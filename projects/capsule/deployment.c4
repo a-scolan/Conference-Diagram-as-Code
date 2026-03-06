@@ -1,0 +1,194 @@
+/**
+ * Capsule - Plateforme de Hébergement de Sites Web Statiques
+ * Modèle de Déploiement : VM unique avec hypothèses réseau par défaut
+ */
+
+deployment {
+  // Environnement de production
+  production = Node_Environment 'Production' {
+    #Production
+    description """
+      Déploiement de production par défaut pour Capsule.
+
+      **Topologie :**
+      - VM de hébergement unique pour Capsule (tous les containers)
+      - Les systèmes externes restent en dehors de cet environnement
+
+      **Réseaux par Défaut (exemple) :**
+      - VLAN Interne 20 : 10.0.2.0/24 (VM Capsule)
+      - VLAN Gestion 30 : 10.0.3.0/24 (accès admin + OpenVox SSH)
+    """
+
+    // Zone Internet (accès utilisateurs)
+	userLan = Zone_Office 'LAN Utilisateur (VLAN 5: 10.0.5.0/24)' {
+      description """
+        Zone réseau des postes de travail utilisateurs.
+      """
+
+      userBrowser = Node_AppBrowser 'Navigateur Utilisateur Interne' {
+        description """
+          Navigateur de l'utilisateur interne accédant aux sites web hébergés.
+        """
+        instanceOf userInt
+
+        webappInstance = Node_App 'WebApp Interne' {
+          description """
+            Instance de webapp exécutée dans le navigateur interne.
+          """
+          instanceOf terminalInt.webapp
+        }
+      }
+      
+      staffBrowser = Node_AppBrowser 'Navigateur Staff' {
+        description """
+          Poste de travail du personnel responsable des sites web.
+          
+          **Accès :**
+          - Portail Op-Con pour demander les déploiements
+          - Consultation des sites web hébergés via LemonLDAP
+        """
+        instanceOf staff
+      }
+	  
+      adminWorkstation = Node_AppBrowser 'Poste Admin' {
+        description """
+          Terminal et navigateur des administrateurs de plateforme.
+          
+          **Accès :**
+          - Console OpenVox pour gestion de l'orchestration
+          - Accès SSH aux VMs (Capsule, OpenVox) pour dépannage
+          - Configuration des limites de ressources et capacité
+        """
+        instanceOf admins
+      }
+    }
+
+    // DMZ VLAN (LemonLDAP)
+    dmzVlan = Zone_Vlan 'DMZ (VLAN 10: 10.0.1.0/24)' {
+      description """
+        Réseau DMZ pour les services de reverse proxy externes.
+      """
+
+      lemonldapVm = Node_Vm 'Proxy LemonLDAP' {
+        description """
+          Serveur d'authentification et reverse proxy (géré par l'équipe sécurité).
+          
+          | Spécification | Valeur |
+          |---------------|--------|
+          | **vCPU** | 4 cores |
+          | **RAM** | 8 GB |
+          | **Storage** | 50 GB SSD |
+          | **Network** | 10.0.1.10 (DMZ VLAN 10) |
+          | **Hostname** | lemonldap-prod-01 |
+        """
+        instanceOf lemonldap.reverseProxy
+      }
+    }
+
+    // Application VLAN (Capsule VM)
+    appVlan = Zone_Vlan 'Tier Application (VLAN 20: 10.0.2.0/24)' {
+      description """
+        Réseau applicatif interne pour le hébergement Capsule.
+      """
+
+      // VM de hébergement Capsule (nœud unique)
+      capsuleVm = Node_Vm 'VM de Hébergement Capsule' {
+        description """
+          VM unique hébergeant la plateforme Capsule et tous les containers de sites web.
+
+          | Spécification | Valeur |
+          |---------------|--------|
+          | **vCPU** | 4 cores (par défaut) |
+          | **RAM** | 4 GB (par défaut) |
+          | **Storage** | 100 GB SSD (par défaut) |
+          | **Network** | 10.0.2.10 (App VLAN 20) |
+          | **Hostname** | capsule-prod-01 |
+
+          **Runtime:**
+          - Podman rootless runtime
+          - Services gérés par systemd
+          - `net.ipv4.ip_unprivileged_port_start=80` pour autoriser le port 80 rootless
+        """
+
+        // Instances de containers Capsule
+        agentInstance = Node_App 'Agent OpenVox' {
+          instanceOf capsule.openvoxAgent
+        }
+
+        dockerInstance = Node_App 'Runtime Container' {
+          instanceOf capsule.docker
+        }
+
+        reverseProxyInstance = Node_App 'Reverse Proxy Capsule' {
+          instanceOf capsule.reverseProxy
+        }
+
+        siteInstance = Node_App 'Containers de Sites Web' {
+          instanceOf capsule.siteExample
+        }
+      }
+    }
+
+    // Management VLAN (admin + OpenVox access)
+    mgmtVlan = Zone_Vlan 'Management (VLAN 30: 10.0.3.0/24)' {
+      description """
+        Management network for SSH access and orchestration.
+      """
+      
+      openvoxVm = Node_Server 'OpenVox' {
+        description """
+          Orchestration and provisioning server.
+          
+          | Specification | Value |
+          |---------------|-------|
+          | **vCPU** | 8 cores |
+          | **RAM** | 16 GB |
+          | **Storage** | 200 GB SSD |
+          | **Network** | 10.0.3.10 (Mgmt VLAN 30) |
+          | **Hostname** | openvox-prod-01 |
+        """
+        instanceOf openvox.orchestrationService
+      }
+      
+      opconVm = Node_Vm 'Op-Con Portal' {
+        description """
+          Self-service deployment portal server.
+          
+          | Specification | Value |
+          |---------------|-------|
+          | **vCPU** | 4 cores |
+          | **RAM** | 8 GB |
+          | **Storage** | 100 GB SSD |
+          | **Network** | 10.0.3.20 (Mgmt VLAN 30) |
+          | **Hostname** | opcon-prod-01 |
+        """
+        instanceOf opcon.portal
+      }
+      
+      nexusVm = Node_Server 'Nexus' {
+        description """
+          Artifact repository server for deployment packages.
+          
+          | Specification | Value |
+          |---------------|-------|
+          | **vCPU** | 4 cores |
+          | **RAM** | 12 GB |
+          | **Storage** | 500 GB SSD |
+          | **Network** | 10.0.3.30 (Mgmt VLAN 30) |
+          | **Hostname** | nexus-prod-01 |
+        """
+        instanceOf nexus
+      }
+    }
+    
+  zoneInternet = Zone_Internet 'Internet' {
+    description """
+    The public internet, source of end-user traffic and external dependencies.
+    """
+    dockerRegistryNode = Node_External 'Docker Registries' {
+    description 'External container registries for base images.'
+    instanceOf dockerRegistries
+    }
+  }
+  }
+}

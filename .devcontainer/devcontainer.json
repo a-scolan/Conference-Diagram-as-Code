@@ -1,0 +1,27 @@
+{
+  "name": "LikeC4 Architecture Workspace",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    }
+  },
+  "postCreateCommand": "npm install -g likec4",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "likec4.likec4-vscode"
+      ],
+      "settings": {
+        "editor.formatOnSave": true
+      }
+    }
+  },
+  "forwardPorts": [5173],
+  "portsAttributes": {
+    "5173": {
+      "label": "LikeC4 Dev Server",
+      "onAutoForward": "openPreview"
+    }
+  }
+}

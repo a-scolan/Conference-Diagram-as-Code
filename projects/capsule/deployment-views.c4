@@ -1,0 +1,37 @@
+/**
+ * Capsule - Plateforme de Hébergement de Sites Web Statiques
+ * Vues de Déploiement : Visualisations infrastructure et déploiement
+ */
+
+views 'Deployment' {
+	deployment view deployment_overview {
+		title 'Vue Deploiement Capsule'
+		description '''
+			Vue de déploiement montrant l'écosystème complet Capsule avec disposition infrastructure.
+
+			**Périmètre :**
+			- LAN Utilisateur : accès internes uniquement (navigateurs internes)
+			- VLAN DMZ : Proxy LemonLDAP pour authentification et terminaison SSL
+			- VLAN App : VM Capsule hébergeant tous les containers de sites web
+			- VLAN Gestion : Orchestration OpenVox, portail Op-Con, et dépôt Nexus
+			- Externe : Registries Docker publics
+		'''
+
+		include production
+		include production.userLan
+		include production.userLan.userBrowser
+		include production.userLan.staffBrowser
+		include production.userLan.adminWorkstation
+		include production.dmzVlan
+		include production.dmzVlan.lemonldapVm
+		include production.mgmtVlan
+		include production.mgmtVlan.opconVm
+		include production.mgmtVlan.nexusVm
+		include production.mgmtVlan.openvoxVm
+		include production.appVlan
+		include production.appVlan.capsuleVm
+		include production.zoneInternet
+		include production.zoneInternet.dockerRegistryNode
+		autoLayout TopBottom
+	}
+}

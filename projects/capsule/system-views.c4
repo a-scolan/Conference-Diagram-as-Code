@@ -1,0 +1,214 @@
+/**
+ * Capsule - Plateforme d'Hébergement de Sites Web Statiques
+ * Vues Système : Visualisations architecturales organisées par niveaux C4
+ */
+
+// ============================================================================
+// VUE INDEX - Page d'accueil avec navigation
+// ============================================================================
+
+views {
+  view index extends c1_systemContext {
+    title 'Capsule - Plateforme de Hébergement de Sites Web Statiques'
+    description '''
+      Solution légère de hébergement de sites web statiques utilisant des containers Podman.
+      
+      **Naviguer vers :**
+      - Contexte Système (C1) pour l'architecture de haut niveau
+      - Architecture Container (C2) pour la structure interne
+      - Déploiement pour les détails d'infrastructure
+    '''
+  }
+}
+
+// ============================================================================
+// NIVEAU CONTEXTE C1 - Paysage système
+// ============================================================================
+
+views 'C1' {
+  view c1_systemContext {
+    title 'Contexte Système'
+    description '''
+      Vue d'ensemble de haut niveau montrant Capsule dans son contexte organisationnel.
+      
+      **Interactions Clés :**
+      - Le personnel déploie des sites web via le portail self-service Op-Con
+      - Op-Con soumet les requêtes à OpenVox pour l'orchestration
+      - Les utilisateurs internes accèdent aux sites web via LemonLDAP
+      - Les administrateurs gèrent la plateforme directement
+      
+      **Frontière de Sécurité :**
+      - LemonLDAP fournit la terminaison SSL et l'authentification
+      - Les containers Capsule ne sont pas exposés directement aux utilisateurs
+      - Op-Con fait la médiation entre le personnel et les systèmes d'orchestration
+    '''
+    
+    // Include all actors and systems
+    include *
+    
+    // Layout hints for better visualization
+    autoLayout TopBottom
+    
+    // Navigation to container view
+    include capsule with {
+      navigateTo c2_capsuleContainers
+    }
+  }
+}
+
+// ============================================================================
+// NIVEAU CONTAINER C2 - Architecture interne Capsule
+// ============================================================================
+
+views 'C2' {
+  view c2_capsuleContainers {
+    title 'Containers Capsule'
+    description '''
+      Vue complète montrant les containers internes du système Capsule plus tous les systèmes environnants.
+      
+      **Composants Internes Capsule :**
+      - Agent OpenVox - Orchestre les déploiements sur Capsule
+      - Runtime Container - Podman pour l'exécution de containers
+      - Reverse Proxy Capsule - Routage par hostname sur le port 80
+      - Containers de Sites Web - Instances Nginx par site web (HTTP sur 8080)
+      
+      **Systèmes Environnants :**
+      - Op-Con - Portail self-service pour les demandes de déploiement
+      - OpenVox (Interface Integration) - Orchestration et gestion des déploiements
+      - LemonLDAP (Chaîne d'authentification) - Reverse proxy et authentification
+      - Nexus - Dépôt de packages de sites web
+      - Registries Docker - Images container de base (nginxinc/nginx-unprivileged)
+      
+      **Utilisateurs :**
+      - Responsables des Sites Web - Demandent des déploiements via Op-Con
+      - Utilisateurs internes - Accèdent aux sites web via LemonLDAP
+      - Administrateurs Plateforme - Gèrent Capsule directement
+    '''
+    
+    // All actors
+    include staff, userInt, admins
+    include terminalInt
+    
+    // All external systems
+    include opcon, openvox, lemonldap, nexus, dockerRegistries
+    
+    // Capsule system and all its containers
+    include capsule
+    include capsule.*
+    
+    // Show relationships to external systems
+    include
+      staff -> opcon,
+      userInt -> terminalInt.webapp,
+      terminalInt.webapp -> lemonldap,
+      admins -> capsule,
+      opcon -> openvox,
+      openvox -> capsule.openvoxAgent,
+      lemonldap -> capsule.reverseProxy,
+      capsule -> nexus,
+      capsule.docker -> dockerRegistries,
+      capsule.reverseProxy -> capsule.siteExample
+    
+    // Layout hints for better visualization
+    autoLayout TopBottom
+
+  rank source { staff, userInt, admins}
+  }
+}
+
+// ============================================================================
+// CAS D'USAGE - Flux dynamiques et interactions
+// ============================================================================
+
+views 'Use Cases' {
+  
+  dynamic view usecase_newWebsite {
+    title 'Configuration de Nouveau Site Web'
+    description '''
+      Flux complet montrant comment un nouveau site web est configuré depuis la planification d'infrastructure jusqu'au déploiement.
+      
+      **Prérequis :**
+      1. L'admin configure LemonLDAP : ajout du virtual host, certificat SSL, règles de contrôle d'accès
+         - Ceci est un prérequis BLOQUANT, ne peut pas être automatisé
+      2. L'admin met à jour la config du reverse proxy Capsule (nginx.conf) : ajout du mapping hostname → port container
+         - Permet à l'agent OpenVox de configurer correctement le reverse proxy
+         - L'agent appliquera cette configuration pendant le déploiement
+      
+      **Déploiement :**
+      3. Le responsable téléverse le package de déploiement vers Nexus
+      4. L'admin demande le déploiement du site web via Op-Con
+      5. L'agent OpenVox orchestre tout :
+         - Pull du package et build de l'image container
+         - Application de la configuration du reverse proxy avec reload gracieux
+         - Le site web devient accessible via le proxy LemonLDAP
+    '''
+    
+    admins -> lemonldap.reverseProxy 'PREREQUIS 1 : Configure LemonLDAP (virtual host, SSL, regles acces)'
+    lemonldap.reverseProxy -> admins 'LemonLDAP prêt pour le nouveau site web'
+    
+    admins -> capsule.reverseProxy 'PREREQUIS 2 : Met a jour nginx.conf avec mapping hostname vers port container'
+    capsule.reverseProxy -> admins 'Configuration du reverse proxy prête pour le déploiement'
+    
+    staff -> nexus 'Televerse package de deploiement (Dockerfile + config nginx + contenu)'
+    
+    staff -> opcon.portal 'Demande le déploiement du site web'
+    opcon.portal -> openvox.orchestrationService 'Soumet la demande de déploiement avec référence au package'
+    openvox.orchestrationService -> capsule.openvoxAgent 'Declenche agent : build, deploy, configure'
+    capsule.openvoxAgent -> nexus 'Pull du package de déploiement (HTTPS)'
+    capsule.openvoxAgent -> capsule.docker 'Orchestre : podman build, podman run'
+    capsule.docker -> dockerRegistries 'Pull image de base (nginx-unprivileged)'
+    capsule.docker -> capsule.siteExample 'Cree et demarre container du site web avec montage de volumes'
+    capsule.openvoxAgent -> capsule.reverseProxy 'Applique mapping hostname et recharge nginx.conf'
+    capsule.reverseProxy -> capsule.reverseProxy 'Reload gracieux : nginx -s reload (pas de downtime)'
+    capsule.siteExample -> staff 'Site web en ligne et accessible via proxy LemonLDAP'
+  }
+  
+  dynamic view usecase_websiteUpdate {
+    title 'Mise a Jour de Site Web'
+    description '''
+      Workflow pour les responsables poussant des mises à jour de contenu ou de configuration :
+      1. Le responsable téléverse un package mis à jour vers Nexus (nouvelle étiquette de version)
+      2. L'admin demande un redéploiement via Op-Con
+      3. Op-Con déclenche OpenVox avec la nouvelle référence de package
+      4. L'agent OpenVox pull le package mis à jour
+      5. L'agent rebuild l'image container avec le nouveau contenu/config
+      6. L'agent remplace le container en cours d'exécution par la version plus récente
+    '''
+    
+    staff -> nexus 'Televerse package mis a jour (nouvelle version)'
+    staff -> opcon.portal 'Demande mise a jour ou redeploiement du site web'
+    opcon.portal -> openvox.orchestrationService 'Soumet demande de mise a jour avec nouvelle version package'
+    openvox.orchestrationService -> capsule.openvoxAgent 'Declenche agent : rebuild et redeploy'
+    capsule.openvoxAgent -> nexus 'Pull package mis a jour (HTTPS)'
+    capsule.openvoxAgent -> capsule.docker 'Orchestre : podman build (nouvelle image), podman stop (ancienne), podman run (nouvelle)'
+    capsule.docker -> dockerRegistries 'Pull image de base (si FROM a change)'
+    capsule.docker -> capsule.siteExample 'Arrete ancien container, execute nouveau container avec memes montages volumes'
+    capsule.siteExample -> staff 'Site web mis a jour en ligne, ancien container supprime'
+  }
+  
+  dynamic view usecase_endUserBrowsing {
+    title 'Navigation des Utilisateurs Internes'
+    description '''
+      Flux montrant comment les utilisateurs internes accèdent aux sites web hébergés :
+      1. L'utilisateur ouvre l'URL du site web dans un navigateur web (terminal, webapp)
+      2. La webapp demande le contenu via la Chaîne d'authentification (LemonLDAP)
+      3. La Chaîne gère la terminaison SSL/TLS et l'authentification SSO
+      4. Après authentification, la requête est proxifiée vers le reverse proxy Capsule
+      5. Capsule route par hostname vers le container de site web correct
+      6. Le contenu est renvoyé via la Chaîne d'authentification à la webapp
+      7. La webapp affiche le site à l'utilisateur
+    '''
+    
+    userInt -> terminalInt.webapp 'Ouvre URL du site web (interne)'
+    terminalInt.webapp -> lemonldap.reverseProxy 'Requete HTTPS via Chaîne d\'authentification'
+    lemonldap.reverseProxy -> lemonldap.reverseProxy 'Terminaison SSL/TLS + authentification SSO'
+    lemonldap.reverseProxy -> capsule.reverseProxy 'Requete HTTP vers reverse proxy Capsule (apres auth)'
+    capsule.reverseProxy -> capsule.reverseProxy 'Recherche du routage par hostname'
+    capsule.reverseProxy -> capsule.siteExample 'Route vers le container du site web (HTTP/8080)'
+    capsule.siteExample -> capsule.reverseProxy 'Sert contenu statique'
+    capsule.reverseProxy -> lemonldap.reverseProxy 'Reponse'
+    lemonldap.reverseProxy -> terminalInt.webapp 'Contenu du site chargé via Chaîne d\'authentification'
+    terminalInt.webapp -> userInt 'Affiche le site (interne)'
+  }
+  
+}

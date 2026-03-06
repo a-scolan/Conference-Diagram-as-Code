@@ -1,0 +1,429 @@
+/**
+ * Capsule - Plateforme d'Hébergement de Sites Web Statiques
+ * Modèle Système : Acteurs, Systèmes, Containers, et Relations
+ */
+
+// ============================================================================
+// NIVEAU CONTEXTE C1 - Acteurs et Systèmes
+// ============================================================================
+
+model {
+  // Acteurs
+  staff = Actor_Staff 'Responsables des Sites Web' {
+    description '''
+      Personnel interne responsable du déploiement et de la maintenance des sites web statiques.
+      
+      **Responsabilités:**
+      - Demander les déploiements de sites web via OpenVox
+      - Fournir les packages de déploiement (images Docker, configs nginx, contenu)
+      - Monitorer la disponibilité et performance des sites web
+    '''
+  }
+  
+  userInt = Actor_Staff 'Utilisateurs internes' {
+    description '''
+      Employés internes accédant aux webapps depuis le réseau interne.
+      
+      **Accès:**
+      - Réseau interne Nantes Métropole
+      - Authentification SSO via LemonLDAP
+      - Peut bénéficier d'un SSO intégré (poste de travail géré)
+    '''
+  }
+  
+  admins = Actor_Admin 'Administrateurs de Plateforme' {
+    description '''
+      Administrateurs système gérant la plateforme d'hébergement Capsule.
+      
+      **Responsabilités:**
+      - Primaire : Gérer les déploiements de plateforme et l'orchestration via OpenVox
+      - Monitorer la santé de la plateforme et gérer les workflows OpenVox
+      - Secondaire : Dépanner les problèmes de VM Capsule et système via SSH
+      - Gérer les mises à jour de sécurité et patches
+      - Configurer les limites de ressources et capacité
+    '''
+  }
+  
+  // Systèmes - Terminaux utilisateurs
+  terminalInt = System_Existing 'Terminal interne' {
+    description '''
+      Terminal utilisateur interne du réseau Nantes Métropole.
+      
+      **Caractéristiques:**
+      - Accès depuis réseau interne sécurisé
+      - Postes de travail gérés par la DSI
+      - SSO possible via intégration poste
+    '''
+    
+    webapp = Container_Webapp 'WebApp Interne' {
+      technology 'HTML5, JavaScript, navigateur web'
+      description 'Interface web utilisée par les utilisateurs internes.'
+    }
+  }
+  
+  // Systèmes
+  capsule = System_New 'Capsule' {
+    #Internal
+    description '''
+      Plateforme d'hébergement de sites web statiques légers utilisant des containers Podman.
+      
+      **Fonctions Principales:**
+      - Exécuter l'agent OpenVox orchestrant les déploiements
+      - Pull et extraire les packages de déploiement depuis Nexus
+      - Construire et exécuter des containers par site web avec défauts de ressources centralisés
+      - Router le trafic HTTP entrant via un reverse proxy local
+      
+      **Architecture:**
+      - Fonctionne sur VM Debian 11 avec ressources limitées
+      - Agent OpenVox s'exécute sur la machine, pull les packages et orchestre Podman
+      - Podman pour gestion container rootless, sans daemon
+      - Containers basés Alpine pour empreinte ressource minimale
+      - Reverse proxy local sur Capsule écoute sur le port 80
+      - Hostnames et DNS sont définis a priori par les architectes système
+      - Intégration systemd pour cycle de vie de service persistant
+      
+      **Workflow Agent:**
+      1. Déclenché par le système OpenVox (via commande SSH)
+      2. Pull le package de déploiement depuis Nexus
+      3. Extrait Dockerfile, configs nginx, et contenu statique
+      4. Exécute podman build pour créer l'image du container
+      5. Exécute podman pour créer et démarrer le container de site web
+      6. Monte les volumes pour config nginx et webroot
+    '''
+    
+    // C2 - Containers Capsule
+    openvoxAgent = Container 'Agent OpenVox' {
+      technology 'Agent process, shell scripts, Podman CLI'
+      description '''
+        Agent OpenVox s'exécutant sur Capsule, orchestrant les déploiements localement.
+        
+        **Responsabilités:**
+        - Recevoir les déclencheurs de déploiement du système OpenVox
+        - Pull les packages de déploiement depuis Nexus
+        - Extraire et valider le contenu des packages
+        - Exécuter podman build pour créer les images de sites web
+        - Gérer le cycle de vie des containers via commandes podman
+        - Mettre à jour dynamiquement le reverse proxy Capsule avec nouveaux mappings hostname
+        - Rapporter le statut de déploiement à OpenVox
+        
+        **Workflow de Déploiement:**
+        1. Déclenché par OpenVox (commande SSH avec métadonnées de déploiement)
+        2. Pull du package depuis Nexus (HTTPS)
+        3. Extraction du Dockerfile, configs nginx, fichiers statiques
+        4. Appel podman build avec Dockerfile extrait
+        5. Appel podman run avec limites de ressources par défaut et montages de volumes
+        6. Génération des fichiers d'unité systemd pour persistance du service
+        7. Activation et démarrage du service systemd
+        8. Ajout du nouveau mapping hostname au volume de config monté du reverse proxy Capsule
+        9. Signal de reload graceful vers Nginx (nginx -s reload) - zéro downtime
+        10. Vérification que le nouveau hostname est accessible via proxy LemonLDAP
+      '''
+    }
+    
+    docker = Container 'Runtime Container' {
+      technology 'Podman 4.x, systemd'
+      description '''
+        Moteur runtime container exécutant les opérations de build et run.
+        
+        **Responsabilités:**
+        - Exécuter podman build (l'agent passe le contexte Dockerfile)
+        - Créer containers avec limites de ressources par défaut du plan OpenVox
+        - Monter les volumes pour config nginx et contenu statique
+        - Démarrer, arrêter, et supprimer les containers de sites web
+        - Gérer le réseau des containers et mappings de ports
+        
+        **Configuration:**
+        - Mode rootless (s'exécute sans privilèges root)
+        - Isolation user namespace
+        - Intégration systemd pour services persistants
+        
+        **Images:**
+        - Image de base : nginxinc/nginx-unprivileged (depuis registry Docker)
+        - Images de sites web : Construites localement depuis Dockerfile dans le package
+      '''
+    }
+
+    reverseProxy = Container_ReverseProxy 'Reverse Proxy Capsule' {
+      technology 'Nginx (container)'
+      description '''
+        Container reverse proxy local sur Capsule gérant le routage basé sur hostname sur le port 80.
+
+        **Responsabilités:**
+        - Écouter sur le port 80 pour le trafic HTTP interne
+        - Router les requêtes par hostname vers le container de site web correct
+        - Transférer les headers d'auth de confiance depuis LemonLDAP
+        - Supporter les mises à jour dynamiques de mapping hostname via configuration montée
+
+        **Configuration:**
+        - nginx.conf monté comme volume persistant (lecture-écriture)
+        - Permet à l'agent OpenVox d'ajouter de nouveaux mappings hostname pendant le déploiement
+        - Hostnames et enregistrements DNS définis a priori par les architectes système
+        - Chaque déploiement de site web ajoute un bloc server avec mapping hostname → backend
+        - Reload graceful (nginx -s reload) appliqué par l'agent OpenVox : zéro downtime
+        - Déployé en utilisant un package d'app reverse-proxy dédié
+      '''
+    }
+    
+    // Template container de site web (instances multiples)
+    siteExample = Container_WebServer 'Containers de Sites Web' {
+      technology 'Alpine Linux 3.19, Nginx 1.24'
+      description '''
+        Template pour containers de sites web servant le contenu statique. Instances multiples s'exécutent simultanément.
+        
+        **Architecture:**
+        - Image basée Alpine (~20-25MB)
+        - Nginx configuré pour service de fichiers statiques
+        - Container Podman rootless
+        - Intégration service systemd
+        
+        **Volumes:**
+        - /etc/nginx/conf.d - Configuration Nginx (lecture seule)
+        - /usr/share/nginx/html - Contenu statique (lecture seule)
+        
+        **Sécurité:**
+        - Système de fichiers root en lecture seule
+        - Processus nginx non-root
+        - Capabilities supprimées (sauf NET_BIND_SERVICE)
+        - Isolation user namespace
+        
+        **Pattern de Déploiement:**
+        Une instance de container par site web hébergé. Chaque instance a :
+        - Nom de container unique (par ex., site-docs, site-wiki)
+        - Container écoute sur le port 8080 (non-privilégié)
+        - Routé par reverse proxy Capsule utilisant mapping hostname
+        - Volumes de configuration et contenu isolés
+        - Unité de service systemd indépendante
+
+        **Contrôles de Ressources:**
+        - Appliqués centralement par les défauts du plan de l'agent OpenVox
+        - Non personnalisables par package de site web
+      '''
+      
+      style {
+        multiple true
+      }
+    }
+  }
+  
+  nexus = System_Existing 'Nexus' {
+    description '''
+      Dépôt d'artifacts existant pour les packages de déploiement.
+      
+      **Artifacts Stockés:**
+      - Packages de déploiement de sites web (format tarball)
+      - Contient : Dockerfile, configs nginx, contenu statique, manifest
+      - Versionnés et tagés pour gestion de releases
+      
+      **Accès:**
+      - Accédé par l'agent OpenVox sur le système Capsule
+      - Récupération basée sur pull via HTTPS
+    '''
+  }
+  
+  dockerRegistries = System_External 'Docker Registries' {
+    description '''
+      Registries d'images container publics (docker.io, etc.).
+      
+      **Images:**
+      - nginxinc/nginx-unprivileged - Image Nginx de base pour sites web
+      - Images officielles et tierces pour dépendances
+      
+      **Accès:**
+      - Pullé par le runtime Podman ou processus de build
+      - Pull anonyme pour images publiques
+    '''
+  }
+  
+  opcon = System_Existing 'Op-Con (Portail Self-Service)' {
+    description '''
+      Portail de déploiement self-service existant médiatisant entre le personnel et OpenVox.
+      
+      **Responsabilités:**
+      - Fournir une interface conviviale pour les requêtes de déploiement
+      - Gérer les workflows de déploiement et approbations
+      - Suivre l'historique et le statut de déploiement
+      - Déclencher les builds et déploiements via OpenVox
+      - Afficher le statut de déploiement et logs
+      - Gérer l'authentification et autorisation utilisateur
+    '''
+    
+    // C2 - Composants Op-Con
+    portal = Container_Webapp 'Portail de Déploiement' {
+      technology 'Application web (framework TBD)'
+      description '''
+        Interface web côté utilisateur pour demander des déploiements de sites web.
+        
+        **Fonctionnalités:**
+        - Formulaire de requête de déploiement (nom du site, version du package, etc.)
+        - Historique des requêtes et suivi du statut
+        - Workflows d'approbation (si requis)
+        - Intégration avec API OpenVox pour déclencher les builds
+        - Logs et informations de dépannage
+      '''
+    }
+  }
+  
+  openvox = System_Existing 'OpenVox' {
+    description '''
+      Système d'orchestration et provisioning existant.
+      
+      **Responsabilités:**
+      - Provisionner et configurer les VMs d'hébergement Capsule
+      - Construire les packages de déploiement (déclenché par Op-Con)
+      - Gérer l'agent sur Capsule pour pull et build des packages
+      - Monitorer la santé de l'infrastructure Capsule
+    '''
+    
+    // C2 - Composants OpenVox
+    orchestrationService = Container_ApplicationServer 'Service d\'Orchestration' {
+      technology 'OpenVox (basé Puppet)'
+      description '''
+        Service d'orchestration OpenVox (système d'infrastructure).
+        
+        **Responsabilités:**
+        - Recevoir les requêtes de déploiement depuis Op-Con
+        - Gérer la construction de packages et assemblage d'artifacts
+        - Déclencher l'agent de déploiement sur le système Capsule
+        - Monitorer le statut de déploiement et santé
+        - Gérer l'historique de déploiement et audit
+        
+        **Intégration:**
+        - Endpoint API pour Op-Con pour déclencher les déploiements
+        - Gère l'agent sur Capsule (SSH, webhooks)
+        - Passe la référence d'artifact du package (URL Nexus) à l'agent
+      '''
+    }
+  }
+  
+  lemonldap = System_Existing 'LemonLDAP' {
+    #Security
+    description '''
+      Système d'authentification et reverse proxy existant fournissant un accès sécurisé.
+      
+      **Fonctions:**
+      - Terminaison SSL/TLS pour tous les sites web
+      - Authentification Single Sign-On (SSO)
+      - Politiques de contrôle d'accès par site web
+      - Reverse proxy vers containers Capsule sur réseau interne
+      
+      **Frontière de Sécurité:**
+      - Seul point d'entrée pour les utilisateurs finaux
+      - Containers Capsule non exposés directement
+    '''
+    
+    // C2 - Containers LemonLDAP (boîte noire)
+    reverseProxy = Container_ReverseProxy 'Chaîne d\'authentification' {
+      technology 'Apache + mod_perl, LemonLDAP::NG'
+      description '''
+        Reverse proxy fournissant terminaison SSL et authentification.
+        
+        **Responsabilités:**
+        - Terminaison SSL/TLS (HTTPS → HTTP)
+        - Authentification Single Sign-On (SSO)
+        - Politiques de contrôle d'accès par site web
+        - Proxy des requêtes vers containers de sites web Capsule
+        
+        **Configuration:**
+        - Virtual host par site web (défini a priori par les architectes)
+        - Backend proxy vers reverse proxy Capsule sur le port 80
+        - Transfert des headers d'authentification (X-Remote-User, X-Remote-Groups)
+        
+        **Frontière de Sécurité:**
+        - Seul point d'entrée externe pour les utilisateurs finaux
+        - Empêche l'accès direct aux containers Capsule
+      '''
+    }
+  }
+  
+  // Relations Contexte C1
+  
+  // Workflow personnel : Téléverse packages vers Nexus, puis déploie via Op-Con vers OpenVox
+  staff -[writes]-> nexus 'Téléverse les packages de sites web' {
+    technology 'HTTPS'
+  }
+  
+  staff -[uses]-> opcon 'Demande les déploiements de sites web' {
+    technology 'HTTPS'
+  }
+  
+  opcon -[calls]-> openvox 'Soumet les requêtes de déploiement' {
+    technology 'HTTPS'
+  }
+  
+  openvox -[calls]-> capsule 'Exécute l\'agent sur le système pour pull et build des packages' {
+    technology 'SSH'
+  }
+  
+  capsule -[reads]-> nexus 'Pull les packages de déploiement' {
+    technology 'HTTPS'
+  }
+  
+  userInt -[uses]-> terminalInt.webapp 'Utilise les webapps internes'
+  
+  terminalInt.webapp -[calls]-> lemonldap 'Accède aux sites web' {
+    technology 'HTTPS'
+  }
+  
+  lemonldap -[calls]-> capsule 'Proxie les requêtes vers le reverse proxy Capsule' {
+    technology 'HTTP'
+  }
+  
+  // Admins gèrent la plateforme via OpenVox, puis dépannent Capsule directement
+  admins -[uses]-> openvox 'Gère la plateforme et les déploiements' {
+    technology 'HTTPS'
+  }
+  
+  admins -[uses]-> capsule 'Dépanne les problèmes système' {
+    technology 'SSH'
+  }
+  
+  // ============================================================================
+  // NIVEAU CONTAINER C2 - Flux détaillés
+  
+  // Workflow personnel
+  staff -[uses]-> opcon.portal 'Demande les déploiements'
+  
+  opcon.portal -[calls]-> openvox.orchestrationService 'Soumet les requêtes de déploiement' {
+    technology 'HTTPS'
+  }
+  
+  // Système OpenVox déclenche l'agent sur Capsule
+  openvox.orchestrationService -[calls]-> capsule.openvoxAgent 'Déclenche le déploiement' {
+    technology 'SSH'
+  }
+  
+  // Agent pull le package et orchestre Podman
+  capsule.openvoxAgent -[reads]-> nexus 'Pull le package de déploiement' {
+    technology 'HTTPS'
+  }
+  
+  capsule.openvoxAgent -[calls]-> capsule.docker 'Orchestre build et run'
+  
+  capsule.docker -[reads]-> dockerRegistries 'Pull les images de base' {
+    technology 'HTTPS'
+  }
+  
+  capsule.docker -[calls]-> capsule.siteExample 'Exécute le container de site web'
+
+  capsule.docker -[calls]-> capsule.reverseProxy 'Exécute le container reverse proxy'
+  
+  // Flux d'accès utilisateur final
+  userInt -[uses]-> terminalInt.webapp 'Accède aux sites web'
+  
+  terminalInt.webapp -[calls]-> lemonldap.reverseProxy 'Accès interne via HTTPS' {
+    technology 'HTTPS'
+  }
+  
+  lemonldap.reverseProxy -[calls]-> capsule.reverseProxy 'Proxie vers le reverse proxy Capsule' {
+    technology 'HTTP'
+  }
+
+  capsule.reverseProxy -[calls]-> capsule.siteExample 'Route par hostname' {
+    technology 'HTTP'
+  }
+  
+  // Gestion admin : OpenVox pour la plateforme, Capsule pour le dépannage
+  admins -[uses]-> openvox.orchestrationService 'Gère la plateforme' {
+    technology 'HTTPS'
+  }
+}

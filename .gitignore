@@ -1,0 +1,22 @@
+# Node
+node_modules/
+
+# LikeC4 build outputs
+.likec4/
+dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# Skills testing space
+projects/skills-testing/.space/
+
+# Temporary files
+*.tmp
+*.bak
