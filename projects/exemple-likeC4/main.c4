@@ -1,0 +1,38 @@
+specification {
+	element person
+	element system
+	element container
+  }
+  
+  model {
+	customer = person "Client"
+	support  = person "Support"
+
+	paymentProvider = system "Prestataire Paiement"
+
+	orderingPlatform = system "Plateforme de commande" {
+		mobileApp    = container "App Mobile"
+		webApp       = container "Portail Web"
+		backendApi   = container "API Backend"
+		orderService = container "Service Commandes"
+		authService  = container "Service Auth"
+		db           = container "PostgreSQL"
+		notifier     = container "Service Notifications"
+	}
+
+	customer -> orderingPlatform.mobileApp "Utilise (iOS/Android)"
+	customer -> orderingPlatform.webApp    "Utilise (navigateur)"
+
+	orderingPlatform.mobileApp  -> orderingPlatform.backendApi   "HTTPS / REST"
+	orderingPlatform.webApp     -> orderingPlatform.backendApi   "HTTPS / REST"
+	orderingPlatform.backendApi -> orderingPlatform.authService  "JWT / OAuth2"
+	orderingPlatform.backendApi -> orderingPlatform.orderService "Appels métier"
+
+	orderingPlatform.orderService -> orderingPlatform.db       "SQL"
+	orderingPlatform.orderService -> orderingPlatform.notifier "Événement: commande créée"
+	orderingPlatform.orderService -> paymentProvider           "API paiement"
+
+	support -> orderingPlatform.webApp "Consulte les commandes"
+  }
+  
+  // ↑ lisible, diffable, versionnable

@@ -1,0 +1,241 @@
+// AleFest Coffee V2 - Le Cafe Mobile
+// Architecture asynchrone : commande mobile + event-driven
+
+model {
+  // NIVEAU CONTEXTE C1 - Acteurs et Système
+
+  festivalier = Actor_Person 'Festivalier' {
+    description '''
+      Client du stand cafe au festival AleFest.
+      
+      Comportement V2:
+      - Commande depuis son telephone n'importe ou dans le festival
+      - Recoit une notification push quand son cafe est pret
+      - Vient recuperer au comptoir uniquement quand c'est pret
+      - Peut profiter du concert pendant la preparation
+    '''
+  }
+
+  barista = Actor_Staff 'Barista' {
+    description '''
+      Personnel du stand cafe preparant les commandes.
+      
+      Responsabilites:
+      - Consulter la file d'attente en temps reel (WebSocket)
+      - Preparer les cafes dans l'ordre FIFO
+      - Marquer les commandes comme en preparation / pret
+      - Les notifications sont envoyees automatiquement
+    '''
+  }
+
+  // Système
+  alefestCoffee = System_New 'AleFest Coffee' {
+    description '''
+      Système de gestion de commandes pour le stand cafe du festival.
+      
+      Objectif:
+      Permettre aux festivaliers de commander a distance et de profiter
+      du festival pendant la preparation de leur cafe.
+      
+      Version V2 - Architecture event-driven:
+      - Commande mobile depuis n'importe ou
+      - Backend decouple (microservices)
+      - Communication asynchrone via RabbitMQ
+      - Push notifications temps reel
+      - WebSocket pour les mises a jour
+    '''
+
+    // NIVEAU CONTAINERS C2 - Composants applicatifs
+
+    // Frontends
+    festivalApp = Container_MobileApp 'Festival App' {
+      technology 'React Native, Expo, WebSocket'
+      description '''
+        Application mobile du festivalier.
+        
+        Fonctionnalites:
+        - Carte des cafes avec photos et tarifs
+        - Commande en un tap depuis n'importe ou
+        - Suivi temps reel : en file -> en preparation -> pret
+        - Push notification Firebase Cloud Messaging
+        - Navigation vers le stand
+        
+        UX V2:
+        Le festivalier commande et repart ecouter le concert.
+        Il est notifie quand son cafe est pret.
+      '''
+    }
+
+    counterApp = Container_Spa 'Counter App' {
+      technology 'React, TypeScript, Vite'
+      description '''
+        Borne de commande tactile (maintenue pour compatibilite).
+        
+        Fonctionnalites:
+        - Meme interface qu'en V1
+        - Appelle directement Order Service
+        - Moins utilisee mais disponible
+      '''
+    }
+
+    baristaScreen = Container_Spa 'Barista Screen' {
+      technology 'React, TypeScript, WebSocket'
+      description '''
+        Ecran dedie barista avec mises a jour temps reel.
+        
+        Fonctionnalites:
+        - File des commandes (FIFO avec priorite)
+        - Connexion WebSocket au Preparation Service
+        - Mises a jour instantanees (plus de polling)
+        - Boutons En preparation / Pret
+        - Compteur commandes/heure
+        
+        Technique V2:
+        WebSocket direct avec Preparation Service.
+      '''
+    }
+
+    // Backend Services
+    orderService = Container_Api 'Order Service' {
+      technology 'Node.js, Express, RabbitMQ client'
+      description '''
+        Service de prise de commande (extrait de Coffee Service V1).
+        
+        Responsabilites:
+        - POST /orders : creer une commande
+        - GET /orders/:id : consulter le statut
+        - Valider la commande (menu, prix)
+        - Publier event order.placed dans RabbitMQ
+        - Ecouter order.ready pour mettre a jour le statut
+        
+        Architecture V2:
+        Ne gere QUE la commande, pas la preparation.
+        Decouple via RabbitMQ.
+      '''
+    }
+
+    preparationService = Container_Api 'Preparation Service' {
+      technology 'Node.js, Express, WebSocket, RabbitMQ client'
+      description '''
+        Service de gestion de la file barista (extrait de Coffee Service V1).
+        
+        Responsabilites:
+        - Ecouter order.placed -> ajouter a la file
+        - Gerer la file FIFO avec priorite
+        - WebSocket vers Barista Screen
+        - Publier order.preparing et order.ready
+        - Calculer estimations de temps
+        
+        Architecture V2:
+        Ne gere QUE la preparation, pas la commande.
+        Push les updates via WebSocket.
+      '''
+    }
+
+    notificationService = Container_Api 'Notification Service' {
+      technology 'Node.js, Firebase Admin SDK, RabbitMQ client'
+      description '''
+        Service d'envoi de notifications push.
+        
+        Responsabilites:
+        - Ecouter order.ready -> push notification festivalier
+        - Ecouter order.preparing -> notification on prepare votre cafe
+        - Gerer les tokens Firebase des devices
+        - Historique des notifications
+        
+        Architecture V2:
+        Service dedie, scalable independamment.
+      '''
+    }
+
+    // Infrastructure
+    eventBus = Container_Queue 'RabbitMQ' {
+      technology 'RabbitMQ 3.12'
+      description '''
+        Message broker au coeur de l'architecture event-driven.
+        
+        Queues:
+        - orders.placed : nouvelles commandes
+        - orders.preparing : commandes en cours
+        - orders.ready : commandes pretes
+        - orders.picked_up : commandes recuperees
+        
+        Avantages:
+        - Decoupage services
+        - Resilience (buffer si service down)
+        - Scalabilite independante des consumers
+      '''
+    }
+
+    database = Container_Database 'PostgreSQL' {
+      technology 'PostgreSQL 16'
+      description '''
+        Base de donnees relationnelle (partagee entre services).
+        
+        Tables:
+        - orders: id, items, status, customer_id, created_at, updated_at
+        - menu_items: id, name, category, price, available
+        - customers: id, device_token, preferences
+        
+        Statuts:
+        - pending -> preparing -> ready -> picked_up
+      '''
+    }
+
+    // RELATIONS C2 - Frontends vers Services
+
+    // Festival App -> Order Service
+    festivalApp -[calls]-> orderService 'POST /orders - Creer commande mobile' {
+      technology 'HTTPS, REST, JWT auth'
+    }
+    festivalApp -[calls]-> orderService 'GET /orders/:id - Consulter statut' {
+      technology 'HTTPS, REST'
+    }
+
+    // Counter App -> Order Service
+    counterApp -[calls]-> orderService 'POST /orders - Creer commande comptoir' {
+      technology 'HTTPS, REST'
+    }
+
+    // Barista Screen -> Preparation Service
+    baristaScreen -[calls]-> preparationService 'WebSocket - Recevoir mises a jour file' {
+      technology 'WebSocket, Socket.io'
+    }
+    baristaScreen -[calls]-> preparationService 'PATCH /queue/:id - Maj statut commande' {
+      technology 'HTTPS, REST'
+    }
+
+    // RELATIONS C2 - Event-driven patterns
+
+    // Order Service <-> RabbitMQ
+    orderService -[async]-> eventBus 'Publier order.placed'
+    eventBus -[async]-> orderService 'Recevoir order.ready'
+
+    // Preparation Service <-> RabbitMQ
+    eventBus -[async]-> preparationService 'Recevoir order.placed'
+    preparationService -[async]-> eventBus 'Publier order.preparing, order.ready'
+
+    // Notification Service <-> RabbitMQ
+    eventBus -[async]-> notificationService 'Recevoir order.preparing, order.ready'
+
+    // Notification Service -> Festival App (via Firebase)
+    notificationService -[uses]-> festivalApp 'Push notification Firebase'
+
+    // RELATIONS C2 - Database access
+
+    orderService -[reads]-> database 'SELECT menu, ordres'
+    orderService -[writes]-> database 'INSERT/UPDATE ordres'
+
+    preparationService -[reads]-> database 'SELECT ordres en cours'
+    preparationService -[writes]-> database 'UPDATE statut ordres'
+
+    notificationService -[reads]-> database 'SELECT customer tokens'
+    notificationService -[writes]-> database 'INSERT notifications log'
+  }
+
+  // RELATIONS C1 - Interactions acteurs/applications
+
+  festivalier -[uses]-> alefestCoffee.festivalApp 'Commande depuis son mobile'
+  festivalier -[uses]-> alefestCoffee.counterApp 'Commande au comptoir (alternative)'
+  barista -[uses]-> alefestCoffee.baristaScreen 'Consulte et gère les commandes'
+}

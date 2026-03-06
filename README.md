@@ -36,6 +36,9 @@ projects/
 │   ├── deployment-views.c4   # Vues de déploiement
 │   ├── ADR/                  # Architecture Decision Records
 │   └── generators/           # Générateurs (matrice réseau)
+├── exemple-likeC4/           # Exemple minimal pédagogique (modèle imbriqué)
+│   ├── likec4.config.ts      # Configuration du projet d'exemple
+│   └── main.c4               # Démo simple avec système + containers
 └── shared/                   # Spécifications & ressources partagées
     ├── spec-*.c4             # Spécifications (kinds, tags, styles)
     └── images/               # Bibliothèque d'icônes (Lucide, Affinity)
