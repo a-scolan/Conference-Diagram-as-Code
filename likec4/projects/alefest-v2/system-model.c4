@@ -1,0 +1,223 @@
+// AleFest Café V2 - Le Café Mobile
+// Architecture asynchrone : commande mobile + pilotage par événements
+
+model {
+  // NIVEAU CONTEXTE C1 - Acteurs et systèmes
+
+  festivalier = Actor_Person 'Festivalier' {
+    style {
+      icon @/lucide-static/circle-user-round.svg
+    }
+
+    description '''
+      Client du stand café.
+      Utilise l'application festival officielle pour commander.
+    '''
+  }
+
+  barista = Actor_Staff 'Barista' {
+    style {
+      icon @/lucide-static/badge.svg
+    }
+
+    description '''
+      Prépare les commandes et met à jour leur statut en temps réel
+      via l'écran barista du stand café.
+    '''
+  }
+
+  // Systèmes externes - Application Festival
+  festivalSystem = System_External 'Système Festival' {
+    style {
+      icon @/lucide-static/calendar.svg
+    }
+
+    description '''
+      Plateforme officielle du festival (périmètre externe).
+      Hors scope AleFest Café : on modélise uniquement
+      l'app mobile et le service d'intégration partenaire.
+    '''
+
+    // NIVEAU CONTAINERS C2 - Conteneurs du système Festival
+    festivalApp = Container_MobileApp 'Application Festival' {
+      technology 'React Native, Expo, WebSocket'
+      style {
+        icon @/lucide-static/smartphone.svg
+      }
+
+      description '''
+        Application mobile officielle du festival :
+        événements, billets, parking, cafés partenaires (AleFest).
+        Hors périmètre AleFest Café.
+      '''
+    }
+
+    festivalService = Container_Api 'Service Festival' {
+      technology 'Node.js, Express'
+      style {
+        icon @/lucide-static/server.svg
+      }
+
+      description '''
+        Backend central du festival : gestion des événements,
+        API pour les partenaires (restaurants, cafés, bars).
+        Hors périmètre AleFest Café.
+      '''
+    }
+
+    // Relations internes
+    festivalApp -[calls]-> festivalService 'API Festival (Events, Billets, Cafés)'
+  }
+
+  // Système AleFest Café
+  alefestCoffee = System_New 'AleFest Café' {
+    style {
+      icon @/lucide-static/coffee.svg
+    }
+
+    description '''
+      Système de commande du stand café AleFest.
+      V2 : commande mobile, services découplés et événements RabbitMQ.
+    '''
+
+    // NIVEAU CONTAINERS C2 - Conteneurs applicatifs
+
+    // Interfaces
+    counterApp = Container_Spa 'Application Comptoir' {
+      technology 'React, TypeScript, Vite'
+      style {
+        icon @/lucide-static/app-window.svg
+      }
+
+      description '''
+        Borne comptoir conservée pour compatibilité et secours.
+      '''
+    }
+
+    baristaScreen = Container_Spa 'Écran Barista' {
+      technology 'React, TypeScript, WebSocket'
+      style {
+        icon @/lucide-static/monitor.svg
+      }
+
+      description '''
+        Écran barista avec file en temps réel via WebSocket.
+      '''
+    }
+
+    // Services backend
+    orderService = Container_Api 'Service de Commandes' {
+      technology 'Node.js, Express, RabbitMQ client'
+      style {
+        icon @/lucide-static/square-terminal.svg
+      }
+
+      description '''
+        Crée les commandes et publie l'événement order.placed.
+      '''
+    }
+
+    preparationService = Container_Api 'Service Préparation' {
+      technology 'Node.js, Express, WebSocket, RabbitMQ client'
+      style {
+        icon @/lucide-static/workflow.svg
+      }
+
+      description '''
+        Gère la file de préparation et publie les événements de statut.
+      '''
+    }
+
+    notificationService = Container_Api 'Service Notification' {
+      technology 'Node.js, Firebase Admin SDK, RabbitMQ client'
+      style {
+        icon @/lucide-static/bell-ring.svg
+      }
+
+      description '''
+        Envoie les notifications push sur order.preparing et order.ready.
+      '''
+    }
+
+    // Infrastructure
+    eventBus = Container_Queue 'RabbitMQ' {
+      technology 'RabbitMQ 3.12'
+      style {
+        icon @/lucide-static/rabbit.svg
+      }
+
+      description '''
+        RabbitMQ transporte les événements entre services.
+      '''
+    }
+
+    database = Container_Database 'PostgreSQL' {
+      technology 'PostgreSQL 16'
+      style {
+        icon tech:postgresql
+      }
+
+      description '''
+        PostgreSQL partagé pour commandes, menu et clients.
+        Statuts : pending, preparing, ready, picked_up.
+      '''
+    }
+
+    // RELATIONS C2 - Interfaces vers services
+
+    // Service Festival -> Service Commande (intégration partenaire)
+    festivalSystem.festivalService -[calls]-> orderService 'POST /orders - Créer la commande mobile' {
+      technology 'HTTPS, REST, JWT auth'
+    }
+    festivalSystem.festivalService -[calls]-> orderService 'GET /orders/:id - Consulter le statut' {
+      technology 'HTTPS, REST'
+    }
+
+    // Application Comptoir -> Service Commande
+    counterApp -[calls]-> orderService 'POST /orders - Créer la commande comptoir' {
+      technology 'HTTPS, REST'
+    }
+
+    // Écran Barista -> Service Préparation
+    baristaScreen -[calls]-> preparationService 'WebSocket - Recevoir les mises à jour de file' {
+      technology 'WebSocket, Socket.io'
+    }
+    baristaScreen -[calls]-> preparationService 'PATCH /queue/:id - Mettre à jour le statut' {
+      technology 'HTTPS, REST'
+    }
+
+    // RELATIONS C2 - Architecture événementielle
+
+    // Service Commande <-> RabbitMQ
+    orderService -[async]-> eventBus 'Publier order.placed'
+    eventBus -[async]-> orderService 'Recevoir order.ready'
+
+    // Service Préparation <-> RabbitMQ
+    eventBus -[async]-> preparationService 'Recevoir order.placed'
+    preparationService -[async]-> eventBus 'Publier order.preparing et order.ready'
+
+    // Service Notification <-> RabbitMQ
+    eventBus -[async]-> notificationService 'Recevoir order.preparing et order.ready'
+
+    // Service Notification -> Application Festival (via Firebase)
+    notificationService -[uses]-> festivalSystem.festivalApp 'Envoyer une notification push Firebase'
+
+    // RELATIONS C2 - Accès base de données
+
+    orderService -[reads]-> database 'Lire menu et commandes'
+    orderService -[writes]-> database 'Créer et mettre à jour les commandes'
+
+    preparationService -[reads]-> database 'Lire les commandes en cours'
+    preparationService -[writes]-> database 'Mettre à jour les statuts'
+
+    notificationService -[reads]-> database 'Lire les jetons clients'
+    notificationService -[writes]-> database 'Écrire l’historique des notifications'
+  }
+
+  // RELATIONS C1 - Interactions acteurs/systèmes
+
+  festivalier -[uses]-> festivalSystem 'Commande via l’application festival'
+  festivalier -[uses]-> alefestCoffee 'Commande au comptoir (secours)'
+  barista -[uses]-> alefestCoffee 'Consulte et gère les commandes'
+  festivalSystem -[uses]-> alefestCoffee 'Intégration partenaire (commandes café)'
+}

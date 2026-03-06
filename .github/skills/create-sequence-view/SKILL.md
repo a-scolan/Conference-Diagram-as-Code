@@ -1,0 +1,92 @@
+---
+name: create-sequence-view
+description: Create sequence views showing temporal flows and user interactions. Uses plain arrows with descriptive labels (no relationship kinds).
+---
+
+# Create Dynamic Sequence View
+
+Use this skill when documenting use case flows and interactions.
+
+## Quick Checklist
+
+- Start with the initiating actor.
+- Use plain arrows (`->`), no relationship kinds.
+- Keep labels action-focused and time-ordered.
+- Place all dynamic views in `views 'Use Cases'`.
+- Avoid parent → child calls inside the same container.
+
+## Core Requirement: Always Include Initiating Actors
+
+**Dynamic views MUST explicitly show the actor(s) that initiate the flow for context:**
+- Start every sequence with the external actor (user, external system, scheduler)
+- Show which user action triggers which internal flows
+- Make causality explicit: "Who does what? When? Why?"
+- This answers: "What triggers this behavior? Who is involved?"
+
+## Organization & Purpose
+
+Place sequence/dynamic views in the `'Use Cases'` subfolder to show **temporal flows** - how the system behaves during important operations.
+
+**Types of use cases to document:**
+- **User workflows:** Upload → validation → processing → storage (happy path)
+- **Validation & error flows:** Input validation, exception handling, retries
+- **Async patterns:** Message queues, background jobs, notifications
+- **Data flows:** Data movement through system (retrieval, transformation, storage)
+- **Disaster recovery:** Failover, replication, recovery procedures
+- **Integration patterns:** External system interactions, polling, webhooks
+
+```likec4
+views 'Use Cases' {
+  dynamic view upload_flow { ... }
+  dynamic view retrieval_flow { ... }
+  dynamic view backup_replication { ... }
+  dynamic view error_handling { ... }
+}
+```
+
+## Requirements
+
+1. **Use `dynamic view`** with descriptive ID
+2. **Include initiating actor** - ALWAYS start with external actor (user, system, scheduler)
+3. **No relationship kinds:** Use plain `->` not `-[kind]->`
+4. **Step labels:** Add descriptive text for each interaction explaining WHAT happens
+5. **Temporal order:** Steps execute top-to-bottom showing sequence
+6. **Folder organization:** Group all use cases in `views 'Use Cases'` subfolder
+7. **Title format:** "[WorkflowName]" (e.g., "Upload") — the folder already provides the category
+8. **CRITICAL: No parent-child relationships** - Cannot show `container -> container.component`
+
+## Parent-Child Restriction
+
+**Dynamic views CANNOT show a parent element calling its own child:**
+
+```likec4
+// ❌ INVALID: Container calling its own component
+developer -> mySystem.webapp
+mySystem.webapp -> mySystem.webapp.authModule   // ❌ COMPILATION ERROR!
+
+// ✅ CORRECT: Actor directly accesses component
+developer -> mySystem.webapp.authModule 'Initiates login'
+mySystem.webapp.authModule -> ldapServer 'Validates credentials'
+```
+
+**Why this restriction exists:**
+- Dynamic views show interactions BETWEEN independent parts
+- Parent-child is a containment relationship, not an interaction
+- In real systems, actors interact with specific components, not abstract containers
+
+## Example
+
+```likec4
+views 'Use Cases' {
+  dynamic view sequence_upload {
+    title 'Document Upload Flow'
+    
+    user -> mySystem.webapp 'Opens upload form'
+    mySystem.webapp -> mySystem.api 'POST /upload'
+    mySystem.api -> mySystem.storage 'Store file'
+    mySystem.api -> mySystem.queue 'Queue processing job'
+    mySystem.queue -> mySystem.worker 'Execute job'
+    mySystem.worker -> mySystem.database 'Update metadata'
+  }
+}
+```

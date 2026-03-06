@@ -1,0 +1,145 @@
+/**
+ * AleFest Café V1 - Le Comptoir
+ * Architecture asynchrone : commande au comptoir, événements internes sans notification mobile
+ */
+
+model {
+  // NIVEAU CONTEXTE C1 - Acteurs et système
+
+  festivalier = Actor_Person 'Festivalier' {
+    style {
+      icon @/lucide-static/circle-user-round.svg
+    }
+
+    description '''
+      Client du stand café.
+      Commande au comptoir et attend son café sur place.
+    '''
+  }
+
+  barista = Actor_Staff 'Barista' {
+    style {
+      icon @/lucide-static/badge.svg
+    }
+
+    description '''
+      Prépare les commandes et met à jour leur statut en temps réel.
+    '''
+  }
+  
+  // Système
+  alefestCoffee = System_New 'AleFest Café' {
+    style {
+      icon @/lucide-static/coffee.svg
+    }
+
+    description '''
+      Système de commande du stand café.
+      V1 : commande au comptoir, services découplés via RabbitMQ,
+      sans notifications mobiles.
+    '''
+
+    // NIVEAU CONTAINERS C2 - Conteneurs applicatifs
+
+    counterApp = Container_Spa 'Application Comptoir' {
+      technology 'React, TypeScript, Vite'
+      style {
+        icon @/lucide-static/app-window.svg
+      }
+
+      description '''
+        Borne tactile de commande au comptoir.
+      '''
+    }
+
+    baristaScreen = Container_Spa 'Écran Barista' {
+      technology 'React, TypeScript, WebSocket'
+      style {
+        icon @/lucide-static/monitor.svg
+      }
+
+      description '''
+        Écran de suivi de file pour le barista.
+      '''
+    }
+
+    orderService = Container_Api 'Service de Commandes' {
+      technology 'Node.js, Express, RabbitMQ client'
+      style {
+        icon @/lucide-static/square-terminal.svg
+      }
+
+      description '''
+        Crée les commandes et publie l’événement order.placed.
+      '''
+    }
+
+    preparationService = Container_Api 'Service Préparation' {
+      technology 'Node.js, Express, WebSocket, RabbitMQ client'
+      style {
+        icon @/lucide-static/workflow.svg
+      }
+
+      description '''
+        Gère la file de préparation et publie les changements de statut.
+      '''
+    }
+
+    eventBus = Container_Queue 'RabbitMQ' {
+      technology 'RabbitMQ 3.12'
+      style {
+        icon @/lucide-static/rabbit.svg
+      }
+
+      description '''
+        Transporte les événements entre services.
+      '''
+    }
+
+    database = Container_Database 'PostgreSQL' {
+      technology 'PostgreSQL 16'
+      style {
+        icon tech:postgresql
+      }
+
+      description '''
+        Base partagée pour commandes et menu.
+      '''
+    }
+
+    // RELATIONS C2 - Interfaces vers services
+
+    counterApp -[calls]-> orderService 'POST /orders - Créer la commande comptoir' {
+      technology 'HTTPS, REST'
+    }
+    counterApp -[calls]-> orderService 'GET /orders/:id - Consulter le statut' {
+      technology 'HTTPS, REST'
+    }
+
+    baristaScreen -[calls]-> preparationService 'WebSocket - Recevoir les mises à jour de file' {
+      technology 'WebSocket, Socket.io'
+    }
+    baristaScreen -[calls]-> preparationService 'PATCH /queue/:id - Mettre à jour le statut' {
+      technology 'HTTPS, REST'
+    }
+
+    // RELATIONS C2 - Architecture événementielle
+
+    orderService -[async]-> eventBus 'Publier order.placed'
+    eventBus -[async]-> preparationService 'Recevoir order.placed'
+    preparationService -[async]-> eventBus 'Publier order.preparing et order.ready'
+
+    // RELATIONS C2 - Accès base de données
+
+    orderService -[reads]-> database 'Lire menu et commandes'
+    orderService -[writes]-> database 'Créer et mettre à jour les commandes'
+
+    preparationService -[reads]-> database 'Lire les commandes en cours'
+    preparationService -[writes]-> database 'Mettre à jour les statuts'
+  }
+
+  // RELATIONS C1 - Interactions acteurs/applications
+
+  festivalier -[uses]-> alefestCoffee.counterApp 'Passe sa commande au comptoir'
+  barista -[uses]-> alefestCoffee.baristaScreen 'Consulte et gère la file'
+}

@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagram as Code — Reference Slide Deck</title>
+<!--
+  Reference template for the visual-explainer skill: slide decks.
+  Electric Navy preset — deep navy, Poppins Black headings, electric yellow-lime accent.
+  Inspired by the OnePoint Atlantique Day presentation template.
+  Distinctly different from the Midnight Editorial (serif/gold), Warm Signal (cream/terracotta),
+  Terminal Mono (green/dark), and Swiss Clean (white/blue) presets.
+  Key patterns demonstrated:
+  - All 10 slide types in a cohesive narrative
+  - SlideEngine JS: keyboard/touch/wheel nav, progress bar, dots, counter, hints
+  - Cinematic transitions: fade + translateY + scale, staggered child reveals
+  - Per-slide background variation (gradient direction, accent glow position)
+  - Decorative SVG accents (corner marks, accent line dividers)
+  - Typography scale: 120px display (Poppins 900) → 48px heading (700) → 22px body (400) → 14px label
+  - Compositional variety: centered, left-heavy, split, full-bleed
+  - Three-color semantic system: yellow-lime (key), orange (warning), cyan (new)
+  - Mermaid at presentation scale (18px labels, 2px edges, 8 nodes)
+  - Dark-first with light mode via prefers-color-scheme
+  - Responsive height breakpoints for projection and small viewports
+  - Nav chrome with backdrop blur for mixed-background visibility
+  - Event delegation: Mermaid zoom and table scroll don't trigger slide nav
+  - prefers-reduced-motion respected
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ THEME: Electric Navy (OnePoint Atlantique Day) ============ */
+  :root {
+    --font-body: 'Poppins', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --bg: #080d2a;
+    --surface: #0c1238;
+    --surface2: #101848;
+    --surface-elevated: #162058;
+    --border: rgba(251, 254, 122, 0.06);
+    --border-bright: rgba(251, 254, 122, 0.40);
+    --text: #e8f0f8;
+    --text-dim: #a0b8d0;
+    --accent: #fbfe7a;
+    --accent-dim: rgba(251, 254, 122, 0.08);
+    --accent2: #f08848;
+    --accent2-dim: rgba(240, 136, 72, 0.10);
+    --accent3: #38b4e8;
+    --accent3-dim: rgba(56, 180, 232, 0.10);
+    --code-bg: #060820;
+    --code-text: #cde5f5;
+    --green: #5cc038;
+    --green-dim: rgba(92, 192, 56, 0.10);
+    --red: #f08848;
+    --red-dim: rgba(240, 136, 72, 0.10);
+    --blue: #38b4e8;
+    --blue-dim: rgba(56, 180, 232, 0.10);
+    --quote-mark: #4a8fa0;
+    --split-light: #d0d0d5;
+    /* --elephant-bg: url(...); — set per-presentation PNG data URI */
+    /* --quote-bg: url(...); — set per-presentation PNG data URI for  opening "  mark */
+  }
+
+  .slide-crystals {
+    position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
+  }
+  .slide-crystals svg { width: 100%; height: 100%; display: block; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--text);
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+
+
+  /* ============ GLOBAL SCROLLBAR STYLING ============ */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #f5c518 transparent;
+  }
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb { background: #f5c518; border-radius: 4px; }
+  *::-webkit-scrollbar-thumb:hover { background: #ff8c00; }
+  *::-webkit-scrollbar-thumb:active { background: #ff8c00; }
+
+  /* ============ DECK ENGINE ============ */
+  .deck {
+    height: 100dvh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .deck::-webkit-scrollbar { display: none; }
+
+  .slide {
+    height: 100dvh;
+    scroll-snap-align: start;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(40px, 6vh, 80px) clamp(40px, 8vw, 120px);
+    isolation: isolate;
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .slide.visible { opacity: 1; transform: none; }
+
+  .slide .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .slide.visible .reveal { opacity: 1; transform: none; }
+  .slide.visible .reveal:nth-child(1) { transition-delay: 0.1s; }
+  .slide.visible .reveal:nth-child(2) { transition-delay: 0.2s; }
+  .slide.visible .reveal:nth-child(3) { transition-delay: 0.3s; }
+  .slide.visible .reveal:nth-child(4) { transition-delay: 0.4s; }
+  .slide.visible .reveal:nth-child(5) { transition-delay: 0.5s; }
+  .slide.visible .reveal:nth-child(6) { transition-delay: 0.6s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide, .slide .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  }
+
+  /* ============ NAV CHROME ============ */
+  .deck-progress {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: var(--accent); z-index: 100;
+    transition: width 0.3s ease; pointer-events: none;
+  }
+
+  .deck-dots {
+    position: fixed; right: clamp(12px, 2vw, 24px); top: 50%;
+    transform: translateY(-50%); display: flex; flex-direction: column;
+    gap: 6px; z-index: 100; padding: 8px;
+    background: color-mix(in srgb, var(--bg) 60%, transparent 40%);
+    border-radius: 20px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  }
+
+  .deck-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--text-dim); opacity: 0.5; border: none; padding: 10px;
+    box-sizing: content-box; cursor: pointer; transition: opacity 0.2s ease, transform 0.2s ease;
+    background-clip: content-box;
+  }
+  .deck-dot:hover { opacity: 0.6; }
+  .deck-dot.active { opacity: 1; transform: scale(1.5); background: var(--accent); }
+
+  .deck-counter {
+    position: fixed; bottom: clamp(12px, 2vh, 24px); right: clamp(12px, 2vw, 24px);
+    font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);
+    z-index: 100; text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  .deck-hints {
+    position: fixed; bottom: clamp(12px, 2vh, 24px); left: 50%;
+    transform: translateX(-50%); font-family: var(--font-mono);
+    font-size: 11px; color: var(--text-dim); opacity: 0.75; z-index: 100;
+    transition: opacity 0.5s ease; white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  .deck-hints.faded { opacity: 0; pointer-events: none; }
+
+  /* ============ SHARED ELEMENTS ============ */
+  .slide__display {
+    font-size: clamp(48px, 10vw, 120px);
+    font-weight: 900; letter-spacing: -2px; line-height: 0.95; text-wrap: balance;
+  }
+
+  .slide__heading {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700; letter-spacing: -0.5px; line-height: 1.15; text-wrap: balance;
+  }
+
+  .slide__body {
+    font-size: clamp(16px, 2.2vw, 22px);
+    line-height: 1.6; color: var(--text-dim); text-wrap: pretty;
+  }
+
+  .slide__subtitle {
+    font-family: var(--font-mono);
+    font-size: clamp(13px, 1.5vw, 18px);
+    color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  .slide__label {
+    font-family: var(--font-mono);
+    font-size: clamp(12px, 1.3vw, 14px); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--accent); margin-bottom: 12px;
+  }
+
+  .slide__accent-line {
+    display: block; width: 60px; height: 3px;
+    background: var(--accent); margin-top: 16px; border-radius: 2px;
+  }
+
+  .slide__decor { position: absolute; pointer-events: none; z-index: 0; }
+
+  /* ============ SLIDE TYPE: TITLE ============ */
+  .slide--title {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: var(--bg);
+    background-image: var(--elephant-bg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide--title > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .slide--title .slide__display {
+    color: var(--accent);
+    font-size: clamp(44px, 9vw, 108px);
+  }
+
+  /* ============ SLIDE TYPE: DIVIDER ============ */
+  .slide--divider {
+    justify-content: center;
+  }
+
+  .slide--divider .slide__number {
+    font-size: clamp(100px, 22vw, 260px); font-weight: 200; line-height: 0.85;
+    opacity: 0.60; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -55%); pointer-events: none;
+    font-variant-numeric: tabular-nums; color: var(--accent);
+  }
+
+  /* ============ SLIDE TYPE: CONTENT ============ */
+
+  .slide--content .slide__inner {
+    display: grid; grid-template-columns: 3fr 2fr;
+    gap: clamp(24px, 4vw, 60px); align-items: center; width: 100%;
+    position: relative; z-index: 1;
+  }
+  .slide__bullets { list-style: none; padding: 0; }
+  .slide__bullets li {
+    padding: 10px 0 10px 24px; position: relative;
+    font-size: clamp(16px, 2.2vw, 22px); line-height: 1.55; color: var(--text-dim);
+  }
+  .slide__bullets li::before {
+    content: ''; position: absolute; left: 0; top: 20px;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  }
+  .slide__bullets li strong { color: var(--text); font-weight: 700; }
+  .slide__aside { display: flex; align-items: center; justify-content: center; min-height: 200px; }
+
+  /* ============ SLIDE TYPE: SPLIT ============ */
+  .slide--split { padding: 0; }
+  .slide--split .slide__panels {
+    display: grid; grid-template-columns: 1fr 1fr; height: 100%;
+  }
+  .slide--split .slide__panel {
+    padding: clamp(40px, 6vh, 80px) clamp(32px, 4vw, 60px);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .slide--split .slide__panel--primary {
+    background: var(--bg);
+    border-right: 1px solid rgba(251,254,122,0.06);
+  }
+  .slide--split .slide__panel--secondary {
+    background: var(--split-light);
+    --text: #1a1a2e;
+    --text-dim: #3a3a50;
+    color: #1a1a2e;
+  }
+  .slide--split .slide__panel--secondary .slide__heading { color: #1a1a2e; }
+  .slide--split .slide__panel--secondary .slide__body { color: #3a3a50; }
+  .slide--split .slide__panel--secondary .slide__bullets li { color: #3a3a50; }
+  .slide--split .slide__panel--secondary .slide__bullets li strong { color: #1a1a2e; }
+
+  /* ============ SLIDE TYPE: DIAGRAM ============ */
+  .slide--diagram { padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 60px); }
+  .slide--diagram .slide__heading { margin-bottom: clamp(8px, 1.5vh, 20px); }
+
+  .mermaid-wrap {
+    position: relative; display: flex; flex-direction: column;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px; overflow: hidden; flex: 1; min-height: 0;
+  }
+  .mermaid-scroll {
+    overflow: auto; flex: 1; min-height: 0; width: 100%;
+    display: flex;
+  }
+  .mermaid-wrap .mermaid {
+    transition: transform 0.2s ease; transform-origin: 0 0;
+    margin: auto; flex-shrink: 0;
+    cursor: grab;
+  }
+  .mermaid-wrap.is-panning .mermaid { cursor: grabbing; }
+  .zoom-controls {
+    position: absolute; top: 8px; right: 8px; display: flex; gap: 2px; z-index: 10;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 2px;
+  }
+  .zoom-controls button {
+    width: 32px; height: 32px; border: none; background: transparent; color: #f5c518;
+    font-family: var(--font-mono); font-size: 15px; cursor: pointer; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s;
+  }
+  .zoom-controls button:hover { background: #ff8c00; color: #fff; }
+  .zoom-controls button:active { background: #e07800; color: #fff; }
+  .slide--diagram .mermaid svg {
+    height: auto !important;
+    display: block; margin: 0 auto;
+  }
+  .slide--diagram .mermaid .nodeLabel {
+    font-size: 16px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+  }
+  .slide--diagram .mermaid .edgeLabel {
+    font-family: var(--font-mono) !important; font-size: 13px !important;
+    overflow: visible !important;
+  }
+  .slide--diagram .mermaid .edgeLabel foreignObject {
+    overflow: visible !important;
+  }
+  .slide--diagram .mermaid .edgeLabel .label {
+    white-space: nowrap !important;
+    padding: 2px 6px !important;
+    background: var(--surface) !important;
+  }
+  .slide--diagram .mermaid .node rect,
+  .slide--diagram .mermaid .node circle,
+  .slide--diagram .mermaid .node polygon { stroke-width: 2px; }
+  .slide--diagram .mermaid .node foreignObject {
+    overflow: visible !important;
+  }
+  .slide--diagram .mermaid .node foreignObject > div {
+    overflow: visible !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* ============ SLIDE TYPE: DEMO / FULLSCREEN CODE ============ */
+  .slide--demo { background: var(--code-bg); }
+  .slide__demo-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; width: 100%; height: 70dvh; margin-top: 16px;
+  }
+  .slide__demo-pane {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: auto; padding: 0;
+    display: flex; flex-direction: column;
+  }
+  .slide__demo-pane-header {
+    background: var(--surface2); border-bottom: 1px solid var(--border);
+    padding: 10px 16px; font-family: var(--font-mono); font-size: 13px;
+    color: var(--text-dim); letter-spacing: 0.5px; flex-shrink: 0;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .slide__demo-pane-header .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .slide__demo-pane pre { padding: 20px; margin: 0; overflow: auto; flex: 1; }
+  .slide__demo-pane code {
+    font-family: var(--font-mono); font-size: clamp(13px, 1.4vw, 16px);
+    line-height: 1.65; color: var(--code-text);
+  }
+
+  /* ============ SLIDE TYPE: DASHBOARD ============ */
+  .slide--dashboard .slide__kpis {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(clamp(140px,20vw,220px),1fr));
+    gap: clamp(12px, 2vw, 24px);
+  }
+  .slide__kpi {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+    border: 1px solid var(--border-bright);
+    border-top: 3px solid var(--accent);
+    border-radius: 0 0 12px 12px;
+    padding: clamp(16px, 3vh, 32px) clamp(16px, 2vw, 24px);
+  }
+  .slide__kpi-val {
+    font-size: clamp(36px, 6vw, 64px); font-weight: 400;
+    letter-spacing: -1.5px; line-height: 1.1; font-variant-numeric: tabular-nums;
+  }
+  .slide__kpi-label {
+    font-family: var(--font-mono); font-size: clamp(12px, 1.3vw, 14px); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin-top: 8px;
+  }
+  .slide__kpi-trend { font-family: var(--font-mono); font-size: 13px; margin-top: 4px; }
+
+  /* ============ SLIDE TYPE: TABLE ============ */
+  .slide--table { padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 60px); }
+  .table-wrap {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; flex: 1; min-height: 0;
+  }
+  .table-scroll { overflow-x: auto; }
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    background: var(--surface2); font-family: var(--font-mono); font-size: clamp(12px, 1.3vw, 14px);
+    font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim);
+    text-align: left; padding: clamp(10px, 1.5vh, 16px) clamp(14px, 2vw, 24px);
+    border-bottom: 2px solid var(--border-bright); white-space: nowrap;
+  }
+  .data-table td {
+    padding: clamp(10px, 1.5vh, 16px) clamp(14px, 2vw, 24px);
+    border-bottom: 1px solid var(--border); font-size: clamp(14px, 1.8vw, 20px); vertical-align: top;
+  }
+  .data-table tbody tr:last-child td { border-bottom: none; }
+  .data-table tbody tr:nth-child(even) { background: var(--surface2); }
+  .data-table tbody tr { transition: background 0.15s; }
+  .data-table tbody tr:hover { background: var(--accent-dim); }
+  .data-table code {
+    font-family: var(--font-mono); font-size: 0.85em;
+    background: var(--accent-dim); color: var(--accent); padding: 1px 5px; border-radius: 3px;
+  }
+
+  /* ============ SLIDE TYPE: CODE ============ */
+  .slide--code { align-items: center; }
+  .slide__code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border-bright);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 12px 12px 0;
+    padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 48px);
+    max-width: 900px; width: 100%; position: relative;
+  }
+  .slide__code-filename {
+    position: absolute; top: -12px; left: 24px;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    padding: 4px 12px; border-radius: 4px; background: var(--accent); color: var(--bg);
+  }
+  .slide__code-block pre { margin: 0; overflow-x: auto; }
+  .slide__code-block code { font-family: var(--font-mono); font-size: clamp(14px, 1.6vw, 18px); line-height: 1.7; color: var(--code-text); }
+  .slide__code-block .hl { color: var(--accent); }
+  .slide__code-block .kw { color: var(--accent3); }
+  .slide__code-block .str { color: var(--green); }
+  .slide__code-block .cm { color: var(--text-dim); }
+
+  /* ============ SLIDE TYPE: CODE-DIFF (dual merge-request style) ============ */
+  .slide--code-diff { align-items: center; }
+  .slide__code-diff {
+    display: grid; grid-template-columns: 1fr 1fr; gap: clamp(12px, 2vw, 24px);
+    max-width: 1200px; width: 100%;
+  }
+  .slide__code-diff .slide__code-block {
+    max-width: none; border-radius: 12px; border-left: 4px solid var(--border);
+  }
+  .slide__code-diff .slide__code-block--before {
+    border-left-color: var(--red);
+  }
+  .slide__code-diff .slide__code-block--after {
+    border-left-color: var(--green);
+  }
+  .slide__code-diff .slide__code-block--before .slide__code-filename {
+    background: var(--red); color: var(--bg);
+  }
+  .slide__code-diff .slide__code-block--after .slide__code-filename {
+    background: var(--green); color: var(--bg);
+  }
+  .slide__code-diff .line-del {
+    display: block; color: var(--red); background: var(--red-dim);
+    margin: 0 calc(-1 * clamp(24px, 4vw, 48px)); padding: 0 clamp(24px, 4vw, 48px);
+  }
+  .slide__code-diff .line-add {
+    display: block; color: var(--green); background: var(--green-dim);
+    margin: 0 calc(-1 * clamp(24px, 4vw, 48px)); padding: 0 clamp(24px, 4vw, 48px);
+  }
+  .slide__code-diff .line-ctx {
+    display: block; color: var(--text-dim);
+  }
+  .slide__code-diff .slide__diff-label {
+    font-family: var(--font-mono); font-size: clamp(11px, 1.2vw, 13px);
+    text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .slide__code-diff .slide__diff-caption {
+    font-size: clamp(13px, 1.5vw, 17px); color: var(--text-dim);
+    margin-top: 12px; line-height: 1.5;
+  }
+
+  /* ============ SLIDE TYPE: QUOTE ============ */
+  .slide--quote {
+    justify-content: center; align-items: flex-start; text-align: left;
+    padding: clamp(60px,10vh,120px) clamp(80px,14vw,240px);
+  }
+  .slide__quote-mark {
+    display: block;
+    pointer-events: none; margin-bottom: 20px;
+    height: clamp(40px, 8vw, 80px);
+  }
+  .slide__quote-mark::before {
+    content: '\201C'; /* fallback: Unicode left double quotation mark */
+    display: inline-block;
+    font-size: clamp(80px, 12vw, 160px);
+    line-height: 0.8;
+    font-family: var(--font-body);
+    font-weight: 900;
+    color: var(--quote-mark);
+    opacity: 0.55;
+    /* If --quote-bg is set, use it as image instead of text: */
+    /* background-image: var(--quote-bg); background-size: contain; background-repeat: no-repeat; */
+    /* In that case, set content: '' and height: 100%; aspect-ratio: 72 / 62; transform: rotate(180deg); */
+  }
+  .slide__quote-mark--close {
+    text-align: right; width: 100%; margin-top: -10px; margin-bottom: 0;
+  }
+  .slide__quote-mark--close::before {
+    content: '\201D'; /* Unicode right double quotation mark */
+  }
+  .slide--quote blockquote {
+    font-size: clamp(28px, 4.5vw, 56px); font-weight: 900; line-height: 1.2;
+    font-style: normal; color: #ffffff;
+  }
+  .slide--quote cite {
+    font-size: clamp(14px, 1.8vw, 20px); font-style: italic;
+    margin-top: clamp(16px, 3vh, 32px); display: block;
+    text-align: right; color: var(--text-dim);
+  }
+
+  /* ============ SLIDE TYPE: FULL-BLEED ============ */
+  .slide--bleed { padding: 0; justify-content: flex-end; }
+  .slide__bg { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; }
+  .slide__bg--gradient {
+    background: linear-gradient(135deg, #040818 0%, #080d2a 40%, #0c1238 100%);
+  }
+  .slide--bleed .slide__content { position: relative; z-index: 2; padding: clamp(40px,6vh,80px) clamp(40px,8vw,120px); color: #fff; }
+  .slide--bleed .slide__heading { color: #fff; }
+  .slide--bleed .slide__subtitle { color: #d0d8e8; }
+
+  /* ============ SLIDE TYPE: EMBED (local HTML iframe) ============ */
+  .slide--embed { padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 60px); }
+  .slide--embed .slide__heading { margin-bottom: clamp(8px, 1.5vh, 20px); }
+  .embed-wrap {
+    position: relative; flex: 1; min-height: 0;
+    border: 1px solid var(--border-bright); border-radius: 12px;
+    overflow: hidden; background: #fff;
+  }
+  .embed-wrap iframe {
+    width: 100%; height: 100%; border: none; display: block;
+    background: #fff;
+  }
+  .embed-wrap .embed-controls {
+    position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; z-index: 10;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 2px;
+  }
+  .embed-wrap .embed-controls button {
+    width: 32px; height: 32px; border: none; background: transparent; color: var(--text-dim);
+    font-family: var(--font-mono); font-size: 14px; cursor: pointer; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s;
+  }
+  .embed-wrap .embed-controls button:hover { background: var(--border); color: var(--text); }
+  .embed-wrap .embed-fallback {
+    position: absolute; inset: 0; display: none; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px;
+    background: var(--surface); color: var(--text-dim); text-align: center; padding: 40px;
+  }
+  .embed-wrap .embed-fallback.visible { display: flex; }
+  .embed-wrap .embed-fallback a {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px; border-radius: 8px; font-family: var(--font-mono);
+    font-size: 14px; text-decoration: none; color: var(--bg);
+    background: var(--accent); font-weight: 600; transition: opacity 0.2s;
+  }
+  .embed-wrap .embed-fallback a:hover { opacity: 0.85; }
+
+  /* ============ SLIDE TYPE: LAUNCHER (open in new tab) ============ */
+  .launcher {
+    flex: 1; min-height: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 28px;
+    border: 1px solid var(--border-bright); border-radius: 16px;
+    background: radial-gradient(ellipse at 60% 40%, rgba(251,254,122,0.04) 0%, transparent 70%),
+               var(--surface);
+    padding: 48px 40px; text-align: center; position: relative; overflow: hidden;
+  }
+  .launcher::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    border-radius: 16px;
+    background: conic-gradient(from 180deg at 50% 50%, transparent 0deg, rgba(251,254,122,0.06) 120deg, transparent 240deg);
+  }
+  .launcher__icon {
+    width: 80px; height: 80px; border-radius: 20px;
+    background: var(--surface2); border: 1px solid var(--border-bright);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; color: var(--accent);
+  }
+  .launcher__title {
+    font-family: var(--font-heading); font-size: clamp(20px, 3vw, 28px);
+    font-weight: 700; color: var(--text); margin: 0;
+  }
+  .launcher__desc {
+    font-size: clamp(14px, 1.8vw, 18px); color: var(--text-dim);
+    max-width: 520px; line-height: 1.6; margin: 0;
+  }
+  .launcher__btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 36px; border-radius: 12px; border: none;
+    background: var(--accent); color: var(--bg);
+    font-family: var(--font-heading); font-weight: 700;
+    font-size: clamp(16px, 2vw, 20px); cursor: pointer;
+    text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 24px rgba(251,254,122,0.15);
+  }
+  .launcher__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 32px rgba(251,254,122,0.3);
+  }
+  .launcher__btn svg { width: 22px; height: 22px; }
+  .launcher__hint {
+    font-family: var(--font-mono); font-size: 13px; color: var(--text-dim);
+    opacity: 0.6; margin: 0;
+  }
+
+  /* ============ CALLOUT BOX ============ */
+  .callout {
+    border-left: 3px solid var(--accent); background: var(--accent-dim);
+    border-radius: 0 8px 8px 0; padding: 14px 20px; margin-top: 16px;
+    font-size: clamp(14px, 1.8vw, 18px); line-height: 1.5;
+  }
+  .callout--blue { border-color: var(--accent3); background: var(--accent3-dim); }
+  .callout--orange { border-color: var(--accent2); background: var(--accent2-dim); }
+  .callout--green { border-color: var(--green); background: var(--green-dim); }
+
+  /* ============ TAG BADGE ============ */
+  .badge {
+    display: inline-block; font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1px; padding: 4px 12px; border-radius: 20px;
+    border: 1px solid var(--border-bright); color: var(--text-dim); margin: 3px 2px;
+  }
+  .badge--accent { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+  .badge--blue { background: var(--accent3-dim); border-color: var(--accent3); color: var(--accent3); }
+  .badge--green { background: var(--green-dim); border-color: var(--green); color: var(--green); }
+  .badge--orange { background: var(--accent2-dim); border-color: var(--accent2); color: var(--accent2); }
+
+
+  /* ============ PIPELINE ============ */
+  .pipeline {
+    display: flex; align-items: stretch; gap: 0;
+    flex: 1; min-height: 0; margin-top: clamp(12px, 2vh, 24px);
+  }
+  .pipeline__step {
+    flex: 1; background: var(--surface); border: 1px solid var(--border);
+    border-top: 3px solid var(--accent); border-radius: 10px;
+    padding: clamp(14px, 2.5vh, 28px) clamp(12px, 1.5vw, 22px);
+    display: flex; flex-direction: column; min-width: 0; overflow-wrap: break-word;
+  }
+  .pipeline__num {
+    font-size: clamp(10px, 1.2vw, 13px); font-weight: 600;
+    color: var(--accent); letter-spacing: 1px;
+  }
+  .pipeline__name {
+    font-size: clamp(16px, 2vw, 24px); font-weight: 700;
+    margin: clamp(4px, 0.8vh, 8px) 0;
+  }
+  .pipeline__desc {
+    font-size: clamp(12px, 1.3vw, 16px); color: var(--text-dim);
+    line-height: 1.5; flex: 1;
+  }
+  .pipeline__file {
+    font-size: clamp(10px, 1.1vw, 12px); color: var(--accent);
+    background: var(--accent-dim); padding: 3px 8px; border-radius: 4px;
+    margin-top: clamp(8px, 1.5vh, 16px); align-self: flex-start;
+    font-family: var(--font-mono);
+  }
+  .pipeline__arrow {
+    display: flex; align-items: center;
+    padding: 0 clamp(3px, 0.4vw, 6px); color: var(--accent);
+    flex-shrink: 0; opacity: 0.4;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-height: 700px) {
+    .slide { padding: clamp(24px, 4vh, 40px) clamp(32px, 6vw, 80px); }
+    .slide__display { font-size: clamp(36px, 8vw, 72px); }
+  }
+  @media (max-width: 768px) {
+    .slide--content .slide__inner { grid-template-columns: 1fr; }
+    .slide--content .slide__aside { display: none; }
+    .slide--split .slide__panels { grid-template-columns: 1fr; }
+    .slide__code-diff { grid-template-columns: 1fr; }
+    .slide__demo-grid { grid-template-columns: 1fr; }
+    .slide--dashboard .slide__kpis { grid-template-columns: repeat(2, 1fr); }
+    .deck-dots { display: none; }
+    .pipeline { flex-direction: column; }
+    .pipeline__arrow { justify-content: center; padding: 4px 0; transform: rotate(90deg); }
+  }
+
+  /* ============ ACCESSIBILITY ============ */
+  /* Focus-visible styles for keyboard navigation (WCAG 2.4.7) */
+  .deck-dot:focus-visible,
+  .zoom-controls button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .deck-dot:focus-visible {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+
+  /* High contrast mode (WCAG 1.4.11) */
+  @media (prefers-contrast: more) {
+    :root {
+      --border: rgba(251, 254, 122, 0.15);
+      --border-bright: rgba(251, 254, 122, 0.35);
+      --text-dim: #c0d0e8;
+      --accent-dim: rgba(251, 254, 122, 0.15);
+    }
+    .slide__code-block { border-width: 2px; border-left-width: 5px; }
+    .slide__code-diff .slide__code-block { border-left-width: 5px; }
+    .slide__kpi { border-width: 2px; border-top-width: 4px; }
+    .callout { border-left-width: 4px; }
+    .table-wrap { border-width: 2px; }
+    .data-table th { border-bottom-width: 3px; }
+    .data-table td { border-bottom-width: 2px; }
+    .mermaid-wrap { border-width: 2px; }
+  }
+
+  /* Reduced motion (WCAG 2.3.3) */
+  @media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; }
+  }
+
+  /* ============ ACCESSIBILITY EXTRAS ============ */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0;
+    margin: -1px; overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+  }
+
+  .speaker-notes { display: none; }
+
+</style>
+</head>
+<body>
+
+<div class="deck" role="region" aria-label="Slide deck presentation" aria-roledescription="carousel">
+
+  <!-- SLIDE 1: TITLE — centered, crystal decorations injected by JS -->
+  <section class="slide slide--title" aria-label="Slide 1: Title">
+    <div class="reveal">
+      <p class="slide__subtitle" style="margin-bottom:clamp(16px,2vh,32px);letter-spacing:2px;">Conférence Technique &mdash; 2026</p>
+    </div>
+    <h1 class="slide__display reveal">Diagram<br>as Code</h1>
+    <div class="reveal">
+      <p class="slide__subtitle" style="margin-top:clamp(16px,2vh,32px);">Architecturer avec du code, pas des clics</p>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: SECTION DIVIDER -->
+  <section class="slide slide--divider" style="background-image:radial-gradient(ellipse at 80% 60%, var(--accent-dim) 0%, transparent 40%);" aria-label="Slide 2: Pourquoi">
+    <span class="slide__number">01</span>
+    <div>
+      <h2 class="slide__heading reveal">Pourquoi ?</h2>
+      <span class="slide__accent-line reveal"></span>
+      <p class="slide__subtitle reveal" style="margin-top:16px;">Le problème avec les diagrammes &laquo;&nbsp;à la souris&nbsp;&raquo;</p>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: CONTENT (left-heavy asymmetric) -->
+  <section class="slide slide--content" style="background-image:radial-gradient(ellipse at 20% 80%, var(--accent-dim) 0%, transparent 45%);" aria-label="Slide 3: L'architecture qui vit dans PowerPoint">
+    <div class="slide__inner">
+      <div>
+        <p class="slide__label reveal">Problème</p>
+        <h2 class="slide__heading reveal">L'architecture qui vit dans PowerPoint</h2>
+        <ul class="slide__bullets">
+          <li class="reveal">Diagrammes déconnectés du code réel</li>
+          <li class="reveal">Outdatés dès le deuxième sprint</li>
+          <li class="reveal">Impossible à versionner ou à faire évoluer en équipe</li>
+          <li class="reveal">Revues d'archi sur des captures d'écran floues</li>
+        </ul>
+      </div>
+      <div class="slide__aside reveal">
+        <svg viewBox="0 0 160 160" width="160" height="160">
+          <rect x="30" y="30" width="100" height="70" rx="6" fill="none" stroke="var(--red)" stroke-width="2" opacity="0.35"/>
+          <line x1="50" y1="55" x2="110" y2="55" stroke="var(--red)" stroke-width="1.5" opacity="0.3" stroke-dasharray="6 3"/>
+          <line x1="50" y1="70" x2="90" y2="70" stroke="var(--red)" stroke-width="1.5" opacity="0.3" stroke-dasharray="6 3"/>
+          <circle cx="80" cy="85" r="5" fill="var(--red)" opacity="0.4"/>
+          <text x="80" y="125" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--text-dim)">STALE DIAGRAM</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide slide--split" aria-label="Slide 4: Avant et après">
+    <div class="slide__panels">
+      <div class="slide__panel slide__panel--primary">
+        <p class="slide__label reveal" style="color:var(--red);">Avant</p>
+        <h2 class="slide__heading reveal" style="font-size:clamp(22px,3.5vw,36px);">La souris</h2>
+        <ul class="slide__bullets" style="margin-top:16px;">
+          <li class="reveal">Drag &amp; drop dans Draw.io ou Visio</li>
+          <li class="reveal">Stocké en .vsdx ou .png</li>
+          <li class="reveal">Pas de diff, pas d'historique</li>
+          <li class="reveal">Une personne &mdash; un silo</li>
+        </ul>
+      </div>
+      <div class="slide__panel slide__panel--secondary">
+        <p class="slide__label reveal" style="color:var(--accent);">Après</p>
+        <h2 class="slide__heading reveal" style="font-size:clamp(22px,3.5vw,36px);">Le texte</h2>
+        <ul class="slide__bullets" style="margin-top:16px;">
+          <li class="reveal">YAML / DSL versioné dans Git</li>
+          <li class="reveal">CI qui valide et génère les images</li>
+          <li class="reveal">PR, revues, diffs lisibles</li>
+          <li class="reveal">Toujours synchronisé avec le code</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: SECTION DIVIDER -->
+  <section class="slide slide--divider" style="background-image:radial-gradient(ellipse at 30% 40%, var(--accent3-dim) 0%, transparent 40%);" aria-label="Slide 5: Outillage">
+    <span class="slide__number">02</span>
+    <div>
+      <h2 class="slide__heading reveal">Outillage</h2>
+      <span class="slide__accent-line reveal" style="background:var(--accent3);"></span>
+      <p class="slide__subtitle reveal" style="margin-top:16px;">Les outils du Diagram as Code</p>
+    </div>
+  </section>
+
+  <section class="slide slide--diagram" aria-label="Slide 6: Flux d'un diagramme as code">
+    <h2 class="slide__heading reveal">Flux d&rsquo;un diagramme as code</h2>
+    <div class="mermaid-wrap reveal">
+    <div class="zoom-controls" role="toolbar" aria-label="Diagram zoom controls">
+      <button onclick="zoomDiagram(this,1.2)" title="Zoom in" aria-label="Zoom in">+</button>
+      <button onclick="zoomDiagram(this,0.8)" title="Zoom out" aria-label="Zoom out">&minus;</button>
+      <button onclick="resetZoom(this)" title="Reset" aria-label="Reset zoom">&#8634;</button>
+      </div>
+      <div class="mermaid-scroll">
+      <pre class="mermaid">
+graph LR
+  Code["Source texte<br/>.yaml / .dsl"] --> Git["Git / PR"]
+  Git --> CI["CI Pipeline"]
+  CI --> Validate["Validation"]
+  CI --> Render["Rendu SVG/PNG"]
+  Render --> Doc["Documentation"]
+  Render --> Archi["Portail Archi"]
+  Validate --> Review["Revue de code"]
+
+  classDef primary fill:#fbfe7a22,stroke:#fbfe7a,stroke-width:2px
+  classDef secondary fill:#38b4e822,stroke:#38b4e8,stroke-width:2px
+  classDef output fill:#5cc03822,stroke:#5cc038,stroke-width:2px
+
+  class Code,Git primary
+  class CI,Validate,Render secondary
+  class Doc,Archi,Review output
+      </pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: DASHBOARD -->
+  <section class="slide slide--dashboard" style="background-image:radial-gradient(ellipse at 70% 30%, var(--accent-dim) 0%, transparent 40%);" aria-label="Slide 7: L'impact en chiffres">
+    <h2 class="slide__heading reveal">L&rsquo;impact en chiffres</h2>
+    <div class="slide__kpis">
+      <div class="slide__kpi reveal">
+        <div class="slide__kpi-val" style="color:var(--accent);">3×</div>
+        <div class="slide__kpi-label">Outils couverts</div>
+        <div class="slide__kpi-trend" style="color:var(--text-dim);">Mermaid · PlantUML · LikeC4</div>
+      </div>
+      <div class="slide__kpi reveal">
+        <div class="slide__kpi-val" style="color:var(--green);">100%</div>
+        <div class="slide__kpi-label">Versionnable</div>
+        <div class="slide__kpi-trend" style="color:var(--green);">Git-native, diffable</div>
+      </div>
+      <div class="slide__kpi reveal">
+        <div class="slide__kpi-val" style="color:var(--blue);">0</div>
+        <div class="slide__kpi-label">Clic requis</div>
+        <div class="slide__kpi-trend" style="color:var(--text-dim);">génération automatique CI</div>
+      </div>
+      <div class="slide__kpi reveal">
+        <div class="slide__kpi-val" style="color:var(--accent);">∞</div>
+        <div class="slide__kpi-label">Formats de sortie</div>
+        <div class="slide__kpi-trend" style="color:var(--green);">SVG · PNG · PDF · HTML</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide slide--table" aria-label="Slide 8: Comparatif des outils">
+    <h2 class="slide__heading reveal">Comparatif des outils</h2>
+    <div class="table-wrap reveal" style="flex:1; min-height:0; margin-top:clamp(8px,1.5vh,20px);">
+      <div class="table-scroll">
+        <table class="data-table" aria-label="Comparatif des outils Diagram as Code">
+          <thead><tr><th scope="col">Outil</th><th scope="col">Syntaxe</th><th scope="col">Rendu</th><th scope="col">Cas d&rsquo;usage</th><th scope="col">Intégration CI</th></tr></thead>
+          <tbody>
+            <tr><td>Mermaid</td><td><code>graph TD</code></td><td>SVG / HTML</td><td>Flowcharts, séquences, ER</td><td style="color:var(--green);">Native GitHub</td></tr>
+            <tr><td>PlantUML</td><td>@startuml</td><td>PNG / SVG</td><td>UML complet, C4</td><td style="color:var(--accent);">Via plugin</td></tr>
+            <tr><td>LikeC4</td><td>DSL custom</td><td>HTML interactif</td><td>Architecture C4 vivante</td><td style="color:var(--green);">CLI + Actions</td></tr>
+            <tr><td>Structurizr</td><td>DSL / code</td><td>HTML interactif</td><td>C4 Model complet</td><td style="color:var(--accent);">Via CLI</td></tr>
+            <tr><td>D2</td><td>Custom DSL</td><td>SVG</td><td>Diagrammes généraux</td><td style="color:var(--green);">CLI léger</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide slide--code" style="background-image:radial-gradient(ellipse at 50% 80%, var(--accent-dim) 0%, transparent 40%);" aria-label="Slide 9: Un diagramme Mermaid en pratique">
+    <h2 class="slide__heading reveal" style="text-align:center;">Un diagramme Mermaid en pratique</h2>
+    <div class="slide__code-block reveal" style="margin-top:clamp(12px,2vh,24px);">
+      <span class="slide__code-filename">architecture.md</span>
+      <pre><code><span class="cm">```mermaid</span>
+<span class="hl">graph TD</span>
+  <span class="hl">client</span>["Navigateur"] --<span class="hl">HTTPS</span>--> <span class="hl">api</span>["API Gateway"]
+  api --<span class="hl">gRPC</span>--> <span class="hl">svc</span>["Service Métier"]
+  svc --<span class="hl">SQL</span>--> <span class="hl">db</span>[("PostgreSQL")]
+  svc --<span class="hl">publish</span>--> <span class="hl">bus</span>{{"Event Bus"}}
+
+  <span class="cm">%%  Rendu automatique dans GitHub, Notion, VS Code</span>
+<span class="cm">```</span></code></pre>
+    </div>
+  </section>
+
+  <section class="slide slide--quote" aria-label="Slide 10: Citation">
+    <div class="slide__quote-mark reveal"></div>
+    <blockquote class="reveal">
+      Un diagramme qui ne vit pas à côté du code est un mensonge documenté.
+    </blockquote>
+    <cite class="reveal">&mdash; Principe du Diagram as Code</cite>
+    <div class="slide__quote-mark slide__quote-mark--close reveal"></div>
+  </section>
+
+  <section class="slide slide--bleed" aria-label="Slide 11: Commencez maintenant">
+    <div class="slide__bg slide__bg--gradient"></div>
+    <div class="slide__content">
+      <p class="slide__label reveal" style="color:var(--accent); letter-spacing:2px;">Prochaine étape</p>
+      <h2 class="slide__heading reveal" style="font-weight:900; font-size:clamp(32px,6vw,64px);">Commencez maintenant</h2>
+      <p class="slide__subtitle reveal" style="color:rgba(232,240,248,0.7); margin-top:12px;">Un Mermaid dans votre README &mdash; c&rsquo;est déjà du Diagram as Code</p>
+    </div>
+  </section>
+
+</div><!-- /deck -->
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+  const isDark = !window.matchMedia('(prefers-color-scheme: light)').matches;
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    look: 'classic',
+    flowchart: {
+      nodeSpacing: 40,
+      rankSpacing: 60,
+      padding: 25,
+      htmlLabels: true,
+      useMaxWidth: false,
+    },
+    themeVariables: {
+      // Electric Navy palette —  yellow-lime primary, cyan secondary, green tertiary
+      primaryColor: isDark ? '#fbfe7a22' : '#080d2a10',
+      primaryBorderColor: isDark ? '#fbfe7a' : '#080d2a',
+      primaryTextColor: isDark ? '#e8f0f8' : '#080d2a',
+      secondaryColor: isDark ? '#38b4e822' : '#e3edf8',
+      secondaryBorderColor: isDark ? '#38b4e8' : '#0d6fa0',
+      secondaryTextColor: isDark ? '#e8f0f8' : '#080d2a',
+      tertiaryColor: isDark ? '#5cc03822' : '#f0fdf0',
+      tertiaryBorderColor: isDark ? '#5cc038' : '#196b24',
+      tertiaryTextColor: isDark ? '#e8f0f8' : '#080d2a',
+      lineColor: isDark ? '#a0b8d0' : '#3a5a78',
+      fontSize: '16px',
+      fontFamily: "'Poppins', system-ui, sans-serif",
+      noteBkgColor: isDark ? '#0c1238' : '#e3edf8',
+      noteTextColor: isDark ? '#e8f0f8' : '#080d2a',
+      noteBorderColor: isDark ? '#a0b8d0' : '#3a5a78',
+    }
+  });
+
+  function autoFit() {
+    document.querySelectorAll('.mermaid').forEach(function(mDiv) {
+      var svg = mDiv.querySelector('svg');
+      if (!svg) return;
+      var vb = svg.getAttribute('viewBox');
+      if (vb) {
+        var parts = vb.split(/[\s,]+/).map(Number);
+        if (parts.length === 4) {
+          var pad = 30;
+          parts = [parts[0] - pad, parts[1] - pad, parts[2] + pad * 2, parts[3] + pad * 2];
+          svg.setAttribute('viewBox', parts.join(' '));
+        }
+      }
+      vb = svg.getAttribute('viewBox');
+      if (!vb) return;
+      var vp = vb.split(/[\s,]+/).map(Number);
+      var vw = vp[2], vh = vp[3];
+      var scroll = mDiv.closest('.mermaid-scroll');
+      var cw = scroll ? scroll.clientWidth : mDiv.parentElement.clientWidth;
+      var ch = scroll ? scroll.clientHeight : mDiv.parentElement.clientHeight;
+      var scale = Math.min(cw / vw, ch / vh, 1);
+      svg.removeAttribute('height');
+      svg.removeAttribute('width');
+      svg.style.width = Math.round(vw * scale) + 'px';
+      svg.style.height = Math.round(vh * scale) + 'px';
+      /* Store base dimensions for zoom layout calculations */
+      mDiv.dataset.baseW = Math.round(vw * scale);
+      mDiv.dataset.baseH = Math.round(vh * scale);
+    });
+    document.querySelectorAll('.slide__kpi-val').forEach(function(el) {
+      if (el.scrollWidth > el.clientWidth) {
+        var s = el.clientWidth / el.scrollWidth;
+        el.style.transform = 'scale(' + s + ')';
+        el.style.transformOrigin = 'left top';
+      }
+    });
+    document.querySelectorAll('.slide--quote blockquote').forEach(function(el) {
+      var len = el.textContent.trim().length;
+      if (len > 100) {
+        var scale = Math.max(0.5, 100 / len);
+        var fs = parseFloat(getComputedStyle(el).fontSize);
+        el.style.fontSize = Math.max(16, Math.round(fs * scale)) + 'px';
+      }
+    });
+  }
+
+  mermaid.run().then(function() {
+    autoFit();
+    /* Initialise zoom layout so .mermaid divs have explicit dimensions */
+    document.querySelectorAll('.mermaid-wrap').forEach(function(w){ updateZoomLayout(w); });
+    new SlideEngine();
+  });
+</script>
+
+<script>
+  /* ====== Crystal geometric decorations — Atlantique Day signature ====== */
+  (function injectCrystals() {
+    var svgNS = 'http://www.w3.org/2000/svg';
+    var crystalData = [
+      { points: '200,0 350,0 100,1080 0,1080', fill: 'rgba(18,28,70,0.50)' },
+      { points: '300,0 430,0 210,1080 100,1080', fill: 'rgba(22,36,80,0.38)' },
+      { points: '80,0 180,0 0,750', fill: 'rgba(15,22,55,0.30)' },
+      { points: '1620,0 1780,0 1920,1080 1800,1080', fill: 'rgba(18,28,70,0.50)' },
+      { points: '1720,0 1850,0 1920,650', fill: 'rgba(22,36,80,0.38)' },
+      { points: '1520,0 1660,0 1830,1080 1700,1080', fill: 'rgba(15,22,55,0.30)' },
+    ];
+    document.querySelectorAll('.slide').forEach(function(slide) {
+      if (slide.querySelector('.slide-crystals')) return;
+      var svg = document.createElementNS(svgNS, 'svg');
+      svg.setAttribute('class', 'slide-crystals');
+      svg.setAttribute('viewBox', '0 0 1920 1080');
+      svg.setAttribute('preserveAspectRatio', 'none');
+      crystalData.forEach(function(d) {
+        var p = document.createElementNS(svgNS, 'polygon');
+        p.setAttribute('points', d.points);
+        p.setAttribute('fill', d.fill);
+        svg.appendChild(p);
+      });
+      slide.insertBefore(svg, slide.firstChild);
+    });
+  })();
+
+  // Mermaid zoom controls
+  function updateZoomState(w){var t=w.querySelector('.mermaid');var z=parseFloat(t.dataset.zoom||'1');w.classList.toggle('is-zoomed',z>1);}
+  function updateZoomLayout(w){
+    var t=w.querySelector('.mermaid');
+    var z=parseFloat(t.dataset.zoom||'1');
+    var bw=parseFloat(t.dataset.baseW||'0');
+    var bh=parseFloat(t.dataset.baseH||'0');
+    if(bw&&bh){t.style.width=Math.ceil(bw*z)+'px';t.style.height=Math.ceil(bh*z)+'px';}
+  }
+  function zoomDiagram(b,f){var w=b.closest('.mermaid-wrap');var t=w.querySelector('.mermaid');var c=parseFloat(t.dataset.zoom||'1');var n=c*f;t.dataset.zoom=n;t.style.transform='scale('+n+')';updateZoomState(w);updateZoomLayout(w);}
+  function resetZoom(b){var w=b.closest('.mermaid-wrap');var t=w.querySelector('.mermaid');t.dataset.zoom='1';t.style.transform='scale(1)';updateZoomState(w);updateZoomLayout(w);}
+  document.querySelectorAll('.mermaid-wrap').forEach(function(w){var sc=w.querySelector('.mermaid-scroll')||w;w.addEventListener('wheel',function(e){if(!e.ctrlKey&&!e.metaKey)return;e.preventDefault();var t=w.querySelector('.mermaid');var c=parseFloat(t.dataset.zoom||'1');var f=e.deltaY<0?1.1:0.9;var n=c*f;t.dataset.zoom=n;t.style.transform='scale('+n+')';updateZoomState(w);updateZoomLayout(w);},{passive:false});var sX,sY,sL,sT;w.addEventListener('mousedown',function(e){if(e.target.closest('.zoom-controls'))return;e.preventDefault();w.classList.add('is-panning');sX=e.clientX;sY=e.clientY;sL=sc.scrollLeft;sT=sc.scrollTop;});window.addEventListener('mousemove',function(e){if(!w.classList.contains('is-panning'))return;sc.scrollLeft=sL-(e.clientX-sX);sc.scrollTop=sT-(e.clientY-sY);});window.addEventListener('mouseup',function(){w.classList.remove('is-panning');});});
+
+  // SlideEngine
+  function SlideEngine(){
+    this.deck=document.querySelector('.deck');
+    this.slides=[].slice.call(document.querySelectorAll('.slide'));
+    this.current=0;
+    this.total=this.slides.length;
+    this.buildChrome();
+    this.bindEvents();
+    this.observe();
+    this.update();
+  }
+  SlideEngine.prototype.buildChrome=function(){
+    var bar=document.createElement('div');bar.className='deck-progress';bar.setAttribute('role','progressbar');bar.setAttribute('aria-label','Slide progress');document.body.appendChild(bar);this.bar=bar;
+    var dots=document.createElement('nav');dots.className='deck-dots';dots.setAttribute('aria-label','Slide navigation');var self=this;
+    this.slides.forEach(function(_,i){var d=document.createElement('button');d.className='deck-dot';d.setAttribute('aria-label','Go to slide '+(i+1));d.onclick=function(){self.goTo(i);};dots.appendChild(d);});
+    document.body.appendChild(dots);this.dots=[].slice.call(dots.children);
+    var ctr=document.createElement('div');ctr.className='deck-counter';ctr.setAttribute('aria-hidden','true');document.body.appendChild(ctr);this.counter=ctr;
+    var hints=document.createElement('div');hints.className='deck-hints';hints.setAttribute('aria-hidden','true');hints.textContent='\u2190 \u2192 or scroll to navigate';document.body.appendChild(hints);this.hints=hints;
+    var liveRegion=document.createElement('div');liveRegion.className='sr-only';liveRegion.setAttribute('role','status');liveRegion.setAttribute('aria-live','polite');liveRegion.setAttribute('aria-atomic','true');document.body.appendChild(liveRegion);this.liveRegion=liveRegion;
+    this.hintTimer=setTimeout(function(){hints.classList.add('faded');},4000);
+  };
+  SlideEngine.prototype.bindEvents=function(){
+    var self=this;
+    document.addEventListener('keydown',function(e){
+      if(e.target.closest('.mermaid-wrap,.table-scroll,.code-scroll,input,textarea,[contenteditable]'))return;
+      if(['ArrowDown','ArrowRight',' ','PageDown'].indexOf(e.key)>-1){e.preventDefault();self.next();}
+      else if(['ArrowUp','ArrowLeft','PageUp'].indexOf(e.key)>-1){e.preventDefault();self.prev();}
+      else if(e.key==='Home'){e.preventDefault();self.goTo(0);}
+      else if(e.key==='End'){e.preventDefault();self.goTo(self.total-1);}
+      self.fadeHints();
+    });
+    var tY;
+    this.deck.addEventListener('touchstart',function(e){tY=e.touches[0].clientY;},{passive:true});
+    this.deck.addEventListener('touchend',function(e){var dy=tY-e.changedTouches[0].clientY;if(Math.abs(dy)>50){dy>0?self.next():self.prev();}});
+  };
+  SlideEngine.prototype.observe=function(){
+    var self=this;
+    var obs=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');self.current=self.slides.indexOf(entry.target);self.update();}});},{threshold:0.5});
+    this.slides.forEach(function(s){obs.observe(s);});
+  };
+  SlideEngine.prototype.goTo=function(i){this.slides[Math.max(0,Math.min(i,this.total-1))].scrollIntoView({behavior:'smooth'});};
+  SlideEngine.prototype.next=function(){if(this.current<this.total-1)this.goTo(this.current+1);};
+  SlideEngine.prototype.prev=function(){if(this.current>0)this.goTo(this.current-1);};
+  SlideEngine.prototype.update=function(){
+    this.bar.style.width=((this.current+1)/this.total*100)+'%';
+    this.bar.setAttribute('aria-valuenow',this.current+1);
+    this.bar.setAttribute('aria-valuemin','1');
+    this.bar.setAttribute('aria-valuemax',this.total);
+    var c=this.current;this.dots.forEach(function(d,i){d.classList.toggle('active',i===c);d.setAttribute('aria-current',i===c?'step':'false');});
+    this.counter.textContent=(this.current+1)+' / '+this.total;
+    if(this.liveRegion)this.liveRegion.textContent='Slide '+(this.current+1)+' of '+this.total;
+  };
+  SlideEngine.prototype.fadeHints=function(){clearTimeout(this.hintTimer);this.hints.classList.add('faded');};
+</script>
+
+</body>
+</html>
