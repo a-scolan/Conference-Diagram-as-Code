@@ -289,6 +289,31 @@ For decks where some slides are light and some dark (especially full-bleed slide
 }
 ```
 
+## Presentation Laser Pointer
+
+For decks used live on stage or during remote talks, the template may replace the OS cursor with a branded laser-style pointer. This is presentation chrome, not decoration.
+
+**Use when:** conference talks, recorded demos, or any dark deck where the cursor must remain clearly visible to the audience.
+
+**Pattern:**
+- Add one fixed `.laser-pointer` element near the end of `<body>`.
+- Enable only on fine pointers (`(any-pointer: fine)`).
+- Hide the native cursor only while the pointer is active via `body.laser-cursor-enabled`.
+- Update position with a single `requestAnimationFrame`-scheduled paint that jumps directly to the latest coordinates — no trailing interpolation loop.
+- Keep the visual restrained: a hot center, a soft ring, a modest glow, and a subtle active scale (~`1.06`).
+- Disable cleanly on `blur`, `pagehide`, `visibilitychange`, and when the pointer leaves the page.
+
+**Performance rules:**
+- No cursor trail made of multiple DOM nodes.
+- No animated blur stack or `mix-blend-mode` gimmicks.
+- No easing loop that keeps repainting after the pointer stops moving.
+- Keep `will-change: transform, opacity` on the laser element only.
+
+**Embeds and iframes:**
+Browser security prevents smooth pointer tracking inside cross-origin iframes while preserving full interaction. Do **not** add a `LIVE/LASER` toggle or a capture shield by default. Accept that the custom laser stops at the iframe boundary, or switch to the popup embed pattern for interactive demos that need their own cursor and keyboard focus.
+
+**Implementation reference:** see `./templates/slide-deck.html` for the canonical CSS/JS implementation.
+
 ## SlideEngine JavaScript
 
 Add once at the end of the page. Handles navigation, chrome updates, and scroll-triggered reveals. Event delegation ensures slide-internal interactions (Mermaid zoom, scrollable code, overflow tables) don't trigger slide navigation.
@@ -1257,6 +1282,8 @@ Full-viewport iframe for interactive external HTML content — LikeC4 architectu
 - `.embed-controls` — reload button resets the iframe, external button opens the URL in a new tab
 - `.embed-fallback` — shown after 3s if the iframe fails to load (common with `file://` URLs)
 - `.embed-wrap` uses `flex: 1; min-height: 0;` to fill available slide height below the heading
+
+**Pointer limitation:** cross-origin iframes cannot reliably share the deck's custom laser pointer or hover tracking. Do not paper over this with overlay modes unless the user explicitly asks for that extra complexity. If pointer visibility during interaction matters, use the popup variant below.
 
 **When to use:** Architecture demos with pan/zoom, live LikeC4 models, any interactive HTML that Mermaid can't express. **When NOT to use:** Static diagrams — use Mermaid or CSS Grid cards instead.
 

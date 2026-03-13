@@ -20,9 +20,11 @@
   - Compositional variety: centered, left-heavy, split, full-bleed
   - Three-color semantic system: yellow-lime (key), orange (warning), cyan (new)
   - Mermaid at presentation scale (18px labels, 2px edges, 8 nodes)
+  - Label-box integrity: canonical block documented in references/mermaid-layout.md
   - Dark-first with light mode via prefers-color-scheme
   - Responsive height breakpoints for projection and small viewports
   - Nav chrome with backdrop blur for mixed-background visibility
+  - Built-in presentation laser pointer for fine-pointer devices (lightweight RAF positioning, subtle active state, no iframe mode by default)
   - Event delegation: Mermaid zoom and table scroll don't trigger slide nav
   - prefers-reduced-motion respected
 -->
@@ -46,6 +48,11 @@
     --text-dim: #a0b8d0;
     --accent: #fbfe7a;
     --accent-dim: rgba(251, 254, 122, 0.08);
+    --laser-core: #fffbe0;
+    --laser-hot: #ffe56b;
+    --laser-ring: rgba(255, 246, 181, 0.52);
+    --laser-glow: rgba(251, 254, 122, 0.22);
+    --laser-glow-soft: rgba(245, 197, 24, 0.12);
     --accent2: #f08848;
     --accent2-dim: rgba(240, 136, 72, 0.10);
     --accent3: #38b4e8;
@@ -76,6 +83,66 @@
     color: var(--text);
     background: var(--bg);
     overflow: hidden;
+  }
+
+  body.laser-cursor-enabled,
+  body.laser-cursor-enabled * {
+    cursor: none !important;
+  }
+
+  .laser-pointer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2147483647;
+    opacity: 0;
+    transform: translate3d(-999px, -999px, 0) translate(-50%, -50%) scale(1);
+    transition: opacity 90ms linear;
+    will-change: transform, opacity;
+    contain: layout style paint;
+    backface-visibility: hidden;
+  }
+  .laser-pointer::before,
+  .laser-pointer::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+  }
+  .laser-pointer::before {
+    inset: 0;
+    background: radial-gradient(circle,
+      rgba(255, 251, 224, 0.22) 0 24%,
+      rgba(251, 254, 122, 0.16) 25% 44%,
+      rgba(245, 197, 24, 0.08) 45% 64%,
+      rgba(245, 197, 24, 0.02) 65% 76%,
+      rgba(245, 197, 24, 0) 77%);
+    border: 1px solid var(--laser-ring);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+                0 0 10px var(--laser-glow),
+                0 0 22px var(--laser-glow-soft);
+  }
+  .laser-pointer::after {
+    inset: 11px;
+    background: radial-gradient(circle,
+      var(--laser-core) 0 40%,
+      #fff2a8 41% 70%,
+      var(--laser-hot) 71% 100%);
+    box-shadow: 0 0 6px rgba(255, 248, 196, 0.5),
+                0 0 14px rgba(251, 254, 122, 0.16);
+  }
+  .laser-pointer.is-visible { opacity: 1; }
+  .laser-pointer.is-active::before {
+    transform: scale(1.06);
+    border-color: rgba(255, 248, 196, 0.72);
+  }
+  .laser-pointer.is-active::after {
+    transform: scale(0.94);
+    box-shadow: 0 0 8px rgba(255, 248, 196, 0.62),
+                0 0 16px rgba(251, 254, 122, 0.2);
   }
 
 
@@ -135,6 +202,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .slide, .slide .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .laser-pointer { transition: none !important; }
   }
 
   /* ============ NAV CHROME ============ */
@@ -292,6 +360,7 @@
   .slide--split .slide__panel--secondary .slide__bullets li strong { color: #1a1a2e; }
 
   /* ============ SLIDE TYPE: DIAGRAM ============ */
+  /* Canonical Mermaid slide-safe label/layout block — keep in sync with references/mermaid-layout.md */
   .slide--diagram { padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 60px); }
   .slide--diagram .slide__heading { margin-bottom: clamp(8px, 1.5vh, 20px); }
 
@@ -342,6 +411,12 @@
     white-space: nowrap !important;
     padding: 2px 6px !important;
     background: var(--surface) !important;
+    line-height: 1.25 !important;
+  }
+  .slide--diagram .mermaid .nodeLabel p,
+  .slide--diagram .mermaid .edgeLabel p,
+  .slide--diagram .mermaid .labelText p {
+    margin: 0 !important;
   }
   .slide--diagram .mermaid .node rect,
   .slide--diagram .mermaid .node circle,
@@ -567,6 +642,7 @@
   .embed-wrap .embed-fallback {
     position: absolute; inset: 0; display: none; flex-direction: column;
     align-items: center; justify-content: center; gap: 16px;
+    z-index: 4;
     background: var(--surface); color: var(--text-dim); text-align: center; padding: 40px;
   }
   .embed-wrap .embed-fallback.visible { display: flex; }
@@ -645,6 +721,65 @@
   .badge--blue { background: var(--accent3-dim); border-color: var(--accent3); color: var(--accent3); }
   .badge--green { background: var(--green-dim); border-color: var(--green); color: var(--green); }
   .badge--orange { background: var(--accent2-dim); border-color: var(--accent2); color: var(--accent2); }
+
+
+  /* ============ RESOURCE SLIDE PATTERN ============ */
+  .resource-list {
+    display: grid; gap: 12px; margin-top: 20px;
+  }
+
+  .resource-item {
+    display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px;
+    background: color-mix(in srgb, var(--surface) 84%, transparent 16%);
+    border: 1px solid var(--border); border-radius: 18px;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.12);
+  }
+
+  .resource-item__tag {
+    min-width: 96px; font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase; color: var(--accent);
+    margin-top: 2px;
+  }
+
+  .resource-item__body {
+    color: var(--text-dim); line-height: 1.52; font-size: clamp(13px, 1.45vw, 17px);
+  }
+
+  .resource-item__body a {
+    display: inline-block; margin-bottom: 4px;
+    color: var(--text); text-decoration: none;
+    font-size: clamp(16px, 1.8vw, 20px); font-weight: 700; line-height: 1.22;
+    text-wrap: pretty;
+  }
+
+  .resource-item__body a:hover {
+    color: var(--accent);
+  }
+
+  .qr-spotlight {
+    position: relative; display: flex; align-items: center; justify-content: center;
+    width: min(100%, 332px); aspect-ratio: 1 / 1; min-height: auto; padding: 12px; border-radius: 22px;
+    background: linear-gradient(155deg, rgba(22,32,88,0.96), rgba(12,18,56,0.96));
+    border: 1px solid rgba(251, 254, 122, 0.12);
+    box-shadow: 0 18px 46px rgba(0,0,0,0.20);
+    overflow: hidden; isolation: isolate;
+  }
+
+  .qr-spotlight::before {
+    content: ''; position: absolute; inset: 10px;
+    border-radius: 16px; background: rgba(255,255,255,0.985);
+    box-shadow: inset 0 0 0 1px rgba(8,13,42,0.08);
+  }
+
+  .qr-spotlight img {
+    position: relative; z-index: 1; width: min(100%, 286px); height: auto;
+    filter: drop-shadow(0 10px 24px rgba(8,13,42,0.18));
+  }
+
+  .qr-caption {
+    margin-top: 14px; text-align: center;
+    font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);
+  }
 
 
   /* ============ PIPELINE ============ */
@@ -942,6 +1077,8 @@ graph LR
 
 </div><!-- /deck -->
 
+<div class="laser-pointer" aria-hidden="true"></div>
+
 <script type="module">
   import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
 
@@ -956,6 +1093,18 @@ graph LR
       padding: 25,
       htmlLabels: true,
       useMaxWidth: false,
+    },
+    sequence: {
+      useMaxWidth: false,
+      wrap: true,
+      width: 220,
+      messageAlign: 'center',
+      mirrorActors: true,
+      boxTextMargin: 8,
+      noteMargin: 12,
+      messageMargin: 36,
+      diagramMarginX: 50,
+      diagramMarginY: 12,
     },
     themeVariables: {
       // Electric Navy palette —  yellow-lime primary, cyan secondary, green tertiary
@@ -1057,6 +1206,92 @@ graph LR
       });
       slide.insertBefore(svg, slide.firstChild);
     });
+  })();
+
+  /* ============ Laser pointer ============ */
+  (function initLaserPointer() {
+    if (!window.matchMedia || !window.matchMedia('(any-pointer: fine)').matches) return;
+    var laser = document.querySelector('.laser-pointer');
+    if (!laser) return;
+    var currentX = window.innerWidth * 0.5;
+    var currentY = window.innerHeight * 0.5;
+    var targetX = currentX;
+    var targetY = currentY;
+    var visible = false;
+    var scale = 1;
+    var rafId = 0;
+
+    function paint() {
+      rafId = 0;
+      currentX = targetX;
+      currentY = targetY;
+      laser.style.transform = 'translate3d(' + Math.round(currentX) + 'px, ' + Math.round(currentY) + 'px, 0) translate(-50%, -50%) scale(' + scale + ')';
+    }
+
+    function schedulePaint() {
+      if (!rafId) rafId = window.requestAnimationFrame(paint);
+    }
+
+    function moveTo(clientX, clientY) {
+      if (typeof clientX !== 'number' || typeof clientY !== 'number') return;
+      targetX = clientX;
+      targetY = clientY;
+      schedulePaint();
+    }
+
+    function reveal(evt) {
+      if (evt && evt.pointerType && evt.pointerType !== 'mouse' && evt.pointerType !== 'pen') {
+        conceal();
+        return;
+      }
+      if (evt && typeof evt.clientX === 'number' && typeof evt.clientY === 'number') {
+        moveTo(evt.clientX, evt.clientY);
+      }
+      if (!visible) {
+        visible = true;
+        document.body.classList.add('laser-cursor-enabled');
+        laser.classList.add('is-visible');
+      }
+    }
+
+    function conceal() {
+      visible = false;
+      scale = 1;
+      laser.classList.remove('is-visible');
+      laser.classList.remove('is-active');
+      document.body.classList.remove('laser-cursor-enabled');
+      schedulePaint();
+    }
+
+    function press(evt) {
+      reveal(evt);
+      scale = 1.06;
+      laser.classList.add('is-active');
+      schedulePaint();
+    }
+
+    function release() {
+      scale = 1;
+      laser.classList.remove('is-active');
+      schedulePaint();
+    }
+
+    document.addEventListener('pointermove', reveal, { passive: true });
+    if (!window.PointerEvent) {
+      document.addEventListener('mousemove', reveal, { passive: true });
+    }
+    document.addEventListener('pointerdown', press, { passive: true });
+    document.addEventListener('pointerup', release, { passive: true });
+    document.addEventListener('pointercancel', conceal, { passive: true });
+    document.addEventListener('mouseout', function(evt) {
+      if (!evt.relatedTarget) conceal();
+    }, { passive: true });
+    window.addEventListener('blur', conceal);
+    window.addEventListener('pagehide', conceal);
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) conceal();
+    });
+    schedulePaint();
   })();
 
   // Mermaid zoom controls

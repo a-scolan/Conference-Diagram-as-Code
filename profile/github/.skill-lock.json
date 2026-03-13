@@ -1,0 +1,43 @@
+{
+  "version": 3,
+  "skills": {
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/skills.git",
+      "skillFolderHash": "",
+      "installedAt": "2026-01-28T15:27:51.794Z",
+      "updatedAt": "2026-01-28T15:27:55.657Z"
+    },
+    "writing-documentation-with-diataxis": {
+      "source": "sammcj/agentic-coding",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/sammcj/agentic-coding.git",
+      "skillFolderHash": "",
+      "installedAt": "2026-01-29T16:47:12.744Z",
+      "updatedAt": "2026-01-29T16:47:12.744Z"
+    },
+    "writing-skills": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/obra/superpowers.git",
+      "skillFolderHash": "",
+      "installedAt": "2026-02-26T14:40:55.326Z",
+      "updatedAt": "2026-03-10T15:51:31.950Z"
+    },
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillFolderHash": "",
+      "installedAt": "2026-03-10T16:11:13.723Z",
+      "updatedAt": "2026-03-10T16:11:13.723Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "github-copilot"
+  ]
+}

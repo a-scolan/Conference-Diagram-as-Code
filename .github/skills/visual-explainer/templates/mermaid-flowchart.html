@@ -14,6 +14,7 @@
   - Large heading (38px) for typographic contrast
   - ESM import of Mermaid + @mermaid-js/layout-elk
   - Mermaid theme: 'base' + full themeVariables, fontSize: 16px
+  - Label-box integrity: canonical block documented in references/mermaid-layout.md
   - CSS overrides: .nodeLabel 16px, .edgeLabel 13px
   - look: 'classic' for clean lines
   - layout: 'elk' for better node positioning
@@ -240,14 +241,29 @@
   .mermaid-wrap.is-panning { cursor: grabbing; user-select: none; }
 
   /* ============ MERMAID SVG OVERRIDES ============ */
+  /* Canonical Mermaid slide-safe label/layout block — keep in sync with references/mermaid-layout.md */
   .mermaid .nodeLabel {
     font-family: var(--font-body) !important;
     font-size: 16px !important;
+    overflow: visible !important;
   }
 
   .mermaid .edgeLabel {
     font-family: var(--font-mono) !important;
     font-size: 13px !important;
+    overflow: visible !important;
+  }
+
+  .mermaid .edgeLabel foreignObject,
+  .mermaid .node foreignObject,
+  .mermaid .node foreignObject > div {
+    overflow: visible !important;
+  }
+
+  .mermaid .nodeLabel p,
+  .mermaid .edgeLabel p,
+  .mermaid .labelText p {
+    margin: 0 !important;
   }
 
   .mermaid .node rect,
@@ -402,6 +418,18 @@
     theme: 'base',
     look: 'classic',
     layout: 'elk',
+    sequence: {
+      useMaxWidth: false,
+      wrap: true,
+      width: 220,
+      messageAlign: 'center',
+      mirrorActors: true,
+      boxTextMargin: 8,
+      noteMargin: 12,
+      messageMargin: 36,
+      diagramMarginX: 50,
+      diagramMarginY: 12,
+    },
     themeVariables: {
       primaryColor: isDark ? '#115e59' : '#ccfbf1',
       primaryBorderColor: isDark ? '#2dd4bf' : '#0d9488',

@@ -45,6 +45,18 @@ Always use `theme: 'base'` — it's the only theme where all `themeVariables` ar
     startOnLoad: true,
     theme: 'base',
     look: 'classic',
+    sequence: {
+      useMaxWidth: false,
+      wrap: true,
+      width: 220,
+      messageAlign: 'center',
+      mirrorActors: true,
+      boxTextMargin: 8,
+      noteMargin: 12,
+      messageMargin: 36,
+      diagramMarginX: 50,
+      diagramMarginY: 12,
+    },
     themeVariables: {
       // Background and surfaces — teal/slate palette (not violet/indigo!)
       primaryColor: isDark ? '#134e4a' : '#ccfbf1',
@@ -96,6 +108,22 @@ Mermaid renders SVG. Override its classes for pixel-perfect control that `themeV
 .mermaid .edgeLabel { color: var(--text-dim) !important; background-color: var(--bg) !important; }
 .mermaid .edgeLabel rect { fill: var(--bg) !important; }
 
+/* Keep Mermaid HTML labels from clipping or inheriting browser paragraph margins */
+.mermaid .nodeLabel,
+.mermaid .edgeLabel {
+  overflow: visible !important;
+}
+.mermaid .edgeLabel foreignObject,
+.mermaid .node foreignObject,
+.mermaid .node foreignObject > div {
+  overflow: visible !important;
+}
+.mermaid .nodeLabel p,
+.mermaid .edgeLabel p,
+.mermaid .labelText p {
+  margin: 0 !important;
+}
+
 /* Node shapes */
 .mermaid .node rect,
 .mermaid .node circle,
@@ -141,6 +169,12 @@ Mermaid renders SVG. Override its classes for pixel-perfect control that `themeV
   stroke-width: 1.5px;
 }
 ```
+
+### Label Box Integrity (Critical)
+
+Mermaid computes label and box sizes **before** post-render CSS runs. If you enlarge `.nodeLabel`, `.labelText`, `.messageText`, or `.noteText` only in CSS, text can overflow its computed box.
+
+Use the canonical pre-render sizing and overflow pattern in `./mermaid-layout.md`.
 
 ### classDef and style Gotchas
 

@@ -84,11 +84,13 @@ Vary the choice each time. If the last diagram was dark and technical, make the 
 | Interactive architecture (LikeC4) | **Embed iframe** (`slide--embed`) | Pan/zoom/navigate across views in a live LikeC4 model |
 | CSP-blocked external app (Codespaces, vscode.dev) | **Popup button** (`slide--embed` + `openPopupFullscreen`) | Service blocks iframing via CSP `frame-ancestors` — open fullscreen popup on same screen instead |
 
-**Mermaid theming:** Always use `theme: 'base'` with custom `themeVariables` so colors match your page palette. Use `layout: 'elk'` for complex graphs (requires the `@mermaid-js/layout-elk` package — see `./references/libraries.md` for the CDN import). Override Mermaid's SVG classes with CSS for pixel-perfect control. See `./references/libraries.md` for full theming guide.
+**Mermaid theming:** Always use `theme: 'base'` with custom `themeVariables` so colors match your page palette. Use `layout: 'elk'` for complex graphs (requires the `@mermaid-js/layout-elk` package — see `./references/libraries.md` for the CDN import). Override Mermaid's SVG classes with CSS for pixel-perfect control. See `./references/libraries.md` for API/theming details and `./references/mermaid-layout.md` for the canonical slide-safe label/layout block.
 
 **Mermaid containers:** Always center Mermaid diagrams with `display: flex; justify-content: center;`. Add zoom controls (+/−/reset) to every `.mermaid-wrap` container.
 
 **Mermaid scaling:** Diagrams with 10+ nodes render too small by default. For 10-12 nodes, increase `fontSize` in themeVariables to 18-20px and set `INITIAL_ZOOM` to 1.5-1.6. For 15+ elements, don't try to scale — use the hybrid pattern instead (simple Mermaid overview + CSS Grid cards). See "Architecture / System Diagrams" below.
+
+**Mermaid label-box integrity:** Never enlarge `.nodeLabel`, `.labelText`, `.messageText`, or `.noteText` only with post-render CSS — Mermaid has already computed box sizes, so text can spill outside boxes. Use the canonical pattern in `./references/mermaid-layout.md`.
 
 **Mermaid layout direction:** Prefer `flowchart TD` (top-down) over `flowchart LR` (left-to-right) for complex diagrams. LR spreads horizontally and makes labels unreadable when there are many nodes. Use LR only for simple 3-4 node linear flows. See `./references/libraries.md` "Layout Direction: TD vs LR".
 
@@ -305,6 +307,8 @@ An alternative output format for presenting content as a magazine-quality slide 
 **Slide types (12):** Title, Section Divider, Content, Split, Diagram, Dashboard, Table, Code, Code-Diff, Quote, Full-Bleed, Embed. Each has a defined layout in `slide-patterns.md` (Embed details in `likec4-embed.md`). The Embed type has a **Popup variant** for CSP-blocked external services — see `slide-patterns.md` "Popup Embed Slide". Content that exceeds a slide's density limit splits across multiple slides — never scrolls within a slide.
 
 **Visual richness:** Check `which surf` at the start. If surf-cli is available, generate 2–4 images (title slide background, full-bleed background, optional content illustrations) before writing HTML — see the Proactive Imagery section in `slide-patterns.md` for the workflow. Also use SVG decorative accents, per-slide background gradients, inline sparklines, and small Mermaid diagrams. Visual-first, text-second.
+
+**Presentation ergonomics.** The reference slide deck template includes a built-in conference-style laser pointer for live talks: a branded yellow highlight that replaces the native cursor on fine-pointer devices, stays responsive under `requestAnimationFrame`, and uses a subtle press state instead of a heavy glow. Treat it as part of the slide chrome, not a gimmick. Keep the implementation lightweight (single fixed element, no cursor trails, no expensive blur stacks) and do not add iframe interaction modes unless the user explicitly wants that trade-off. For external demos, prefer the popup embed pattern over trying to preserve a custom cursor inside cross-origin iframes.
 
 **Compositional variety:** Consecutive slides must vary spatial approach — centered, left-heavy, right-heavy, split, edge-aligned, full-bleed. Three centered slides in a row means push one off-axis.
 

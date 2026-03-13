@@ -1,50 +1,68 @@
-# Atlantique Day - Architecture as Code with LikeC4
+# Diagram as Code — AleFest Coffee
 
-Ce dépôt contient le projet LikeC4 utilisé comme démo lors de la conférence **Diagram as Code** à l'Atlantique Day.
+Ce dépôt contient les supports et modèles utilisés pour la conférence **Diagram as Code** à l'Atlantique Day.
 
-## 🚀 Démarrage rapide
+Le fil rouge du talk est **AleFest Coffee** : une évolution d'architecture entre une **V1 synchrone** (commande au comptoir) et une **V2 event-driven** (commande mobile, RabbitMQ, WebSocket, notifications push).
 
-### Avec GitHub Codespace
+## Démarrer la présentation
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/a-scolan/atlantique-day-likec4)
+La présentation HTML enrichie se trouve dans `server/public/presentation-diagram-as-code.html`.
 
-1. Cliquez sur le badge ci-dessus pour ouvrir un Codespace
-2. Attendez l'installation automatique de LikeC4
-3. Lancez le serveur de développement :
-   ```bash
-   cd projects/capsule
-   npx likec4 serve
-   ```
-
-### En local
+Pour la servir localement :
 
 ```bash
-npm install -g likec4
-cd projects/capsule
-likec4 serve
+cd server
+npm install
+npm start
 ```
 
-## 📁 Structure du projet
+Puis ouvrez `http://localhost:3000/presentation-diagram-as-code.html`.
 
+## Explorer les modèles LikeC4
+
+Les projets principaux sont :
+
+- `projects/alefest-v1` — **AleFest Coffee V1 - Le Comptoir**
+- `projects/alefest-v2` — **AleFest Coffee V2 - Le Café Mobile**
+- `projects/exemple-likeC4` — exemple minimal pédagogique
+- `projects/shared` — spécifications et ressources partagées
+
+Pour lancer un projet LikeC4 en local :
+
+```bash
+cd projects/alefest-v2
+npx likec4 serve
 ```
+
+Vous pouvez faire la même chose avec `projects/alefest-v1` pour comparer les deux versions.
+
+## Fichiers clés
+
+- `projects/alefest-v2/ADR/ADR-001-commande-mobile.md` — décision architecturale source
+- `projects/alefest-v2/system-model.c4` — modèle système V2
+- `projects/alefest-v2/system-views.c4` — vues C1, C2 et dynamiques
+- `server/public/assets/image.png` — QR code OpenFeedback utilisé dans la présentation
+- `Draft déroulé.md` — déroulé éditorial de la session
+
+## Structure rapide
+
+```text
 projects/
-├── capsule/                  # Projet principal - Hébergement Web Statique
-│   ├── likec4.config.ts      # Configuration du projet
-│   ├── system-model.c4       # Modèle système (éléments & relations)
-│   ├── system-views.c4       # Vues système (C1, C2, C3)
-│   ├── deployment.c4         # Modèle de déploiement
-│   ├── deployment-views.c4   # Vues de déploiement
-│   ├── ADR/                  # Architecture Decision Records
-│   └── generators/           # Générateurs (matrice réseau)
-├── exemple-likeC4/           # Exemple minimal pédagogique (modèle imbriqué)
-│   ├── likec4.config.ts      # Configuration du projet d'exemple
-│   └── main.c4               # Démo simple avec système + containers
-└── shared/                   # Spécifications & ressources partagées
-    ├── spec-*.c4             # Spécifications (kinds, tags, styles)
-    └── images/               # Bibliothèque d'icônes (Lucide, Affinity)
+├── alefest-v1/
+├── alefest-v2/
+│   └── ADR/
+├── exemple-likeC4/
+└── shared/
+server/
+├── public/
+│   ├── assets/
+│   └── presentation-diagram-as-code.html
+└── server.js
 ```
 
-## 🔗 Liens utiles
+## Ressources utiles
 
-- [Documentation LikeC4](https://likec4.dev)
-- [Extension VS Code LikeC4](https://marketplace.visualstudio.com/items?itemName=likec4.likec4-vscode)
+- [LikeC4](https://likec4.dev)
+- [Repo démo hands-on](https://github.com/a-scolan/c4-hands-on-demo)
+- [Template C4 LikeC4](https://github.com/a-scolan/c4-template)
+- [« Diagram as Code en 2025 : Le repas de famille des outils » sur dev.to](https://dev.to/onepoint/diagram-as-code-en-2025-le-repas-de-famille-des-outils-1gdp)

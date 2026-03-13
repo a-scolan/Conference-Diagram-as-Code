@@ -349,9 +349,28 @@ alefestCoffee = System_New 'AleFest Coffee' {
 
 **Fini les gribouillis obsolètes : compilons la documentation** 🚀
 
+Idées à retenir : 
+- un diagramme propre est focalisé sur un objectif (Modélisation C4)
+- un diagramme focalisé est plus facile à maintenir et peut être généré à partir de la source de vérité (code du modèle)
+- un diagramme généré evolue avec le projet, et peut être intégré dans les processus de développement, être produit en collaboration, et peu être validé par les humains grâce à des visual diffs et des builds pour les PR
+
+A vous de jouer pour faire vivre vos architectures !
+
+### Ressources pour approfondir
 - Allez essayer **LikeC4** : https://likec4.dev
-- Fork le repo démo : https://github.com/a-scolan/c4-hands-on-demo
-- Lire l'article : https://dev.to/onepoint/diagram-as-code-en-2025-le-repas-de-famille-des-outils-1gdp
+- Fork un repo démo : https://github.com/a-scolan/c4-hands-on-demo
+- Lancez vous avec un template de modélisation C4 avec LikeC4 : https://github.com/a-scolan/c4-template
+- Lire l'article **« Diagram as Code en 2025 : Le repas de famille des outils »** sur dev.to : https://dev.to/onepoint/diagram-as-code-en-2025-le-repas-de-famille-des-outils-1gdp
+
+ Ajouter le QR Code de OpenFeeback (très important, en grand et bien visible malgré sa transparence png) ![alt text](image.png)
+
+### Et derrière pour l'avenir 
+- génération de diagramme à partir d'une base de code existante (plans Helm, Azure et AWS services ?)
+- intégration de projets entre eux et création d'une base de diagramme interconnectés ?
+- automatiser au maximum la création de diagramme à partir de l'ADR, et faire en sorte que les humains n'aient plus qu'à valider et ajuster les détails (ex: description, propriétés) ?
+- utiliser le diagramme comme source de vérité pour les évolutions d'architecture et d'infrastructure et planifier des travaux ?
+- une implémentation des diagrammes archimate en LikeC4, avec ses skills pour automatiser par IA ? Mettre en relation du TOGAF ? => plus de standardisation, faciliter l'accès au framework complexe
+- vos idées ?
 
 ### Q&A (10 min)
 
