@@ -4,8 +4,10 @@ Ce sous-dossier regroupe les projets **LikeC4** utilisés pour la conférence **
 
 ## Projets disponibles
 
-- `projects/alefest-v1` — AleFest Coffee V1, architecture synchrone au comptoir
-- `projects/alefest-v2` — AleFest Coffee V2, architecture event-driven et mobile
+- `projects/coffee-v1` — AleFest Coffee V1, Le Comptoir (version démo conférence)
+- `projects/coffee-v2` — AleFest Coffee V2, Mobile + notifications (version démo conférence)
+- `projects/alefest-v1` — AleFest Coffee V1, architecture synchrone au comptoir (version originale)
+- `projects/alefest-v2` — AleFest Coffee V2, architecture event-driven et mobile (version originale)
 - `projects/exemple-likeC4` — exemple minimal pédagogique
 - `projects/shared` — spécifications, styles et images partagés
 
@@ -14,22 +16,23 @@ Ce sous-dossier regroupe les projets **LikeC4** utilisés pour la conférence **
 Depuis ce dossier `likec4/` :
 
 ```bash
-cd projects/alefest-v2
+cd projects/coffee-v2
 npx likec4 serve
 ```
 
 Pour comparer avec la version initiale :
 
 ```bash
-cd projects/alefest-v1
+cd projects/coffee-v1
 npx likec4 serve
 ```
 
 ## Fichiers clés
 
-- `projects/alefest-v2/ADR/ADR-001-commande-mobile.md`
-- `projects/alefest-v2/system-model.c4`
-- `projects/alefest-v2/system-views.c4`
+- `projects/coffee-v2/system-model.c4`
+- `projects/coffee-v2/system-views.c4`
+- `projects/coffee-v1/system-model.c4`
+- `projects/coffee-v1/system-views.c4`
 - `projects/shared/spec-*.c4`
 
 ## Lien avec la présentation

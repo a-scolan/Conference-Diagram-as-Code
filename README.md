@@ -22,25 +22,27 @@ Puis ouvrez `http://localhost:3000/presentation-diagram-as-code.html`.
 
 Les projets principaux sont :
 
-- `projects/alefest-v1` — **AleFest Coffee V1 - Le Comptoir**
-- `projects/alefest-v2` — **AleFest Coffee V2 - Le Café Mobile**
+- `projects/coffee-v1` — **AleFest Coffee V1 - Le Comptoir** (version démo conférence)
+- `projects/coffee-v2` — **AleFest Coffee V2 - Le Café Mobile** (version démo conférence)
+- `projects/alefest-v1` — AleFest Coffee V1 (version originale complète)
+- `projects/alefest-v2` — AleFest Coffee V2 (version originale complète)
 - `projects/exemple-likeC4` — exemple minimal pédagogique
 - `projects/shared` — spécifications et ressources partagées
 
 Pour lancer un projet LikeC4 en local :
 
 ```bash
-cd projects/alefest-v2
+cd projects/coffee-v2
 npx likec4 serve
 ```
 
-Vous pouvez faire la même chose avec `projects/alefest-v1` pour comparer les deux versions.
+Vous pouvez faire la même chose avec `projects/coffee-v1` pour comparer les deux versions.
 
 ## Fichiers clés
 
-- `projects/alefest-v2/ADR/ADR-001-commande-mobile.md` — décision architecturale source
-- `projects/alefest-v2/system-model.c4` — modèle système V2
-- `projects/alefest-v2/system-views.c4` — vues C1, C2 et dynamiques
+- `AleFest.md` — décision architecturale et contexte métier source
+- `projects/coffee-v2/system-model.c4` — modèle système V2
+- `projects/coffee-v2/system-views.c4` — vues C1, C2 et dynamiques
 - `server/public/assets/image.png` — QR code OpenFeedback utilisé dans la présentation
 - `Draft déroulé.md` — déroulé éditorial de la session
 
@@ -48,6 +50,8 @@ Vous pouvez faire la même chose avec `projects/alefest-v1` pour comparer les de
 
 ```text
 projects/
+├── coffee-v1/
+├── coffee-v2/
 ├── alefest-v1/
 ├── alefest-v2/
 │   └── ADR/

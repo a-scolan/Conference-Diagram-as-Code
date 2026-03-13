@@ -1,0 +1,20 @@
+Prendre le temps d'énoncer les titres
+Fiabiliser le coding
+Finaliser la partie CI
+Peaufiner les diagrammes
+Trouver un moyen d'interpeller sur l'impact, appel à l'action
+
+
+Forme : sous titre, en têtes pas assez contrastés
+
+Remettre en question les highlights de "conclusion" de slide
+
+diapo 19 : faire un bilan de la user story ajoutée
+
+prendre plus de temps sur le code, accompagner la compréhension et présenter le code
+
+mise en page de la slide présetnation speaker et +synthétique
+
+slide "avenir" et ensuite ? à ajouter
+
+QR code à mettre sur la slide de fin

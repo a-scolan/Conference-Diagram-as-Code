@@ -2,21 +2,37 @@
 
 ## 🎯 Objectif global
 
-Montrer comment passer d'une décision architecturale (ADR textuelle) à une **cartographie vivante et navigable** via **LikeC4**, démontrant que le Diagram-as-Code réconcilie la **vision métier** avec l'**implémentation technique**.
+Montrer comment passer d'une décision architecturale (ADR textuelle) à une **cartographie vivante et navigable** via **LikeC4**, démontrant que le Diagram-as-Code réconcilie la modélisation avec l'implémentation.
 
-**Cas d'étude**: AleFest Coffee - une évolution d'architecture de la V1 (synchrone) à la V2 (event-driven).
+**Cas d'étude**: AleFest Coffee - une évolution d'architecture de la V1 (synchrone au comptoir) à la V2 (mobile, event-driven et notifications push).
 
 ---
 
 ## 📋 Partie 0 : Introduction (5 min)
 
+Slide d'accueil : mots clefs = Architecture as code, diagrammes, C4, Live coding.
+
 ### Se présenter
+Alexis Scolan, architecte technique
+
+Chez Onepoint, je travaille sur les sujets d'architecture technique : intégrer de nouvelles solutions à des systèmes d'information complexes, en participant à leur bonne gestion et cartographie, et en apportant l'innovation nécessaire pour rendre les systèmes compréhensibles, pas juste dessinés.
+
+J'ai la conviction que les bonnes pratiques de code sont aussi applicables à la documentation technique, et que les outils de développement devraient être utilisés pour faire vivre nos architectures et documentations.
+aime les modèles versionnés, diffables et utilisables en revue de code
+
+Aujourd'hui, je vous le démontre sur un cas concret : AleFest Coffee, du texte d'ADR jusqu'au diagramme d'architecture interactif
+
+L'encart speaker latéral n'est pas nécessaire.
 
 ### Contexte : Le problème réel
 
 **Mise en scène** (slide + question audience):
+Titre de la slide : **Point de situation**.
 - "Qui a déjà fait un dessin pour expliquer un système ?"
 - "Qui a vu ce dessin devenir obsolète 6 mois plus tard ?"
+
+Formulation retenue : « ce PNG reflète l'état de notre système ».
+Conclusion de la diapo (à cheval sur les deux colonnes) : « Le problème, ce n'est pas de dessiner. C'est de garder le sens vivant après l'export. »
 
 **Le constat :**
 - Une architecture née sur un tableau blanc → figée en PNG/SVG
@@ -28,7 +44,7 @@ Montrer comment passer d'une décision architecturale (ADR textuelle) à une **c
 
 **Trois principes :**
 
-1. Une source de vérité unique : le code du modèle
+1. Une source de vérité *unique* : le code du modèle
    - Versionné, diffable, auditable
    - Peut être généré par l'IA ou écrit à la main - et éventuellement, sur la base du code applicatif existant !
 
@@ -42,19 +58,53 @@ Montrer comment passer d'une décision architecturale (ADR textuelle) à une **c
 
 ---
 
+### Modélisation C4
+présentation de la logique de modélisation C4 sur cet exemple
 
-## 🎬 LIVE DEMO Partie 1 : De l'ADR au Modèle (10 min)
+"Je vous emmène dans un voyage, du concept à la cartographie du système, du panorama à l'infiniment petit... Enfin juste vers des boites plus petites, mais on verra que ça fait toute la différence !" — C4, c'est le Google Maps de la modélisation.
 
----
-TODO : quelques slide de présentation du projet AleFest Coffee (contexte métier, V1 vs V2)
-Use case de commande
+#### Slide à ajouter : **C4 = le zoom intelligent de l'architecture**
 
----
+**Intent de la slide** : faire comprendre en 20 secondes que C4 n'est pas "un diagramme", mais une suite de vues cohérentes.
+
+**Contenu projeté (format 4 blocs)**
+
+1. **C1 — Contexte**
+  - Qui interagit avec le système ?
+  - Frontière métier
+
+2. **C2 — Containers**
+  - Comment le système est construit ?
+  - APIs, apps, bases, bus
+
+3. **C3 — Components**
+  - Qu'y a-t-il dans un container critique ?
+  - Responsabilités techniques
+
+4. **(Optionnel) Dynamique / Déploiement**
+  - Comment ça s'exécute ? Où ça tourne ?
+
+**Punchline speaker (bas de slide)**
+> "C4, c'est Google Maps : même territoire, niveaux de zoom différents, sans perdre le sens."
+
+**Note speaker (transition vers la démo)**
+- "On part C1 depuis l'ADR pour aligner métier + périmètre."
+- "Puis on zoome C2 pour rendre explicites les choix techniques."
+- "Enfin on montre le comportement et les impacts de changement."
+
+## 🎬 LIVE DEMO Partie 1 : Alefest Coffee
+
+
+présentation du projet AleFest Coffee et son ADR [Alefest.md](AleFest.md)
+présentation de la logique de modélisation C4 sur cet exemple
+
+"Je vous emmène dans un voyage, du concept à la cartographie du système, du panorama à l'infiniment petit... Enfin juste vers des boites plus petites, mais on verra que ça fait toute la différence !" — C4, c'est le Google Maps de la modélisation.
+
 
 ### Contexte : L'ADR en Markdown
 
 **Scénario** : On part d'une décision architecturale brute
-
+Il  faudra ici
 ```markdown
 # ADR-0006: Event-driven architecture pour AleFest Coffee V2
 
@@ -131,7 +181,6 @@ model {
 ---
 
 ## 🎬 LIVE DEMO Partie 2 : Containers (C2) + Comportements (15 min)
-
 ### Contexte : Affinage du modèle
 
 On **"zoome"** à l'intérieur du système pour détailler les briques logicielles.
@@ -162,52 +211,19 @@ Backend :
 **Code LikeC4 structurant le modèle** :
 
 ```likec4
-alefestCoffee = System_New 'AleFest Coffee' {
-  
-  // Frontends
-  festivalApp = Container_MobileApp 'Festival App' {
-    technology 'React Native, Expo, WebSocket'
-    description 'Commande mobile + notifications push'
-  }
-  
-  baristaScreen = Container_Spa 'Barista Screen' {
-    technology 'React, TypeScript, WebSocket'
-    description 'File en temps réel (WebSocket vs polling V1)'
-  }
+model {
+  alefestCoffee = System_New 'AleFest Coffee' {
+    orderService = Container_Api 'Order Service'
+    preparationService = Container_Api 'Preparation Service'
+    notificationService = Container_Api 'Notification Service'
+    eventBus = Container_Queue 'RabbitMQ'
+    database = Container_Database 'PostgreSQL'
 
-  // Services
-  orderService = Container_Api 'Order Service' {
-    technology 'Node.js, Express, RabbitMQ'
-    description 'Réception commandes, publish order.placed'
+    orderService -[async]-> eventBus 'Publier order.placed'
+    eventBus -[async]-> preparationService 'Consommer order.placed'
+    preparationService -[async]-> eventBus 'Publier order.ready'
+    eventBus -[async]-> notificationService 'Consommer order.ready'
   }
-
-  preparationService = Container_Service 'Preparation Service' {
-    technology 'Node.js, RabbitMQ consumer'
-    description 'Écoute order.placed, gère file de préparation'
-  }
-
-  notificationService = Container_Service 'Notification Service' {
-    technology 'Node.js, Firebase Cloud Messaging'
-    description 'Envoie notifications push quand commande prête'
-  }
-
-  eventBus = Container_MessageBroker 'RabbitMQ' {
-    technology 'RabbitMQ'
-    description 'Découplage asynchrone entre services'
-  }
-
-  database = Container_Database 'PostgreSQL' {
-    technology 'PostgreSQL 16'
-    description 'Persistance commandes + menu'
-  }
-
-  // Relations (qui parle à qui)
-  festivalApp -[async]-> orderService 'POST /orders'
-  orderService -[publishes]-> eventBus 'order.placed'
-  eventBus -[consumes]-> preparationService
-  preparationService -[publishes]-> eventBus 'order.ready'
-  eventBus -[consumes]-> notificationService
-  notificationService -[async]-> festivalApp 'Push FCM'
 }
 ```
 
@@ -220,25 +236,6 @@ alefestCoffee = System_New 'AleFest Coffee' {
 - **Point clé** : Le diagramme expose le pattern event-driven
 
 #### Vue 2 : **Sequence** (Scenario d'une commande)
-
-```
-Festivalier          Festival App    Order Service    RabbitMQ    Prep Service    Notification    Barista
-    |                    |                 |              |             |              |              |
-    |--- Tap Commande--->|                 |              |             |              |              |
-    |                    |-- POST /orders->|              |             |              |              |
-    |                    |                 |-- publish -->|             |              |              |
-    |                    |<-- 200 OK ------|              |             |              |              |
-    |<-- Receipt --------|                 |              |             |              |              |
-    |                    |                 |              |-> consume ->|             |              |
-    |                    |                 |              |             |-- publish ->|              |
-    | [Écoute concert]   |                 |              |             |             |-> FCM push --|
-    |                    |                 |              |             |             |<-- Ack -----|
-    |<-- Notification ---|<-- WebSocket ---|              |             |<-- Webhook-|              |
-    |                    |                 |              |             |             |              |
-    |-- Va chercher --->|                 |              |     [Order ready] <---|
-    |                    |                 |              |             |             |              |-- ✅
-    |<-- Cafe -----------|                 |              |             |             |              |
-```
 
 **Scénario raconté** : 
 1. Festivalier commande depuis son téléphone 📱
@@ -315,7 +312,7 @@ alefestCoffee = System_New 'AleFest Coffee' {
 
 ---
 
-## 🎯 Conclusion (5 min)
+## 🎯 Partie 5 : Bilan & conclusion (5 min)
 
 ### Synthèse
 
