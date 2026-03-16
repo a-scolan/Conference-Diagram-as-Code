@@ -204,51 +204,16 @@
 
   /* ============ SLIDE TYPE: TITLE ============ */
   .slide--title {
-    justify-content: space-between;
-    align-items: stretch;
-    text-align: left;
-    padding: clamp(28px, 4vh, 54px) clamp(28px, 5vw, 88px) clamp(52px, 7vh, 88px);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     background-color: var(--bg);
-    background-image:
-      linear-gradient(112deg, rgba(8, 13, 42, 0.92) 0%, rgba(8, 13, 42, 0.84) 44%, rgba(8, 13, 42, 0.58) 100%),
-      radial-gradient(circle at 15% 18%, rgba(251, 254, 122, 0.16) 0%, transparent 24%),
-      radial-gradient(circle at 78% 24%, rgba(56, 180, 232, 0.18) 0%, transparent 22%),
-      radial-gradient(circle at 74% 86%, rgba(240, 136, 72, 0.18) 0%, transparent 28%),
-      var(--elephant-bg);
-    background-size: auto, auto, auto, auto, cover;
-    background-position: center, center, center, center, center;
+    background-image: var(--elephant-bg);
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
     position: relative;
     overflow: hidden;
-  }
-
-  .slide--title::before {
-    content: '';
-    position: absolute;
-    inset: clamp(16px, 2.2vh, 28px);
-    border-radius: 28px;
-    border: 1px solid rgba(251, 254, 122, 0.16);
-    background:
-      linear-gradient(135deg, rgba(12, 18, 56, 0.80) 0%, rgba(12, 18, 56, 0.58) 48%, rgba(9, 15, 47, 0.38) 100%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 38%);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      0 18px 60px rgba(3, 6, 22, 0.42);
-    z-index: 0;
-  }
-
-  .slide--title::after {
-    content: '';
-    position: absolute;
-    right: -12%;
-    bottom: -22%;
-    width: min(42vw, 620px);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(251, 254, 122, 0.22) 0%, rgba(251, 254, 122, 0.08) 38%, transparent 68%);
-    filter: blur(10px);
-    pointer-events: none;
-    z-index: 0;
   }
 
   .slide--title > * {
@@ -257,87 +222,67 @@
   }
 
   .slide--title .slide__display {
-    color: var(--text);
-    font-size: clamp(54px, 9vw, 132px);
-    letter-spacing: -3px;
-    line-height: 0.88;
-    max-width: 8ch;
+    color: var(--accent);
+    font-size: clamp(44px, 9vw, 108px);
   }
 
-  .title-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.24fr) minmax(280px, 0.86fr);
-    gap: clamp(24px, 4vw, 72px);
-    align-items: center;
-    width: 100%;
-    flex: 1;
-    min-height: 0;
+  /* ============ SLIDE TYPE: SPEAKER ============ */
+  .slide--speaker .slide__inner {
+    grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+    align-items: stretch;
+    gap: clamp(24px, 3.6vw, 48px);
   }
 
-  .title-hero__content,
-  .title-hero__rail {
-    min-width: 0;
-  }
-
-  .title-hero__content {
+  .speaker-intro {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: clamp(12px, 2vh, 24px);
+    min-width: 0;
+    gap: clamp(12px, 1.8vh, 22px);
   }
 
-  .title-hero__eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .title-hero__flash {
-    width: fit-content;
-    max-width: 100%;
-    padding: 8px 14px;
-    border-radius: 999px;
-    border: 1px solid rgba(240, 136, 72, 0.34);
-    background: rgba(240, 136, 72, 0.12);
+  .speaker-intro__kicker {
+    margin: 0;
     color: var(--accent2);
     font-family: var(--font-mono);
-    font-size: clamp(12px, 1.2vw, 14px);
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-size: clamp(13px, 1.2vw, 15px);
+    font-weight: 700;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
 
-  .title-hero__lede {
-    max-width: 32ch;
-    font-size: clamp(20px, 2.4vw, 30px);
-    line-height: 1.32;
+  .speaker-intro__role {
+    margin: 0;
+    font-size: clamp(24px, 2.6vw, 32px);
+    line-height: 1.2;
     color: var(--text);
-    text-wrap: balance;
   }
 
-  .title-hero__lede strong { color: var(--accent); }
+  .speaker-intro__lead {
+    max-width: 34ch;
+    font-size: clamp(18px, 2.2vw, 26px);
+    line-height: 1.42;
+    color: var(--text);
+  }
 
-  .title-hero__chips,
-  .title-hero__footer {
+  .speaker-intro__lead strong { color: var(--accent); }
+
+  .speaker-pill-list {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
   }
 
-  .title-chip,
-  .title-meta {
+  .speaker-pill {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    min-width: 0;
     padding: 10px 14px;
     border-radius: 999px;
     border: 1px solid rgba(251, 254, 122, 0.14);
-    background: rgba(8, 13, 42, 0.34);
+    background: rgba(8, 13, 42, 0.24);
     color: var(--text-dim);
     font-family: var(--font-mono);
-    font-size: clamp(11px, 1.05vw, 13px);
+    font-size: clamp(11px, 1.04vw, 13px);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -345,76 +290,122 @@
     -webkit-backdrop-filter: blur(8px);
   }
 
-  .title-chip--accent {
-    color: #091022;
-    background: var(--accent);
-    border-color: transparent;
-  }
-
-  .title-hero__rail {
+  .speaker-panels {
     display: grid;
-    gap: 14px;
+    gap: 16px;
     align-content: center;
+    min-width: 0;
   }
 
-  .title-step {
+  .speaker-panel {
     position: relative;
     overflow: hidden;
-    padding: clamp(18px, 2.2vh, 24px) clamp(18px, 1.8vw, 24px);
     border-radius: 22px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: linear-gradient(155deg, rgba(12, 18, 56, 0.92) 0%, rgba(16, 24, 72, 0.82) 100%);
-    box-shadow: 0 14px 36px rgba(4, 8, 26, 0.28);
+    border: 1px solid rgba(251, 254, 122, 0.10);
+    background: linear-gradient(155deg, rgba(12, 18, 56, 0.92) 0%, rgba(16, 24, 72, 0.84) 100%);
+    padding: clamp(18px, 2.1vh, 24px);
+    box-shadow: 0 18px 42px rgba(4, 8, 26, 0.24);
   }
 
-  .title-step::before {
+  .speaker-panel::before {
     content: '';
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
     width: 4px;
-    opacity: 0.92;
+    background: var(--accent);
   }
 
-  .title-step:nth-child(1) { transform: translateX(-20px) rotate(-2deg); }
-  .title-step:nth-child(2) { transform: translateX(12px) rotate(1.5deg); }
-  .title-step:nth-child(3) { transform: translateX(-10px) rotate(-1deg); }
+  .speaker-panel--alt::before { background: var(--accent3); }
 
-  .title-step--accent::before { background: var(--accent); }
-  .title-step--blue::before { background: var(--accent3); }
-  .title-step--orange::before { background: var(--accent2); }
-
-  .title-step__num {
-    display: inline-flex;
-    margin-bottom: 8px;
+  .speaker-panel__eyebrow {
+    margin: 0 0 8px;
     color: var(--text-dim);
     font-family: var(--font-mono);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
   }
 
-  .title-step__title {
-    font-size: clamp(22px, 2.2vw, 30px);
-    font-weight: 700;
-    line-height: 1.05;
+  .speaker-panel__title {
+    margin: 0;
+    font-size: clamp(24px, 2.5vw, 34px);
+    line-height: 1.08;
     color: var(--text);
   }
 
-  .title-step__body {
-    margin-top: 8px;
-    font-size: clamp(14px, 1.35vw, 17px);
-    line-height: 1.45;
+  .speaker-panel__text {
+    margin: 10px 0 0;
+    font-size: clamp(14px, 1.4vw, 18px);
+    line-height: 1.5;
     color: var(--text-dim);
-    text-wrap: pretty;
   }
 
-  .title-hero__footer {
-    margin-top: clamp(14px, 2vh, 22px);
-    padding-top: clamp(12px, 1.8vh, 18px);
-    border-top: 1px solid rgba(251, 254, 122, 0.12);
+  .speaker-proof {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .speaker-proof__item {
+    padding: 12px 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(8, 13, 42, 0.28);
+  }
+
+  .speaker-proof__label {
+    display: block;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .speaker-proof__value {
+    display: block;
+    margin-top: 6px;
+    color: var(--text);
+    font-size: clamp(16px, 1.8vw, 20px);
+    line-height: 1.35;
+    font-weight: 700;
+  }
+
+  .speaker-roadmap {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0;
+    display: grid;
+    gap: 12px;
+  }
+
+  .speaker-roadmap li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: start;
+    color: var(--text-dim);
+    font-size: clamp(14px, 1.35vw, 17px);
+    line-height: 1.45;
+  }
+
+  .speaker-roadmap__step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
   }
 
   /* ============ SLIDE TYPE: DIVIDER ============ */
@@ -844,23 +835,15 @@
   @media (max-height: 700px) {
     .slide { padding: clamp(24px, 4vh, 40px) clamp(32px, 6vw, 80px); }
     .slide__display { font-size: clamp(36px, 8vw, 72px); }
-    .slide--title { padding-bottom: clamp(34px, 5vh, 48px); }
-    .title-step { padding: 14px 16px; }
   }
   @media (max-width: 768px) {
-    .slide--title {
-      justify-content: center;
-      padding: clamp(24px, 4vh, 36px) clamp(24px, 5vw, 32px) clamp(40px, 6vh, 56px);
-    }
-    .title-hero { grid-template-columns: 1fr; }
-    .title-hero__lede,
-    .slide--title .slide__display { max-width: none; }
-    .title-hero__rail { grid-template-columns: 1fr; }
-    .title-step:nth-child(1),
-    .title-step:nth-child(2),
-    .title-step:nth-child(3) { transform: none; }
     .slide--content .slide__inner { grid-template-columns: 1fr; }
     .slide--content .slide__aside { display: none; }
+    .slide--speaker .slide__aside {
+      display: grid;
+      min-height: auto;
+    }
+    .speaker-proof { grid-template-columns: 1fr; }
     .slide--split .slide__panels { grid-template-columns: 1fr; }
     .slide__code-diff { grid-template-columns: 1fr; }
     .slide__demo-grid { grid-template-columns: 1fr; }
@@ -878,70 +861,63 @@
   .deck-dot:focus-visible {
     opacity: 1;
     transform: scale(1.5);
-  }
-
-  /* High contrast mode (WCAG 1.4.11) */
-  @media (prefers-contrast: more) {
-    :root {
-      --border: rgba(251, 254, 122, 0.15);
-      --border-bright: rgba(251, 254, 122, 0.35);
-      --text-dim: #c0d0e8;
-      --accent-dim: rgba(251, 254, 122, 0.15);
-    }
-    .slide__code-block { border-width: 2px; border-left-width: 5px; }
-    .slide__code-diff .slide__code-block { border-left-width: 5px; }
-    .slide__kpi { border-width: 2px; border-top-width: 4px; }
-    .callout { border-left-width: 4px; }
-    .table-wrap { border-width: 2px; }
-    .data-table th { border-bottom-width: 3px; }
-    .data-table td { border-bottom-width: 2px; }
-    .mermaid-wrap { border-width: 2px; }
-  }
-
-  /* Reduced motion (WCAG 2.3.3) */
-  @media (prefers-reduced-motion: reduce) {
-    * { scroll-behavior: auto !important; }
-  }
-</style>
-</head>
-<body>
-
-<div class="deck" role="region" aria-label="Présentation : Ne dessinez plus vos architectures, codez-les">
-
-  <!-- ═══════════════════════════════════════════
-       PARTIE 1 : INTRODUCTION
-       ═══════════════════════════════════════════ -->
-
-  <!-- SLIDE 1 — TITRE -->
-  <section class="slide slide--title">
-    <div class="title-hero">
-      <div class="title-hero__content">
+      <div class="reveal" style="margin-bottom:clamp(16px,3vh,32px);">
+        <p class="slide__subtitle" style="letter-spacing:3px; color:var(--accent);">Atlantique Day 2026</p>
+      </div>
+      <h1 class="slide__display reveal">Ne dessinez plus<br>vos architectures&nbsp;:</h1>
+      <h1 class="slide__display reveal" style="color:var(--text); font-size:clamp(32px,6.5vw,80px); margin-top:8px;">codez-les&nbsp;!</h1>
+      <div class="reveal" style="margin-top:clamp(24px,4vh,48px); display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <span class="slide__accent-line" style="width:80px; height:4px;"></span>
+        <p class="slide__subtitle" style="color:var(--text-dim); margin-top:8px;">Architecture as code &middot; diagrammes &middot; C4 &middot; Live coding</p>
         <div class="title-hero__eyebrow reveal">
           <p class="slide__subtitle" style="letter-spacing:3px; color:var(--accent);">Atlantique Day 2026</p>
           <span class="title-chip title-chip--accent">Diagram as Code</span>
+    <!-- SLIDE 2 — SPEAKER -->
+    <section class="slide slide--content slide--speaker" data-nav="Speaker" data-part="0" style="background-image:radial-gradient(ellipse at 82% 20%, var(--accent2-dim) 0%, transparent 36%), radial-gradient(ellipse at 14% 85%, var(--accent3-dim) 0%, transparent 42%);">
+      <div class="slide__inner">
+        <div class="speaker-intro">
+          <p class="slide__label reveal">Speaker</p>
+          <p class="speaker-intro__kicker reveal">Architecture &middot; cartographie &middot; outillage</p>
+          <h2 class="slide__heading reveal" style="font-size:clamp(40px,6vw,72px); line-height:0.95; margin:0;">Alexis Scolan</h2>
+          <p class="speaker-intro__role reveal">Architecte technique chez <strong style="color:var(--accent);">onepoint</strong></p>
+          <p class="speaker-intro__lead reveal">
+            J'aide les équipes à rendre leurs systèmes <strong>lisibles</strong>, <strong>versionnés</strong> et utiles en revue — pas juste joliment dessinés pour la photo de famille.
+          </p>
+          <div class="speaker-pill-list reveal">
+            <span class="speaker-pill">Vision métier ↔ implémentation</span>
+            <span class="speaker-pill">Modèles diffables</span>
+            <span class="speaker-pill">Architecture reviewable</span>
+          </div>
+          <div class="callout callout--orange reveal" style="margin-top:20px;">
+            Aujourd'hui, on prend <strong>AleFest Coffee</strong> et on va du texte d'ADR jusqu'au portail d'architecture vivant.
+          </div>
         </div>
-        <p class="title-hero__flash reveal">Arrêtons les PNG orphelins.</p>
-        <h1 class="slide__display reveal">L'architecture<br><span style="color:var(--accent);">se code.</span></h1>
-        <p class="title-hero__lede reveal">Un modèle <strong>vivant</strong>, versionné dans Git, relu en PR et projeté comme une app — pas comme une capture d'écran.</p>
-        <div class="title-hero__chips reveal">
-          <span class="title-chip">Git-friendly</span>
-          <span class="title-chip">C4 multi-zoom</span>
-          <span class="title-chip">Live coding</span>
-          <span class="title-chip">PR-ready</span>
+        <div class="slide__aside speaker-panels">
+          <article class="speaker-panel reveal">
+            <p class="speaker-panel__eyebrow">Ce que j'apporte</p>
+            <h3 class="speaker-panel__title">Faire parler le modèle au dev, à l'archi et au métier.</h3>
+            <p class="speaker-panel__text">Mon angle : partir d'un besoin concret, éviter le diagramme jetable et rendre l'architecture exploitable dans Git et les PR.</p>
+            <div class="speaker-proof">
+              <div class="speaker-proof__item">
+                <span class="speaker-proof__label">Focus</span>
+                <span class="speaker-proof__value">Architecture vivante</span>
+              </div>
+              <div class="speaker-proof__item">
+                <span class="speaker-proof__label">Terrain</span>
+                <span class="speaker-proof__value">Vrai cas AleFest Coffee</span>
+              </div>
+            </div>
+          </article>
+          <article class="speaker-panel speaker-panel--alt reveal">
+            <p class="speaker-panel__eyebrow">En quelques minutes</p>
+            <ul class="speaker-roadmap">
+              <li><span class="speaker-roadmap__step">01</span><span>on part d'une <strong>ADR</strong> et on extrait le squelette du modèle</span></li>
+              <li><span class="speaker-roadmap__step">02</span><span>on zoome en <strong>C1 puis C2</strong> pour rendre le système compréhensible</span></li>
+              <li><span class="speaker-roadmap__step">03</span><span>on termine avec une <strong>PR</strong> et un portail interactif qui vit avec le code</span></li>
+            </ul>
+          </article>
         </div>
       </div>
-      <div class="title-hero__rail" aria-hidden="true">
-        <article class="title-step title-step--accent reveal">
-          <span class="title-step__num">01 · besoin</span>
-          <div class="title-step__title">ADR / Markdown</div>
-          <p class="title-step__body">On part du texte métier, pas d'un schéma figé qu'il faudra refaire demain.</p>
-        </article>
-        <article class="title-step title-step--blue reveal">
-          <span class="title-step__num">02 · modèle</span>
-          <div class="title-step__title">DSL LikeC4</div>
-          <p class="title-step__body">Une source versionnée, diffable et capable de produire plusieurs vues sans recopier l'intention.</p>
-        </article>
-        <article class="title-step title-step--orange reveal">
           <span class="title-step__num">03 · rendu</span>
           <div class="title-step__title">Portail vivant</div>
           <p class="title-step__body">C1, C2, séquences, review et demo : la présentation devient interactive et fun.</p>
