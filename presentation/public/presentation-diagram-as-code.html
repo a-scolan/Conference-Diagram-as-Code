@@ -1654,7 +1654,41 @@
 
   .qr-caption {
     margin-top: 14px; text-align: center;
-    font-family: var(--font-mono); font-size: calc(12px + var(--font-bump)); color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: calc(clamp(17px, 2vw, 24px) + var(--font-bump));
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    line-height: 1.28;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    background: rgba(8, 13, 42, 0.62);
+    border: 1px solid rgba(251, 254, 122, 0.22);
+    border-radius: 12px;
+    padding: 8px 14px;
+  }
+
+  .slide--bleed .slide__aside--feedback {
+    position: absolute;
+    top: var(--merci-qr-top, clamp(22px, 3.4vh, 44px));
+    left: 0;
+    right: 0;
+    width: 100%;
+    transform: none;
+    z-index: 3;
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .slide--bleed .slide__aside--feedback .qr-spotlight {
+    margin-inline: auto;
+  }
+
+  .slide--bleed .slide__aside--feedback .qr-caption {
+    color: #ffffff;
+    background: rgba(8, 13, 42, 0.72);
+    border-color: rgba(255, 255, 255, 0.26);
   }
 
   .slide [style*="font-size:18px"] { font-size: calc(18px + var(--font-bump)) !important; }
@@ -1822,20 +1856,19 @@
       </div>
     </div>
   </section>
-  ajouter une slide présentant l'image "drawio.png" ici pour illustrer le propos
+  <section class="slide slide--quote" data-nav="Le problème réel — message" data-part="0" style="background-image:radial-gradient(ellipse at 50% 20%, var(--green-dim) 0%, transparent 40%), radial-gradient(ellipse at 50% 82%, var(--accent-dim) 0%, transparent 48%);">
+    <div class="callout callout--green reveal">Le problème c'est de pouvoir faire vivre ces connaissances dans le temps.</div>
+  </section>
+  
   <section class="slide slide--content" data-nav="Le problème réel — dessin" data-part="0" style="background-image:radial-gradient(ellipse at 50% 20%, var(--accent2-dim) 0%, transparent 40%), radial-gradient(ellipse at 50% 82%, var(--accent3-dim) 0%, transparent 48%);">
 	<div class="slide__inner" style="grid-template-columns:1fr; align-items:center;">
 	  <div>
-		<h2 class="slide__heading reveal">Notre probl&egrave;me n'est pas la qualité du dessin.</h2>
+		<h2 class="slide__heading reveal">Pas la qualité du dessin.</h2>
     <img src="assets/drawio.png" alt="Un dessin d'architecture typique, réalisé avec un outil de type draw.io, avec des boîtes et des flèches représentant les composants du système et leurs interactions." style="width:100%; max-width:800px; display:block; margin:24px auto 0;">
 	  </div>
 	</div>
   </section>
 
-  <section class="slide slide--quote" data-nav="Le problème réel — message" data-part="0" style="background-image:radial-gradient(ellipse at 50% 20%, var(--green-dim) 0%, transparent 40%), radial-gradient(ellipse at 50% 82%, var(--accent-dim) 0%, transparent 48%);">
-    <div class="callout callout--green reveal">Le problème c'est de pouvoir faire vivre ces connaissances dans le temps.</div>
-  </section>
-  
   <section class="slide slide--content" data-nav="Changer de paradigme" data-part="0" style="background-image:radial-gradient(ellipse at 50% 20%, var(--accent-dim) 0%, transparent 40%);">
     <div class="slide__inner" style="grid-template-columns:1fr;">
       <div>
@@ -2537,14 +2570,14 @@ flowchart TD
           <li class="reveal">Quel nouveau service entre dans le jeu&nbsp;?</li>
           <li class="reveal">Qui parle &agrave; qui apr&egrave;s le changement&nbsp;?</li>
           <li class="reveal">Cr&eacute;e-t-on un nouveau point chaud, une d&eacute;pendance ou une boucle&nbsp;?</li>
-          <li class="reveal">L'IA peut proposer&nbsp;; <strong>les humains valident la logique</strong></li>
         </ul>
       </div>
       <div class="slide__aside reveal" style="width:min(100%,460px); justify-self:end;">
         <div class="speaker-card" style="width:min(100%,460px); min-height:260px; padding:32px; display:flex; flex-direction:column; justify-content:center;">
           <p class="speaker-card__eyebrow">Question de relecteurs</p>
           <h3 class="speaker-card__name" style="font-size:clamp(24px,3.6vw,34px);">&laquo;&nbsp;Qu'est-ce qui change vraiment&nbsp;?&nbsp;&raquo;</h3>
-          <p class="speaker-card__meta">Avec un diff visuel et textuel, la r&eacute;ponse n'est plus cach&eacute;e dans de la prose ou dans un sch&eacute;ma &agrave; refaire &agrave; la main.</p>
+          <br> 
+		  <p class="speaker-card__meta">Avec un diff visuel et textuel, la r&eacute;ponse n'est plus cach&eacute;e dans de la prose ou dans un sch&eacute;ma &agrave; refaire &agrave; la main.</p>
         </div>
       </div>
     </div>
@@ -2605,7 +2638,7 @@ graph LR
       <p class="slide__label reveal" style="color:var(--accent4);">Partie 5</p>
       <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">Et alors?</h2>
       <span class="slide__accent-line reveal" style="width:80px; height:4px; background:var(--accent4);"></span>
-      <p class="slide__subtitle reveal" style="margin-top:20px;">A retenir et comment repartir avec du concret</p>
+      <p class="slide__subtitle reveal" style="margin-top:20px;">Que retenir et comment repartir avec du concret</p>
     </div>
   </section>
 
@@ -2701,15 +2734,15 @@ graph LR
     <div class="slide__inner">
       <div>
         <p class="slide__label reveal" style="color:var(--accent4);">Ressources</p>
-        <h2 class="slide__heading reveal">Pour refaire &ccedil;a chez vous</h2>
+        <h2 class="slide__heading reveal">Pour manipuler et approfondir</h2>
         <div class="resource-list">
           <div class="resource-item reveal">
             <div class="resource-item__tag">Docs</div>
             <div class="resource-item__body"><a href="https://likec4.dev" target="_blank" rel="noopener">likec4.dev</a><br>Documentation officielle et extension VS Code.</div>
           </div>
           <div class="resource-item reveal">
-            <div class="resource-item__tag">Demo</div>
-            <div class="resource-item__body"><a href="https://github.com/a-scolan/c4-hands-on-demo" target="_blank" rel="noopener">github.com/a-scolan/c4-hands-on-demo</a><br>Repo d'exploration et de prise en main.</div>
+            <div class="resource-item__tag">Démo</div>
+            <div class="resource-item__body"><a href="https://a-scolan.github.io/c4-hands-on-demo/" target="_blank" rel="noopener">a-scolan.github.io/c4-hands-on-demo</a><br>Repo d'exploration et de prise en main.</div>
           </div>
           <div class="resource-item reveal">
             <div class="resource-item__tag">Template</div>
@@ -2721,11 +2754,15 @@ graph LR
           </div>
         </div>
       </div>
-      <div class="slide__aside reveal" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
-        <div class="qr-spotlight">
-          <img src="./assets/image.png" alt="QR code OpenFeedback pour la session Diagram as Code">
-        </div>
-        <p class="qr-caption">OpenFeedback &middot; scannez-moi pour vos retours</p>
+      <div class="slide__aside reveal" style="display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+        <h3 style="font-size: clamp(16px,2vw,22px); font-weight: 700; color: var(--accent4); margin: 0 0 14px 0;">Et pour l'avenir ?</h3>
+        <ul class="slide__bullets" style="margin:0;">
+          <li class="reveal"><strong>Reverse engineering ?</strong> &mdash; Générer des diagrammes à partir d&rsquo;une infrastructure existante (Helm, Azure, AWS&hellip;)</li>
+          <li class="reveal"><strong>Infrastructure et réseau</strong> &mdash; Déduire des règles de sécurité et pare-feux</li>
+          <li class="reveal"><strong>ArchiMate et TOGAF en LikeC4</strong> &mdash; Implémenter ArchiMate avec skills IA pour standardiser et démocratiser le TOGAF</li>
+          <li class="reveal"><strong>Enterprise</strong> &mdash; Intégrer LikeC4 aux outils d&rsquo;architecture d&rsquo;entreprise existants</li>
+          <li class="reveal" style="color:var(--accent);"><strong>Vos idées ?</strong> C'est libre et opensource</li>
+        </ul>
       </div>
     </div>
   </section>
@@ -2733,11 +2770,11 @@ graph LR
   
   <section class="slide slide--bleed" data-nav="Merci">
     <div class="slide__bg slide__bg--gradient"></div>
-	<div class="slide__aside reveal" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+	<div class="slide__aside slide__aside--feedback reveal" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
 	  <div class="qr-spotlight">
 		<img src="./assets/image.png" alt="QR code OpenFeedback pour la session Diagram as Code">
 	  </div>
-	  <p class="qr-caption">OpenFeedback &middot; scannez-moi pour vos retours</p>
+	  <p class="qr-caption">OpenFeedback</p>
 	</div>
     <div class="slide__content">
       <p class="slide__label reveal" style="color:var(--accent4); letter-spacing:2px;">Questions / Réponses</p>
@@ -2754,9 +2791,6 @@ graph LR
       <div class="reveal" style="margin-top:32px;">
         <p style="font-size:clamp(14px,1.8vw,20px); color:var(--text-dim);">
           Alexis Scolan &mdash; <span style="color:var(--accent2);">onepoint</span> &middot; Architecte technique
-        </p>
-        <p style="font-size:clamp(12px,1.5vw,16px); color:var(--text-dim); margin-top:8px;">
-          Et ensuite&nbsp;? G&eacute;n&eacute;ration depuis le code existant, graphes inter-projets, et encore plus d'automatisation utile.
         </p>
       </div>
     </div>
@@ -2831,6 +2865,27 @@ graph LR
     }
   });
 
+  function updateMerciQrSpotlightPosition() {
+    var slide = document.querySelector('.slide[data-nav="Merci"]');
+    if (!slide) return;
+    var aside = slide.querySelector('.slide__aside--feedback');
+    var qr = aside ? aside.querySelector('.qr-spotlight') : null;
+    var subtitle = slide.querySelector('.slide__content .slide__subtitle');
+    if (!aside || !qr || !subtitle) return;
+
+    var slideRect = slide.getBoundingClientRect();
+    var subtitleRect = subtitle.getBoundingClientRect();
+    var qrRect = qr.getBoundingClientRect();
+
+    var availableBottom = Math.max(0, subtitleRect.top - slideRect.top);
+    var centeredTop = (availableBottom - qrRect.height) / 2;
+    var minTop = 12;
+    var maxTop = Math.max(minTop, availableBottom - qrRect.height);
+    var computedTop = Math.max(minTop, Math.min(centeredTop, maxTop));
+
+    slide.style.setProperty('--merci-qr-top', Math.round(computedTop) + 'px');
+  }
+
   function autoFit() {
     document.querySelectorAll('.mermaid').forEach(function(mDiv) {
       var svg = mDiv.querySelector('svg');
@@ -2879,6 +2934,7 @@ graph LR
         el.style.fontSize = Math.max(16, Math.round(fs * scale)) + 'px';
       }
     });
+    updateMerciQrSpotlightPosition();
   }
 
 
@@ -2896,6 +2952,7 @@ graph LR
   }
   mermaid.run().then(function() {
     autoFit();
+    window.addEventListener('resize', autoFit, { passive: true });
     /* Initialise zoom layout so .mermaid divs have explicit dimensions */
     enforcePart0GrayMarkers();
     document.querySelectorAll('.mermaid-wrap').forEach(function(w){ var t=w.querySelector('.mermaid'); var z=getInitialZoom(w); t.dataset.zoom=String(z); t.style.transform='scale('+z+')'; updateZoomState(w); updateZoomLayout(w); });
