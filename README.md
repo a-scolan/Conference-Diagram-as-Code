@@ -6,17 +6,18 @@ Le fil rouge du talk est **AleFest Coffee** : une évolution d'architecture entr
 
 ## Démarrer la présentation
 
-La présentation HTML enrichie se trouve dans `server/public/presentation-diagram-as-code.html`.
+La présentation HTML enrichie se trouve dans `presentation/public/presentation-diagram-as-code.html`.
 
-Pour la servir localement :
+Pour reconstruire les builds LikeC4 single-file utilisés par les iframes, puis servir la présentation localement :
 
 ```bash
-cd server
+cd presentation
 npm install
+npm run build
 npm start
 ```
 
-Puis ouvrez `http://localhost:3000/presentation-diagram-as-code.html`.
+Puis ouvrez `http://localhost:4000/presentation-diagram-as-code.html`.
 
 ## Explorer les modèles LikeC4
 
@@ -43,7 +44,9 @@ Vous pouvez faire la même chose avec `projects/coffee-v1` pour comparer les deu
 - `AleFest.md` — décision architecturale et contexte métier source
 - `projects/coffee-v2/system-model.c4` — modèle système V2
 - `projects/coffee-v2/system-views.c4` — vues C1, C2 et dynamiques
-- `server/public/assets/image.png` — QR code OpenFeedback utilisé dans la présentation
+- `presentation/public/assets/coffee-v1-single/index.html` — build single-file LikeC4 pour la V1
+- `presentation/public/assets/coffee-v2-single/index.html` — build single-file LikeC4 pour la V2
+- `presentation/build-single-assets.js` — script de synchronisation des builds LikeC4 vers les assets publics
 - `Draft déroulé.md` — déroulé éditorial de la session
 
 ## Structure rapide
@@ -57,6 +60,15 @@ projects/
 │   └── ADR/
 ├── exemple-likeC4/
 └── shared/
+Test LikeC4/
+presentation/
+├── public/
+│   ├── assets/
+│   └── presentation-diagram-as-code.html
+├── likec4/
+│   └── projects/
+├── build-single-assets.js
+└── server.js
 server/
 ├── public/
 │   ├── assets/

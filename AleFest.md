@@ -24,6 +24,9 @@ Le fil rouge est simple : **V1 structure déjà le domaine en services découpl�
 ## ADR-001 : Digitaliser le stand café
 
 ```markdown
+# Status
+Accepted
+
 # Contexte
 Le stand café du festival AleFest souffre de 3 problèmes :
 - File d'attente physique : les festivaliers bloquent 15 min et ratent des concerts
@@ -39,6 +42,11 @@ Créer un système de prise de commande numérique au comptoir avec :
 # Contraintes
 - Les baristas doivent pouvoir marquer une commande "prête" en un tap
 - Le festivalier attend au comptoir (V1 = synchrone)
+
+# Conséquences
+- Réduit la file physique au comptoir
+- Donne une meilleure visibilité aux baristas sur les commandes en cours
+- Pose une base simple pour une évolution mobile ultérieure
 ```
 
 ---
