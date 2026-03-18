@@ -15,6 +15,10 @@ model {
     '''
   }
 
+  extend festivalier {
+	
+  }
+
   barista = Actor_Staff 'Barista' {
     style {
       icon @/lucide-static/badge.svg

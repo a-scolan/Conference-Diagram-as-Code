@@ -1,14 +1,13 @@
 
+Trouver un moyen d'interpeller sur l'impact, appel à l'action
 
-Combler et insérer un peu plus de contenu, détailler plus de contexte : combler 5-10 min de plus
+slide "avenir" et ensuite ? à ajouter
+slide "d'avenir" et appel à l'action
 
 Ecrire un texte d'intro à lire pour être bien formel et clair : pas de "je", que le sujet et l'objectif
 
 ajouter une définition de ADR
-séparer la v1 et la v2
-slide "d'avenir" et appel à l'action
 
-remettre le qr code à la toute fin
 
 virer les "thèmes"  en bas de la slide d'intro, mettre nom prénom
 setup de départ :
@@ -18,9 +17,6 @@ setup de départ :
 - navigateur chargé et VRAIMENT en plein écran
 - batterie portable chargée
 
-vulgariser la slide 5 car les éléments de seront définis plus tard
-
-recadrer le narratif, v2 PLUS TARD
 
 un gros ET ALORS à la place de bilan et conclusion
 

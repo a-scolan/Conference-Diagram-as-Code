@@ -13,6 +13,7 @@
   :root {
     --font-body: 'Poppins', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --font-bump: 5px;
     --bg: #080d2a;
     --surface: #0c1238;
     --surface2: #101848;
@@ -267,14 +268,14 @@
 
   .deck-counter {
     position: fixed; bottom: clamp(22px, 3.5vh, 40px); right: clamp(8px, 1.2vw, 14px);
-    font-family: var(--font-mono); font-size: 12px; color: var(--text-subtitle);
+    font-family: var(--font-mono); font-size: calc(12px + var(--font-bump)); color: var(--text-subtitle);
     z-index: 100; text-shadow: 0 1px 3px rgba(0,0,0,0.3);
   }
 
   .deck-hints {
     position: fixed; bottom: clamp(56px, 8vh, 92px); left: 50%;
     transform: translateX(-50%); font-family: var(--font-mono);
-    font-size: 11px; color: var(--text-subtitle); opacity: 0.88; z-index: 100;
+    font-size: calc(11px + var(--font-bump)); color: var(--text-subtitle); opacity: 0.88; z-index: 100;
     transition: opacity 0.5s ease; white-space: nowrap;
     text-shadow: 0 1px 3px rgba(0,0,0,0.3);
   }
@@ -282,30 +283,30 @@
 
   /* ============ SHARED ELEMENTS ============ */
   .slide__display {
-    font-size: clamp(48px, 10vw, 120px);
+    font-size: calc(clamp(48px, 10vw, 120px) + var(--font-bump));
     font-weight: 900; letter-spacing: -2px; line-height: 0.95; text-wrap: balance;
   }
 
   .slide__heading {
-    font-size: clamp(28px, 5vw, 48px);
+    font-size: calc(clamp(28px, 5vw, 48px) + var(--font-bump));
     font-weight: 700; letter-spacing: -0.5px; line-height: 1.15; text-wrap: balance;
   }
 
   .slide__body {
-    font-size: clamp(16px, 2.2vw, 22px);
+    font-size: calc(clamp(16px, 2.2vw, 22px) + var(--font-bump));
     line-height: 1.6; color: var(--text-dim); text-wrap: pretty;
   }
 
   .slide__subtitle {
     font-family: var(--font-mono);
-    font-size: clamp(13px, 1.5vw, 18px);
+    font-size: calc(clamp(13px, 1.5vw, 18px) + var(--font-bump));
     color: var(--text-subtitle); letter-spacing: 0.08em; text-transform: uppercase;
     font-weight: 600;
   }
 
   .slide__label {
     font-family: var(--font-mono);
-    font-size: clamp(12px, 1.3vw, 14px); font-weight: 600;
+    font-size: calc(clamp(12px, 1.3vw, 14px) + var(--font-bump)); font-weight: 600;
     text-transform: uppercase; letter-spacing: 1.5px;
     color: var(--accent); margin-bottom: 12px;
   }
@@ -338,12 +339,12 @@
 
   .slide--title .slide__display {
     color: var(--accent);
-    font-size: clamp(44px, 9vw, 108px);
+    font-size: calc(clamp(44px, 9vw, 108px) + var(--font-bump));
   }
 
   /* ============ SLIDE TYPE: SPEAKER ============ */
-  .slide--speaker .slide__inner {
-    grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+  .slide--content.slide--speaker .slide__inner {
+    grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
     gap: clamp(24px, 3.6vw, 48px);
   }
@@ -356,11 +357,22 @@
     gap: clamp(12px, 1.8vh, 22px);
   }
 
+  .slide--speaker .speaker-intro > .reveal {
+    width: 100%;
+    max-width: none;
+  }
+
+  .slide--speaker .slide__heading.reveal,
+  .slide--speaker .speaker-intro__role.reveal,
+  .slide--speaker .speaker-intro__lead.reveal {
+    text-wrap: initial;
+  }
+
   .speaker-intro__kicker {
     margin: 0;
     color: var(--accent2);
     font-family: var(--font-mono);
-    font-size: clamp(13px, 1.2vw, 15px);
+    font-size: calc(clamp(13px, 1.2vw, 15px) + var(--font-bump));
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -368,14 +380,14 @@
 
   .speaker-intro__role {
     margin: 0;
-    font-size: clamp(24px, 2.6vw, 32px);
+    font-size: calc(clamp(24px, 2.6vw, 32px) + var(--font-bump));
     line-height: 1.2;
     color: var(--text);
   }
 
   .speaker-intro__lead {
-    max-width: 34ch;
-    font-size: clamp(18px, 2.2vw, 26px);
+    max-width: none;
+    font-size: calc(clamp(18px, 2.2vw, 26px) + var(--font-bump));
     line-height: 1.42;
     color: var(--text);
   }
@@ -397,7 +409,7 @@
     background: rgba(8, 13, 42, 0.24);
     color: var(--text-dim);
     font-family: var(--font-mono);
-    font-size: clamp(11px, 1.04vw, 13px);
+    font-size: calc(clamp(11px, 1.04vw, 13px) + var(--font-bump));
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -418,7 +430,7 @@
     border-radius: 22px;
     border: 1px solid rgba(251, 254, 122, 0.10);
     background: linear-gradient(155deg, rgba(12, 18, 56, 0.92) 0%, rgba(16, 24, 72, 0.84) 100%);
-    padding: clamp(18px, 2.1vh, 24px);
+    padding: clamp(16px, 1.9vh, 22px);
     box-shadow: 0 18px 42px rgba(4, 8, 26, 0.24);
   }
 
@@ -438,7 +450,7 @@
     margin: 0 0 8px;
     color: var(--text-dim);
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: calc(12px + var(--font-bump));
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -446,14 +458,14 @@
 
   .speaker-panel__title {
     margin: 0;
-    font-size: clamp(24px, 2.5vw, 34px);
+    font-size: calc(clamp(24px, 2.5vw, 34px) + var(--font-bump));
     line-height: 1.08;
     color: var(--text);
   }
 
   .speaker-panel__text {
     margin: 10px 0 0;
-    font-size: clamp(14px, 1.4vw, 18px);
+    font-size: calc(clamp(14px, 1.4vw, 18px) + var(--font-bump));
     line-height: 1.5;
     color: var(--text-dim);
   }
@@ -476,7 +488,7 @@
     display: block;
     color: var(--text-dim);
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: calc(11px + var(--font-bump));
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -486,7 +498,7 @@
     display: block;
     margin-top: 6px;
     color: var(--text);
-    font-size: clamp(16px, 1.8vw, 20px);
+    font-size: calc(clamp(16px, 1.8vw, 20px) + var(--font-bump));
     line-height: 1.35;
     font-weight: 700;
   }
@@ -505,7 +517,7 @@
     gap: 12px;
     align-items: start;
     color: var(--text-dim);
-    font-size: clamp(14px, 1.35vw, 17px);
+    font-size: calc(clamp(14px, 1.35vw, 17px) + var(--font-bump));
     line-height: 1.45;
   }
 
@@ -519,7 +531,7 @@
     background: var(--accent-dim);
     color: var(--accent);
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: calc(12px + var(--font-bump));
     font-weight: 700;
   }
 
@@ -544,10 +556,40 @@
     gap: clamp(24px, 4vw, 60px); align-items: center; width: 100%;
     position: relative; z-index: 1;
   }
+  .slide--content .slide__inner > :only-child {
+    grid-column: 1 / -1;
+  }
+  .slide--content.slide--portal-vivant .slide__inner {
+    grid-template-columns: minmax(0, 1.22fr) minmax(260px, 0.78fr);
+    align-items: start;
+    gap: clamp(16px, 2.6vw, 34px);
+  }
+  .slide--content.slide--portal-vivant .slide__heading {
+    width: 100%;
+    max-width: none;
+    margin-bottom: clamp(6px, 1.3vh, 14px);
+  }
+  .slide--content.slide--portal-vivant .slide__bullets li {
+    padding: 7px 0 7px 22px;
+    line-height: 1.42;
+  }
+  .slide--content.slide--portal-vivant .slide__bullets li::before {
+    top: 16px;
+  }
+  .slide--content.slide--portal-vivant .slide__aside {
+    margin-top: clamp(20px, 3vh, 32px);
+    justify-content: center;
+    align-self: start;
+  }
+  .slide--content.slide--portal-vivant .slide__aside svg {
+    width: min(100%, 480px);
+    height: auto;
+    max-height: 36vh;
+  }
   .slide__bullets { list-style: none; padding: 0; }
   .slide__bullets li {
     padding: 10px 0 10px 24px; position: relative;
-    font-size: clamp(16px, 2.2vw, 22px); line-height: 1.55; color: var(--text-dim);
+    font-size: calc(clamp(16px, 2.2vw, 22px) + var(--font-bump)); line-height: 1.55; color: var(--text-dim);
   }
   .slide__bullets li::before {
     content: ''; position: absolute; left: 0; top: 20px;
@@ -609,7 +651,7 @@
     display: grid; grid-template-columns: 1fr 1fr; height: 100%;
   }
   .slide--split .slide__panel {
-    padding: clamp(40px, 6vh, 80px) clamp(32px, 4vw, 60px);
+    padding: clamp(36px, 5.4vh, 72px) clamp(30px, 3.8vw, 56px);
     display: flex; flex-direction: column; justify-content: center;
   }
   .slide--split .slide__panel--primary {
@@ -680,13 +722,13 @@
 
   /* ============ SLIDE TYPE: DIAGRAM ============ */
   .slide--diagram {
-    --diagram-node-font-size: 16px;
-    --diagram-edge-label-size: 13px;
+    --diagram-node-font-size: calc(16px + var(--font-bump));
+    --diagram-edge-label-size: calc(13px + var(--font-bump));
     --diagram-sequence-outline: rgba(8,13,42,0.84);
     padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 60px);
   }
   .slide--diagram-flow {
-    --diagram-edge-label-size: 13px;
+    --diagram-edge-label-size: calc(13px + var(--font-bump));
   }
   .slide--diagram .slide__heading { margin-bottom: clamp(8px, 1.5vh, 20px); }
 
@@ -711,7 +753,7 @@
   }
   .zoom-controls button {
     width: 32px; height: 32px; border: none; background: transparent; color: #f5c518;
-    font-family: var(--font-mono); font-size: 15px; cursor: pointer; border-radius: 4px;
+    font-family: var(--font-mono); font-size: calc(15px + var(--font-bump)); cursor: pointer; border-radius: 4px;
     display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s;
   }
   .zoom-controls button:hover { background: #ff8c00; color: #fff; }
@@ -928,7 +970,7 @@
     stroke: rgba(160,184,208,0.28) !important;
   }
   .slide--diagram-sequence .mermaid .sequenceNumber {
-    font-size: 13px !important;
+    font-size: calc(13px + var(--font-bump)) !important;
     font-weight: 700 !important;
   }
   .slide--diagram .mermaid .node foreignObject {
@@ -954,14 +996,14 @@
   }
   .slide__demo-pane-header {
     background: var(--surface2); border-bottom: 1px solid var(--border);
-    padding: 10px 16px; font-family: var(--font-mono); font-size: 13px;
+    padding: 10px 16px; font-family: var(--font-mono); font-size: calc(13px + var(--font-bump));
     color: var(--text-dim); letter-spacing: 0.5px; flex-shrink: 0;
     display: flex; align-items: center; gap: 8px;
   }
   .slide__demo-pane-header .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
   .slide__demo-pane pre { padding: 20px; margin: 0; overflow: auto; flex: 1; }
   .slide__demo-pane code {
-    font-family: var(--font-mono); font-size: clamp(13px, 1.4vw, 16px);
+    font-family: var(--font-mono); font-size: calc(clamp(13px, 1.4vw, 16px) + var(--font-bump));
     line-height: 1.65; color: var(--code-text);
   }
 
@@ -978,14 +1020,14 @@
     padding: clamp(16px, 3vh, 32px) clamp(16px, 2vw, 24px);
   }
   .slide__kpi-val {
-    font-size: clamp(36px, 6vw, 64px); font-weight: 400;
+    font-size: calc(clamp(36px, 6vw, 64px) + var(--font-bump)); font-weight: 400;
     letter-spacing: -1.5px; line-height: 1.1; font-variant-numeric: tabular-nums;
   }
   .slide__kpi-label {
-    font-family: var(--font-mono); font-size: clamp(12px, 1.3vw, 14px); font-weight: 600;
+    font-family: var(--font-mono); font-size: calc(clamp(12px, 1.3vw, 14px) + var(--font-bump)); font-weight: 600;
     text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin-top: 8px;
   }
-  .slide__kpi-trend { font-family: var(--font-mono); font-size: 13px; margin-top: 4px; }
+  .slide__kpi-trend { font-family: var(--font-mono); font-size: calc(13px + var(--font-bump)); margin-top: 4px; }
 
   /* ============ SLIDE TYPE: TABLE ============ */
   .slide--table { padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 60px); }
@@ -996,14 +1038,14 @@
   .table-scroll { overflow-x: auto; }
   .data-table { width: 100%; border-collapse: collapse; }
   .data-table th {
-    background: var(--surface2); font-family: var(--font-mono); font-size: clamp(12px, 1.3vw, 14px);
+    background: var(--surface2); font-family: var(--font-mono); font-size: calc(clamp(12px, 1.3vw, 14px) + var(--font-bump));
     font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim);
     text-align: left; padding: clamp(10px, 1.5vh, 16px) clamp(14px, 2vw, 24px);
     border-bottom: 2px solid var(--border-bright); white-space: nowrap;
   }
   .data-table td {
     padding: clamp(10px, 1.5vh, 16px) clamp(14px, 2vw, 24px);
-    border-bottom: 1px solid var(--border); font-size: clamp(14px, 1.8vw, 20px); vertical-align: top;
+    border-bottom: 1px solid var(--border); font-size: calc(clamp(14px, 1.8vw, 20px) + var(--font-bump)); vertical-align: top;
   }
   .data-table tbody tr:last-child td { border-bottom: none; }
   .data-table tbody tr:nth-child(even) { background: var(--surface2); }
@@ -1021,16 +1063,16 @@
     border: 1px solid var(--border-bright);
     border-left: 4px solid var(--accent);
     border-radius: 0 12px 12px 0;
-    padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 48px);
+    padding: clamp(22px, 3.6vh, 42px) clamp(22px, 3.6vw, 42px);
     max-width: 900px; width: 100%; position: relative;
   }
   .slide__code-filename {
     position: absolute; top: -12px; left: 24px;
-    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    font-family: var(--font-mono); font-size: calc(12px + var(--font-bump)); font-weight: 600;
     padding: 4px 12px; border-radius: 4px; background: var(--accent); color: var(--bg);
   }
   .slide__code-block pre { margin: 0; overflow-x: auto; }
-  .slide__code-block code { font-family: var(--font-mono); font-size: clamp(14px, 1.6vw, 18px); line-height: 1.7; color: var(--code-text); }
+  .slide__code-block code { font-family: var(--font-mono); font-size: calc(clamp(14px, 1.6vw, 18px) + var(--font-bump)); line-height: 1.7; color: var(--code-text); }
   .slide__code-block .hl { color: var(--accent); }
   .slide__code-block .kw { color: var(--accent3); }
   .slide__code-block .str { color: var(--green); }
@@ -1069,50 +1111,44 @@
     display: block; color: var(--text-dim);
   }
   .slide__code-diff .slide__diff-label {
-    font-family: var(--font-mono); font-size: clamp(11px, 1.2vw, 13px);
+    font-family: var(--font-mono); font-size: calc(clamp(11px, 1.2vw, 13px) + var(--font-bump));
     text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;
     margin-bottom: 8px;
   }
   .slide__code-diff .slide__diff-caption {
-    font-size: clamp(13px, 1.5vw, 17px); color: var(--text-dim);
+    font-size: calc(clamp(13px, 1.5vw, 17px) + var(--font-bump)); color: var(--text-dim);
     margin-top: 12px; line-height: 1.5;
   }
 
-  /* ============ SLIDE TYPE: QUOTE ============ */
+  /* ============ SLIDE TYPE: STANDALONE CALLOUT ============ */
   .slide--quote {
-    justify-content: center; align-items: center; text-align: center;
-    padding: clamp(60px,10vh,120px) clamp(60px,10vw,160px);
+    justify-content: center;
+    align-items: center;
+    padding: clamp(64px,10vh,124px) clamp(64px,10vw,164px);
   }
-  .slide__quote-mark {
-    display: block;
-    pointer-events: none; margin-bottom: 20px;
-    height: clamp(40px, 8vw, 80px);
+  .slide--quote .callout {
+    width: min(100%, 980px);
+    margin: 0 auto;
+    padding: clamp(32px, 4.4vh, 52px) clamp(30px, 4.4vw, 58px);
+    border-left-width: 6px;
+    border-radius: 22px;
+    font-size: calc(clamp(27px, 3.5vw, 42px) + var(--font-bump));
+    line-height: 1.34;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    color: #ffffff;
+    box-shadow: 0 22px 56px rgba(6, 8, 32, 0.26);
+    text-wrap: balance;
+    text-align: center;
   }
-  .slide__quote-mark::before {
-    content: '';
-    display: inline-block;
-    height: 100%;
-    aspect-ratio: 72 / 62;
-    background-image: var(--quote-bg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    opacity: 0.85;
-    transform: rotate(180deg); /* flip closing-quote image into opening " */
+  .slide--quote .callout--blue {
+    background: linear-gradient(135deg, rgba(56, 180, 232, 0.20) 0%, rgba(56, 180, 232, 0.13) 100%);
   }
-  .slide__quote-mark--close {
-    text-align: center; width: 100%; margin-top: -10px; margin-bottom: 0;
+  .slide--quote .callout--orange {
+    background: linear-gradient(135deg, rgba(240, 136, 72, 0.20) 0%, rgba(240, 136, 72, 0.13) 100%);
   }
-  .slide__quote-mark--close::before {
-    transform: none; /* closing mark uses image as-is */
-  }
-  .slide--quote blockquote {
-    font-size: clamp(28px, 4.5vw, 56px); font-weight: 900; line-height: 1.2;
-    font-style: normal; color: #ffffff;
-  }
-  .slide--quote cite {
-    font-size: clamp(14px, 1.8vw, 20px); font-style: italic;
-    margin-top: clamp(16px, 3vh, 32px); display: block;
-    text-align: right; color: var(--text-dim);
+  .slide--quote .callout--green {
+    background: linear-gradient(135deg, rgba(92, 192, 56, 0.20) 0%, rgba(92, 192, 56, 0.13) 100%);
   }
 
   /* ============ SLIDE TYPE: FULL-BLEED ============ */
@@ -1143,7 +1179,7 @@
   }
   .embed-wrap .embed-controls button {
     width: 32px; height: 32px; border: none; background: transparent; color: var(--text-dim);
-    font-family: var(--font-mono); font-size: 14px; cursor: pointer; border-radius: 4px;
+    font-family: var(--font-mono); font-size: calc(14px + var(--font-bump)); cursor: pointer; border-radius: 4px;
     display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s;
   }
   .embed-wrap .embed-controls button:hover { background: var(--border); color: var(--text); }
@@ -1151,13 +1187,13 @@
     position: absolute; inset: 0; display: none; flex-direction: column;
     align-items: center; justify-content: center; gap: 16px;
     z-index: 4;
-    background: var(--surface); color: var(--text-dim); text-align: center; padding: 40px;
+    background: var(--surface); color: var(--text-dim); text-align: center; padding: 36px;
   }
   .embed-wrap .embed-fallback.visible { display: flex; }
   .embed-wrap .embed-fallback a {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 12px 24px; border-radius: 8px; font-family: var(--font-mono);
-    font-size: 14px; text-decoration: none; color: var(--bg);
+    font-size: calc(14px + var(--font-bump)); text-decoration: none; color: var(--bg);
     background: var(--accent); font-weight: 600; transition: opacity 0.2s;
   }
   .embed-wrap .embed-fallback a:hover { opacity: 0.85; }
@@ -1209,7 +1245,7 @@
       height: auto;
       max-width: 100%;
       margin: var(--code-preview-chip-line) 0 0;
-      padding: clamp(18px, 2.2vh, 24px) clamp(12px, 1.4vw, 18px) clamp(12px, 1.4vh, 18px);
+      padding: clamp(16px, 2vh, 22px) clamp(10px, 1.2vw, 16px) clamp(10px, 1.2vh, 16px);
       overflow: hidden;
     }
     .slide--code-preview .slide__code-block pre {
@@ -1222,7 +1258,7 @@
     .slide--code-preview .slide__code-block code {
       display: block;
       width: 100%;
-      font-size: clamp(10.5px, 0.9vw, 12.5px);
+      font-size: calc(clamp(10.5px, 0.9vw, 12.5px) + var(--font-bump));
       line-height: 1.45;
     }
     .slide--code-preview .slide__aside {
@@ -1265,6 +1301,60 @@
     .slide--adr-preview .embed-wrap iframe,
     .slide--adr-preview .embed-wrap .embed-fallback {
       background: #ffffff;
+    }
+
+    /* ============ SLIDE TUNING: C2 unified toggle (Mermaid <-> likeC4) ============ */
+    .slide--c2-unified {
+      position: relative;
+      padding-top: clamp(52px, 7vh, 86px);
+      padding-bottom: clamp(18px, 2.8vh, 30px);
+    }
+    .slide--c2-unified > .slide__heading {
+      margin-bottom: clamp(12px, 1.6vh, 20px);
+      max-width: none;
+      text-wrap: balance;
+    }
+    .slide--c2-unified .c2-unified__toggle {
+      position: absolute;
+      top: clamp(14px, 2vh, 22px);
+      right: clamp(20px, 3vw, 34px);
+      z-index: 22;
+      border: 1px solid var(--border-bright);
+      background: color-mix(in srgb, var(--surface) 86%, transparent 14%);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-family: var(--font-mono);
+      font-size: calc(12px + var(--font-bump));
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+    }
+    .slide--c2-unified .c2-unified__toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent-dim) 72%, var(--surface) 28%);
+    }
+    .slide--c2-unified .c2-unified__views {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: flex;
+      width: 100%;
+    }
+    .slide--c2-unified .c2-unified__view {
+      display: none;
+      flex: 1 1 auto;
+      min-height: 0;
+      width: 100%;
+    }
+    .slide--c2-unified[data-view="mermaid"] .c2-unified__view--mermaid,
+    .slide--c2-unified[data-view="likec4"] .c2-unified__view--likec4 {
+      display: flex;
+      flex-direction: column;
+    }
+    .slide--c2-unified .c2-unified__view--mermaid .mermaid-wrap {
+      margin-top: 0;
     }
 
   /* ============ SLIDE TYPE: LAUNCHER (open in new tab) ============ */
@@ -1407,12 +1497,12 @@
   .speaker-card__meta {
     font-family: var(--font-mono);
     color: var(--text-dim);
-    font-size: clamp(12px, 1.4vw, 14px);
+    font-size: calc(clamp(12px, 1.4vw, 14px) + var(--font-bump));
   }
 
   .speaker-card__name {
     margin: 10px 0 8px;
-    font-size: clamp(28px, 4vw, 40px);
+    font-size: calc(clamp(28px, 4vw, 40px) + var(--font-bump));
     line-height: 1.05;
   }
 
@@ -1426,18 +1516,22 @@
   }
 
   .key-card strong {
-    display: block; margin-bottom: 8px; color: var(--text);
-    font-size: clamp(16px, 1.9vw, 20px);
+    display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; color: var(--text);
+    font-size: calc(clamp(16px, 1.9vw, 20px) + var(--font-bump));
+    /* keep the marker visually grouped with the title */
   }
 
   .slide[data-part="0"] .key-card__marker {
     color: var(--part0-neutral-gray);
+    flex: none;
+    white-space: nowrap;
+    margin-right: 6px;
   }
 
   .key-card span {
     display: block; color: var(--text-subtitle); line-height: 1.5;
     font-weight: 500;
-    font-size: clamp(13px, 1.6vw, 16px);
+    font-size: calc(clamp(13px, 1.6vw, 16px) + var(--font-bump));
   }
 
   .system-lanes {
@@ -1446,12 +1540,29 @@
   }
 
   .lane-card {
+    --lane-color: color-mix(in srgb, var(--accent) 42%, var(--text-subtitle) 58%);
+    --lane-color-dim: color-mix(in srgb, var(--accent-dim) 52%, rgba(255,255,255,0.05) 48%);
     padding: 18px 20px;
+    border-color: color-mix(in srgb, var(--lane-color) 26%, rgba(255,255,255,0.08) 74%);
+    background:
+      linear-gradient(160deg, color-mix(in srgb, var(--lane-color-dim) 46%, rgba(12, 18, 56, 0.94) 54%) 0%, rgba(12, 18, 56, 0.92) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .lane-card::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: var(--lane-color);
+    opacity: 0.7;
   }
 
   .lane-card h3 {
-    margin: 0 0 12px; font-size: clamp(18px, 2.3vw, 24px);
-    color: var(--text);
+    margin: 0 0 12px; font-size: calc(clamp(18px, 2.3vw, 24px) + var(--font-bump));
+    color: color-mix(in srgb, var(--lane-color) 82%, var(--text) 18%);
+    letter-spacing: 0.02em;
   }
 
   .lane-card ul {
@@ -1460,18 +1571,37 @@
 
   .lane-card li {
     position: relative; padding-left: 18px; margin: 8px 0;
-    color: var(--text-dim); line-height: 1.5;
+    color: color-mix(in srgb, var(--text) 94%, var(--lane-color) 6%);
+    line-height: 1.5;
   }
 
   .lane-card li::before {
     content: ''; position: absolute; left: 0; top: 10px;
-    width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--lane-color);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--lane-color-dim) 64%, transparent 36%);
   }
 
-  .lane-card--accent { color: var(--accent); }
-  .lane-card--blue { color: var(--accent3); }
-  .lane-card--orange { color: var(--accent2); }
-  .lane-card--green { color: var(--green); }
+  .lane-card--accent {
+    --lane-color: color-mix(in srgb, var(--accent) 42%, #dde6bf 58%);
+    --lane-color-dim: color-mix(in srgb, var(--accent-dim) 48%, rgba(255,255,255,0.06) 52%);
+  }
+  .lane-card--blue {
+    --lane-color: color-mix(in srgb, var(--accent3) 42%, #cde4ef 58%);
+    --lane-color-dim: color-mix(in srgb, var(--accent3-dim) 48%, rgba(255,255,255,0.06) 52%);
+  }
+  .lane-card--orange {
+    --lane-color: color-mix(in srgb, var(--accent2) 40%, #ead8c8 60%);
+    --lane-color-dim: color-mix(in srgb, var(--accent2-dim) 46%, rgba(255,255,255,0.06) 54%);
+  }
+  .lane-card--green {
+    --lane-color: color-mix(in srgb, var(--green) 42%, #d0e3cc 58%);
+    --lane-color-dim: color-mix(in srgb, var(--green-dim) 48%, rgba(255,255,255,0.06) 52%);
+  }
+  .lane-card--purple {
+    --lane-color: color-mix(in srgb, var(--accent4) 34%, #e3cfdd 66%);
+    --lane-color-dim: color-mix(in srgb, var(--accent4-dim) 44%, rgba(255,255,255,0.06) 56%);
+  }
 
   .resource-list {
     display: grid; gap: 12px; margin-top: 20px;
@@ -1482,19 +1612,19 @@
   }
 
   .resource-item__tag {
-    min-width: 96px; font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+    min-width: 96px; font-family: var(--font-mono); font-size: calc(12px + var(--font-bump)); font-weight: 700;
     letter-spacing: 1.2px; text-transform: uppercase; color: var(--accent);
     margin-top: 2px;
   }
 
   .resource-item__body {
-    color: var(--text-dim); line-height: 1.52; font-size: clamp(13px, 1.45vw, 17px);
+    color: var(--text-dim); line-height: 1.52; font-size: calc(clamp(13px, 1.45vw, 17px) + var(--font-bump));
   }
 
   .resource-item__body a {
     display: inline-block; margin-bottom: 4px;
     color: var(--text); text-decoration: none;
-    font-size: clamp(16px, 1.8vw, 20px); font-weight: 700; line-height: 1.22;
+    font-size: calc(clamp(16px, 1.8vw, 20px) + var(--font-bump)); font-weight: 700; line-height: 1.22;
     text-wrap: pretty;
   }
 
@@ -1524,13 +1654,26 @@
 
   .qr-caption {
     margin-top: 14px; text-align: center;
-    font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);
+    font-family: var(--font-mono); font-size: calc(12px + var(--font-bump)); color: var(--text-dim);
   }
+
+  .slide [style*="font-size:18px"] { font-size: calc(18px + var(--font-bump)) !important; }
+  .slide [style*="font-size:14px"] { font-size: calc(14px + var(--font-bump)) !important; }
+  .slide [style*="font-size:clamp(10.5px,1.05vw,13px)"] { font-size: calc(clamp(10.5px, 1.05vw, 13px) + var(--font-bump)) !important; }
+  .slide [style*="font-size:clamp(12px,1.5vw,16px)"] { font-size: calc(clamp(12px, 1.5vw, 16px) + var(--font-bump)) !important; }
+  .slide [style*="font-size:clamp(14px,1.8vw,20px)"] { font-size: calc(clamp(14px, 1.8vw, 20px) + var(--font-bump)) !important; }
+  .slide [style*="font-size:clamp(14px,2vw,22px)"] { font-size: calc(clamp(14px, 2vw, 22px) + var(--font-bump)) !important; }
+  .slide [style*="font-size:clamp(24px,3.6vw,34px)"] { font-size: calc(clamp(24px, 3.6vw, 34px) + var(--font-bump)) !important; }
+  .slide [style*="font-size:clamp(28px,4vw,38px)"] { font-size: calc(clamp(28px, 4vw, 38px) + var(--font-bump)) !important; }
+  .slide [style*="font-size:clamp(32px,6vw,64px)"] { font-size: calc(clamp(32px, 6vw, 64px) + var(--font-bump)) !important; }
+  .slide [style*="font-size:clamp(32px,6.5vw,80px)"] { font-size: calc(clamp(32px, 6.5vw, 80px) + var(--font-bump)) !important; }
+  .slide [style*="font-size:clamp(40px,6vw,72px)"] { font-size: calc(clamp(40px, 6vw, 72px) + var(--font-bump)) !important; }
+  .slide [style*="font-size:clamp(40px,7vw,80px)"] { font-size: calc(clamp(40px, 7vw, 80px) + var(--font-bump)) !important; }
 
   /* ============ RESPONSIVE ============ */
   @media (max-height: 700px) {
     .slide { padding: clamp(24px, 4vh, 40px) clamp(32px, 6vw, 80px); }
-    .slide__display { font-size: clamp(36px, 8vw, 72px); }
+    .slide__display { font-size: calc(clamp(36px, 8vw, 72px) + var(--font-bump)); }
   }
   @media (max-width: 768px) {
     .slide--content .slide__inner { grid-template-columns: 1fr; }
@@ -1633,34 +1776,25 @@
     <h1 class="slide__display reveal" style="color:var(--text); font-size:clamp(32px,6.5vw,80px); margin-top:8px;">codez-les&nbsp;!</h1>
     <div class="reveal" style="margin-top:clamp(24px,4vh,48px); display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center;">
       <span class="slide__accent-line" style="width:80px; height:4px;"></span>
-      <p class="slide__subtitle" style="color:var(--text-dim); margin-top:8px;">Alexis Scolan &middot;Architecture et diagram as code</p>
-    </div>
+      <p class="slide__subtitle" style="color:var(--text-dim); margin-top:8px;">Alexis Scolan</p>
+
+	</div>
   </section>
 
   <section class="slide slide--content slide--speaker" data-nav="Speaker" data-part="0" style="background-image:radial-gradient(ellipse at 82% 20%, var(--accent2-dim) 0%, transparent 36%), radial-gradient(ellipse at 14% 85%, var(--accent3-dim) 0%, transparent 42%);">
     <div class="slide__inner">
       <div class="speaker-intro">
         <p class="slide__label reveal">Speaker</p>
-        <p class="speaker-intro__kicker reveal">Architecture &middot; cartographie &middot; outillage</p>
         <h2 class="slide__heading reveal" style="font-size:clamp(40px,6vw,72px); line-height:0.95; margin:0;">Alexis Scolan</h2>
         <p class="speaker-intro__role reveal">Architecte technique chez <strong style="color:var(--accent);">onepoint</strong></p>
-      </div>
-      <div class="slide__aside speaker-panels">
-        <article class="speaker-panel reveal">
-          <p class="speaker-panel__eyebrow">Mon métier</p>
-          <h3 class="speaker-panel__title">Architecte</h3>
-          <p class="speaker-panel__text">Mon angle : concevoir et faire vivre les systèmes avec agilité, unifier les sources de vérité, les retranscrire à l'ensemble des acteurs selon leurs besoin.</p>
-          <div class="speaker-proof">
-            <div class="speaker-proof__item">
-              <span class="speaker-proof__label">Focus</span>
-              <span class="speaker-proof__value">Architecture vivante</span>
-            </div>
-            <div class="speaker-proof__item">
-              <span class="speaker-proof__label">Concret</span>
-              <span class="speaker-proof__value">Démo et coding</span>
-            </div>
-          </div>
-        </article>
+		<br>
+        <p class="speaker-intro__lead reveal">J'aide les &eacute;quipes &agrave; garder une <strong>architecture lisible et vivante</strong>, avec une <strong>approche concr&egrave;te et pragmatique</strong>, align&eacute;e avec le terrain et compr&eacute;hensible par tous les acteurs.</p>
+        <br>
+		<div class="speaker-pill-list reveal">
+          <span class="speaker-pill">Diagram as Code</span>
+          <span class="speaker-pill">C4 model</span>
+          <span class="speaker-pill">Architecture agile</span>
+        </div>
       </div>
     </div>
   </section>
@@ -1678,22 +1812,29 @@
         </ul>
       </div>
       <div class="slide__panel slide__panel--secondary" style="display:flex; flex-direction:column; justify-content:center; gap:16px;">
-            <li class="reveal"><strong class="c4-level c4-level--c1">C1 — Contexte</strong> : qui interagit avec le système ?</li>
-            <li class="reveal"><strong class="c4-level c4-level--c2">C2 — Containers</strong> : comment le système fonctionne ?</li>
-            <li class="reveal"><strong class="c4-level c4-level--c3">C3 — Components</strong> : comment se compose un container ?</li>
-            <li class="reveal"><strong class="c4-level c4-level--c4">C4 — Code</strong> : quelles classes / quels modules implémentent les composants ?</li>
-          <li class="reveal">La mise &agrave; jour devient un <strong>co&ucirc;t cach&eacute;</strong>, vite abandonn&eacute;</li>
-          <li class="reveal">On finit par accepter cette <strong>dette documentaire</strong> comme une fatalit&eacute;</li>
+        <p class="slide__label reveal">Le vrai co&ucirc;t cach&eacute;</p>
+        <h2 class="slide__heading reveal">Le PNG meurt en silence</h2>
+        <ul class="slide__bullets" style="margin-top:16px;">
+          <li class="reveal">Le code &eacute;volue, la carte reste <strong>fig&eacute;e</strong></li>
+          <li class="reveal">La mise &agrave; jour devient un <strong>co&ucirc;t cach&eacute;</strong>, donc elle est abandonn&eacute;e</li>
+          <li class="reveal">On finit par accepter une <strong>dette documentaire</strong> comme une fatalit&eacute;</li>
         </ul>
       </div>
     </div>
-    <div class="split-footer">
-      <div class="callout callout--green reveal" style="font-size:clamp(13px,1.6vw,17px);">
-        Le probl&egrave;me, ce n'est pas de dessiner. C'est de faire vivre la connaissance dans le temps.
-      </div>
-    </div>
+  </section>
+  ajouter une slide présentant l'image "drawio.png" ici pour illustrer le propos
+  <section class="slide slide--content" data-nav="Le problème réel — dessin" data-part="0" style="background-image:radial-gradient(ellipse at 50% 20%, var(--accent2-dim) 0%, transparent 40%), radial-gradient(ellipse at 50% 82%, var(--accent3-dim) 0%, transparent 48%);">
+	<div class="slide__inner" style="grid-template-columns:1fr; align-items:center;">
+	  <div>
+		<h2 class="slide__heading reveal">Notre probl&egrave;me n'est pas la qualité du dessin.</h2>
+    <img src="assets/drawio.png" alt="Un dessin d'architecture typique, réalisé avec un outil de type draw.io, avec des boîtes et des flèches représentant les composants du système et leurs interactions." style="width:100%; max-width:800px; display:block; margin:24px auto 0;">
+	  </div>
+	</div>
   </section>
 
+  <section class="slide slide--quote" data-nav="Le problème réel — message" data-part="0" style="background-image:radial-gradient(ellipse at 50% 20%, var(--green-dim) 0%, transparent 40%), radial-gradient(ellipse at 50% 82%, var(--accent-dim) 0%, transparent 48%);">
+    <div class="callout callout--green reveal">Le problème c'est de pouvoir faire vivre ces connaissances dans le temps.</div>
+  </section>
   
   <section class="slide slide--content" data-nav="Changer de paradigme" data-part="0" style="background-image:radial-gradient(ellipse at 50% 20%, var(--accent-dim) 0%, transparent 40%);">
     <div class="slide__inner" style="grid-template-columns:1fr;">
@@ -1703,53 +1844,20 @@
         <div class="key-grid">
           <div class="key-card reveal">
             <strong><span class="key-card__marker">1.</span> Une unique source de v&eacute;rit&eacute;</strong>
-            <span>Une sémantique complète, à même de représenter tout le système clairement.</span>
+            <span>Une sémantique complète, à même de représenter tout le système clairement. Lâcher le dessin, passer au diagramme.</span>
           </div>
           <div class="key-card reveal">
-            <strong><span class="key-card__marker">2.</span> Des perspectives multiples</strong>
-            <span>Contexte, containers, comportements&nbsp;: plusieurs regards, plusieurs niveaux de détail, un seul syst&egrave;me.</span>
+            <strong><span class="key-card__marker">2.</span> Des perspectives  multiples</strong>
+            <span>Contexte, structure, comportements, niveaux de détail : représenter un seul syst&egrave;me sous différents angles</span>
           </div>
           <div class="key-card reveal">
             <strong><span class="key-card__marker">3.</span> Un vrai cycle de vie</strong>
-            <span>CI/CD, PR, review, build: la doc cesse d'&ecirc;tre un fichier &agrave; part et devient un livrable à part entière.</span>
+            <span>Le développement logiciel a ses cycles : réconcilions l'architecture avec ces processus</span>
           </div>
         </div>
       </div>
     </div>
   </section>
-
-  
-  <section class="slide slide--content" data-nav="Fil rouge" data-part="0" style="background-image:radial-gradient(ellipse at 18% 24%, var(--accent3-dim) 0%, transparent 38%), radial-gradient(ellipse at 84% 76%, var(--accent-dim) 0%, transparent 42%);">
-    <div class="reveal" style="width:100%; margin-bottom:clamp(18px, 2.8vh, 28px);">
-      <p class="slide__label">Fil rouge</p>
-      <h2 class="slide__heading" style="margin:0;">Le cas d'&eacute;tude</h2>
-    </div>
-    <div class="slide__inner" style="grid-template-columns:minmax(0, 1fr) minmax(0, 2fr); align-items:stretch;">
-      <div class="slide__aside reveal">
-        <div class="speaker-card" style="width:min(100%,380px);">
-          <h3 class="speaker-card__name" style="font-size:clamp(28px,4vw,38px);">AleFest Coffee</h3>
-          <p class="speaker-card__meta">Un stand caf&eacute; fictif et assez riche pour vous démontrer comment une architecture vivante se construit, et se maintient.</p>
-          <div style="margin-top:16px;">
-            <span class="badge badge--accent">ADR</span>
-            <span class="badge badge--blue">Modélisation C4</span>
-            <span class="badge badge--green">LikeC4</span>
-          </div>
-        </div>
-      </div>
-      <div class="reveal">
-        <article class="speaker-panel speaker-panel--alt" style="max-width:100%;">
-          <p class="speaker-panel__eyebrow">En quelques minutes</p>
-          <ul class="speaker-roadmap">
-            <li><span class="speaker-roadmap__step">01</span><span>on part d'un <strong>ADR</strong> et on extrait et modélise un système général avec l'aide de l'IA</span></li>
-            <li><span class="speaker-roadmap__step">02</span><span>on détaille <strong>au niveau C2</strong> pour rendre les mécaniques du système compréhensible</span></li>
-			<li><span class="speaker-roadmap__step">03</span><span>on raconte le fonctionnement <strong>avec un diagramme dynamique</strong></span></li>
-            <li><span class="speaker-roadmap__step">04</span><span>on termine la conception avec une <strong>PR</strong> et un portail interactif qui vit avec le code</span></li>
-          </ul>
-        </article>
-      </div>
-    </div>
-  </section>
-
   
   <section class="slide slide--content" data-nav="C4 zoom" data-part="0" style="background-image:radial-gradient(ellipse at 50% 20%, var(--accent-dim) 0%, transparent 40%);">
     <div class="slide__inner">
@@ -1763,9 +1871,6 @@
           <li class="reveal"><strong class="c4-level c4-level--c4">C4 — Code</strong> : quelles classes / quels modules implémentent les composants ?</li>
           <li class="reveal"><strong>Optionnel — Dynamique / Déploiement</strong> : comment ça s'exécute, où ça tourne ?</li>
         </ul>
-        <div class="callout callout--blue reveal" style="margin-top:20px;">
-          « L'objectif de C4, c'est Google Maps : avec un même territoire, on propose différents niveaux de zoom, sans perdre la cohésion»
-        </div>
       </div>
         <div class="slide__aside reveal" style="width:min(100%,420px); max-width:420px; overflow:visible; position:relative; z-index:2;">
           <svg viewBox="0 0 260 260" width="400" height="400" aria-label="Imbrication C1 C2 C3 C4 et fantôme d'un second système" style="overflow:visible;">
@@ -1849,9 +1954,13 @@
     </div>
   </section>
 
+  <section class="slide slide--quote" data-nav="C4 zoom — image mentale" data-part="0" style="background-image:radial-gradient(ellipse at 20% 18%, var(--accent3-dim) 0%, transparent 38%), radial-gradient(ellipse at 78% 82%, var(--accent-dim) 0%, transparent 44%);">
+    <div class="callout callout--blue reveal">C4, c'est comme Google Maps :<br>un territoire unique,<br> plusieurs représentations, plusieurs niveaux de zoom,<br>en conservant la coh&eacute;sion.</div>
+  </section>
+
 
   <!-- ═══════════════════════════════════════════
-       PARTIE 2 : LA MÉTHODE C4
+       PARTIE 2 : Démo ADR to Diagram
        ═══════════════════════════════════════════ -->
 
   
@@ -1859,9 +1968,43 @@
     <span class="slide__number" aria-hidden="true">01</span>
     <div>
       <p class="slide__label reveal">Partie 1</p>
-      <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">De l'ADR au mod&egrave;le</h2>
+      <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">Du besoin métier au mod&egrave;le</h2>
       <span class="slide__accent-line reveal" style="width:80px; height:4px;"></span>
-      <p class="slide__subtitle reveal" style="margin-top:20px;">AleFest Coffee &middot; besoin m&eacute;tier &rarr; vue de contexte validable</p>
+      <p class="slide__subtitle reveal" style="margin-top:20px;">AleFest Coffee &middot; besoin m&eacute;tier &rarr; représentation du système</p>
+    </div>
+  </section>
+  
+  <section class="slide slide--content slide--fil-rouge" data-nav="Fil rouge" data-part="0" style="background-image:radial-gradient(ellipse at 18% 24%, var(--accent3-dim) 0%, transparent 38%), radial-gradient(ellipse at 84% 76%, var(--accent-dim) 0%, transparent 42%);">
+    <div class="reveal" style="width:100%; margin-bottom:clamp(18px, 2.8vh, 28px);">
+      <p class="slide__label">Fil rouge</p>
+      <h2 class="slide__heading" style="margin:0;">Le cas d'&eacute;tude</h2>
+    </div>
+    <div class="slide__inner" style="grid-template-columns:minmax(0, 1fr) minmax(0, 2fr); align-items:stretch;">
+      <div class="slide__aside reveal" style="align-items:stretch; min-height:100%;">
+        <div class="speaker-card" style="width:100%; height:100%;">
+          <h3 class="speaker-card__name" style="font-size:clamp(28px,4vw,38px);">AleFest Coffee ☕</h3>
+          <p class="speaker-card__meta">Un stand caf&eacute; en difficulté dans un contexte festif</p>
+		  <br>
+          <p class="speaker-card__meta">Objectif : un service plus rapide que la musique</p>
+          <div style="margin-top:16px;">
+            <span class="badge badge--accent">Commandes manuelles</span>
+            <span class="badge badge--green">Files d'attente</span>
+            <span class="badge badge--blue">Insatisfaction</span>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" style="display:flex; min-height:100%;">
+        <article class="speaker-panel speaker-panel--alt" style="max-width:100%; width:100%; height:100%;">
+          <p class="speaker-panel__eyebrow">Raconté en quelques étapes</p>
+          <ul class="speaker-roadmap">
+            <li><span class="speaker-roadmap__step">01</span><span>d'un <strong>besoin clair</strong> à un modèle probant, avec l'aide de l'<strong></strong>IA</strong></span></li>
+            <li><span class="speaker-roadmap__step">02</span><span>d'un système vague, à des <strong>mécanismes limpides</strong></span></li>
+            <li><span class="speaker-roadmap__step">03</span><span>d'un premier jet à un <strong>système mature</strong></span></li>
+			<li><span class="speaker-roadmap__step">04</span><span>d'un système statique à une histoire marquante de <strong>l'usage de système</strong></span></li>
+            <li><span class="speaker-roadmap__step">05</span><span>d'un document volant à <strong>un livrable révisé, validé et intégré</strong></span></li>
+          </ul>
+        </article>
+      </div>
     </div>
   </section>
 
@@ -1874,51 +2017,20 @@
         <ul class="slide__bullets">
           <li class="reveal">Un stand caf&eacute; en festival&nbsp;: pics de commandes <strong>entre deux concerts</strong></li>
           <li class="reveal">Première version : le festivalier commande au comptoir et <strong>attend sur place</strong></li>
-          <li class="reveal">En V2 : il doit pouvoir <strong>commander depuis son t&eacute;l&eacute;phone</strong> et &ecirc;tre notifi&eacute; quand c'est pr&ecirc;t</li>
         </ul>
-        <div class="callout callout--blue reveal" style="margin-top:20px;">
-          Le diagramme doit raconter &agrave; la fois la structure du syst&egrave;me et la promesse m&eacute;tier&nbsp;: lib&eacute;rer le festivalier pendant l'attente.
-        </div>
       </div>
       <aside class="slide__aside slide__aside--meme reveal" aria-hidden="true">
         <img src="assets/plan.webp" alt="" loading="eager">
       </aside>
     </div>
   </section>
-
-  
-  <section class="slide slide--split" data-nav="V1 vs V2">
-    <div class="slide__panels">
-      <div class="slide__panel slide__panel--primary">
-        <p class="slide__label reveal" style="color:var(--accent2);">V1 &middot; Le comptoir</p>
-        <h2 class="slide__heading reveal">Syst&egrave;me local,<br>festivalier captif</h2>
-        <ul class="slide__bullets" style="margin-top:16px;">
-          <li class="reveal">Commande num&eacute;rique au comptoir via <strong>Application Comptoir</strong></li>
-          <li class="reveal"><strong>Service de Commandes</strong> et <strong>Service Pr&eacute;paration</strong> d&eacute;j&agrave; d&eacute;coupl&eacute;s en interne</li>
-          <li class="reveal"><strong>RabbitMQ</strong> notifie l'équipe de barista</li>
-          <li class="reveal">Le festivalier attend au stand jusqu'&agrave; la remise de la boisson</li>
-        </ul>
-      </div>
-      <div class="slide__panel slide__panel--secondary" style="display:flex; flex-direction:column; justify-content:center; gap:16px;">
-        <p class="slide__label reveal" style="color:var(--green);">V2 &middot; Le caf&eacute; mobile</p>
-        <h2 class="slide__heading reveal">Syst&egrave;me intégré,<br>festivalier lib&eacute;r&eacute;</h2>
-        <ul class="slide__bullets" style="margin-top:16px;">
-          <li class="reveal">S'intégrer à <strong>l'app du festival</strong> + <strong>Service Festival</strong> pour commander &agrave; distance</li>
-          <li class="reveal"><strong>Notification Service</strong> pour sortir de l'attente au comptoir</li>
-          <li class="reveal"><strong>RabbitMQ</strong> reste le socle &eacute;v&eacute;nementiel, enrichi par du push et int&eacute;gration externe</li>
-          <li class="reveal">Le caf&eacute; devient une exp&eacute;rience fluide, sans immobiliser le festivalier</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-  
   
   <section class="slide slide--code slide--code-preview slide--adr-preview" data-nav="ADR-001" style="background-image:radial-gradient(ellipse at 80% 30%, var(--red-dim) 0%, transparent 50%);">
     <h2 class="slide__heading reveal">ADR-001&nbsp;: digitaliser le stand caf&eacute;</h2>
     <div class="slide__inner">
       <div class="code-preview__pane code-preview__pane--code">
         <div class="code-preview__frame">
-          <span class="slide__code-filename">AleFest.md</span>
+          <span class="slide__code-filename">ADR-001 Digital coffee.md</span>
           <div class="slide__code-block reveal">
             <pre><code><span class="cm"># ADR-001 : le stand café numérique</span>
 ## Status
@@ -1938,7 +2050,7 @@ Créer un système de prise de commande numérique au comptoir avec :
 
 ## Contraintes
 - Les baristas doivent pouvoir marquer une commande "prête" en un tap
-- Le festivalier attend au comptoir (V1 = synchrone)
+- Le festivalier attend au comptoir jusqu'à la remise de la boisson
 
 ## Conséquences
 - Réduit la file physique au comptoir
@@ -1979,28 +2091,21 @@ Créer un système de prise de commande numérique au comptoir avec :
     <div class="slide__inner">
       <div class="c1-generated__pane c1-generated__pane--code code-preview__pane code-preview__pane--code">
         <div class="code-preview__frame">
-          <span class="slide__code-filename">projects/coffee-v1/system-model.c4</span>
+          <span class="slide__code-filename"> coffee-v1/system-model.c4</span>
           <div class="slide__code-block reveal">
             <pre><code style="font-size:clamp(10.5px,1.05vw,13px); line-height:1.4;"><span class="kw">model</span> {
-    alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
-      counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span> { <span class="cm">...</span> }
-      baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span> { <span class="cm">...</span> }
+  alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
+    counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span> { <span class="cm">...</span> }
+    baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span> { <span class="cm">...</span> }
 
-      orderService = <span class="hl">Container_Api</span> <span class="str">'Service de Commandes'</span> { <span class="cm">...</span> }
-      preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span> { <span class="cm">...</span> }
+    orderService = <span class="hl">Container_Api</span> <span class="str">'Service de Commandes'</span> { <span class="cm">...</span> }
+    preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span> { <span class="cm">...</span> }
 
-      eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span> { <span class="cm">...</span> }
-      database = <span class="hl">Container_Database</span> <span class="str">'PostgreSQL'</span> { <span class="cm">...</span> }
+    eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span> { <span class="cm">...</span> }
+    database = <span class="hl">Container_Database</span> <span class="str">'PostgreSQL'</span> { <span class="cm">...</span> }
 
-      counterApp -[<span class="hl">calls</span>]-&gt; orderService <span class="str">'POST /orders'</span>
-      baristaScreen -[<span class="hl">calls</span>]-&gt; preparationService <span class="str">'WebSocket'</span>
-
-      orderService -[<span class="hl">async</span>]-&gt; eventBus <span class="str">'Publie order.placed'</span>
-      eventBus -[<span class="hl">async</span>]-&gt; preparationService <span class="str">'Livre order.placed'</span>
-
-      orderService -[<span class="hl">writes</span>]-&gt; database <span class="str">'Commande'</span>
-      preparationService -[<span class="hl">writes</span>]-&gt; database <span class="str">'Statut'</span>
-    }
+    <span class="cm">// relations internes, technologies, descriptions...</span>
+  }
 }</code></pre>
           </div>
         </div>
@@ -2028,16 +2133,59 @@ Créer un système de prise de commande numérique au comptoir avec :
     </div>
   </section>
   
+  <section class="slide slide--content" data-nav="Briques C2" style="background-image:radial-gradient(ellipse at 80% 50%, var(--accent-dim) 0%, transparent 40%);">
+    <div class="slide__inner">
+      <div>
+        <p class="slide__label reveal">... qui pourrait être détaillée</p>
+        <h2 class="slide__heading reveal">On zoome dans le syst&egrave;me<br>et on explicite les briques</h2>
+        <p class="slide__body reveal" style="margin-top:12px; margin-bottom:16px;">
+          La question n'est plus &laquo;&nbsp;qui interagit avec AleFest Coffee&nbsp;?&nbsp;&raquo; mais &laquo;&nbsp;quels logiciels sont responsables de l'exp&eacute;rience Alefest Coffee&nbsp;?&nbsp;&raquo;.
+        </p>
+        <div class="system-lanes">
+          <div class="lane-card lane-card--green reveal">
+            <h3>Frontends</h3>
+            <ul>
+              <li>Counter App &middot; compatibilit&eacute; comptoir</li>
+              <li>Barista Screen &middot; file temps r&eacute;el</li>
+            </ul>
+          </div>
+          <div class="lane-card lane-card--blue reveal">
+            <h3>Services</h3>
+            <ul>
+              <li>Order Service &middot; prise de commande</li>
+              <li>Preparation Service &middot; accompagne l'activité du barista</li>
+              <li>File de messages &middot; découple la prise de commande de son traitement</li>
+            </ul>
+          </div>
+          <div class="lane-card lane-card--orange reveal">	
+            <h3>Intention UX</h3>
+            <ul>
+              <li>Le festivalier vit une expérience fluide</li>
+              <li>Le barista se libère de la prise de commande</li>
+            </ul>
+          </div>
+          <div class="lane-card lane-card--purple reveal">	
+            <h3>Un seul modèle</h3>
+            <ul>
+              <li>On complète le système</li>
+              <li>On visualise ce qui compte</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="slide slide--content slide--c1-generated slide--code-preview" data-nav="C1 généré" style="background-image:radial-gradient(ellipse at 70% 20%, var(--accent-dim) 0%, transparent 40%);">
     <p class="slide__label reveal">V1 &middot; le diagramme</p>
-    <h2 class="slide__heading reveal">... qui peut être détaillée</h2>
+    <h2 class="slide__heading reveal"></h2>
     <div class="slide__inner">
       <div class="c1-generated__pane c1-generated__pane--code code-preview__pane code-preview__pane--code">
         <div class="code-preview__frame">
-          <span class="slide__code-filename">projects/coffee-v1/system-model.c4</span>
+          <span class="slide__code-filename"> coffee-v1/system-model.c4</span>
           <div class="slide__code-block reveal">
             <pre><code style="font-size:clamp(10.5px,1.05vw,13px); line-height:1.4;"><span class="kw">model</span> {
-    alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
+  <span class="hl">extend</span> alefestCoffee {
       counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span> { <span class="cm">...</span> }
       baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span> { <span class="cm">...</span> }
 
@@ -2084,7 +2232,7 @@ Créer un système de prise de commande numérique au comptoir avec :
   </section>
 
   <!-- ═══════════════════════════════════════════
-       PARTIE 3 : LIVE DÉMO
+       PARTIE 2 : LIVE DÉMO
        ═══════════════════════════════════════════ -->
 
   
@@ -2092,69 +2240,42 @@ Créer un système de prise de commande numérique au comptoir avec :
     <span class="slide__number" style="color:var(--accent3);" aria-hidden="true">02</span>
     <div>
       <p class="slide__label reveal" style="color:var(--accent3);">Partie 2</p>
-      <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">Containers &amp; comportements</h2>
+      <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">Evoluer &amp; éprouver</h2>
       <span class="slide__accent-line reveal" style="width:80px; height:4px; background:var(--accent3);"></span>
-      <p class="slide__subtitle reveal" style="margin-top:20px;">C2, cas d'usage, et faire évoluer un diagramme</p>
+      <p class="slide__subtitle reveal" style="margin-top:20px;">Faire évoluer l'architecture et l'éprouver avec des scénarios</p>
     </div>
   </section>
-
   
-  <section class="slide slide--content" data-nav="Briques C2" style="background-image:radial-gradient(ellipse at 80% 50%, var(--accent-dim) 0%, transparent 40%);">
-    <div class="slide__inner">
-      <div>
-        <p class="slide__label reveal">Raffinement C2</p>
-        <h2 class="slide__heading reveal">On zoome dans le syst&egrave;me<br>et on explicite les briques</h2>
-        <p class="slide__body reveal" style="margin-top:12px; margin-bottom:16px;">
-          La question n'est plus &laquo;&nbsp;qui interagit avec AleFest Coffee&nbsp;?&nbsp;&raquo; mais &laquo;&nbsp;quelles responsabilit&eacute;s logicielles portent l'exp&eacute;rience V2&nbsp;?&nbsp;&raquo;.
-        </p>
-        <div class="system-lanes">
-          <div class="lane-card lane-card--green reveal">
-            <h3>Frontends</h3>
-            <ul>
-              <li>Festival App &middot; commande mobile + push</li>
-              <li>Counter App &middot; compatibilit&eacute; comptoir</li>
-              <li>Barista Screen &middot; file temps r&eacute;el</li>
-            </ul>
-          </div>
-          <div class="lane-card lane-card--blue reveal">
-            <h3>Services</h3>
-            <ul>
-              <li>Order Service &middot; prise de commande</li>
-              <li>Preparation Service &middot; file barista</li>
-              <li>Notification Service &middot; push Firebase</li>
-            </ul>
-          </div>
-          <div class="lane-card lane-card--accent reveal">
-            <h3>Infrastructure</h3>
-            <ul>
-              <li>RabbitMQ &middot; d&eacute;couplage &eacute;v&eacute;nementiel</li>
-              <li>PostgreSQL &middot; persistance partag&eacute;e</li>
-            </ul>
-          </div>
-          <div class="lane-card lane-card--orange reveal">
-            <h3>Intention UX</h3>
-            <ul>
-              <li>Le festivalier repart &eacute;couter le concert</li>
-              <li>Le barista n'attend plus le polling</li>
-            </ul>
-          </div>
-        </div>
+  
+  <section class="slide slide--split" data-nav="V1 vs V2">
+    <div class="slide__panels">
+      <div class="slide__panel slide__panel--primary">
+        <p class="slide__label reveal" style="color:var(--accent2);">V1 &middot; Le comptoir</p>
+        <h2 class="slide__heading reveal">Syst&egrave;me local,<br>festivalier captif</h2>
+        <ul class="slide__bullets" style="margin-top:16px;">
+          <li class="reveal">Commande num&eacute;rique au comptoir via <strong>Application Comptoir</strong></li>
+          <li class="reveal">Responsabilités des <strong>Service de Commandes</strong> et <strong>Service Pr&eacute;paration</strong> bien séparés</li>
+          <li class="reveal"><strong>La file de message</strong> notifie seulement l'équipe de barista</li>
+          <li class="reveal">Le festivalier attend au stand jusqu'&agrave; la remise de la boisson</li>
+        </ul>
       </div>
-      <div class="slide__aside reveal">
-        <div class="speaker-card" style="width:min(100%,360px);">
-          <p class="speaker-card__eyebrow">Point cl&eacute;</p>
-          <h3 class="speaker-card__name" style="font-size:clamp(24px,3.6vw,34px);">Une seule source,<br>plusieurs vues</h3>
-          <p class="speaker-card__meta">La structure C2 sert ensuite &agrave; g&eacute;n&eacute;rer la vue statique, les flows et les diffs d'&eacute;volution.</p>
-        </div>
+      <div class="slide__panel slide__panel--secondary" style="display:flex; flex-direction:column; justify-content:center; gap:16px;">
+        <p class="slide__label reveal" style="color:var(--green);">V2 &middot; Le caf&eacute; mobile</p>
+        <h2 class="slide__heading reveal">Syst&egrave;me intégré,<br>festivalier lib&eacute;r&eacute;</h2>
+        <ul class="slide__bullets" style="margin-top:16px;">
+          <li class="reveal">S'intégrer à <strong>l'app du festival</strong> + <strong>Service Festival</strong> pour commander &agrave; distance</li>
+          <li class="reveal"><strong>Notification Service</strong> pour se libérer de l'attente au comptoir</li>
+          <li class="reveal"><strong>Profiter de la qualité de l'architecture v1</strong>, le socle &eacute;v&eacute;nementiel est enrichi</li>
+          <li class="reveal">Le caf&eacute; devient une exp&eacute;rience fluide, sans immobiliser le festivalier</li>
+        </ul>
       </div>
     </div>
   </section>
-
   
   <section class="slide slide--code" data-nav="Code C2" style="background-image:radial-gradient(ellipse at 50% 80%, var(--accent-dim) 0%, transparent 40%);">
-    <h2 class="slide__heading reveal" style="text-align:center; margin-bottom:clamp(12px,2vh,24px);">Le mod&egrave;le V2 tient en DSL lisible</h2>
+    <h2 class="slide__heading reveal" style="text-align:center; margin-bottom:clamp(12px,2vh,24px);">Le mod&egrave;le V2 étend et reste lisible</h2>
     <div class="slide__code-block reveal">
-      <span class="slide__code-filename">projects/coffee-v2/system-model.c4</span>
+      <span class="slide__code-filename"> coffee-v2/system-model.c4</span>
       <pre><code><span class="kw">model</span> {
   alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Coffee'</span> {
     festivalApp = <span class="hl">Container_MobileApp</span> <span class="str">'Festival App'</span>
@@ -2171,18 +2292,26 @@ Créer un système de prise de commande numérique au comptoir avec :
 }</code></pre>
     </div>
   </section>
-
   
-  <section class="slide slide--diagram slide--diagram-flow" data-nav="Vue C2">
-    <h2 class="slide__heading reveal">La vue C2 expose le pattern event-driven</h2>
-    <div class="mermaid-wrap reveal" data-initial-zoom="1">
-      <div class="zoom-controls">
-        <button onclick="zoomDiagram(this,1.2)" title="Zoom in">+</button>
-        <button onclick="zoomDiagram(this,0.8)" title="Zoom out">&minus;</button>
-        <button onclick="resetZoom(this)" title="Reset">&#8634;</button>
-      </div>
-      <div class="mermaid-scroll">
-      <pre class="mermaid">
+  <section class="slide slide--content slide--code-preview slide--diagram-flow slide--c2-unified" data-nav="Vue C2 + likeC4" data-view="mermaid" style="background-image:radial-gradient(ellipse at 50% 80%, var(--accent-dim) 0%, transparent 40%);">
+    <button
+      class="c2-unified__toggle"
+      type="button"
+      onclick="toggleC2UnifiedView(this)"
+      aria-pressed="false"
+      aria-label="Afficher le bloc code et l'aperçu LikeC4"
+    >LikeC4</button>
+    <h2 class="slide__heading reveal">C2&nbsp;: Comparer LikeC4</h2>
+    <div class="c2-unified__views">
+      <div class="c2-unified__view c2-unified__view--mermaid">
+        <div class="mermaid-wrap reveal" data-initial-zoom="1">
+          <div class="zoom-controls">
+            <button onclick="zoomDiagram(this,1.2)" title="Zoom in">+</button>
+            <button onclick="zoomDiagram(this,0.8)" title="Zoom out">&minus;</button>
+            <button onclick="resetZoom(this)" title="Reset">&#8634;</button>
+          </div>
+          <div class="mermaid-scroll">
+          <pre class="mermaid">
 flowchart TD
   Fest["Festivalier"]
   Bar["Barista"]
@@ -2229,20 +2358,17 @@ flowchart TD
   Order --> DB
   Prep --> DB
   Notif --> DB
-      </pre>
+          </pre>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
-
-  
-  <section class="slide slide--content slide--c2-likec4 slide--code-preview" data-nav="Flow mobile likeC4" style="background-image:radial-gradient(ellipse at 50% 80%, var(--accent-dim) 0%, transparent 40%);">
-    <h2 class="slide__heading reveal">Le sc&eacute;nario mobile en likeC4 + aper&ccedil;u C2</h2>
-    <div class="slide__inner">
-      <div class="c2-likec4__pane c2-likec4__pane--code code-preview__pane code-preview__pane--code">
-        <div class="code-preview__frame">
-          <span class="slide__code-filename">projects/coffee-v2/system-views.c4 · likeC4</span>
-          <div class="slide__code-block reveal">
-            <pre><code><span class="kw">dynamic view</span> order_mobile_flow {
+      <div class="c2-unified__view c2-unified__view--likec4">
+        <div class="slide__inner">
+          <div class="c2-likec4__pane c2-likec4__pane--code code-preview__pane code-preview__pane--code">
+            <div class="code-preview__frame">
+              <span class="slide__code-filename"> coffee-v2/system-views.c4 · likeC4</span>
+              <div class="slide__code-block reveal">
+                <pre><code><span class="kw">dynamic view</span> order_mobile_flow {
   festivalier -&gt; alefestCoffee.festivalApp <span class="str">'Commande cappuccino'</span>
   alefestCoffee.festivalApp -&gt; alefestCoffee.orderService <span class="str">'POST /orders'</span>
   alefestCoffee.orderService -&gt; alefestCoffee.eventBus <span class="str">'PUBLISH order.placed'</span>
@@ -2252,39 +2378,67 @@ flowchart TD
   alefestCoffee.eventBus -&gt; alefestCoffee.notificationService <span class="str">'CONSUME order.ready'</span>
   alefestCoffee.notificationService -&gt; alefestCoffee.festivalApp <span class="str">'Firebase push'</span>
 }</code></pre>
-          </div>
-        </div>
-      </div>
-      <div class="slide__aside reveal c2-likec4__pane c2-likec4__pane--embed code-preview__pane code-preview__pane--embed">
-        <div class="code-preview__frame">
-          <span class="slide__code-filename">Vue C2</span>
-          <div class="embed-wrap reveal" id="coffee-v2-c2-embed-likec4">
-            <div class="embed-controls">
-              <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
-              <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
+              </div>
             </div>
-            <iframe
-              title="LikeC4 coffee-v2 C2"
-              loading="lazy"
-              data-src="assets/coffee-v2-single/index.html#/project/coffee-v2/view/c2_containers?theme=dark"
-            ></iframe>
-            <div class="embed-fallback" aria-live="polite">
-              <span>Impossible de charger l'aper&ccedil;u ici.</span>
-              <a href="assets/coffee-v2-single/index.html#/project/coffee-v2/view/c2_containers?theme=dark" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v2 (vue C2)</a>
+          </div>
+          <div class="slide__aside reveal c2-likec4__pane c2-likec4__pane--embed code-preview__pane code-preview__pane--embed">
+            <div class="code-preview__frame">
+              <span class="slide__code-filename">Vue C2</span>
+              <div class="embed-wrap reveal" id="coffee-v2-c2-embed-likec4">
+                <div class="embed-controls">
+                  <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
+                  <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
+                </div>
+                <iframe
+                  title="LikeC4 coffee-v2 C2"
+                  loading="lazy"
+                  data-src="assets/coffee-v2-single/index.html#/project/coffee-v2/view/c2_containers?theme=dark"
+                ></iframe>
+                <div class="embed-fallback" aria-live="polite">
+                  <span>Impossible de charger l'aper&ccedil;u ici.</span>
+                  <a href="assets/coffee-v2-single/index.html#/project/coffee-v2/view/c2_containers?theme=dark" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v2 (vue C2)</a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+  
 
+  <section class="slide slide--quote" data-nav="Cas d'étude — promesse" style="background-image:radial-gradient(ellipse at 18% 24%, var(--accent3-dim) 0%, transparent 38%), radial-gradient(ellipse at 82% 78%, var(--accent-dim) 0%, transparent 44%);">
+    <div class="callout callout--blue reveal">Le diagramme doit raconter<br>la promesse m&eacute;tier<br>en plus de servir de référence</div>
+  </section>
+  <section class="slide slide--split" data-nav="Impact UX">
+    <div class="slide__panels">
+      <div class="slide__panel slide__panel--primary">
+        <p class="slide__label reveal" style="color:var(--accent2);">Avant</p>
+        <h2 class="slide__heading reveal">V1&nbsp;: le festivalier<br>attend au comptoir</h2>
+        <ul class="slide__bullets" style="margin-top:16px;">
+          <li class="reveal">Se déplace pour payer, attend pour consommer</li>
+          <li class="reveal">Temps mort en file d'attente</li>
+          <li class="reveal">Le barista subit les impatients</li>
+        </ul>
+      </div>
+      <div class="slide__panel slide__panel--secondary" style="display:flex; flex-direction:column; justify-content:center; gap:16px;">
+        <p class="slide__label reveal" style="color:var(--green);">Apr&egrave;s</p>
+        <h2 class="slide__heading reveal">V2&nbsp;: il commande,<br>profite du festival, vient quand c'est pr&ecirc;t</h2>
+        <ul class="slide__bullets" style="margin-top:16px;">
+          <li class="reveal">Attente transform&eacute;e en <strong>exp&eacute;rience libre</strong></li>
+          <li class="reveal">WebSocket c&ocirc;t&eacute; barista, push c&ocirc;t&eacute; festivalier</li>
+          <li class="reveal">Le flow technique rend visible un <strong>gain m&eacute;tier imm&eacute;diat</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
   
   <section class="slide slide--content slide--seq-likec4 slide--code-preview" data-nav="Séquence mobile" style="background-image:radial-gradient(ellipse at 50% 20%, var(--accent-dim) 0%, transparent 40%);">
     <h2 class="slide__heading reveal">Une vue comportementale raconte le gain utilisateur</h2>
     <div class="slide__inner">
       <div class="seq-likec4__pane seq-likec4__pane--code code-preview__pane code-preview__pane--code">
         <div class="code-preview__frame">
-          <span class="slide__code-filename">projects/coffee-v2/system-views.c4 &middot; likeC4</span>
+          <span class="slide__code-filename"> coffee-v2/system-views.c4  </span>
           <div class="slide__code-block reveal">
             <pre><code><span class="kw">dynamic view</span> order_mobile_flow {
   festivalier -&gt; festivalSystem.festivalApp <span class="str">'Commande un flat white'</span>
@@ -2334,97 +2488,9 @@ flowchart TD
     </div>
   </section>
 
-  
-  <section class="slide slide--split" data-nav="Impact UX">
-    <div class="slide__panels">
-      <div class="slide__panel slide__panel--primary">
-        <p class="slide__label reveal" style="color:var(--accent2);">Avant</p>
-        <h2 class="slide__heading reveal">V1&nbsp;: le festivalier<br>attend au comptoir</h2>
-        <ul class="slide__bullets" style="margin-top:16px;">
-          <li class="reveal">Temps mort subi</li>
-          <li class="reveal">Polling HTTP bruyant</li>
-          <li class="reveal">Le barista rafra&icirc;chit la file au lieu de la suivre en temps r&eacute;el</li>
-        </ul>
-      </div>
-      <div class="slide__panel slide__panel--secondary" style="display:flex; flex-direction:column; justify-content:center; gap:16px;">
-        <p class="slide__label reveal" style="color:var(--green);">Apr&egrave;s</p>
-        <h2 class="slide__heading reveal">V2&nbsp;: il commande,<br>profite du festival, revient quand c'est pr&ecirc;t</h2>
-        <ul class="slide__bullets" style="margin-top:16px;">
-          <li class="reveal">Attente transform&eacute;e en <strong>exp&eacute;rience libre</strong></li>
-          <li class="reveal">WebSocket c&ocirc;t&eacute; barista, push c&ocirc;t&eacute; festivalier</li>
-          <li class="reveal">Le flow technique rend visible un <strong>gain m&eacute;tier imm&eacute;diat</strong></li>
-        </ul>
-      </div>
-    </div>
+  <section class="slide slide--quote" data-nav="Portail vivant — bénéfice" style="background-image:radial-gradient(ellipse at 24% 22%, var(--green-dim) 0%, transparent 40%), radial-gradient(ellipse at 78% 80%, var(--accent-dim) 0%, transparent 44%);">
+    <div class="callout callout--green reveal">Le m&ecirc;me mod&egrave;le sert<br>&agrave; discuter avec le m&eacute;tier,<br>la maitrise d'oeuvre,<br>et les d&eacute;veloppeurs.</div>
   </section>
-
-  
-  <section class="slide slide--content" data-nav="Portail vivant" style="background-image:radial-gradient(ellipse at 20% 30%, var(--green-dim) 0%, transparent 40%);">
-    <div class="slide__inner">
-      <div>
-        <p class="slide__label reveal">Portail vivant</p>
-        <h2 class="slide__heading reveal">LikeC4 ne produit pas<br>une image, mais une app</h2>
-        <ul class="slide__bullets">
-          <li class="reveal">Navigation par clic&nbsp;: de la vue globale au d&eacute;tail</li>
-          <li class="reveal">Liens vers les fichiers du mod&egrave;le et vers les vues g&eacute;n&eacute;r&eacute;es</li>
-          <li class="reveal">Plusieurs publics, plusieurs lectures, <strong>une seule source</strong></li>
-          <li class="reveal"><strong>La Google Map de votre syst&egrave;me</strong>, pas un screenshot fig&eacute;</li>
-        </ul>
-        <div class="callout callout--green reveal" style="margin-top:20px;">
-          Le m&ecirc;me mod&egrave;le sert &agrave; discuter avec le m&eacute;tier, l'architecture et les d&eacute;veloppeurs.
-        </div>
-      </div>
-      <div class="slide__aside reveal">
-        <svg viewBox="0 0 160 160" width="160" height="160">
-          
-          <rect x="10" y="20" width="140" height="110" rx="6" fill="var(--surface)" stroke="var(--border-bright)" stroke-width="1.5"/>
-          <rect x="10" y="20" width="140" height="24" rx="6" fill="var(--surface2)"/>
-          <circle cx="24" cy="32" r="4" fill="#e97132" opacity="0.6"/>
-          <circle cx="36" cy="32" r="4" fill="#fbfe7a" opacity="0.6"/>
-          <circle cx="48" cy="32" r="4" fill="#4ea72e" opacity="0.6"/>
-          <rect x="60" y="26" width="80" height="12" rx="3" fill="var(--surface-elevated)"/>
-          <text x="100" y="36" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--text-dim)">localhost:3000</text>
-          
-          <rect x="30" y="58" width="40" height="18" rx="3" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="1"/>
-          <text x="50" y="70" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--accent)">Client</text>
-          <line x1="70" y1="67" x2="90" y2="67" stroke="var(--text-dim)" stroke-width="1" marker-end="url(#arr)"/>
-          <rect x="90" y="58" width="40" height="18" rx="3" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1"/>
-          <text x="110" y="70" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--accent3)">API</text>
-          
-          <polygon points="105,95 115,105 108,105" fill="var(--accent)" opacity="0.8"/>
-          <text x="90" y="138" text-anchor="middle" font-family="var(--font-mono)" font-size="8" fill="var(--text-dim)">NAVIGABLE</text>
-        </svg>
-      </div>
-    </div>
-  </section>
-
-
-  
-  <section class="slide slide--embed" id="slide-codespace" data-nav="Live coding">
-    <p class="slide__label reveal">Live coding</p>
-    <h2 class="slide__heading reveal">Le vrai repo AleFest, en direct</h2>
-
-    <div class="embed-wrap reveal" id="codespace-embed">
-      <div class="embed-controls">
-        <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
-        <button onclick="openCodespacePopup()" title="Ouvrir en popup">↗</button>
-      </div>
-      <iframe
-        id="codespace-iframe"
-        loading="lazy"
-        data-src="https://stunning-space-winner-w46x9xqrrgj2969j.github.dev/"
-        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms allow-modals allow-downloads allow-top-navigation-by-user-activation"
-        allow="clipboard-read; clipboard-write"
-        title="GitHub Codespace — Live coding LikeC4"
-      ></iframe>
-      <div class="embed-fallback">
-        <p style="font-size:18px;">Le Codespace n'a pas pu se charger.</p>
-        <p style="font-size:14px; max-width:500px;">Le live s'appuie sur les fichiers <code>projects/coffee-v2/system-model.c4</code> et <code>system-views.c4</code>.</p>
-        <p style="font-size:14px; max-width:500px;">Copilot peut acc&eacute;l&eacute;rer l'amor&ccedil;age, mais la validation humaine garde la main sur le sens.</p>
-      </div>
-    </div>
-  </section>
-
 
   <!-- ═══════════════════════════════════════════
        PARTIE 4 : OUTILLAGE
@@ -2437,7 +2503,7 @@ flowchart TD
       <p class="slide__label reveal" style="color:var(--accent2);">Partie 3</p>
       <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">Collaboration &amp; diff</h2>
       <span class="slide__accent-line reveal" style="width:80px; height:4px; background:var(--accent2);"></span>
-      <p class="slide__subtitle reveal" style="margin-top:20px;">Quand le mod&egrave;le &eacute;volue, la review devient visuelle</p>
+      <p class="slide__subtitle reveal" style="margin-top:20px;">Le mod&egrave;le &eacute;volue, la revue devient visuelle</p>
     </div>
   </section>  
   <section class="slide slide--code-diff" data-nav="Diff de PR" style="background-image:radial-gradient(ellipse at 30% 70%, var(--red-dim) 0%, transparent 30%), radial-gradient(ellipse at 70% 70%, var(--green-dim) 0%, transparent 30%);">
@@ -2473,9 +2539,6 @@ flowchart TD
           <li class="reveal">Cr&eacute;e-t-on un nouveau point chaud, une d&eacute;pendance ou une boucle&nbsp;?</li>
           <li class="reveal">L'IA peut proposer&nbsp;; <strong>les humains valident la logique</strong></li>
         </ul>
-        <div class="callout callout--blue reveal" style="margin-top:20px;">
-          Le diff ne remplace pas la conversation&nbsp;; il la rend beaucoup plus rapide et beaucoup moins ambigu&euml;.
-        </div>
       </div>
       <div class="slide__aside reveal" style="width:min(100%,460px); justify-self:end;">
         <div class="speaker-card" style="width:min(100%,460px); min-height:260px; padding:32px; display:flex; flex-direction:column; justify-content:center;">
@@ -2485,6 +2548,10 @@ flowchart TD
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="slide slide--quote" data-nav="Review — bénéfice" style="background-image:radial-gradient(ellipse at 20% 18%, var(--accent3-dim) 0%, transparent 38%), radial-gradient(ellipse at 78% 82%, var(--accent2-dim) 0%, transparent 42%);">
+    <div class="callout callout--blue reveal">Le diff ne remplace pas la conversation&nbsp;;<br>il la rend plus efficace<br>et moins ambigu&euml;.</div>
   </section>
 
   
@@ -2536,9 +2603,9 @@ graph LR
     <span class="slide__number" style="color:var(--accent4);" aria-hidden="true">05</span>
     <div>
       <p class="slide__label reveal" style="color:var(--accent4);">Partie 5</p>
-      <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">Bilan &amp; conclusion</h2>
+      <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">Et alors?</h2>
       <span class="slide__accent-line reveal" style="width:80px; height:4px; background:var(--accent4);"></span>
-      <p class="slide__subtitle reveal" style="margin-top:20px;">Ce qu'on retient, ce qu'on embarque, et comment repartir avec du concret</p>
+      <p class="slide__subtitle reveal" style="margin-top:20px;">A retenir et comment repartir avec du concret</p>
     </div>
   </section>
 
@@ -2591,7 +2658,44 @@ graph LR
       </div>
     </div>
   </section>
-
+  
+  <section class="slide slide--content slide--portal-vivant" data-nav="Portail vivant" style="background-image:radial-gradient(ellipse at 20% 30%, var(--green-dim) 0%, transparent 40%);">
+    <p class="slide__label reveal">Une architecture vivante et palpitante</p>
+    <h2 class="slide__heading reveal">LikeC4 ne produit pas que des images, mais une app React complète</h2>
+    <div class="slide__inner">
+      <div>
+        <ul class="slide__bullets">
+          <li class="reveal">Navigation au clic&nbsp;: de la vue globale au d&eacute;tail</li>
+          <li class="reveal">Liens vers les fichiers du mod&egrave;le et vers les vues g&eacute;n&eacute;r&eacute;es</li>
+          <li class="reveal">Plusieurs publics, plusieurs lectures, <strong>une seule source</strong></li>
+		  <li class="reveal">Intégration de modèles entre eux</li>
+		  <li class="reveal">Export : d2, plantuml, mermaid, png...</li>
+          <li class="reveal"><strong>Le cockpit de votre syst&egrave;me</strong>, pas un screenshot fig&eacute;</li>
+        </ul>
+      </div>
+      <div class="slide__aside reveal">
+        <svg viewBox="0 0 160 160" width="480" height="480">
+          
+          <rect x="10" y="20" width="140" height="110" rx="6" fill="var(--surface)" stroke="var(--border-bright)" stroke-width="1.5"/>
+          <rect x="10" y="20" width="140" height="24" rx="6" fill="var(--surface2)"/>
+          <circle cx="24" cy="32" r="4" fill="#e97132" opacity="0.6"/>
+          <circle cx="36" cy="32" r="4" fill="#fbfe7a" opacity="0.6"/>
+          <circle cx="48" cy="32" r="4" fill="#4ea72e" opacity="0.6"/>
+          <rect x="60" y="26" width="80" height="12" rx="3" fill="var(--surface-elevated)"/>
+          <text x="100" y="36" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--text-dim)">localhost:3000</text>
+          
+          <rect x="30" y="58" width="40" height="18" rx="3" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="1"/>
+          <text x="50" y="70" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--accent)">Client</text>
+          <line x1="70" y1="67" x2="90" y2="67" stroke="var(--text-dim)" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="90" y="58" width="40" height="18" rx="3" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1"/>
+          <text x="110" y="70" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--accent3)">API</text>
+          
+          <polygon points="105,95 115,105 108,105" fill="var(--accent)" opacity="0.8"/>
+          <text x="90" y="138" text-anchor="middle" font-family="var(--font-mono)" font-size="8" fill="var(--text-dim)">NAVIGABLE</text>
+        </svg>
+      </div>
+    </div>
+  </section>
   
   <section class="slide slide--content" data-nav="Ressources & QR" style="background-image:radial-gradient(ellipse at 80% 20%, var(--accent4-dim) 0%, transparent 40%);">
     <div class="slide__inner">
@@ -2629,6 +2733,12 @@ graph LR
   
   <section class="slide slide--bleed" data-nav="Merci">
     <div class="slide__bg slide__bg--gradient"></div>
+	<div class="slide__aside reveal" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+	  <div class="qr-spotlight">
+		<img src="./assets/image.png" alt="QR code OpenFeedback pour la session Diagram as Code">
+	  </div>
+	  <p class="qr-caption">OpenFeedback &middot; scannez-moi pour vos retours</p>
+	</div>
     <div class="slide__content">
       <p class="slide__label reveal" style="color:var(--accent4); letter-spacing:2px;">Questions / Réponses</p>
       <h2 class="slide__heading reveal" style="font-weight:900; font-size:clamp(40px,7vw,80px);">Merci !</h2>
@@ -2924,6 +3034,30 @@ graph LR
     var iframe = wrap.querySelector('iframe');
     var url = iframe.src || iframe.dataset.src;
     if (url) window.open(url, '_blank');
+  }
+  function toggleC2UnifiedView(btn) {
+    var slide = btn.closest('.slide--c2-unified');
+    if (!slide) return;
+    var current = slide.getAttribute('data-view') === 'likec4' ? 'likec4' : 'mermaid';
+    var next = current === 'mermaid' ? 'likec4' : 'mermaid';
+    var nextIsLikeC4 = next === 'likec4';
+    slide.setAttribute('data-view', next);
+    btn.setAttribute('aria-pressed', String(nextIsLikeC4));
+    btn.setAttribute('aria-label', nextIsLikeC4 ? 'Afficher le bloc Mermaid' : 'Afficher le bloc code et l\'aperçu LikeC4');
+    btn.textContent = nextIsLikeC4 ? 'Mermaid' : 'LikeC4';
+
+    if (nextIsLikeC4) {
+      slide.querySelectorAll('.embed-wrap iframe[data-src]').forEach(function(iframe) {
+        if (!iframe.src) {
+          iframe.src = iframe.dataset.src;
+        }
+      });
+    }
+
+    window.requestAnimationFrame(function() {
+      autoFit();
+      updateZoomLayout(slide.querySelector('.mermaid-wrap'));
+    });
   }
   /* Lazy-load embeds when their slide becomes visible + detect load errors */
   (function initEmbeds() {

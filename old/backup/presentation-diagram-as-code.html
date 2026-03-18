@@ -429,6 +429,12 @@
     gap: clamp(24px, 4vw, 60px); align-items: center; width: 100%;
     position: relative; z-index: 1;
   }
+  .slide--content.slide--full-width .slide__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .slide--content.slide--full-width .slide__aside {
+    display: none;
+  }
   .slide__bullets { list-style: none; padding: 0; }
   .slide__bullets li {
     padding: 10px 0 10px 24px; position: relative;
@@ -1375,7 +1381,7 @@ graph LR
   </section>
 
   <!-- SLIDE 15 — CE N'EST PAS UNE IMAGE -->
-  <section class="slide slide--content" style="background-image:radial-gradient(ellipse at 20% 30%, var(--green-dim) 0%, transparent 40%);">
+  <section class="slide slide--content slide--full-width" style="background-image:radial-gradient(ellipse at 20% 30%, var(--green-dim) 0%, transparent 40%);">
     <div class="slide__inner">
       <div>
         <p class="slide__label reveal">Effet waouh</p>

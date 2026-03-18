@@ -19,6 +19,24 @@ npm start
 
 Puis ouvrez `http://localhost:4000/presentation-diagram-as-code.html`.
 
+## Publier la présentation sur GitHub Pages
+
+Un workflow CI/CD est fourni dans `.github/workflows/github-pages.yml`.
+
+Il :
+
+- installe les dépendances dans `presentation/`
+- reconstruit les assets LikeC4 (`npm run build`)
+- publie `presentation/public` sur GitHub Pages
+
+Pour l'activer :
+
+1. Dans GitHub, allez dans **Settings → Pages**
+2. Dans **Build and deployment**, sélectionnez **GitHub Actions**
+3. Poussez sur la branche `main` (ou lancez le workflow manuellement depuis l'onglet **Actions**)
+
+Une fois le workflow terminé, l'URL publique est visible dans le job `deploy`.
+
 ## Explorer les modèles LikeC4
 
 Les projets principaux sont :
