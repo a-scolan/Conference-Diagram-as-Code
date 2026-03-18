@@ -1633,11 +1633,10 @@
     <h1 class="slide__display reveal" style="color:var(--text); font-size:clamp(32px,6.5vw,80px); margin-top:8px;">codez-les&nbsp;!</h1>
     <div class="reveal" style="margin-top:clamp(24px,4vh,48px); display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center;">
       <span class="slide__accent-line" style="width:80px; height:4px;"></span>
-      <p class="slide__subtitle" style="color:var(--text-dim); margin-top:8px;">Diagram as code &middot; Architecture &middot; C4 &middot; Live coding</p>
+      <p class="slide__subtitle" style="color:var(--text-dim); margin-top:8px;">Alexis Scolan &middot;Architecture et diagram as code</p>
     </div>
   </section>
 
-  
   <section class="slide slide--content slide--speaker" data-nav="Speaker" data-part="0" style="background-image:radial-gradient(ellipse at 82% 20%, var(--accent2-dim) 0%, transparent 36%), radial-gradient(ellipse at 14% 85%, var(--accent3-dim) 0%, transparent 42%);">
     <div class="slide__inner">
       <div class="speaker-intro">
@@ -2440,68 +2439,19 @@ flowchart TD
       <span class="slide__accent-line reveal" style="width:80px; height:4px; background:var(--accent2);"></span>
       <p class="slide__subtitle reveal" style="margin-top:20px;">Quand le mod&egrave;le &eacute;volue, la review devient visuelle</p>
     </div>
-  </section>
-
-  
-  <section class="slide slide--content" data-nav="Nouveau besoin" style="background-image:radial-gradient(ellipse at 80% 20%, var(--accent2-dim) 0%, transparent 42%);">
-    <div class="slide__inner">
-      <div>
-        <p class="slide__label reveal">Nouveau besoin</p>
-        <h2 class="slide__heading reveal">ADR-0007&nbsp;: les commandes VIP<br>doivent passer devant</h2>
-        <p class="slide__body reveal" style="margin-top:12px; margin-bottom:12px;">
-          La demande produit est simple &agrave; formuler, mais elle change le <strong>chemin de traitement</strong> des commandes dans le syst&egrave;me.
-        </p>
-        <ul class="slide__bullets">
-          <li class="reveal">Ajouter un <strong>Priority Queue Service</strong> pour trier standard vs VIP</li>
-          <li class="reveal">Rerouter la pr&eacute;paration vers une file enrichie</li>
-          <li class="reveal">Rendre l'impact visible pour l'architecture, le dev et la revue</li>
-        </ul>
-        <div class="callout callout--orange reveal" style="margin-top:20px;">
-          La vraie question n'est pas &laquo;&nbsp;est-ce qu'on sait coder le changement&nbsp;?&nbsp;&raquo; mais &laquo;&nbsp;est-ce qu'on voit clairement ce qu'il change dans le syst&egrave;me&nbsp;?&nbsp;&raquo;
-        </div>
-      </div>
-      <div class="slide__aside reveal">
-        <div class="key-grid" style="grid-template-columns:1fr; width:min(100%,360px);">
-          <div class="key-card">
-            <strong>Impact visible</strong>
-            <span>Nouveau container, nouveaux flux, nouvelles questions de d&eacute;pendances.</span>
-          </div>
-          <div class="key-card">
-            <strong>Impact m&eacute;tier</strong>
-            <span>Traitement prioritaire sans r&eacute;&eacute;crire le discours m&eacute;tier &agrave; la main dans Confluence.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  
+  </section>  
   <section class="slide slide--code-diff" data-nav="Diff de PR" style="background-image:radial-gradient(ellipse at 30% 70%, var(--red-dim) 0%, transparent 30%), radial-gradient(ellipse at 70% 70%, var(--green-dim) 0%, transparent 30%);">
-    <p class="slide__label reveal" style="text-align:center;">Visual diff</p>
-    <h2 class="slide__heading reveal" style="text-align:center; margin-bottom:clamp(12px,2vh,24px);">La pull request raconte l'&eacute;volution architecturale</h2>
-    <div class="slide__code-diff reveal">
-      <div>
-        <p class="slide__diff-label" style="color:var(--red);">Avant &middot; FIFO simple</p>
-        <div class="slide__code-block slide__code-block--before">
-          <span class="slide__code-filename">system-model.c4</span>
-          <pre><code><span class="line-ctx">eventBus -[async]-&gt; preparationService</span>
-<span class="line-ctx">  <span class="str">'Recevoir order.placed'</span></span>
-<span class="line-ctx">preparationService -[async]-&gt; eventBus</span>
-<span class="line-ctx">  <span class="str">'Publier order.ready'</span></span></code></pre>
-        </div>
-        <p class="slide__diff-caption reveal">Le flux est direct&nbsp;: aucune priorisation visible.</p>
-      </div>
-      <div>
-        <p class="slide__diff-label" style="color:var(--green);">Apr&egrave;s &middot; VIP prioritaires</p>
-        <div class="slide__code-block slide__code-block--after">
-          <span class="slide__code-filename">system-model.c4</span>
-          <pre><code><span class="line-add">+ priorityQueueService = Container_Service 'Priority Queue'</span>
-<span class="line-add">+   technology 'Node.js, Redis'</span>
-<span class="line-add">+ eventBus -[async]-&gt; priorityQueueService 'Recevoir order.placed'</span>
-<span class="line-add">+ priorityQueueService -[consumes]-&gt; preparationService 'Commandes triées'</span>
-<span class="line-add">+ notificationService -[publishes]-&gt; priorityQueueService 'Metadata VIP'</span></code></pre>
-        </div>
-        <p class="slide__diff-caption reveal">On voit tout de suite le nouveau service et le nouveau chemin critique.</p>
+    <div class="slide__inner" style="min-height:100%; display:flex; align-items:center; justify-content:center;">
+      <div class="launcher reveal" style="max-width:none; text-align:center; align-items:center;">
+        <p class="slide__label" style="margin-bottom:14px; text-align:center;">Pull request</p>
+        <h2 class="slide__heading" style="text-align:center; margin-bottom:18px;">Ouvrir la page de diff GitHub</h2>
+        <a class="launcher__btn" href="https://github.com/a-scolan/atlantique-day-likec4/pull/1/changes" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir la page GitHub de diff de la pull request">
+          <span>Ouvrir la PR</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 7H17V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
       </div>
     </div>
   </section>
@@ -2527,18 +2477,19 @@ flowchart TD
           Le diff ne remplace pas la conversation&nbsp;; il la rend beaucoup plus rapide et beaucoup moins ambigu&euml;.
         </div>
       </div>
-      <div class="slide__aside reveal">
-        <div class="speaker-card" style="width:min(100%,360px);">
-          <p class="speaker-card__eyebrow">Question de reviewer</p>
+      <div class="slide__aside reveal" style="width:min(100%,460px); justify-self:end;">
+        <div class="speaker-card" style="width:min(100%,460px); min-height:260px; padding:32px; display:flex; flex-direction:column; justify-content:center;">
+          <p class="speaker-card__eyebrow">Question de relecteurs</p>
           <h3 class="speaker-card__name" style="font-size:clamp(24px,3.6vw,34px);">&laquo;&nbsp;Qu'est-ce qui change vraiment&nbsp;?&nbsp;&raquo;</h3>
-          <p class="speaker-card__meta">Avec un diff visuel et textuel, la r&eacute;ponse n'est plus cach&eacute;e dans du prose ou dans un sch&eacute;ma &agrave; refaire &agrave; la main.</p>
+          <p class="speaker-card__meta">Avec un diff visuel et textuel, la r&eacute;ponse n'est plus cach&eacute;e dans de la prose ou dans un sch&eacute;ma &agrave; refaire &agrave; la main.</p>
         </div>
       </div>
     </div>
   </section>
 
   
-  <section class="slide slide--divider" data-nav="Partie 4" style="background:linear-gradient(110deg, #040818 0%, #080d2a 60%, #0c1238 100%);">
+  <!--
+  <section class="slide slide-&#45;divider" data-nav="Partie 4" style="background:linear-gradient(110deg, #040818 0%, #080d2a 60%, #0c1238 100%);">
     <span class="slide__number" style="color:var(--green);" aria-hidden="true">04</span>
     <div>
       <p class="slide__label reveal" style="color:var(--green);">Partie 4</p>
@@ -2548,8 +2499,7 @@ flowchart TD
     </div>
   </section>
 
-  
-  <section class="slide slide--diagram slide--diagram-flow" data-nav="Pipeline CI/CD">
+  <section class="slide slide-&#45;diagram slide-&#45;diagram-flow" data-nav="Pipeline CI/CD">
     <h2 class="slide__heading reveal">Pipeline&nbsp;: du texte brut au portail d'architecture</h2>
     <div class="mermaid-wrap reveal">
       <div class="zoom-controls">
@@ -2560,13 +2510,13 @@ flowchart TD
       <div class="mermaid-scroll">
       <pre class="mermaid">
 graph LR
-  ADR["📝 ADR / Markdown"] --> Model["🧩 Modèle .c4"]
-  Model --> PR["🔀 Pull Request<br/>review technique + archi"]
-  PR --> Validate["✅ Validation LikeC4"]
-  Validate --> Render["🎨 Génération HTML / vues"]
-  Render --> VisualDiff["👁️ Visual diff"]
-  VisualDiff --> Publish["🚀 Publication"]
-  Publish --> Portal["🗺️ Portail vivant"]
+  ADR["📝 ADR / Markdown"] -&gt; Model["🧩 Modèle .c4"]
+  Model -&gt; PR["🔀 Pull Request&lt;br/&gt;review technique + archi"]
+  PR -&gt; Validate["✅ Validation LikeC4"]
+  Validate -&gt; Render["🎨 Génération HTML / vues"]
+  Render -&gt; VisualDiff["👁️ Visual diff"]
+  VisualDiff -&gt; Publish["🚀 Publication"]
+  Publish -&gt; Portal["🗺️ Portail vivant"]
 
   classDef gold fill:#fbfe7a44,stroke:#fbfe7a,stroke-width:2px,color:#ffffff
   classDef blue fill:#0f9ed544,stroke:#0f9ed5,stroke-width:2px,color:#ffffff
@@ -2579,6 +2529,7 @@ graph LR
       </div>
     </div>
   </section>
+  -->
 
   
   <section class="slide slide--divider" data-nav="Partie 5" style="background:linear-gradient(110deg, #120816 0%, #190b23 60%, #240f2e 100%);">
@@ -2622,18 +2573,18 @@ graph LR
             </tr>
             <tr>
               <td><strong>Git / PR</strong></td>
-              <td>Le diagramme est &agrave; c&ocirc;t&eacute; du flux de dev</td>
-              <td>La PR expose l'intention architecturale</td>
+              <td>Le diagramme est sauvegardé ailleurs, difficile à relier</td>
+              <td>La PR expose l'intention architecturale et accompagne le code</td>
             </tr>
             <tr>
               <td><strong>CI/CD</strong></td>
               <td>Production manuelle et fragile</td>
-              <td>Validation et publication automatis&eacute;es</td>
+              <td>Validation et publication automatis&eacute;es, comme une livraison de code!</td>
             </tr>
             <tr>
               <td><strong>IA</strong></td>
               <td>Difficile de g&eacute;n&eacute;rer un sch&eacute;ma fiable</td>
-              <td>Simple d'amorcer du code de mod&egrave;le, puis de le faire valider</td>
+              <td>Simple d'amorcer du code de mod&egrave;lisation, puis de le faire valider et l'exploiter avec un LLM et MCP</td>
             </tr>
           </tbody>
         </table>
@@ -2685,12 +2636,10 @@ graph LR
         Ne dessinez plus vos architectures &mdash; codez-les, versionnez-les, publiez-les.
       </p>
       <div class="reveal" style="margin-top:32px; display:flex; gap:12px; flex-wrap:wrap;">
-        <span class="badge badge--accent">LikeC4</span>
-        <span class="badge badge--blue">ADR</span>
+        <span class="badge badge--accent">Architecture</span>
+        <span class="badge badge--blue">Diagram as code</span>
         <span class="badge badge--green">C4 Model</span>
-        <span class="badge badge--orange">Visual diff</span>
-        <span class="badge">GitHub Actions</span>
-        <span class="badge">VS Code</span>
+        <span class="badge badge--orange">LikeC4</span>
       </div>
       <div class="reveal" style="margin-top:32px;">
         <p style="font-size:clamp(14px,1.8vw,20px); color:var(--text-dim);">
