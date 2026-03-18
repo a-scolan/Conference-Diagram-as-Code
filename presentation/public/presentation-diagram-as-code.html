@@ -1975,30 +1975,33 @@ Créer un système de prise de commande numérique au comptoir avec :
   </section>
   
   <section class="slide slide--content slide--c1-generated slide--code-preview" data-nav="C1 généré" style="background-image:radial-gradient(ellipse at 70% 20%, var(--accent-dim) 0%, transparent 40%);">
-    <p class="slide__label reveal">V1 &middot; validation du besoin</p>
-    <h2 class="slide__heading reveal">ADR-001 devient une vue navigable du stand caf&eacute;</h2>
+    <p class="slide__label reveal">V1 &middot; le diagramme</p>
+    <h2 class="slide__heading reveal">La spec devient une vue navigable du système...</h2>
     <div class="slide__inner">
       <div class="c1-generated__pane c1-generated__pane--code code-preview__pane code-preview__pane--code">
         <div class="code-preview__frame">
           <span class="slide__code-filename">projects/coffee-v1/system-model.c4</span>
           <div class="slide__code-block reveal">
             <pre><code style="font-size:clamp(10.5px,1.05vw,13px); line-height:1.4;"><span class="kw">model</span> {
-    festivalier = <span class="hl">Actor_Person</span> <span class="str">'Festivalier'</span> {
-      description <span class="str">'Client du stand'</span>
-    }
-
-    barista = <span class="hl">Actor_Staff</span> <span class="str">'Barista'</span> {
-      description <span class="str">'Pr&eacute;pare les boissons'</span>
-    }
-
     alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
-      description <span class="str">'Stand caf&eacute;'</span>
+      counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span> { <span class="cm">...</span> }
+      baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span> { <span class="cm">...</span> }
 
-      <span class="cm">...</span>
+      orderService = <span class="hl">Container_Api</span> <span class="str">'Service de Commandes'</span> { <span class="cm">...</span> }
+      preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span> { <span class="cm">...</span> }
+
+      eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span> { <span class="cm">...</span> }
+      database = <span class="hl">Container_Database</span> <span class="str">'PostgreSQL'</span> { <span class="cm">...</span> }
+
+      counterApp -[<span class="hl">calls</span>]-&gt; orderService <span class="str">'POST /orders'</span>
+      baristaScreen -[<span class="hl">calls</span>]-&gt; preparationService <span class="str">'WebSocket'</span>
+
+      orderService -[<span class="hl">async</span>]-&gt; eventBus <span class="str">'Publie order.placed'</span>
+      eventBus -[<span class="hl">async</span>]-&gt; preparationService <span class="str">'Livre order.placed'</span>
+
+      orderService -[<span class="hl">writes</span>]-&gt; database <span class="str">'Commande'</span>
+      preparationService -[<span class="hl">writes</span>]-&gt; database <span class="str">'Statut'</span>
     }
-
-    festivalier -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Passe commande'</span>
-    barista -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Pr&eacute;pare les commandes'</span>
 }</code></pre>
           </div>
         </div>
@@ -2027,30 +2030,33 @@ Créer un système de prise de commande numérique au comptoir avec :
   </section>
   
   <section class="slide slide--content slide--c1-generated slide--code-preview" data-nav="C1 généré" style="background-image:radial-gradient(ellipse at 70% 20%, var(--accent-dim) 0%, transparent 40%);">
-    <p class="slide__label reveal">V1 &middot; validation du besoin</p>
-    <h2 class="slide__heading reveal">ADR-001 devient une vue navigable du stand caf&eacute;</h2>
+    <p class="slide__label reveal">V1 &middot; le diagramme</p>
+    <h2 class="slide__heading reveal">... qui peut être détaillée</h2>
     <div class="slide__inner">
       <div class="c1-generated__pane c1-generated__pane--code code-preview__pane code-preview__pane--code">
         <div class="code-preview__frame">
           <span class="slide__code-filename">projects/coffee-v1/system-model.c4</span>
           <div class="slide__code-block reveal">
             <pre><code style="font-size:clamp(10.5px,1.05vw,13px); line-height:1.4;"><span class="kw">model</span> {
-    festivalier = <span class="hl">Actor_Person</span> <span class="str">'Festivalier'</span> {
-      description <span class="str">'Client du stand'</span>
-    }
-
-    barista = <span class="hl">Actor_Staff</span> <span class="str">'Barista'</span> {
-      description <span class="str">'Pr&eacute;pare les boissons'</span>
-    }
-
     alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
-      description <span class="str">'Stand caf&eacute;'</span>
+      counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span> { <span class="cm">...</span> }
+      baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span> { <span class="cm">...</span> }
 
-      <span class="cm">...</span>
+      orderService = <span class="hl">Container_Api</span> <span class="str">'Service de Commandes'</span> { <span class="cm">...</span> }
+      preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span> { <span class="cm">...</span> }
+
+      eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span> { <span class="cm">...</span> }
+      database = <span class="hl">Container_Database</span> <span class="str">'PostgreSQL'</span> { <span class="cm">...</span> }
+
+      counterApp -[<span class="hl">calls</span>]-&gt; orderService <span class="str">'POST /orders'</span>
+      baristaScreen -[<span class="hl">calls</span>]-&gt; preparationService <span class="str">'WebSocket'</span>
+
+      orderService -[<span class="hl">async</span>]-&gt; eventBus <span class="str">'Publie order.placed'</span>
+      eventBus -[<span class="hl">async</span>]-&gt; preparationService <span class="str">'Livre order.placed'</span>
+
+      orderService -[<span class="hl">writes</span>]-&gt; database <span class="str">'Commande'</span>
+      preparationService -[<span class="hl">writes</span>]-&gt; database <span class="str">'Statut'</span>
     }
-
-    festivalier -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Passe commande'</span>
-    barista -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Pr&eacute;pare les commandes'</span>
 }</code></pre>
           </div>
         </div>
@@ -2070,7 +2076,7 @@ Créer un système de prise de commande numérique au comptoir avec :
             ></iframe>
             <div class="embed-fallback" aria-live="polite">
               <span>Impossible de charger l'aper&ccedil;u ici.</span>
-              <a href="assets/coffee-v1-single/index.html#/view/c2_containers/" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v1 (vue C1)</a>
+              <a href="assets/coffee-v1-single/index.html#/view/c2_containers/" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v1 (vue C2)</a>
             </div>
           </div>
         </div>
@@ -2089,7 +2095,7 @@ Créer un système de prise de commande numérique au comptoir avec :
       <p class="slide__label reveal" style="color:var(--accent3);">Partie 2</p>
       <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">Containers &amp; comportements</h2>
       <span class="slide__accent-line reveal" style="width:80px; height:4px; background:var(--accent3);"></span>
-      <p class="slide__subtitle reveal" style="margin-top:20px;">C2 statique, flow mobile et portail vivant</p>
+      <p class="slide__subtitle reveal" style="margin-top:20px;">C2, cas d'usage, et faire évoluer un diagramme</p>
     </div>
   </section>
 
