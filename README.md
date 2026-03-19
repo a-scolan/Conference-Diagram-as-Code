@@ -37,6 +37,20 @@ Pour l'activer :
 
 Une fois le workflow terminé, l'URL publique est visible dans le job `deploy`.
 
+### Publication minimale automatisée vers `likec4-presentation`
+
+Des scripts sont disponibles pour publier uniquement le strict nécessaire dans le repo cible `a-scolan/likec4-presentation` :
+
+- Bash : `scripts/publish-likec4-presentation.sh`
+- PowerShell : `scripts/publish-likec4-presentation.ps1`
+
+Ils :
+
+- exportent un repo minimal (build + `public/` + modèles LikeC4 nécessaires)
+- ajoutent des redirections racine (`/` et `/presentation-diagram-as-code.html`)
+- reconstruisent les assets
+- pushent sur `main` du repo cible
+
 ## Explorer les modèles LikeC4
 
 Les projets principaux sont :
