@@ -4,6 +4,7 @@ Ce sous-dossier regroupe les projets **LikeC4** utilisés pour la conférence **
 
 ## Projets disponibles
 
+- `projects/coffee-adr001` — ADR-001 fidèle au besoin initial comptoir (borne, écran barista, backends découplés)
 - `projects/coffee-v1` — AleFest Coffee V1, Le Comptoir (version démo conférence)
 - `projects/coffee-v2` — AleFest Coffee V2, Mobile + notifications (version démo conférence)
 - `projects/alefest-v1` — AleFest Coffee V1, architecture synchrone au comptoir (version originale)
@@ -27,6 +28,13 @@ cd projects/coffee-v1
 npx likec4 serve
 ```
 
+Pour explorer l'interprétation fidèle de l'ADR initial :
+
+```bash
+cd projects/coffee-adr001
+npx likec4 serve
+```
+
 ## Reconstruire les builds single-file utilisés par la présentation
 
 Depuis le dossier `presentation/` :
@@ -40,9 +48,14 @@ Cette commande :
 - rebuild `projects/coffee-v1` vers `public/assets/coffee-v1-single/`
 - rebuild `projects/coffee-v2` vers `public/assets/coffee-v2-single/`
 - génère un `index.html` autonome et un `404.html` miroir pour chaque build
+- utilise la dépendance locale `../node_modules/likec4` (pas un binaire global)
+
+Le projet `coffee-adr001` reste pour l'instant un projet de modélisation local séparé : il n'est pas inclus dans les assets single-file de la présentation.
 
 ## Fichiers clés
 
+- `projects/coffee-adr001/system-model.c4`
+- `projects/coffee-adr001/system-views.c4`
 - `projects/coffee-v2/system-model.c4`
 - `projects/coffee-v2/system-views.c4`
 - `projects/coffee-v1/system-model.c4`

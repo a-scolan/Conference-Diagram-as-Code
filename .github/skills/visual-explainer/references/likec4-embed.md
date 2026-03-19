@@ -20,7 +20,7 @@ A new slide type alongside `slide--diagram`, `slide--code`, etc. Full-viewport i
 ```html
 <section class="slide slide--embed">
   <h2 class="slide__heading reveal">Démo LikeC4 — votre architecture vivante</h2>
-  <div class="embed-wrap reveal">
+  <div class="embed-wrap reveal" data-likec4-fit-on-load="true" data-likec4-zoomout-steps="1">
     <div class="embed-controls">
       <button onclick="reloadEmbed(this)" title="Recharger" aria-label="Recharger l'iframe">↻</button>
       <button onclick="openEmbedExternal(this)" title="Ouvrir dans le navigateur" aria-label="Ouvrir dans un nouvel onglet">↗</button>
@@ -48,6 +48,8 @@ A new slide type alongside `slide--diagram`, `slide--code`, etc. Full-viewport i
 | `sandbox="allow-scripts allow-same-origin allow-popups"` | Security sandbox — permits LikeC4's JS/React runtime while blocking navigation and form submission |
 | `title` | Accessibility — screen readers announce the iframe's purpose |
 | `loading="lazy"` | Belt-and-suspenders alongside IntersectionObserver for browsers that don't support the observer |
+| `data-likec4-fit-on-load="true"` | Optional same-origin presentation tweak — clicks LikeC4's internal **Fit View** control after the iframe finishes rendering |
+| `data-likec4-zoomout-steps="1"` | Optional extra breathing room after Fit View — clicks LikeC4's internal **Zoom Out** control $n$ times |
 
 ### CSS
 
@@ -175,6 +177,42 @@ function openEmbedExternal(btn) {
   if (url) window.open(url, '_blank');
 }
 
+function shouldTuneLikeC4Viewport(wrap) {
+  var fitOnLoad = String(wrap && wrap.dataset.likec4FitOnLoad ? wrap.dataset.likec4FitOnLoad : '').toLowerCase() === 'true';
+  var zoomOutSteps = parseInt(wrap && wrap.dataset.likec4ZoomoutSteps ? wrap.dataset.likec4ZoomoutSteps : '', 10);
+  return fitOnLoad || (!isNaN(zoomOutSteps) && zoomOutSteps > 0);
+}
+
+function triggerLikeC4Control(doc, selector, count) {
+  var remaining = Math.max(0, count || 0);
+  while (remaining > 0) {
+    var btn = doc.querySelector(selector);
+    if (!btn || btn.disabled) break;
+    btn.click();
+    remaining -= 1;
+  }
+}
+
+function scheduleLikeC4ViewportTuning(wrap) {
+  if (!shouldTuneLikeC4Viewport(wrap)) return;
+  var iframe = wrap.querySelector('iframe');
+  if (!iframe) return;
+  [80, 220, 480].forEach(function(delay) {
+    window.setTimeout(function() {
+      try {
+        var doc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!doc || !doc.body) return;
+        var fitClicks = String(wrap.dataset.likec4FitOnLoad || '').toLowerCase() === 'true' ? 1 : 0;
+        var zoomOutSteps = parseInt(wrap.dataset.likec4ZoomoutSteps || '0', 10) || 0;
+        triggerLikeC4Control(doc, '.react-flow__controls-fitview', fitClicks);
+        triggerLikeC4Control(doc, '.react-flow__controls-zoomout', zoomOutSteps);
+      } catch (e) {
+        /* Same-origin only — ignore if the embedded tool is cross-origin. */
+      }
+    }, delay);
+  });
+}
+
 /* Lazy-load embeds when their slide becomes visible + detect load errors */
 (function initEmbeds() {
   document.querySelectorAll('.embed-wrap iframe[data-src]').forEach(function(iframe) {
@@ -186,6 +224,9 @@ function openEmbedExternal(btn) {
       if (loaded) return;
       loaded = true;
       iframe.src = iframe.dataset.src;
+      iframe.addEventListener('load', function() {
+        scheduleLikeC4ViewportTuning(wrap);
+      }, { once: true });
 
       /* Detect load failure after a timeout —
          file:// iframes don't always fire error events */
@@ -216,6 +257,8 @@ function openEmbedExternal(btn) {
   });
 })();
 ```
+
+The Fit View / Zoom Out automation only works for **same-origin** embeds (local exports, localhost dev servers, or assets served from the same presentation host). For cross-origin iframes, the browser blocks DOM access — keep the fallback link and manual controls.
 
 **How it works:**
 

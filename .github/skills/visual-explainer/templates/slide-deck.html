@@ -572,20 +572,32 @@
   .slide--diagram .slide__heading { margin-bottom: clamp(8px, 1.5vh, 20px); }
 
   .mermaid-wrap {
-    position: relative; display: flex; flex-direction: column;
+    position: relative; display: flex; flex-direction: column; align-items: stretch;
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 12px; padding: 24px; overflow: hidden; flex: 1; min-height: 0;
   }
   .mermaid-scroll {
     overflow: auto; flex: 1; min-height: 0; width: 100%;
-    display: flex;
+    display: flex; align-items: center; justify-content: center;
+    cursor: default;
   }
+  .mermaid-scroll.has-overflow-x { justify-content: flex-start; }
+  .mermaid-scroll.has-overflow-y { align-items: flex-start; }
   .mermaid-wrap .mermaid {
-    transition: transform 0.2s ease; transform-origin: 0 0;
-    margin: auto; flex-shrink: 0;
-    cursor: grab;
+    transition: width 0.2s ease, height 0.2s ease;
+    margin: auto; flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: center;
+    cursor: default;
   }
-  .mermaid-wrap.is-panning .mermaid { cursor: grabbing; }
+  .mermaid-wrap.can-pan .mermaid { cursor: grab; }
+  .mermaid-wrap.can-pan .mermaid-scroll { touch-action: none; }
+  .mermaid-wrap .mermaid svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+  }
+  .mermaid-wrap.is-panning .mermaid { cursor: grabbing; user-select: none; }
   .zoom-controls {
     position: absolute; top: 8px; right: 8px; display: flex; gap: 2px; z-index: 10;
     background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 2px;
@@ -742,6 +754,9 @@
   .slide__code-diff .slide__code-block {
     max-width: none; border-radius: 12px; border-left: 4px solid var(--border);
   }
+  .slide__code-diff .slide__code-block code {
+    line-height: 1.28;
+  }
   .slide__code-diff .slide__code-block--before {
     border-left-color: var(--red);
   }
@@ -756,14 +771,17 @@
   }
   .slide__code-diff .line-del {
     display: block; color: var(--red); background: var(--red-dim);
+    line-height: 1.28;
     margin: 0 calc(-1 * clamp(24px, 4vw, 48px)); padding: 0 clamp(24px, 4vw, 48px);
   }
   .slide__code-diff .line-add {
     display: block; color: var(--green); background: var(--green-dim);
+    line-height: 1.28;
     margin: 0 calc(-1 * clamp(24px, 4vw, 48px)); padding: 0 clamp(24px, 4vw, 48px);
   }
   .slide__code-diff .line-ctx {
     display: block; color: var(--text-dim);
+    line-height: 1.28;
   }
   .slide__code-diff .slide__diff-label {
     font-family: var(--font-mono); font-size: clamp(11px, 1.2vw, 13px);
@@ -1260,11 +1278,11 @@
 
   <section class="slide slide--diagram" aria-label="Slide 6: Flux d'un diagramme as code">
     <h2 class="slide__heading reveal">Flux d&rsquo;un diagramme as code</h2>
-    <div class="mermaid-wrap reveal">
+    <div class="mermaid-wrap reveal" data-fit-mode="cover" data-fit-scale-max="2.2" data-initial-zoom="1.04" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
     <div class="zoom-controls" role="toolbar" aria-label="Diagram zoom controls">
-      <button onclick="zoomDiagram(this,1.2)" title="Zoom in" aria-label="Zoom in">+</button>
-      <button onclick="zoomDiagram(this,0.8)" title="Zoom out" aria-label="Zoom out">&minus;</button>
-      <button onclick="resetZoom(this)" title="Reset" aria-label="Reset zoom">&#8634;</button>
+      <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom in" aria-label="Zoom in">+</button>
+      <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom out" aria-label="Zoom out">&minus;</button>
+      <button type="button" data-zoom-action="reset" title="Reset" aria-label="Reset zoom">&#8634;</button>
       </div>
       <div class="mermaid-scroll">
       <pre class="mermaid">
@@ -1419,34 +1437,68 @@ graph LR
     }
   });
 
+  function getInitialZoom(w){return parseFloat(w && w.dataset.initialZoom ? w.dataset.initialZoom : '1') || 1;}
+  function getFitScaleMax(w){var maxScale=parseFloat(w && w.dataset.fitScaleMax ? w.dataset.fitScaleMax : '');return !isNaN(maxScale) && maxScale > 0 ? maxScale : 1;}
+  function getFitMode(w){var mode=String(w && w.dataset.fitMode ? w.dataset.fitMode : 'contain').toLowerCase();return mode==='cover' ? 'cover' : 'contain';}
+
+  function getStableMermaidViewBox(svg) {
+    if (!svg) return null;
+    var rawViewBox = svg.dataset.rawViewBox || svg.getAttribute('viewBox');
+    if (!rawViewBox) return null;
+    if (!svg.dataset.rawViewBox) svg.dataset.rawViewBox = rawViewBox;
+
+    var parts = rawViewBox.split(/[\s,]+/).map(Number);
+    if (parts.length !== 4 || parts.some(function(v){ return Number.isNaN(v); })) return null;
+
+    var fallbackPad = 60;
+    var viewBox = [parts[0] - fallbackPad, parts[1] - fallbackPad, parts[2] + fallbackPad * 2, parts[3] + fallbackPad * 2];
+
+    try {
+      var box = typeof svg.getBBox === 'function' ? svg.getBBox() : null;
+      if (box && box.width > 0 && box.height > 0) {
+        var padX = Math.max(36, Math.min(72, box.width * 0.08));
+        var padY = Math.max(32, Math.min(72, box.height * 0.12));
+        viewBox = [box.x - padX, box.y - padY, box.width + padX * 2, box.height + padY * 2];
+      }
+    } catch (e) {
+      /* Fallback keeps a stable padded viewBox based on the original bounds. */
+    }
+
+    return viewBox;
+  }
+
   function autoFit() {
     document.querySelectorAll('.mermaid').forEach(function(mDiv) {
       var svg = mDiv.querySelector('svg');
       if (!svg) return;
-      var vb = svg.getAttribute('viewBox');
-      if (vb) {
-        var parts = vb.split(/[\s,]+/).map(Number);
-        if (parts.length === 4) {
-          var pad = 30;
-          parts = [parts[0] - pad, parts[1] - pad, parts[2] + pad * 2, parts[3] + pad * 2];
-          svg.setAttribute('viewBox', parts.join(' '));
-        }
-      }
-      vb = svg.getAttribute('viewBox');
-      if (!vb) return;
-      var vp = vb.split(/[\s,]+/).map(Number);
+      var vp = getStableMermaidViewBox(svg);
+      if (!vp) return;
+      svg.setAttribute('viewBox', vp.join(' '));
       var vw = vp[2], vh = vp[3];
+      var wrap = mDiv.closest('.mermaid-wrap');
       var scroll = mDiv.closest('.mermaid-scroll');
       var cw = scroll ? scroll.clientWidth : mDiv.parentElement.clientWidth;
       var ch = scroll ? scroll.clientHeight : mDiv.parentElement.clientHeight;
-      var scale = Math.min(cw / vw, ch / vh, 1);
+      var safeCw = Math.max(1, cw || 0);
+      var safeCh = Math.max(1, ch || 0);
+      var fitMode = getFitMode(wrap);
+      var rawScale = fitMode === 'cover'
+        ? Math.max(safeCw / vw, safeCh / vh)
+        : Math.min(safeCw / vw, safeCh / vh);
+      var scale = Math.min(rawScale, getFitScaleMax(wrap));
+      if (!isFinite(scale) || scale <= 0) scale = 1;
+      var fittedWidth = Math.round(vw * scale);
+      var fittedHeight = Math.round(vh * scale);
       svg.removeAttribute('height');
       svg.removeAttribute('width');
-      svg.style.width = Math.round(vw * scale) + 'px';
-      svg.style.height = Math.round(vh * scale) + 'px';
+      svg.style.width = '100%';
+      svg.style.height = '100%';
       /* Store base dimensions for zoom layout calculations */
-      mDiv.dataset.baseW = Math.round(vw * scale);
-      mDiv.dataset.baseH = Math.round(vh * scale);
+      mDiv.dataset.baseW = fittedWidth;
+      mDiv.dataset.baseH = fittedHeight;
+      mDiv.style.width = fittedWidth + 'px';
+      mDiv.style.height = fittedHeight + 'px';
+      if (wrap) delete wrap.dataset.centeredZoom;
     });
     document.querySelectorAll('.slide__kpi-val').forEach(function(el) {
       if (el.scrollWidth > el.clientWidth) {
@@ -1480,9 +1532,19 @@ graph LR
 
   mermaid.run().then(function() {
     autoFit();
+    window.addEventListener('resize', function() {
+      autoFit();
+      document.querySelectorAll('.slide.visible .mermaid-wrap').forEach(function(w){ updateZoomLayout(w); scheduleCenterMermaidViewport(w, true); });
+    }, { passive: true });
     enforcePart0GrayMarkers();
     /* Initialise zoom layout so .mermaid divs have explicit dimensions */
-    document.querySelectorAll('.mermaid-wrap').forEach(function(w){ updateZoomLayout(w); });
+    document.querySelectorAll('.mermaid-wrap').forEach(function(w){ var t=w.querySelector('.mermaid'); var z=getInitialZoom(w); t.dataset.zoom=String(z); t.style.transform='none'; updateZoomState(w); updateZoomLayout(w); });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function() {
+        autoFit();
+        document.querySelectorAll('.slide.visible .mermaid-wrap').forEach(function(w){ updateZoomLayout(w); scheduleCenterMermaidViewport(w, true); });
+      });
+    }
     new SlideEngine();
   });
 </script>
@@ -1602,17 +1664,77 @@ graph LR
   })();
 
   // Mermaid zoom controls
-  function updateZoomState(w){var t=w.querySelector('.mermaid');var z=parseFloat(t.dataset.zoom||'1');w.classList.toggle('is-zoomed',z>1);}
+  function getCurrentZoom(w){var t=w&&w.querySelector?w.querySelector('.mermaid'):null;return parseFloat(t&&t.dataset.zoom||getInitialZoom(w))||getInitialZoom(w);}
+  function getZoomMin(w){var min=parseFloat(w&&w.dataset.zoomMin?w.dataset.zoomMin:'');return !isNaN(min)&&min>0?min:0.6;}
+  function getZoomMax(w){var max=parseFloat(w&&w.dataset.zoomMax?w.dataset.zoomMax:'');return !isNaN(max)&&max>getZoomMin(w)?max:4;}
+  function clampDiagramZoom(w,zoom){return Math.min(getZoomMax(w),Math.max(getZoomMin(w),zoom));}
+  function shouldCenterMermaidViewport(w,zoom){
+    if(!w)return false;
+    var mode=String(w.dataset.centerViewportOnReveal||'').toLowerCase();
+    var currentZoom=typeof zoom==='number'?zoom:getCurrentZoom(w);
+    if(mode==='true'||mode==='always')return true;
+    if(mode==='false'||mode==='never')return false;
+    return currentZoom>1.01;
+  }
+  function updateZoomState(w){var t=w.querySelector('.mermaid');var z=parseFloat(t.dataset.zoom||getInitialZoom(w));w.classList.toggle('is-zoomed',z>1);}
+  function updateMermaidViewportAlignment(w){
+    if(!w)return;
+    var sc=w.querySelector('.mermaid-scroll');
+    var t=w.querySelector('.mermaid');
+    if(!sc||!t)return;
+    var overflowX=Math.ceil(t.offsetWidth)>sc.clientWidth+1;
+    var overflowY=Math.ceil(t.offsetHeight)>sc.clientHeight+1;
+    sc.classList.toggle('has-overflow-x',overflowX);
+    sc.classList.toggle('has-overflow-y',overflowY);
+    w.classList.toggle('can-pan',overflowX||overflowY||getCurrentZoom(w)>1.01);
+  }
   function updateZoomLayout(w){
     var t=w.querySelector('.mermaid');
-    var z=parseFloat(t.dataset.zoom||'1');
+    var z=parseFloat(t.dataset.zoom||getInitialZoom(w));
     var bw=parseFloat(t.dataset.baseW||'0');
     var bh=parseFloat(t.dataset.baseH||'0');
-    if(bw&&bh){t.style.width=Math.ceil(bw*z)+'px';t.style.height=Math.ceil(bh*z)+'px';}
+    if(bw&&bh){t.style.width=Math.ceil(bw*z)+'px';t.style.height=Math.ceil(bh*z)+'px';t.style.transform='none';}
+    updateMermaidViewportAlignment(w);
   }
-  function zoomDiagram(b,f){var w=b.closest('.mermaid-wrap');var t=w.querySelector('.mermaid');var c=parseFloat(t.dataset.zoom||'1');var n=c*f;t.dataset.zoom=n;t.style.transform='scale('+n+')';updateZoomState(w);updateZoomLayout(w);}
-  function resetZoom(b){var w=b.closest('.mermaid-wrap');var t=w.querySelector('.mermaid');t.dataset.zoom='1';t.style.transform='scale(1)';updateZoomState(w);updateZoomLayout(w);}
-  document.querySelectorAll('.mermaid-wrap').forEach(function(w){var sc=w.querySelector('.mermaid-scroll')||w;w.addEventListener('wheel',function(e){if(!e.ctrlKey&&!e.metaKey)return;e.preventDefault();var t=w.querySelector('.mermaid');var c=parseFloat(t.dataset.zoom||'1');var f=e.deltaY<0?1.1:0.9;var n=c*f;t.dataset.zoom=n;t.style.transform='scale('+n+')';updateZoomState(w);updateZoomLayout(w);},{passive:false});var sX,sY,sL,sT;w.addEventListener('mousedown',function(e){if(e.target.closest('.zoom-controls'))return;e.preventDefault();w.classList.add('is-panning');sX=e.clientX;sY=e.clientY;sL=sc.scrollLeft;sT=sc.scrollTop;});window.addEventListener('mousemove',function(e){if(!w.classList.contains('is-panning'))return;sc.scrollLeft=sL-(e.clientX-sX);sc.scrollTop=sT-(e.clientY-sY);});window.addEventListener('mouseup',function(){w.classList.remove('is-panning');});});
+  function setDiagramZoom(w,zoom,centerOnContent){if(!w)return;var t=w.querySelector('.mermaid');if(!t)return;t.dataset.zoom=String(clampDiagramZoom(w,zoom));updateZoomState(w);updateZoomLayout(w);if(centerOnContent)scheduleCenterMermaidViewport(w,true);}
+  function scheduleCenterMermaidViewport(w,force){
+    if(!w)return;
+    if(Array.isArray(w._centerViewportTimers))w._centerViewportTimers.forEach(function(id){window.clearTimeout(id);});
+    w._centerViewportTimers=[0,90,220].map(function(delay){
+      return window.setTimeout(function(){
+        updateZoomLayout(w);
+        queueCenterMermaidViewport(w,force);
+      },delay);
+    });
+  }
+  function queueCenterMermaidViewport(w,force){
+    if(!w)return;
+    var sc=w.querySelector('.mermaid-scroll');
+    var t=w.querySelector('.mermaid');
+    var svg=w.querySelector('.mermaid svg');
+    if(!sc||!t||!svg)return;
+    var zoom=getCurrentZoom(w);
+    if(!shouldCenterMermaidViewport(w,zoom)){delete w.dataset.centeredZoom;return;}
+    var zoomKey=String(zoom);
+    if(!force&&w.dataset.centeredZoom===zoomKey)return;
+    window.requestAnimationFrame(function(){window.requestAnimationFrame(function(){var scRect=sc.getBoundingClientRect();var svgRect=svg.getBoundingClientRect();var contentLeft=sc.scrollLeft+(svgRect.left-scRect.left);var contentTop=sc.scrollTop+(svgRect.top-scRect.top);var renderLeft=contentLeft;var renderTop=contentTop;var renderWidth=svgRect.width;var renderHeight=svgRect.height;try{var box=typeof svg.getBBox==='function'?svg.getBBox():null;var viewBox=svg.viewBox&&svg.viewBox.baseVal;var viewBoxX=viewBox&&isFinite(viewBox.x)?viewBox.x:0;var viewBoxY=viewBox&&isFinite(viewBox.y)?viewBox.y:0;var viewBoxW=(viewBox&&viewBox.width)||svg.clientWidth||svgRect.width||1;var viewBoxH=(viewBox&&viewBox.height)||svg.clientHeight||svgRect.height||1;var scaleX=svgRect.width/viewBoxW;var scaleY=svgRect.height/viewBoxH;if(box&&box.width&&box.height&&isFinite(scaleX)&&scaleX>0&&isFinite(scaleY)&&scaleY>0){renderLeft=contentLeft+((box.x-viewBoxX)*scaleX);renderTop=contentTop+((box.y-viewBoxY)*scaleY);renderWidth=box.width*scaleX;renderHeight=box.height*scaleY;}}catch(e){}var targetLeft=renderLeft+(renderWidth*0.5)-(sc.clientWidth*0.5);var targetTop=renderTop+(renderHeight*0.5)-(sc.clientHeight*0.5);var maxScrollLeft=Math.max(0,sc.scrollWidth-sc.clientWidth);var maxScrollTop=Math.max(0,sc.scrollHeight-sc.clientHeight);sc.scrollLeft=Math.max(0,Math.min(maxScrollLeft,Math.round(targetLeft)));sc.scrollTop=Math.max(0,Math.min(maxScrollTop,Math.round(targetTop)));w.dataset.centeredZoom=zoomKey;});});
+  }
+  function zoomDiagram(b,f){var w=b.closest('.mermaid-wrap');setDiagramZoom(w,getCurrentZoom(w)*f,true);}
+  function resetZoom(b){var w=b.closest('.mermaid-wrap');setDiagramZoom(w,getInitialZoom(w),true);}
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.zoom-controls button[data-zoom-action]');
+    if (!btn) return;
+    e.preventDefault();
+    var action = btn.dataset.zoomAction;
+    if (action === 'reset') {
+      resetZoom(btn);
+      return;
+    }
+    var factor = parseFloat(btn.dataset.zoomFactor || '1');
+    if (!isFinite(factor) || factor <= 0 || factor === 1) return;
+    zoomDiagram(btn, factor);
+  });
+  document.querySelectorAll('.mermaid-wrap').forEach(function(w){var sc=w.querySelector('.mermaid-scroll')||w;w.addEventListener('wheel',function(e){var freeWheel=String(w.dataset.wheelZoom||'').toLowerCase()==='true';if(!freeWheel&&!e.ctrlKey&&!e.metaKey)return;e.preventDefault();setDiagramZoom(w,getCurrentZoom(w)*(e.deltaY<0?1.1:0.9),true);},{passive:false});var activePointerId=null,sX,sY,sL,sT;sc.addEventListener('pointerdown',function(e){if(e.pointerType==='touch'||e.button!==0||e.target.closest('.zoom-controls')||!w.classList.contains('can-pan'))return;e.preventDefault();activePointerId=e.pointerId;w.classList.add('is-panning');sX=e.clientX;sY=e.clientY;sL=sc.scrollLeft;sT=sc.scrollTop;if(sc.setPointerCapture)sc.setPointerCapture(e.pointerId);});sc.addEventListener('pointermove',function(e){if(activePointerId!==e.pointerId||!w.classList.contains('is-panning'))return;sc.scrollLeft=sL-(e.clientX-sX);sc.scrollTop=sT-(e.clientY-sY);});function stopPan(e){if(activePointerId===null)return;if(e&&typeof e.pointerId==='number'&&e.pointerId!==activePointerId)return;activePointerId=null;w.classList.remove('is-panning');}sc.addEventListener('pointerup',stopPan);sc.addEventListener('pointercancel',stopPan);sc.addEventListener('lostpointercapture',stopPan);});
 
   // SlideEngine
   function SlideEngine(){
@@ -1651,7 +1773,7 @@ graph LR
   };
   SlideEngine.prototype.observe=function(){
     var self=this;
-    var obs=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');self.current=self.slides.indexOf(entry.target);self.update();}});},{threshold:0.5});
+    var obs=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');entry.target.querySelectorAll('.mermaid-wrap').forEach(function(w){scheduleCenterMermaidViewport(w,true);});self.current=self.slides.indexOf(entry.target);self.update();}});},{threshold:0.5});
     this.slides.forEach(function(s){obs.observe(s);});
   };
   SlideEngine.prototype.goTo=function(i){this.slides[Math.max(0,Math.min(i,this.total-1))].scrollIntoView({behavior:'smooth'});};

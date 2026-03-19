@@ -8,6 +8,25 @@ Ce document reprend le **déroulé réel de la conférence tel qu’il apparaît
 
 ## Ouverture
 
+### 0. Arrivée sur scène
+
+**Texte possible :**
+
+> Bonjour à toutes et à tous.
+>
+> Merci d’être là, et merci aux organisateurs.
+>
+> C'est un vrai plaisir de partager ce sujet avec un public aussi diversifié, hors du cadre des réunions habituelles. 
+> Parce que l'architecture, c'est typiquement le genre de sujet qui réunit vite une grande diversité de profils : des architectes, des devs, des métiers, maîtrises d'oeuvre… Mais rarement pour parler de la méthode de travail, seulement du contenu.
+> Et c'est justement ce qui va nous intéresser : définir la méthode pour faire vivre une architecture qu'on peut partager, faire évoluer, et qui ne finit pas oubliée dans un dossier ou un wiki.
+>
+> Avec ces outils et pratiques, l'ambition est de vous faire interroger quelques façons de travailler bien ancrées.
+
+**Intention orale :**
+- Saluer la salle et installer une adresse directe aux personnes présentes.
+- Introduire le sujet sans dévoiler trop tôt le fond de la démonstration.
+- Préparer une transition fluide vers le titre **« Ne dessinez plus vos architectures : codez-les ! »**.
+
 ### 1. Titre
 **Slide :** _Ne dessinez plus vos architectures : codez-les !_
 
@@ -143,15 +162,15 @@ Ce document reprend le **déroulé réel de la conférence tel qu’il apparaît
 ### 11. C1 généré
 **Slide :** _La spec devient une vue navigable du système…_
 
-- À partir du modèle `projects/coffee-v1/system-model.c4`
-- Apparition des principaux containers de V1 :
-  - Application Comptoir
-  - Écran Barista
-  - Service de Commandes
-  - Service Préparation
-  - RabbitMQ
-  - PostgreSQL
-- Relations visibles : appels, asynchrone, persistance
+- À partir du début du modèle `projects/coffee-v1/system-model.c4`
+- Apparition du périmètre **C1** de V1 :
+  - `Festivalier`
+  - `Barista`
+  - `AleFest Café`
+- Relations visibles :
+  - le festivalier utilise le système pour commander au comptoir
+  - le barista utilise le système pour préparer et suivre les commandes
+- Les containers et les relations internes arrivent dans le zoom **C2**, juste après
 
 **Message clé :**
 - Le texte et la modélisation donnent une **vue navigable**, pas juste un dessin.
@@ -318,26 +337,45 @@ Ce document reprend le **déroulé réel de la conférence tel qu’il apparaît
 
 - Quand le modèle évolue, la review devient visuelle
 
-### 23. Diff de PR
-**Slide :** _Ouvrir la page de diff GitHub_
+### 23. Specs & arborescence
+**Slide :** _Le repo sépare les spécifications partagées du modèle V2_
 
-- La slide ouvre la PR GitHub de démonstration
-- But : montrer un diff de modèle dans un workflow réel
+- À gauche : deux extraits de code, `spec-containers.c4` puis `system-model.c4`
+- L’extrait de spec montre aussi que les types portent leur **notation** et leur **style visuel** (`shape`, `icon`)
+- À droite : arborescence ASCII du dossier `projects/`
+- Message : `shared` porte le vocabulaire commun ; `coffee-v2` porte le modèle métier concret
 
 **Intention orale :**
-- Déplacer la discussion d’architecture dans le terrain naturel des équipes : la PR.
+- Montrer que la lisibilité ne tient pas qu'aux vues générées : elle tient aussi à l'organisation du repo.
+- Préparer la transition vers le diff : quand c'est structuré, la review devient plus claire.
 
 ### 24. Questions de review
 **Slide :** _La revue de code devient aussi une revue d’architecture_
 
-**Questions rendues visibles par le diff :**
+**Questions mises en avant :**
 - Quel nouveau service entre dans le jeu ?
 - Qui parle à qui après le changement ?
 - Crée-t-on un nouveau point chaud, une dépendance ou une boucle ?
 - L’IA peut proposer ; les humains valident la logique.
 
-**Message clé :**
-> Le diff ne remplace pas la conversation ; il la rend plus rapide et moins ambiguë.
+**Intention orale :**
+- Poser d’abord la vraie question de la review : **qu’est-ce qui change vraiment ?**
+- Annoncer clairement ce que la PR devra rendre visible ensuite, d’un coup d’œil.
+
+### 25. La pull request
+**Slide :** _La pull request_
+
+- Titre d'ouverture : **Revue d'architecture**
+- Un badge **Open · PR #1** la rend identifiable instantanément
+- Un diagramme Mermaid `gitGraph` plus GitHub-like montre la branche `v2_png` issue de `main`
+- Le bloc Mermaid est volontairement plus zoomé pour que la branche de review domine visuellement
+- Les labels de commits restent courts pour laisser lire la divergence et le commit repère
+- Le bouton GitHub reste disponible en bas pour ouvrir directement le diff
+
+**Intention orale :**
+- Montrer que la PR répond précisément aux questions posées juste avant.
+- Déplacer la discussion d’architecture dans le terrain naturel des équipes : la PR.
+- Montrer que la review ne parle pas seulement de fichiers, mais d'une branche et d'une histoire de changements.
 
 > Remarque : une partie “industrialisation / pipeline CI-CD” existe dans le HTML mais elle est commentée, donc non affichée dans la version actuelle des slides.
 
@@ -345,14 +383,14 @@ Ce document reprend le **déroulé réel de la conférence tel qu’il apparaît
 
 ## Partie 5 — Bilan & conclusion
 
-### 25. Intertitre partie 5
+### 26. Intertitre partie 5
 **Slide :** _Bilan & conclusion_
 
 - Ce qu’on retient
 - Ce qu’on embarque
 - Comment repartir avec du concret
 
-### 26. Avant / Après
+### 27. Avant / Après
 **Slide :** _Le paradoxe réconcilié : avant / après_
 
 | Sujet | Avant · PNG statique | Après · Diagram as Code |
@@ -367,7 +405,7 @@ Ce document reprend le **déroulé réel de la conférence tel qu’il apparaît
 **Message clé :**
 - Le diagram as code réconcilie lisibilité, collaboration, industrialisation et outillage moderne.
 
-### 27. Ressources & QR
+### 28. Ressources & QR
 **Slide :** _Pour refaire ça chez vous_
 
 **Ressources montrées :**

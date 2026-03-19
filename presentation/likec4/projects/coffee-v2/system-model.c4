@@ -196,11 +196,11 @@ model {
     }
   }
 
-  festivalier -[uses]-> festivalSystem 'Commande mobile et suivi'
-  festivalier -[uses]-> alefestCoffee 'Commande au comptoir (fallback)'
-  barista -[uses]-> alefestCoffee 'Prépare et remet la boisson'
+  festivalier -[uses]-> festivalSystem.festivalApp 'Commande mobile et suivi'
+  festivalier -[uses]-> alefestCoffee.counterApp 'Commande au comptoir (fallback)'
+  barista -[uses]-> alefestCoffee.baristaScreen 'Prépare et remet la boisson'
 
-  festivalSystem -[uses]-> alefestCoffee 'Intégration partenaire' {
+  festivalSystem.festivalService -[uses]-> alefestCoffee.orderService 'Intégration des commandes partenaire' {
     technology 'HTTPS'
   }
 }

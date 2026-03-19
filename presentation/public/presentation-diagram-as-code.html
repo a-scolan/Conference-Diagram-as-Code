@@ -733,20 +733,32 @@
   .slide--diagram .slide__heading { margin-bottom: clamp(8px, 1.5vh, 20px); }
 
   .mermaid-wrap {
-    position: relative; display: flex; flex-direction: column;
+    position: relative; display: flex; flex-direction: column; align-items: stretch;
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 24px; overflow: hidden; flex: 1; min-height: 0;
+    border-radius: 12px; padding: 24px; overflow: hidden; flex: 1; min-height: 0; min-width: 0;
   }
   .mermaid-scroll {
-    overflow: auto; flex: 1; min-height: 0; width: 100%;
+    overflow: auto; flex: 1; min-height: 0; min-width: 0; width: 100%;
     display: flex; align-items: center; justify-content: center;
+    cursor: default;
   }
+  .mermaid-scroll.has-overflow-x { justify-content: flex-start; }
+  .mermaid-scroll.has-overflow-y { align-items: flex-start; }
   .mermaid-wrap .mermaid {
-    transition: transform 0.2s ease; transform-origin: 0 0;
-    margin: auto; flex-shrink: 0;
-    cursor: grab;
+    transition: width 0.2s ease, height 0.2s ease;
+    margin: auto; flex: 0 0 auto; min-width: 0; min-height: 0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: default;
   }
-  .mermaid-wrap.is-panning .mermaid { cursor: grabbing; }
+  .mermaid-wrap.can-pan .mermaid { cursor: grab; }
+  .mermaid-wrap.can-pan .mermaid-scroll { touch-action: none; }
+  .mermaid-wrap .mermaid svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+  }
+  .mermaid-wrap.is-panning .mermaid { cursor: grabbing; user-select: none; }
   .zoom-controls {
     position: absolute; top: 8px; right: 8px; display: flex; gap: 2px; z-index: 10;
     background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 2px;
@@ -758,16 +770,10 @@
   }
   .zoom-controls button:hover { background: #ff8c00; color: #fff; }
   .zoom-controls button:active { background: #e07800; color: #fff; }
-  .slide--diagram .mermaid svg {
-    height: auto !important;
-    display: block; margin: 0 auto;
-  }
-  .slide--diagram .mermaid .nodeLabel,
   .slide--diagram .mermaid .cluster text,
   .slide--diagram .mermaid .cluster-label text,
   .slide--diagram .mermaid .cluster span,
   .slide--diagram .mermaid text.actor,
-  .slide--diagram .mermaid .actor text,
   .slide--diagram .mermaid .titleText,
   .slide--diagram .mermaid .noteText,
   .slide--diagram .mermaid .noteText tspan,
@@ -779,7 +785,6 @@
   .slide--diagram .mermaid .messageText,
   .slide--diagram .mermaid .messageText tspan,
   .slide--diagram .mermaid .classTitleText,
-  .slide--diagram .mermaid .state-title,
   .slide--diagram .mermaid .er text,
   .slide--diagram .mermaid .mindmap-node text {
     color: var(--text) !important;
@@ -1183,6 +1188,113 @@
     display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s;
   }
   .embed-wrap .embed-controls button:hover { background: var(--border); color: var(--text); }
+  .embed-wrap .embed-likec4-cta {
+    position: absolute; top: 8px; left: 8px; z-index: 11;
+    display: none; align-items: center; gap: 10px;
+    min-height: 38px; padding: 0 16px;
+    border-radius: 999px; border: 1px solid rgba(251, 254, 122, 0.38);
+    background: linear-gradient(135deg, rgba(8, 13, 42, 0.92) 0%, rgba(15, 158, 213, 0.24) 100%);
+    color: var(--text); font-family: var(--font-mono); font-size: calc(12px + var(--font-bump)); font-weight: 700;
+    letter-spacing: 0.02em; cursor: pointer;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.24);
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  }
+  .embed-wrap[data-embed-kind="likec4"] .embed-likec4-cta {
+    display: inline-flex;
+  }
+  .embed-wrap.is-loaded .embed-likec4-cta {
+    display: none;
+  }
+  .embed-wrap .embed-likec4-cta:hover {
+    transform: translateY(-1px); border-color: rgba(251, 254, 122, 0.62);
+    box-shadow: 0 18px 34px rgba(0,0,0,0.28);
+  }
+  .embed-wrap .embed-likec4-cta:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  .embed-wrap .embed-likec4-cta[disabled] {
+    opacity: 0.84; cursor: progress;
+  }
+  .embed-wrap .embed-likec4-cta__status {
+    width: 10px; height: 10px; border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px rgba(251, 254, 122, 0.14);
+    flex: none;
+  }
+  .embed-wrap.is-loaded .embed-likec4-cta__status {
+    background: var(--green);
+    box-shadow: 0 0 0 4px rgba(92, 192, 56, 0.16);
+  }
+  .embed-wrap.is-fallback .embed-likec4-cta__status {
+    background: var(--accent2);
+    box-shadow: 0 0 0 4px rgba(240, 136, 72, 0.14);
+  }
+  .embed-wrap.is-loading .embed-likec4-cta__status {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.16);
+    border-top-color: var(--accent);
+    background: transparent; box-shadow: none;
+    animation: embed-loader-spin 0.9s linear infinite;
+  }
+  .embed-wrap .embed-likec4-cta__label {
+    white-space: nowrap;
+  }
+  .embed-wrap .embed-loader {
+    position: absolute; inset: 0; display: none; flex-direction: column;
+    align-items: center; justify-content: center; gap: 14px;
+    z-index: 3;
+    padding: 32px;
+    background: linear-gradient(180deg, rgba(8, 13, 42, 0.22) 0%, rgba(8, 13, 42, 0.84) 100%);
+    color: var(--text); text-align: center;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  }
+  .embed-wrap[data-load-mode="manual"]:not(.is-loading):not(.is-loaded):not(.is-fallback) .embed-loader {
+    display: flex;
+  }
+  .embed-wrap[data-load-mode="manual"]:not(.is-loading):not(.is-loaded):not(.is-fallback) .embed-controls {
+    opacity: 0; pointer-events: none;
+  }
+  .embed-wrap[data-load-mode="manual"] .embed-loader {
+    gap: 0;
+    padding: 0;
+  }
+  .embed-wrap[data-load-mode="manual"] .embed-loader__spinner,
+  .embed-wrap[data-load-mode="manual"] .embed-loader__title,
+  .embed-wrap[data-load-mode="manual"] .embed-loader__hint,
+  .embed-wrap[data-load-mode="manual"] .embed-likec4-cta {
+    display: none !important;
+  }
+  .embed-wrap .embed-loader__spinner {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.16);
+    border-top-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(251, 254, 122, 0.10);
+  }
+  .embed-wrap.is-loading .embed-loader__spinner {
+    animation: embed-loader-spin 0.9s linear infinite;
+  }
+  .embed-wrap .embed-loader__title {
+    margin: 0; font-size: clamp(14px, 1.4vw, 18px); font-weight: 700; color: var(--text);
+  }
+  .embed-wrap .embed-loader__hint {
+    margin: 0; max-width: 34ch; line-height: 1.5;
+    font-size: clamp(11px, 1vw, 13px); color: var(--text-subtitle);
+  }
+  .embed-wrap .embed-loader__button {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 208px; min-height: 44px; padding: 0 18px;
+    border-radius: 999px; border: 1px solid rgba(251, 254, 122, 0.34);
+    background: linear-gradient(135deg, rgba(251, 254, 122, 0.18) 0%, rgba(56, 180, 232, 0.16) 100%);
+    color: var(--text); font-family: var(--font-mono); font-size: calc(12px + var(--font-bump)); font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+  }
+  .embed-wrap .embed-loader__button:hover {
+    transform: translateY(-1px); border-color: rgba(251, 254, 122, 0.60);
+  }
+  .embed-wrap.is-loading .embed-loader__button {
+    opacity: 0.78; pointer-events: none;
+  }
   .embed-wrap .embed-fallback {
     position: absolute; inset: 0; display: none; flex-direction: column;
     align-items: center; justify-content: center; gap: 16px;
@@ -1197,6 +1309,15 @@
     background: var(--accent); font-weight: 600; transition: opacity 0.2s;
   }
   .embed-wrap .embed-fallback a:hover { opacity: 0.85; }
+  @keyframes embed-loader-spin {
+    to { transform: rotate(360deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .embed-wrap.is-loading .embed-loader__spinner { animation: none; }
+    .embed-wrap .embed-loader__button { transition: none; }
+    .embed-wrap.is-loading .embed-likec4-cta__status { animation: none; }
+    .embed-wrap .embed-likec4-cta { transition: none; }
+  }
 
     /* ============ SLIDE TUNING: CODE + LIVE PREVIEW SPLIT ============ */
     .slide--code-preview {
@@ -1238,7 +1359,7 @@
     .slide--code-preview .code-preview__frame > .slide__code-filename {
       top: var(--code-preview-chip-line);
       transform: translateY(-50%);
-      z-index: 3;
+      z-index: 20;
     }
     .slide--code-preview .slide__code-block {
       flex: 1 1 auto;
@@ -1303,6 +1424,333 @@
       background: #ffffff;
     }
 
+    .slide--workspace-tree {
+      --code-preview-code-col: 1.08fr;
+      --code-preview-preview-col: 0.92fr;
+    }
+    .slide--workspace-tree .workspace-tree__code-stack {
+      display: grid;
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: clamp(16px, 2vh, 22px);
+      min-height: 0;
+    }
+    .slide--workspace-tree .workspace-tree__code-stack .slide__code-block {
+      padding-top: clamp(18px, 2.3vh, 24px);
+    }
+    .slide--workspace-tree .workspace-tree__code-stack .slide__code-block pre {
+      justify-content: flex-start;
+    }
+    .slide--workspace-tree .workspace-tree__code-stack .code-preview__frame,
+    .slide--workspace-tree .workspace-tree__ascii-frame {
+      min-height: 0;
+    }
+    .slide--workspace-tree .workspace-tree__ascii-frame .slide__code-block {
+      margin-top: var(--code-preview-chip-line);
+      padding-top: clamp(18px, 2.3vh, 24px);
+    }
+    .slide--workspace-tree .workspace-tree__ascii-frame .slide__code-block pre {
+      justify-content: flex-start;
+    }
+    .slide--workspace-tree .slide__code-block code {
+      font-size: calc(clamp(9px, 0.72vw, 10.5px) + var(--font-bump));
+      line-height: 1.38;
+    }
+    .slide--workspace-tree .workspace-tree__ascii-frame .slide__code-block code {
+      font-size: calc(clamp(10px, 0.78vw, 12px) + var(--font-bump));
+      line-height: 1.58;
+      color: var(--text-subtitle);
+    }
+
+    .slide--pr-review {
+      justify-content: flex-start;
+      padding-top: clamp(44px, 6vh, 72px);
+      padding-bottom: clamp(26px, 4vh, 42px);
+    }
+    .slide--pr-review .slide__label,
+    .slide--pr-review .slide__heading,
+    .slide--pr-review .slide__body {
+      text-align: center;
+      max-width: none;
+    }
+    .slide--pr-review .slide__body {
+      max-width: 72ch;
+      margin: 0 auto;
+      color: var(--text);
+    }
+    .slide--pr-review .pr-review__status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: -4px;
+    }
+    .slide--pr-review .pr-review__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(63, 185, 80, 0.55);
+      background: linear-gradient(135deg, rgba(46, 160, 67, 0.26), rgba(63, 185, 80, 0.14));
+      color: #d2f4d8;
+      font-family: var(--font-mono);
+      font-size: calc(12px + var(--font-bump));
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      box-shadow: 0 0 0 1px rgba(13, 17, 23, 0.2), 0 10px 24px rgba(0, 0, 0, 0.18);
+    }
+    .slide--pr-review .pr-review__badge::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #3fb950;
+      box-shadow: 0 0 0 4px rgba(63, 185, 80, 0.18);
+      flex: none;
+    }
+    .slide--pr-review .pr-review__meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      background: rgba(12, 18, 56, 0.56);
+      font-family: var(--font-mono);
+      font-size: calc(12px + var(--font-bump));
+      color: var(--text-dim);
+    }
+    .slide--pr-review .slide__inner {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(16px, 2vh, 24px);
+      flex: 1 1 auto;
+      min-height: 0;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+    }
+    .slide--pr-review .mermaid-wrap {
+      width: 100%;
+      max-width: none;
+      flex: 0 1 auto;
+      height: clamp(260px, 44vh, 440px);
+      min-height: 0;
+      margin-top: clamp(6px, 1.2vh, 14px);
+      padding: clamp(10px, 1.4vh, 14px) clamp(6px, 0.7vw, 10px);
+      background:
+        radial-gradient(ellipse at 14% 16%, rgba(88, 166, 255, 0.20) 0%, transparent 42%),
+        radial-gradient(ellipse at 84% 16%, rgba(63, 185, 80, 0.20) 0%, transparent 40%),
+        linear-gradient(180deg, rgba(7, 12, 28, 0.98) 0%, rgba(10, 17, 38, 0.97) 52%, rgba(12, 20, 45, 0.96) 100%);
+      border-color: rgba(88, 166, 255, 0.34);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 20px 48px rgba(0,0,0,0.28);
+    }
+    .slide--pr-review .mermaid-scroll {
+      width: 100%;
+      min-height: 0;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      overflow: auto;
+    }
+    .slide--pr-review .mermaid {
+      transform-origin: center center;
+    }
+    .slide--pr-review .mermaid svg {
+      margin: auto;
+    }
+    .slide--pr-review .mermaid .nodeLabel,
+    .slide--pr-review .mermaid .labelText,
+    .slide--pr-review .mermaid .branch-label0,
+    .slide--pr-review .mermaid .branch-label1,
+    .slide--pr-review .mermaid .commit-label,
+    .slide--pr-review .mermaid .tag-label {
+      font-weight: 600 !important;
+      letter-spacing: 0.01em !important;
+    }
+    .slide--pr-review .pr-review__cta {
+      margin-top: clamp(2px, 0.6vh, 8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding-top: 0;
+    }
+    .slide--pr-review .launcher__hint {
+      text-align: center;
+      max-width: 62ch;
+      opacity: 0.82;
+    }
+    .slide--pr-review .mermaid .branch0,
+    .slide--pr-review .mermaid .arrow0 {
+      stroke: #58a6ff !important;
+      stroke-width: 3px !important;
+    }
+    .slide--pr-review .mermaid .branch1,
+    .slide--pr-review .mermaid .arrow1 {
+      stroke: #3fb950 !important;
+      stroke-width: 3px !important;
+    }
+    .slide--pr-review .mermaid .commit0 {
+      stroke: #58a6ff !important;
+      fill: #58a6ff !important;
+    }
+    .slide--pr-review .mermaid .commit1 {
+      stroke: #3fb950 !important;
+      fill: #3fb950 !important;
+    }
+    .slide--pr-review .mermaid .commit-highlight1 {
+      stroke: #fbfe7a !important;
+      fill: #fbfe7a !important;
+    }
+    .slide--pr-review .mermaid .commit-highlight-inner {
+      stroke: #0d1117 !important;
+      fill: #0d1117 !important;
+    }
+    .slide--pr-review .mermaid .branchLabelBkg.label0,
+    .slide--pr-review .mermaid .label0 {
+      fill: #14305f !important;
+    }
+    .slide--pr-review .mermaid .branchLabelBkg.label1,
+    .slide--pr-review .mermaid .label1 {
+      fill: #124722 !important;
+    }
+    .slide--pr-review .mermaid .branch-label0 {
+      fill: #eaf3ff !important;
+      font-weight: 650;
+    }
+    .slide--pr-review .mermaid .branch-label1 {
+      fill: #e6ffe6 !important;
+      font-weight: 650;
+    }
+    .slide--pr-review .mermaid .commit-label-bkg {
+      fill: rgba(9, 15, 32, 0.98) !important;
+      stroke: rgba(255, 255, 255, 0.12) !important;
+      stroke-width: 1px !important;
+      opacity: 1 !important;
+    }
+    .slide--pr-review .mermaid .commit-label {
+      fill: #f8fbff !important;
+      font-weight: 650;
+      letter-spacing: 0.01em;
+    }
+    .slide--pr-review .mermaid .tag-label-bkg {
+      fill: #fbfe7a !important;
+      stroke: #d9de53 !important;
+      filter: drop-shadow(0 0 14px rgba(251, 254, 122, 0.22));
+    }
+    .slide--pr-review .mermaid .tag-label {
+      fill: #0d1117 !important;
+      font-size: 11px !important;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .slide--pr-review .mermaid .tag-hole {
+      fill: #0d1117 !important;
+    }
+
+    .slide--review-questions {
+      justify-content: flex-start;
+      padding-top: clamp(46px, 6.2vh, 74px);
+      padding-bottom: clamp(26px, 3.8vh, 40px);
+    }
+    .slide--review-questions .slide__inner {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+      align-content: start;
+      gap: clamp(24px, 3.2vh, 36px);
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    .slide--review-questions .review-questions__hero {
+      display: grid;
+      gap: clamp(12px, 1.7vh, 18px);
+      width: 100%;
+    }
+    .slide--review-questions .slide__heading {
+      max-width: none;
+      margin: 0;
+      font-size: calc(clamp(36px, 5.4vw, 62px) + var(--font-bump));
+      line-height: 0.98;
+      text-wrap: balance;
+    }
+    .slide--review-questions .review-questions__lede {
+      margin: 0;
+      max-width: min(100%, 78ch);
+      font-size: calc(clamp(17px, 2vw, 23px) + var(--font-bump));
+      line-height: 1.55;
+      color: var(--text-subtitle);
+      text-wrap: pretty;
+    }
+    .slide--review-questions .review-questions__story {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(16px, 2vw, 24px);
+      width: 100%;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    .slide--review-questions .review-questions__card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: clamp(220px, 30vh, 296px);
+      padding: clamp(22px, 3vh, 30px);
+      border-radius: 24px;
+      border: 1px solid color-mix(in srgb, var(--accent3) 18%, var(--border) 82%);
+      background:
+        linear-gradient(180deg, rgba(14, 22, 66, 0.98) 0%, rgba(11, 18, 56, 0.92) 100%);
+      box-shadow: 0 18px 42px rgba(0,0,0,0.16);
+      overflow: hidden;
+    }
+    .slide--review-questions .review-questions__card::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: var(--accent3);
+      opacity: 0.95;
+    }
+    .slide--review-questions .review-questions__card:nth-child(2)::before {
+      background: var(--accent);
+    }
+    .slide--review-questions .review-questions__card:nth-child(3)::before {
+      background: var(--accent2);
+    }
+    .slide--review-questions .review-questions__step {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: calc(clamp(12px, 1.25vw, 14px) + var(--font-bump));
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent3);
+    }
+    .slide--review-questions .review-questions__card:nth-child(2) .review-questions__step {
+      color: var(--accent);
+    }
+    .slide--review-questions .review-questions__card:nth-child(3) .review-questions__step {
+      color: var(--accent2);
+    }
+    .slide--review-questions .review-questions__question {
+      margin: 0;
+      font-size: calc(clamp(21px, 2.35vw, 28px) + var(--font-bump));
+      line-height: 1.16;
+      font-weight: 700;
+      color: var(--text);
+      text-wrap: balance;
+    }
+    .slide--review-questions .review-questions__detail {
+      margin: 0;
+      font-size: calc(clamp(15px, 1.65vw, 19px) + var(--font-bump));
+      line-height: 1.58;
+      color: var(--text-subtitle);
+      text-wrap: pretty;
+    }
+
     /* ============ SLIDE TUNING: C2 unified toggle (Mermaid <-> likeC4) ============ */
     .slide--c2-unified {
       position: relative;
@@ -1353,8 +1801,166 @@
       display: flex;
       flex-direction: column;
     }
+    .slide--c2-unified .c2-unified__view--mermaid .slide__inner {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    .slide--c2-unified[data-view="mermaid"] .c2-unified__view--mermaid .slide__inner {
+      grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+    }
+    .slide--c2-unified .c2-mermaid__pane {
+      min-width: 0;
+    }
+    .slide--c2-unified .c2-mermaid__pane--code .slide__code-block {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    .slide--c2-unified .c2-mermaid__pane--code .slide__code-block pre {
+      height: 100%;
+    }
     .slide--c2-unified .c2-unified__view--mermaid .mermaid-wrap {
       margin-top: 0;
+    }
+    .slide--c2-unified .c2-mermaid__pane--diagram .mermaid-wrap {
+      min-height: clamp(280px, 42vh, 500px);
+      padding: clamp(6px, 0.8vh, 10px) clamp(4px, 0.6vw, 8px);
+    }
+    .slide--c2-unified .c2-mermaid__pane--diagram .mermaid-scroll {
+      padding: clamp(2px, 0.4vh, 6px);
+    }
+
+    /* ============ SLIDE TUNING: Live coding launcher/detail ============ */
+    .slide--live-coding {
+      --code-preview-code-col: 1.08fr;
+      --code-preview-preview-col: 0.92fr;
+      position: relative;
+      padding-top: clamp(40px, 5.8vh, 70px);
+      padding-bottom: clamp(20px, 3vh, 32px);
+    }
+    .slide--live-coding .live-coding__view {
+      display: none;
+      flex: 1 1 auto;
+      min-height: 0;
+      width: 100%;
+    }
+    .slide--live-coding[data-view="launcher"] .live-coding__view--launcher,
+    .slide--live-coding[data-view="detail"] .live-coding__view--detail {
+      display: flex;
+      flex-direction: column;
+    }
+    .slide--live-coding .live-coding__launcher {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .slide--live-coding .live-coding__launcher-btn {
+      min-width: clamp(220px, 26vw, 320px);
+      justify-content: center;
+      font-size: calc(clamp(20px, 2.6vw, 28px) + var(--font-bump));
+      padding: clamp(18px, 2.8vh, 24px) clamp(34px, 3.2vw, 48px);
+    }
+    .slide--live-coding .live-coding__toggle {
+      position: static;
+      align-self: flex-end;
+      margin-bottom: clamp(8px, 1vh, 14px);
+      border: 1px solid var(--border-bright);
+      background: color-mix(in srgb, var(--surface) 86%, transparent 14%);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-family: var(--font-mono);
+      font-size: calc(12px + var(--font-bump));
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+    }
+    .slide--live-coding .live-coding__toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent-dim) 72%, var(--surface) 28%);
+    }
+    .slide--live-coding .slide__heading {
+      max-width: none;
+      margin-bottom: clamp(12px, 1.6vh, 20px);
+      text-wrap: balance;
+    }
+    .slide--live-coding .live-coding__legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .slide--live-coding .live-coding__legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-bright);
+      font-family: var(--font-mono);
+      font-size: calc(11px + var(--font-bump));
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .slide--live-coding .live-coding__legend-pill--mod {
+      background: rgba(251, 254, 122, 0.14);
+      border-color: rgba(251, 254, 122, 0.35);
+      color: var(--accent);
+    }
+    .slide--live-coding .live-coding__legend-pill--add {
+      background: rgba(92, 192, 56, 0.18);
+      border-color: rgba(92, 192, 56, 0.38);
+      color: var(--green);
+    }
+    .slide--live-coding .live-coding__code-block {
+      max-width: none;
+      margin-top: 6px;
+      padding-top: 12px;
+    }
+    .slide--live-coding .live-coding__code-block pre {
+      margin: 0;
+      height: 100%;
+    }
+    .slide--live-coding .live-coding__code-block code {
+      display: block;
+      font-size: 0;
+      line-height: 0;
+    }
+    .slide--live-coding .live-coding__code-block .line-ctx,
+    .slide--live-coding .live-coding__code-block .line-add,
+    .slide--live-coding .live-coding__code-block .line-mod {
+      display: block;
+      font-size: calc(clamp(9.8px, 0.88vw, 11.8px) + var(--font-bump));
+      line-height: 1.28;
+      white-space: pre;
+      margin: 0 calc(-1 * clamp(18px, 3vw, 30px));
+      padding: 0 clamp(18px, 3vw, 30px);
+    }
+    .slide--live-coding .live-coding__code-block .line-ctx {
+      color: var(--code-text);
+      background: transparent;
+    }
+    .slide--live-coding .live-coding__code-block .line-mod {
+      color: #fff6b1;
+      background: rgba(251, 254, 122, 0.12);
+    }
+    .slide--live-coding .live-coding__code-block .line-add {
+      color: #dfffd3;
+      background: rgba(92, 192, 56, 0.18);
+    }
+    .slide--live-coding .live-coding__caption {
+      margin-top: 12px;
+      font-size: calc(clamp(13px, 1.45vw, 16px) + var(--font-bump));
+      line-height: 1.5;
+      color: var(--text-dim);
+    }
+    .slide--live-coding .live-coding__embed-wrap {
+      flex: 1 1 auto;
+      min-height: 0;
     }
 
   /* ============ SLIDE TYPE: LAUNCHER (open in new tab) ============ */
@@ -1715,6 +2321,9 @@
     .slide--speaker .slide__aside {
       display: grid;
       min-height: auto;
+    }
+    .slide--review-questions .review-questions__story {
+      grid-template-columns: 1fr;
     }
     .speaker-proof { grid-template-columns: 1fr; }
     .slide--code-preview .slide__inner { grid-template-columns: 1fr; }
@@ -2079,7 +2688,9 @@ Le stand café du festival AleFest souffre de 3 problèmes :
 Créer un système de prise de commande numérique au comptoir avec :
 - Une borne/tablette pour saisir les commandes (staff ou self-service)
 - Un écran barista affichant la file de préparation	
-- Un backend simple gérant commandes et file d'attente
+- Un backend simple gérant commandes, un autre backend les présentant aux baristas
+- Une file de messages faisant communiquer les backends et permettant de découpler les traitements
+- Une base de données pour persistence des états et  de la comptabilité
 
 ## Contraintes
 - Les baristas doivent pouvoir marquer une commande "prête" en un tap
@@ -2127,18 +2738,15 @@ Créer un système de prise de commande numérique au comptoir avec :
           <span class="slide__code-filename"> coffee-v1/system-model.c4</span>
           <div class="slide__code-block reveal">
             <pre><code style="font-size:clamp(10.5px,1.05vw,13px); line-height:1.4;"><span class="kw">model</span> {
+  festivalier = <span class="hl">Actor_Person</span> <span class="str">'Festivalier'</span> { <span class="cm">...</span> }
+  barista = <span class="hl">Actor_Staff</span> <span class="str">'Barista'</span> { <span class="cm">...</span> }
+
   alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
-    counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span> { <span class="cm">...</span> }
-    baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span> { <span class="cm">...</span> }
-
-    orderService = <span class="hl">Container_Api</span> <span class="str">'Service de Commandes'</span> { <span class="cm">...</span> }
-    preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span> { <span class="cm">...</span> }
-
-    eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span> { <span class="cm">...</span> }
-    database = <span class="hl">Container_Database</span> <span class="str">'PostgreSQL'</span> { <span class="cm">...</span> }
-
-    <span class="cm">// relations internes, technologies, descriptions...</span>
+    <span class="cm">// description, style, puis les containers plus bas...</span>
   }
+
+  festivalier -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Passe sa commande au comptoir'</span>
+  barista -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Pr&eacute;pare et suit les commandes'</span>
 }</code></pre>
           </div>
         </div>
@@ -2146,7 +2754,7 @@ Créer un système de prise de commande numérique au comptoir avec :
       <div class="slide__aside reveal c1-generated__pane c1-generated__pane--embed code-preview__pane code-preview__pane--embed">
         <div class="code-preview__frame">
           <span class="slide__code-filename">Vue C1</span>
-          <div class="embed-wrap reveal" id="coffee-v2-c1-embed">
+          <div class="embed-wrap reveal" id="coffee-v2-c1-embed" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000">
             <div class="embed-controls">
               <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
               <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
@@ -2244,7 +2852,7 @@ Créer un système de prise de commande numérique au comptoir avec :
       <div class="slide__aside reveal c1-generated__pane c1-generated__pane--embed code-preview__pane code-preview__pane--embed">
         <div class="code-preview__frame">
           <span class="slide__code-filename">Vue C2</span>
-          <div class="embed-wrap reveal" id="coffee-v2-c2-embed">
+          <div class="embed-wrap reveal" id="coffee-v2-c2-embed" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000">
             <div class="embed-controls">
               <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
               <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
@@ -2305,24 +2913,383 @@ Créer un système de prise de commande numérique au comptoir avec :
     </div>
   </section>
   
-  <section class="slide slide--code" data-nav="Code C2" style="background-image:radial-gradient(ellipse at 50% 80%, var(--accent-dim) 0%, transparent 40%);">
-    <h2 class="slide__heading reveal" style="text-align:center; margin-bottom:clamp(12px,2vh,24px);">Le mod&egrave;le V2 étend et reste lisible</h2>
-    <div class="slide__code-block reveal">
-      <span class="slide__code-filename"> coffee-v2/system-model.c4</span>
-      <pre><code><span class="kw">model</span> {
-  alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Coffee'</span> {
-    festivalApp = <span class="hl">Container_MobileApp</span> <span class="str">'Festival App'</span>
-    orderService = <span class="hl">Container_Api</span> <span class="str">'Order Service'</span>
-    preparationService = <span class="hl">Container_Api</span> <span class="str">'Preparation Service'</span>
-    notificationService = <span class="hl">Container_Api</span> <span class="str">'Notification Service'</span>
-    eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span>
-    database = <span class="hl">Container_Database</span> <span class="str">'PostgreSQL'</span>
+  <section class="slide slide--content slide--code-preview slide--live-coding" data-nav="Live coding" data-view="launcher" style="background-image:radial-gradient(ellipse at 50% 80%, var(--accent-dim) 0%, transparent 40%);">
+    <div class="live-coding__view live-coding__view--launcher">
+      <div class="live-coding__launcher reveal">
+        <button
+          class="launcher__btn live-coding__launcher-btn"
+          type="button"
+          onclick="toggleLiveCodingView(this)"
+          aria-label="Afficher le live coding de coffee-v2"
+          aria-expanded="false"
+        >Live coding</button>
+      </div>
+    </div>
 
-    festivalApp -[<span class="hl">calls</span>]-> orderService <span class="str">'POST /orders'</span>
-    orderService -[<span class="hl">async</span>]-> eventBus <span class="str">'Publier order.placed'</span>
-    eventBus -[<span class="hl">async</span>]-> preparationService <span class="str">'Recevoir order.placed'</span>
+    <div class="live-coding__view live-coding__view--detail">
+      <button
+        class="c2-unified__toggle live-coding__toggle"
+        type="button"
+        onclick="toggleLiveCodingView(this)"
+        aria-label="Revenir &agrave; la face Live coding"
+      >Retour</button>
+      <p class="slide__label reveal">V2 &middot; live coding</p>
+      <h2 class="slide__heading reveal">Le mod&egrave;le V2 : ce qui change vraiment par rapport &agrave; coffee-v1</h2>
+      <div class="slide__inner">
+        <div class="code-preview__pane code-preview__pane--code">
+          <div class="code-preview__frame reveal">
+            <span class="slide__code-filename"> coffee-v2/system-model.c4 &middot; diff vs coffee-v1</span>
+            <div class="slide__code-block live-coding__code-block">
+              <pre><code><span class="line-ctx"><span class="kw">model</span> {</span>
+<span class="line-add">  festivalSystem = <span class="hl">System_External</span> <span class="str">'Syst&egrave;me Festival'</span> {</span>
+<span class="line-add">    festivalApp = <span class="hl">Container_MobileApp</span> <span class="str">'Application Festival'</span> { <span class="cm">...</span> }</span>
+<span class="line-add">    festivalService = <span class="hl">Container_Api</span> <span class="str">'Service Festival'</span> { <span class="cm">...</span> }</span>
+<span class="line-add">    festivalApp -[<span class="hl">calls</span>]-&gt; festivalService <span class="str">'API mobile festival'</span> { <span class="kw">technology</span> <span class="str">'HTTPS'</span> }</span>
+<span class="line-add">  }</span>
+<span class="line-ctx">  alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {</span>
+<span class="line-ctx">    counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span> { <span class="cm">...</span> }</span>
+<span class="line-ctx">    baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span> { <span class="cm">...</span> }</span>
+<span class="line-ctx">    orderService = <span class="hl">Container_Api</span> <span class="str">'Service de Commandes'</span> { <span class="cm">...</span> }</span>
+<span class="line-ctx">    preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span> { <span class="cm">...</span> }</span>
+<span class="line-add">    notificationService = <span class="hl">Container_Api</span> <span class="str">'Service Notification'</span> { <span class="cm">...</span> }</span>
+<span class="line-ctx">    eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span> { <span class="cm">...</span> }</span>
+<span class="line-add">    eventBus -[<span class="hl">async</span>]-&gt; notificationService <span class="str">'Livre order.preparing / order.ready'</span> {</span>
+<span class="line-add">      <span class="kw">technology</span> <span class="str">'AMQP'</span></span>
+<span class="line-add">    }</span>
+<span class="line-add">    notificationService -[<span class="hl">uses</span>]-&gt; festivalSystem.festivalApp <span class="str">'Envoie push notification'</span> {</span>
+<span class="line-add">      <span class="kw">technology</span> <span class="str">'Firebase Cloud Messaging'</span></span>
+<span class="line-add">    }</span>
+<span class="line-ctx">  }</span>
+<span class="line-add">  festivalier -[<span class="hl">uses</span>]-&gt; festivalSystem.festivalApp <span class="str">'Commande mobile et suivi'</span></span>
+<span class="line-mod">  festivalier -[<span class="hl">uses</span>]-&gt; alefestCoffee.counterApp <span class="str">'Commande au comptoir (fallback)'</span></span>
+<span class="line-ctx">  barista -[<span class="hl">uses</span>]-&gt; alefestCoffee.baristaScreen <span class="str">'Pr&eacute;pare et remet la boisson'</span></span>
+<span class="line-add">  festivalSystem.festivalService -[<span class="hl">uses</span>]-&gt; alefestCoffee.orderService <span class="str">'Int&eacute;gration des commandes partenaire'</span> { <span class="kw">technology</span> <span class="str">'HTTPS'</span> }</span>
+<span class="line-ctx">}</span></code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide__aside reveal code-preview__pane code-preview__pane--embed">
+          <div class="code-preview__frame">
+            <span class="slide__code-filename">Vue C2</span>
+            <div class="embed-wrap live-coding__embed-wrap" id="coffee-v2-c2-live-coding-embed" data-embed-timeout="10000">
+              <div class="embed-controls">
+                <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
+                <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
+              </div>
+              <iframe
+                title="LikeC4 coffee-v2 C2 live coding"
+                loading="lazy"
+                data-src="assets/coffee-v2-single/index.html#/project/coffee-v2/view/c2_containers?theme=dark"
+              ></iframe>
+              <div class="embed-fallback" aria-live="polite">
+                <span>Impossible de charger l'aper&ccedil;u ici.</span>
+                <a href="assets/coffee-v2-single/index.html#/project/coffee-v2/view/c2_containers?theme=dark" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v2 (vue C2)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide slide--quote" data-nav="Cas d'étude — promesse" style="background-image:radial-gradient(ellipse at 18% 24%, var(--accent3-dim) 0%, transparent 38%), radial-gradient(ellipse at 82% 78%, var(--accent-dim) 0%, transparent 44%);">
+    <div class="callout callout--blue reveal">Le diagramme doit raconter<br>la promesse m&eacute;tier<br>en plus de servir de référence</div>
+  </section>
+  
+  <section class="slide slide--content slide--seq-likec4 slide--code-preview" data-nav="Séquence mobile" style="background-image:radial-gradient(ellipse at 50% 20%, var(--accent-dim) 0%, transparent 40%);">
+    <h2 class="slide__heading reveal">Une vue comportementale raconte l'utilisation</h2>
+    <div class="slide__inner">
+      <div class="seq-likec4__pane seq-likec4__pane--code code-preview__pane code-preview__pane--code">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename"> coffee-v2/system-views.c4  </span>
+          <div class="slide__code-block reveal">
+            <pre><code><span class="kw">dynamic view</span> order_mobile_flow {
+  festivalier -&gt; festivalSystem.festivalApp <span class="str">'Commande un flat white'</span>
+  festivalSystem.festivalApp -&gt; festivalSystem.festivalService <span class="str">'POST /orders'</span>
+  festivalSystem.festivalService -&gt; alefestCoffee.orderService <span class="str">'POST /orders'</span>
+  alefestCoffee.orderService -&gt; alefestCoffee.database <span class="str">'INSERT order'</span>
+  alefestCoffee.orderService -&gt; alefestCoffee.eventBus <span class="str">'order.placed'</span>
+  festivalSystem.festivalService -&gt; festivalSystem.festivalApp <span class="str">'Confirme orderId'</span>
+  festivalSystem.festivalApp -&gt; festivalier <span class="str">'Commande confirm&eacute;e'</span>
+
+  alefestCoffee.eventBus -&gt; alefestCoffee.preparationService <span class="str">'order.placed'</span>
+  alefestCoffee.preparationService -&gt; alefestCoffee.baristaScreen <span class="str">'WebSocket push file'</span>
+  alefestCoffee.baristaScreen -&gt; barista <span class="str">'Affiche commande'</span>
+  barista -&gt; alefestCoffee.preparationService <span class="str">'PATCH preparing'</span>
+  alefestCoffee.preparationService -&gt; alefestCoffee.eventBus <span class="str">'order.preparing'</span>
+
+  barista -&gt; alefestCoffee.preparationService <span class="str">'PATCH ready'</span>
+  alefestCoffee.preparationService -&gt; alefestCoffee.eventBus <span class="str">'order.ready'</span>
+  alefestCoffee.eventBus -&gt; alefestCoffee.notificationService <span class="str">'order.ready'</span>
+  alefestCoffee.notificationService -&gt; festivalSystem.festivalApp <span class="str">'Push : votre caf&eacute; est pr&ecirc;t'</span>
+  festivalSystem.festivalApp -&gt; festivalier <span class="str">'Notification re&ccedil;ue'</span>
+  festivalier -&gt; barista <span class="str">'R&eacute;cup&egrave;re sa boisson'</span>
+}</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="slide__aside reveal seq-likec4__pane seq-likec4__pane--embed code-preview__pane code-preview__pane--embed">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename">Use Case</span>
+          <div class="embed-wrap reveal" id="coffee-v2-seq-embed-likec4" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000">
+            <div class="embed-controls">
+              <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
+              <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
+            </div>
+            <iframe
+              title="LikeC4 coffee-v2 S&eacute;quence mobile"
+              loading="lazy"
+              data-src="assets/coffee-v2-single/index.html#/project/coffee-v2/view/order_mobile_flow?theme=dark"
+            ></iframe>
+            <div class="embed-fallback" aria-live="polite">
+              <span>Impossible de charger l'aper&ccedil;u ici.</span>
+              <a href="assets/coffee-v2-single/index.html#/project/coffee-v2/view/order_mobile_flow?theme=dark" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v2 (vue s&eacute;quence)</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="slide slide--split" data-nav="Impact UX">
+    <div class="slide__panels">
+      <div class="slide__panel slide__panel--primary">
+        <p class="slide__label reveal" style="color:var(--accent2);">Avant</p>
+        <h2 class="slide__heading reveal">V1&nbsp;: le festivalier<br>attend au comptoir</h2>
+        <ul class="slide__bullets" style="margin-top:16px;">
+          <li class="reveal">Se déplace pour payer, attend pour consommer</li>
+          <li class="reveal">Temps mort en file d'attente</li>
+          <li class="reveal">Le barista subit les impatients</li>
+        </ul>
+      </div>
+      <div class="slide__panel slide__panel--secondary" style="display:flex; flex-direction:column; justify-content:center; gap:16px;">
+        <p class="slide__label reveal" style="color:var(--green);">Apr&egrave;s</p>
+        <h2 class="slide__heading reveal">V2&nbsp;: il commande,<br>profite du festival, vient quand c'est pr&ecirc;t</h2>
+        <ul class="slide__bullets" style="margin-top:16px;">
+          <li class="reveal">Attente transform&eacute;e en <strong>exp&eacute;rience libre</strong></li>
+          <li class="reveal">Le flow technique rend visible un <strong>gain m&eacute;tier imm&eacute;diat</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide slide--quote" data-nav="Portail vivant — bénéfice" style="background-image:radial-gradient(ellipse at 24% 22%, var(--green-dim) 0%, transparent 40%), radial-gradient(ellipse at 78% 80%, var(--accent-dim) 0%, transparent 44%);">
+    <div class="callout callout--green reveal">Le m&ecirc;me mod&egrave;le sert<br>&agrave; discuter avec le m&eacute;tier,<br>la maitrise d'oeuvre,<br>et les d&eacute;veloppeurs.</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       PARTIE 4 : OUTILLAGE
+       ═══════════════════════════════════════════ -->
+
+  
+  <section class="slide slide--divider" data-nav="Partie 3" style="background:linear-gradient(110deg, #060a22 0%, #080d2a 60%, #0c1238 100%);">
+    <span class="slide__number" style="color:var(--accent2);" aria-hidden="true">03</span>
+    <div>
+      <p class="slide__label reveal" style="color:var(--accent2);">Partie 3</p>
+      <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">Collaboration &amp; revue d'architecture</h2>
+      <span class="slide__accent-line reveal" style="width:80px; height:4px; background:var(--accent2);"></span>
+      <p class="slide__subtitle reveal" style="margin-top:20px;">Le mod&egrave;le &eacute;volue, la revue devient visuelle</p>
+    </div>
+  </section>
+
+  <section class="slide slide--content slide--code-preview slide--diagram-flow slide--workspace-tree" data-nav="Specs &amp; arborescence" style="background-image:radial-gradient(ellipse at 18% 22%, var(--accent3-dim) 0%, transparent 40%), radial-gradient(ellipse at 82% 78%, var(--green-dim) 0%, transparent 40%);">
+    <p class="slide__label reveal">Collaborer</p>
+    <h2 class="slide__heading reveal">Uniformiser les pratiques de codage, et la sémantique visuelle</h2>
+    <div class="slide__inner">
+      <div class="code-preview__pane workspace-tree__code-stack">
+        <div class="code-preview__frame reveal">
+          <span class="slide__code-filename">spec-containers.c4</span>
+          <div class="slide__code-block">
+            <pre><code><span class="kw">specification</span> {
+  <span class="kw">tag</span> <span class="hl">Container</span>
+  <span class="kw">tag</span> <span class="hl">MobileApp</span>
+  <span class="kw">tag</span> <span class="hl">Database</span>
+
+  <span class="kw">element</span> <span class="hl">Container_MobileApp</span> {
+    #Container #MobileApp
+    notation <span class="str">&quot;Mobile application&quot;</span>
+    <span class="kw">style</span> { shape mobile; icon @/custom/smartphone.svg }
+  }
+
+  <span class="kw">element</span> <span class="hl">Container_Database</span> {
+    #Container #Database
+    <span class="kw">style</span> { color storage; shape storage; icon @/lucide-static/database.svg }
   }
 }</code></pre>
+          </div>
+        </div>
+
+        <div class="code-preview__frame reveal">
+          <span class="slide__code-filename">system-model.c4</span>
+          <div class="slide__code-block">
+            <pre><code><span class="kw">model</span> {
+  alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
+    counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span>
+    baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span>
+    orderService = <span class="hl">Container_Api</span> <span class="str">'Service de Commandes'</span>
+    preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span>
+    notificationService = <span class="hl">Container_Api</span> <span class="str">'Service Notification'</span>
+    eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span>
+    database = <span class="hl">Container_Database</span> <span class="str">'PostgreSQL'</span>
+  }
+}</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide__aside code-preview__pane">
+        <div class="code-preview__frame workspace-tree__ascii-frame reveal">
+          <span class="slide__code-filename">Arborescence de projet</span>
+          <div class="slide__code-block workspace-tree__ascii-block" aria-label="Arborescence ASCII du dossier projects avec coffee-v2 et shared, le dossier images n'&eacute;tant pas d&eacute;pli&eacute;.">
+            <pre><code><span class="kw">projects/</span>
+├─ <span class="hl">coffee-v2/</span>
+│  ├─ likec4.config.ts
+│  ├─ system-model.c4
+│  └─ system-views.c4
+└─ <span class="hl">shared/</span>
+   ├─ images/
+   ├─ SPEC_CHEATSHEET.md
+   ├─ spec-code.c4
+   ├─ spec-components.c4
+   ├─ spec-containers.c4
+   ├─ spec-context.c4
+   ├─ spec-deployment.c4
+   └─ spec-global.c4</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide slide--content slide--review-questions" data-nav="Questions de review" style="background-image:radial-gradient(ellipse at 70% 20%, var(--accent3-dim) 0%, transparent 40%);">
+    <p class="slide__label reveal">Ce qu'on veut voir en review</p>
+    <div class="slide__inner">
+      <div class="review-questions__hero">
+        <h2 class="slide__heading reveal">En revue, la question devient simple&nbsp;: qu'est-ce qui change dans l'architecture&nbsp;?</h2>
+        <p class="review-questions__lede reveal">Une bonne PR ne laisse pas le reviewer reconstituer l'histoire tout seul&nbsp;: elle montre d'embl&eacute;e ce qui entre dans le syst&egrave;me, ce qui change dans les interactions, et ce que cela met en risque.</p>
+      </div>
+      <div class="review-questions__story">
+        <article class="review-questions__card reveal">
+          <p class="review-questions__step">01 &middot; Ce qui entre</p>
+          <h3 class="review-questions__question">Quels nouveaux éléments apparaissent&nbsp;?</h3>
+          <p class="review-questions__detail">On voit tout de suite <strong>ce qui s'ajoute au paysage</strong>, sans devoir fouiller le diff fichier par fichier.</p>
+        </article>
+        <article class="review-questions__card reveal">
+          <p class="review-questions__step">02 &middot; Ce qui bouge</p>
+          <h3 class="review-questions__question">Qui parle &agrave; qui apr&egrave;s le changement&nbsp;?</h3>
+          <p class="review-questions__detail">Les nouveaux flux, le sync vs async, les responsabilit&eacute;s qui se d&eacute;placent&nbsp;: <strong>la structure devient lisible</strong>, pas seulement le code.</p>
+        </article>
+        <article class="review-questions__card reveal">
+          <p class="review-questions__step">03 &middot; Ce qui devient sensible</p>
+          <h3 class="review-questions__question">Cr&eacute;e-t-on un point chaud, une boucle ou une fragilit&eacute;&nbsp;?</h3>
+          <p class="review-questions__detail">Le reviewer peut discuter tout de suite des <strong>risques architecturaux</strong>, au lieu de les d&eacute;couvrir apr&egrave;s coup.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide slide--diagram slide--pr-review" data-nav="La pull request" style="background-image:radial-gradient(ellipse at 24% 18%, var(--accent3-dim) 0%, transparent 38%), radial-gradient(ellipse at 76% 82%, var(--green-dim) 0%, transparent 42%);">
+    <p class="slide__label reveal">Revue d'architecture</p>
+    <h2 class="slide__heading reveal">La pull request</h2>
+    <p class="slide__body reveal">La PR r&eacute;pond ensuite &agrave; ces questions d'un coup d'oeil&nbsp;: branche relue, point de divergence et commit rep&egrave;re.</p>
+    <div class="slide__inner">
+      <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="3.2" data-initial-zoom="1.58" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
+        <div class="zoom-controls" role="toolbar" aria-label="Commandes de zoom du diagramme git">
+          <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom avant" aria-label="Zoom avant">+</button>
+          <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom arri&egrave;re" aria-label="Zoom arri&egrave;re">&minus;</button>
+          <button type="button" data-zoom-action="reset" title="R&eacute;initialiser le zoom" aria-label="R&eacute;initialiser le zoom">&#8634;</button>
+        </div>
+        <div class="mermaid-scroll" role="img" aria-label="Diagramme git de la pull request montrant la branche v2_png issue de main et le point de revue PR 1.">
+          <pre class="mermaid">
+gitGraph
+   commit id: "v1"
+   branch alefest_coffee_v2
+   checkout alefest_coffee_v2
+   commit id: "v2"
+   commit id: "review" type: HIGHLIGHT tag: "Pull request"
+   checkout main
+   commit id: "bugfix #1"
+   commit id: "bugfix #2"
+          </pre>
+        </div>
+      </div>
+
+	  <div class="pr-review__status reveal">
+		<span class="pr-review__badge"><code>feat/alefest_coffee_v2</code> → <code>main</code></span>
+	  </div>
+      <div class="pr-review__cta reveal">
+        <a class="launcher__btn" href="https://github.com/a-scolan/atlantique-day-likec4/pull/1/changes" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir la page GitHub de diff de la pull request">
+          <span>Ouvrir la PR</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 7H17V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       PARTIE 5 : INDUSTRIALISATION
+       ═══════════════════════════════════════════ -->
+
+  <section class="slide slide--quote" data-nav="Review — bénéfice" style="background-image:radial-gradient(ellipse at 20% 18%, var(--accent3-dim) 0%, transparent 38%), radial-gradient(ellipse at 78% 82%, var(--accent2-dim) 0%, transparent 42%);">
+    <div class="callout callout--blue reveal">Le diff ne remplace pas la conversation&nbsp;;<br>il la rend plus efficace<br>et moins ambigu&euml;.</div>
+  </section>
+
+  
+  <!--
+  <section class="slide slide-&#45;divider" data-nav="Partie 4" style="background:linear-gradient(110deg, #040818 0%, #080d2a 60%, #0c1238 100%);">
+    <span class="slide__number" style="color:var(--green);" aria-hidden="true">04</span>
+    <div>
+      <p class="slide__label reveal" style="color:var(--green);">Partie 4</p>
+      <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">L'industrialisation</h2>
+      <span class="slide__accent-line reveal" style="width:80px; height:4px; background:var(--green);"></span>
+      <p class="slide__subtitle reveal" style="margin-top:20px;">ADR, mod&egrave;le, validation, rendu et publication &agrave; chaque push</p>
+    </div>
+  </section>
+
+  <section class="slide slide-&#45;diagram slide-&#45;diagram-flow" data-nav="Pipeline CI/CD">
+    <h2 class="slide__heading reveal">Pipeline&nbsp;: du texte brut au portail d'architecture</h2>
+    <div class="mermaid-wrap reveal">
+      <div class="zoom-controls">
+        <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom in">+</button>
+        <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom out">&minus;</button>
+        <button type="button" data-zoom-action="reset" title="Reset">&#8634;</button>
+      </div>
+      <div class="mermaid-scroll">
+      <pre class="mermaid">
+graph LR
+  ADR["📝 ADR / Markdown"] -&gt; Model["🧩 Modèle .c4"]
+  Model -&gt; PR["🔀 Pull Request&lt;br/&gt;review technique + archi"]
+  PR -&gt; Validate["✅ Validation LikeC4"]
+  Validate -&gt; Render["🎨 Génération HTML / vues"]
+  Render -&gt; VisualDiff["👁️ Visual diff"]
+  VisualDiff -&gt; Publish["🚀 Publication"]
+  Publish -&gt; Portal["🗺️ Portail vivant"]
+
+  classDef gold fill:#fbfe7a44,stroke:#fbfe7a,stroke-width:2px,color:#ffffff
+  classDef blue fill:#0f9ed544,stroke:#0f9ed5,stroke-width:2px,color:#ffffff
+  classDef green fill:#4ea72e44,stroke:#4ea72e,stroke-width:2px,color:#ffffff
+
+  class ADR,Model,PR gold
+  class Validate,Render,VisualDiff blue
+  class Publish,Portal green
+      </pre>
+      </div>
+    </div>
+  </section>
+  -->
+
+  
+  <section class="slide slide--divider" data-nav="Partie 5" style="background:linear-gradient(110deg, #120816 0%, #190b23 60%, #240f2e 100%);">
+    <span class="slide__number" style="color:var(--accent4);" aria-hidden="true">05</span>
+    <div>
+      <p class="slide__label reveal" style="color:var(--accent4);">Partie 5</p>
+      <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">Et alors?</h2>
+      <span class="slide__accent-line reveal" style="width:80px; height:4px; background:var(--accent4);"></span>
+      <p class="slide__subtitle reveal" style="margin-top:20px;">Que retenir et comment repartir avec du concret</p>
     </div>
   </section>
   
@@ -2334,17 +3301,72 @@ Créer un système de prise de commande numérique au comptoir avec :
       aria-pressed="false"
       aria-label="Afficher le bloc code et l'aperçu LikeC4"
     >LikeC4</button>
-    <h2 class="slide__heading reveal">C2&nbsp;: Comparer LikeC4</h2>
+    <h2 class="slide__heading reveal">Comparer l'outil LikeC4</h2>
     <div class="c2-unified__views">
       <div class="c2-unified__view c2-unified__view--mermaid">
-        <div class="mermaid-wrap reveal" data-initial-zoom="1">
-          <div class="zoom-controls">
-            <button onclick="zoomDiagram(this,1.2)" title="Zoom in">+</button>
-            <button onclick="zoomDiagram(this,0.8)" title="Zoom out">&minus;</button>
-            <button onclick="resetZoom(this)" title="Reset">&#8634;</button>
+        <div class="slide__inner">
+          <div class="c2-mermaid__pane c2-mermaid__pane--code code-preview__pane code-preview__pane--code">
+            <div class="code-preview__frame">
+              <span class="slide__code-filename">coffee-v1/c2-containers.mmd</span>
+              <div class="slide__code-block reveal">
+                <pre><code>flowchart TD
+  Fest["Festivalier"]
+  Bar["Barista"]
+
+  classDef gold fill:#fbfe7a44,stroke:#fbfe7a,stroke-width:2px,color:#ffffff
+  classDef blue fill:#0f9ed544,stroke:#0f9ed5,stroke-width:2px,color:#ffffff
+  classDef green fill:#4ea72e44,stroke:#4ea72e,stroke-width:2px,color:#ffffff
+
+  subgraph Frontends
+    direction LR
+    App["Festival App"]
+    Counter["Counter App"]
+    Screen["Barista Screen"]
+  end
+
+  subgraph Services
+    direction LR
+    Order["Order Service"]
+    MQ{{"RabbitMQ"}}
+    Prep["Preparation Service"]
+    Notif["Notification Service"]
+  end
+
+  DB[("PostgreSQL")]
+
+  style Frontends fill:#0c1238cc,stroke:#a0b8d055,stroke-width:1px
+  style Services fill:#0c1238cc,stroke:#a0b8d055,stroke-width:1px
+
+  class Fest,Bar,App,Counter,Screen gold
+  class Order,Prep,Notif blue
+  class MQ,DB green
+
+  Fest --> App
+  Fest --> Counter
+  Bar --> Screen
+  App -->|POST /orders| Order
+  Counter -->|POST /orders| Order
+  Screen &lt;--&gt;|WebSocket| Prep
+  Order -->|publish order.placed| MQ
+  MQ -->|consume order.placed| Prep
+  Prep -->|publish order.ready| MQ
+  MQ -->|consume order.ready| Notif
+  Notif -->|Push Firebase| App
+  Order --> DB
+  Prep --> DB
+  Notif --> DB</code></pre>
+              </div>
+            </div>
           </div>
-          <div class="mermaid-scroll">
-          <pre class="mermaid">
+          <div class="slide__aside reveal c2-mermaid__pane c2-mermaid__pane--diagram code-preview__pane code-preview__pane--embed">
+              <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="2.2" data-initial-zoom="0.72" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
+              <div class="zoom-controls" role="toolbar" aria-label="Commandes de zoom du diagramme C2 Mermaid">
+                <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom avant" aria-label="Zoom avant">+</button>
+                <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom arri&egrave;re" aria-label="Zoom arri&egrave;re">&minus;</button>
+                <button type="button" data-zoom-action="reset" title="R&eacute;initialiser le zoom" aria-label="R&eacute;initialiser le zoom">&#8634;</button>
+              </div>
+              <div class="mermaid-scroll" role="img" aria-label="Diagramme Mermaid C2 d'AleFest Coffee avec frontends, services, bus d'&eacute;v&eacute;nements et base PostgreSQL.">
+              <pre class="mermaid">
 flowchart TD
   Fest["Festivalier"]
   Bar["Barista"]
@@ -2391,7 +3413,9 @@ flowchart TD
   Order --> DB
   Prep --> DB
   Notif --> DB
-          </pre>
+              </pre>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -2399,17 +3423,41 @@ flowchart TD
         <div class="slide__inner">
           <div class="c2-likec4__pane c2-likec4__pane--code code-preview__pane code-preview__pane--code">
             <div class="code-preview__frame">
-              <span class="slide__code-filename"> coffee-v2/system-views.c4 · likeC4</span>
+              <span class="slide__code-filename"> coffee-v2/system-model.c4 · likeC4</span>
               <div class="slide__code-block reveal">
-                <pre><code><span class="kw">dynamic view</span> order_mobile_flow {
-  festivalier -&gt; alefestCoffee.festivalApp <span class="str">'Commande cappuccino'</span>
-  alefestCoffee.festivalApp -&gt; alefestCoffee.orderService <span class="str">'POST /orders'</span>
-  alefestCoffee.orderService -&gt; alefestCoffee.eventBus <span class="str">'PUBLISH order.placed'</span>
-  alefestCoffee.eventBus -&gt; alefestCoffee.preparationService <span class="str">'CONSUME order.placed'</span>
-  alefestCoffee.preparationService -&gt; alefestCoffee.baristaScreen <span class="str">'WebSocket nouvelle commande'</span>
-  alefestCoffee.preparationService -&gt; alefestCoffee.eventBus <span class="str">'PUBLISH order.ready'</span>
-  alefestCoffee.eventBus -&gt; alefestCoffee.notificationService <span class="str">'CONSUME order.ready'</span>
-  alefestCoffee.notificationService -&gt; alefestCoffee.festivalApp <span class="str">'Firebase push'</span>
+                  <pre><code style="font-size:clamp(10.5px,1.05vw,13px); line-height:1.4;"><span class="kw">model</span> {
+  festivalier = <span class="hl">Actor_Person</span> <span class="str">'Festivalier'</span> { <span class="cm">...</span> }
+  barista = <span class="hl">Actor_Staff</span> <span class="str">'Barista'</span> { <span class="cm">...</span> }
+
+  festivalSystem = <span class="hl">System_External</span> <span class="str">'Syst&egrave;me Festival'</span> {
+    festivalApp = <span class="hl">Container_MobileApp</span> <span class="str">'Application Festival'</span> {
+      technology <span class="str">'React Native, Expo'</span>
+    }
+    festivalService = <span class="hl">Container_Api</span> <span class="str">'Service Festival'</span> {
+      technology <span class="str">'Node.js, Express'</span>
+    }
+    festivalApp -[<span class="hl">calls</span>]-&gt; festivalService <span class="str">'API mobile festival'</span> { <span class="cm">...</span> }
+  }
+
+  alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
+    counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span> { <span class="cm">...</span> }
+    baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span> { <span class="cm">...</span> }
+    orderService = <span class="hl">Container_Api</span> <span class="str">'Service de Commandes'</span> { technology <span class="str">'Node.js, Express, ...'</span> }
+    preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span> { technology <span class="str">'Node.js, WebSocket, ...'</span> }
+    notificationService = <span class="hl">Container_Api</span> <span class="str">'Service Notification'</span> { technology <span class="str">'Node.js, Firebase, ...'</span> }
+    eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span> { technology <span class="str">'RabbitMQ 3.12'</span> }
+    database = <span class="hl">Container_Database</span> <span class="str">'PostgreSQL'</span> { technology <span class="str">'PostgreSQL 16'</span> }
+
+    orderService -[<span class="hl">async</span>]-&gt; eventBus <span class="str">'Publie order.placed'</span> { <span class="cm">...</span> }
+    eventBus -[<span class="hl">async</span>]-&gt; preparationService <span class="str">'Livre order.placed'</span> { <span class="cm">...</span> }
+    preparationService -[<span class="hl">async</span>]-&gt; eventBus <span class="str">'Publie order.ready'</span> { <span class="cm">...</span> }
+    orderService -[<span class="hl">writes</span>]-&gt; database <span class="str">'Cr&eacute;er et mettre &agrave; jour commande'</span> { <span class="cm">...</span> }
+    notificationService -[<span class="hl">uses</span>]-&gt; festivalSystem.festivalApp <span class="str">'Envoie push notification'</span> { <span class="cm">...</span> }
+  }
+
+  festivalier -[<span class="hl">uses</span>]-&gt; festivalSystem <span class="str">'Commande mobile et suivi'</span>
+  barista -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Pr&eacute;pare et remet la boisson'</span>
+  festivalSystem -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Int&eacute;gration partenaire'</span> { technology <span class="str">'HTTPS'</span> }
 }</code></pre>
               </div>
             </div>
@@ -2417,7 +3465,7 @@ flowchart TD
           <div class="slide__aside reveal c2-likec4__pane c2-likec4__pane--embed code-preview__pane code-preview__pane--embed">
             <div class="code-preview__frame">
               <span class="slide__code-filename">Vue C2</span>
-              <div class="embed-wrap reveal" id="coffee-v2-c2-embed-likec4">
+              <div class="embed-wrap reveal" id="coffee-v2-c2-embed-likec4" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000" data-likec4-fit-on-load="true" data-likec4-zoomout-steps="1">
                 <div class="embed-controls">
                   <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
                   <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
@@ -2436,209 +3484,6 @@ flowchart TD
           </div>
         </div>
       </div>
-    </div>
-  </section>
-  
-
-  <section class="slide slide--quote" data-nav="Cas d'étude — promesse" style="background-image:radial-gradient(ellipse at 18% 24%, var(--accent3-dim) 0%, transparent 38%), radial-gradient(ellipse at 82% 78%, var(--accent-dim) 0%, transparent 44%);">
-    <div class="callout callout--blue reveal">Le diagramme doit raconter<br>la promesse m&eacute;tier<br>en plus de servir de référence</div>
-  </section>
-  <section class="slide slide--split" data-nav="Impact UX">
-    <div class="slide__panels">
-      <div class="slide__panel slide__panel--primary">
-        <p class="slide__label reveal" style="color:var(--accent2);">Avant</p>
-        <h2 class="slide__heading reveal">V1&nbsp;: le festivalier<br>attend au comptoir</h2>
-        <ul class="slide__bullets" style="margin-top:16px;">
-          <li class="reveal">Se déplace pour payer, attend pour consommer</li>
-          <li class="reveal">Temps mort en file d'attente</li>
-          <li class="reveal">Le barista subit les impatients</li>
-        </ul>
-      </div>
-      <div class="slide__panel slide__panel--secondary" style="display:flex; flex-direction:column; justify-content:center; gap:16px;">
-        <p class="slide__label reveal" style="color:var(--green);">Apr&egrave;s</p>
-        <h2 class="slide__heading reveal">V2&nbsp;: il commande,<br>profite du festival, vient quand c'est pr&ecirc;t</h2>
-        <ul class="slide__bullets" style="margin-top:16px;">
-          <li class="reveal">Attente transform&eacute;e en <strong>exp&eacute;rience libre</strong></li>
-          <li class="reveal">WebSocket c&ocirc;t&eacute; barista, push c&ocirc;t&eacute; festivalier</li>
-          <li class="reveal">Le flow technique rend visible un <strong>gain m&eacute;tier imm&eacute;diat</strong></li>
-        </ul>
-      </div>
-    </div>
-  </section>
-  
-  <section class="slide slide--content slide--seq-likec4 slide--code-preview" data-nav="Séquence mobile" style="background-image:radial-gradient(ellipse at 50% 20%, var(--accent-dim) 0%, transparent 40%);">
-    <h2 class="slide__heading reveal">Une vue comportementale raconte le gain utilisateur</h2>
-    <div class="slide__inner">
-      <div class="seq-likec4__pane seq-likec4__pane--code code-preview__pane code-preview__pane--code">
-        <div class="code-preview__frame">
-          <span class="slide__code-filename"> coffee-v2/system-views.c4  </span>
-          <div class="slide__code-block reveal">
-            <pre><code><span class="kw">dynamic view</span> order_mobile_flow {
-  festivalier -&gt; festivalSystem.festivalApp <span class="str">'Commande un flat white'</span>
-  festivalSystem.festivalApp -&gt; festivalSystem.festivalService <span class="str">'POST /orders'</span>
-  festivalSystem.festivalService -&gt; alefestCoffee.orderService <span class="str">'POST /orders'</span>
-  alefestCoffee.orderService -&gt; alefestCoffee.database <span class="str">'INSERT order'</span>
-  alefestCoffee.orderService -&gt; alefestCoffee.eventBus <span class="str">'order.placed'</span>
-  festivalSystem.festivalService -&gt; festivalSystem.festivalApp <span class="str">'Confirme orderId'</span>
-  festivalSystem.festivalApp -&gt; festivalier <span class="str">'Commande confirm&eacute;e'</span>
-
-  alefestCoffee.eventBus -&gt; alefestCoffee.preparationService <span class="str">'order.placed'</span>
-  alefestCoffee.preparationService -&gt; alefestCoffee.baristaScreen <span class="str">'WebSocket push file'</span>
-  alefestCoffee.baristaScreen -&gt; barista <span class="str">'Affiche commande'</span>
-  barista -&gt; alefestCoffee.preparationService <span class="str">'PATCH preparing'</span>
-  alefestCoffee.preparationService -&gt; alefestCoffee.eventBus <span class="str">'order.preparing'</span>
-
-  barista -&gt; alefestCoffee.preparationService <span class="str">'PATCH ready'</span>
-  alefestCoffee.preparationService -&gt; alefestCoffee.eventBus <span class="str">'order.ready'</span>
-  alefestCoffee.eventBus -&gt; alefestCoffee.notificationService <span class="str">'order.ready'</span>
-  alefestCoffee.notificationService -&gt; festivalSystem.festivalApp <span class="str">'Push : votre caf&eacute; est pr&ecirc;t'</span>
-  festivalSystem.festivalApp -&gt; festivalier <span class="str">'Notification re&ccedil;ue'</span>
-  festivalier -&gt; barista <span class="str">'R&eacute;cup&egrave;re sa boisson'</span>
-}</code></pre>
-          </div>
-        </div>
-      </div>
-      <div class="slide__aside reveal seq-likec4__pane seq-likec4__pane--embed code-preview__pane code-preview__pane--embed">
-        <div class="code-preview__frame">
-          <span class="slide__code-filename">Use Case</span>
-          <div class="embed-wrap reveal" id="coffee-v2-seq-embed-likec4">
-            <div class="embed-controls">
-              <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
-              <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
-            </div>
-            <iframe
-              title="LikeC4 coffee-v2 S&eacute;quence mobile"
-              loading="lazy"
-              data-src="assets/coffee-v2-single/index.html#/project/coffee-v2/view/order_mobile_flow?theme=dark"
-            ></iframe>
-            <div class="embed-fallback" aria-live="polite">
-              <span>Impossible de charger l'aper&ccedil;u ici.</span>
-              <a href="assets/coffee-v2-single/index.html#/project/coffee-v2/view/order_mobile_flow?theme=dark" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v2 (vue s&eacute;quence)</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide slide--quote" data-nav="Portail vivant — bénéfice" style="background-image:radial-gradient(ellipse at 24% 22%, var(--green-dim) 0%, transparent 40%), radial-gradient(ellipse at 78% 80%, var(--accent-dim) 0%, transparent 44%);">
-    <div class="callout callout--green reveal">Le m&ecirc;me mod&egrave;le sert<br>&agrave; discuter avec le m&eacute;tier,<br>la maitrise d'oeuvre,<br>et les d&eacute;veloppeurs.</div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       PARTIE 4 : OUTILLAGE
-       ═══════════════════════════════════════════ -->
-
-  
-  <section class="slide slide--divider" data-nav="Partie 3" style="background:linear-gradient(110deg, #060a22 0%, #080d2a 60%, #0c1238 100%);">
-    <span class="slide__number" style="color:var(--accent2);" aria-hidden="true">03</span>
-    <div>
-      <p class="slide__label reveal" style="color:var(--accent2);">Partie 3</p>
-      <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">Collaboration &amp; diff</h2>
-      <span class="slide__accent-line reveal" style="width:80px; height:4px; background:var(--accent2);"></span>
-      <p class="slide__subtitle reveal" style="margin-top:20px;">Le mod&egrave;le &eacute;volue, la revue devient visuelle</p>
-    </div>
-  </section>  
-  <section class="slide slide--code-diff" data-nav="Diff de PR" style="background-image:radial-gradient(ellipse at 30% 70%, var(--red-dim) 0%, transparent 30%), radial-gradient(ellipse at 70% 70%, var(--green-dim) 0%, transparent 30%);">
-    <div class="slide__inner" style="min-height:100%; display:flex; align-items:center; justify-content:center;">
-      <div class="launcher reveal" style="max-width:none; text-align:center; align-items:center;">
-        <p class="slide__label" style="margin-bottom:14px; text-align:center;">Pull request</p>
-        <h2 class="slide__heading" style="text-align:center; margin-bottom:18px;">Ouvrir la page de diff GitHub</h2>
-        <a class="launcher__btn" href="https://github.com/a-scolan/atlantique-day-likec4/pull/1/changes" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir la page GitHub de diff de la pull request">
-          <span>Ouvrir la PR</span>
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M9 7H17V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ═══════════════════════════════════════════
-       PARTIE 5 : INDUSTRIALISATION
-       ═══════════════════════════════════════════ -->
-
-  
-  <section class="slide slide--content" data-nav="Questions de review" style="background-image:radial-gradient(ellipse at 70% 20%, var(--accent3-dim) 0%, transparent 40%);">
-    <div class="slide__inner">
-      <div>
-        <p class="slide__label reveal">Ce que le diff rend visible</p>
-        <h2 class="slide__heading reveal">La revue de code devient aussi<br>une revue d'architecture</h2>
-        <ul class="slide__bullets">
-          <li class="reveal">Quel nouveau service entre dans le jeu&nbsp;?</li>
-          <li class="reveal">Qui parle &agrave; qui apr&egrave;s le changement&nbsp;?</li>
-          <li class="reveal">Cr&eacute;e-t-on un nouveau point chaud, une d&eacute;pendance ou une boucle&nbsp;?</li>
-        </ul>
-      </div>
-      <div class="slide__aside reveal" style="width:min(100%,460px); justify-self:end;">
-        <div class="speaker-card" style="width:min(100%,460px); min-height:260px; padding:32px; display:flex; flex-direction:column; justify-content:center;">
-          <p class="speaker-card__eyebrow">Question de relecteurs</p>
-          <h3 class="speaker-card__name" style="font-size:clamp(24px,3.6vw,34px);">&laquo;&nbsp;Qu'est-ce qui change vraiment&nbsp;?&nbsp;&raquo;</h3>
-          <br> 
-		  <p class="speaker-card__meta">Avec un diff visuel et textuel, la r&eacute;ponse n'est plus cach&eacute;e dans de la prose ou dans un sch&eacute;ma &agrave; refaire &agrave; la main.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide slide--quote" data-nav="Review — bénéfice" style="background-image:radial-gradient(ellipse at 20% 18%, var(--accent3-dim) 0%, transparent 38%), radial-gradient(ellipse at 78% 82%, var(--accent2-dim) 0%, transparent 42%);">
-    <div class="callout callout--blue reveal">Le diff ne remplace pas la conversation&nbsp;;<br>il la rend plus efficace<br>et moins ambigu&euml;.</div>
-  </section>
-
-  
-  <!--
-  <section class="slide slide-&#45;divider" data-nav="Partie 4" style="background:linear-gradient(110deg, #040818 0%, #080d2a 60%, #0c1238 100%);">
-    <span class="slide__number" style="color:var(--green);" aria-hidden="true">04</span>
-    <div>
-      <p class="slide__label reveal" style="color:var(--green);">Partie 4</p>
-      <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">L'industrialisation</h2>
-      <span class="slide__accent-line reveal" style="width:80px; height:4px; background:var(--green);"></span>
-      <p class="slide__subtitle reveal" style="margin-top:20px;">ADR, mod&egrave;le, validation, rendu et publication &agrave; chaque push</p>
-    </div>
-  </section>
-
-  <section class="slide slide-&#45;diagram slide-&#45;diagram-flow" data-nav="Pipeline CI/CD">
-    <h2 class="slide__heading reveal">Pipeline&nbsp;: du texte brut au portail d'architecture</h2>
-    <div class="mermaid-wrap reveal">
-      <div class="zoom-controls">
-        <button onclick="zoomDiagram(this,1.2)" title="Zoom in">+</button>
-        <button onclick="zoomDiagram(this,0.8)" title="Zoom out">&minus;</button>
-        <button onclick="resetZoom(this)" title="Reset">&#8634;</button>
-      </div>
-      <div class="mermaid-scroll">
-      <pre class="mermaid">
-graph LR
-  ADR["📝 ADR / Markdown"] -&gt; Model["🧩 Modèle .c4"]
-  Model -&gt; PR["🔀 Pull Request&lt;br/&gt;review technique + archi"]
-  PR -&gt; Validate["✅ Validation LikeC4"]
-  Validate -&gt; Render["🎨 Génération HTML / vues"]
-  Render -&gt; VisualDiff["👁️ Visual diff"]
-  VisualDiff -&gt; Publish["🚀 Publication"]
-  Publish -&gt; Portal["🗺️ Portail vivant"]
-
-  classDef gold fill:#fbfe7a44,stroke:#fbfe7a,stroke-width:2px,color:#ffffff
-  classDef blue fill:#0f9ed544,stroke:#0f9ed5,stroke-width:2px,color:#ffffff
-  classDef green fill:#4ea72e44,stroke:#4ea72e,stroke-width:2px,color:#ffffff
-
-  class ADR,Model,PR gold
-  class Validate,Render,VisualDiff blue
-  class Publish,Portal green
-      </pre>
-      </div>
-    </div>
-  </section>
-  -->
-
-  
-  <section class="slide slide--divider" data-nav="Partie 5" style="background:linear-gradient(110deg, #120816 0%, #190b23 60%, #240f2e 100%);">
-    <span class="slide__number" style="color:var(--accent4);" aria-hidden="true">05</span>
-    <div>
-      <p class="slide__label reveal" style="color:var(--accent4);">Partie 5</p>
-      <h2 class="slide__heading reveal" style="font-size:clamp(32px,6vw,64px); font-weight:900;">Et alors?</h2>
-      <span class="slide__accent-line reveal" style="width:80px; height:4px; background:var(--accent4);"></span>
-      <p class="slide__subtitle reveal" style="margin-top:20px;">Que retenir et comment repartir avec du concret</p>
     </div>
   </section>
 
@@ -2694,7 +3539,7 @@ graph LR
   
   <section class="slide slide--content slide--portal-vivant" data-nav="Portail vivant" style="background-image:radial-gradient(ellipse at 20% 30%, var(--green-dim) 0%, transparent 40%);">
     <p class="slide__label reveal">Une architecture vivante et palpitante</p>
-    <h2 class="slide__heading reveal">LikeC4 ne produit pas que des images, mais une app React complète</h2>
+    <h2 class="slide__heading reveal">LikeC4 ne produit pas que des images, mais une app React intégrable</h2>
     <div class="slide__inner">
       <div>
         <ul class="slide__bullets">
@@ -2729,7 +3574,7 @@ graph LR
       </div>
     </div>
   </section>
-  
+
   <section class="slide slide--content" data-nav="Ressources & QR" style="background-image:radial-gradient(ellipse at 80% 20%, var(--accent4-dim) 0%, transparent 40%);">
     <div class="slide__inner">
       <div>
@@ -2886,38 +3731,75 @@ graph LR
     slide.style.setProperty('--merci-qr-top', Math.round(computedTop) + 'px');
   }
 
+  function getFitScaleMax(wrap) {
+    var maxScale = parseFloat(wrap && wrap.dataset.fitScaleMax ? wrap.dataset.fitScaleMax : '');
+    return !isNaN(maxScale) && maxScale > 0 ? maxScale : 1;
+  }
+  function getFitMode(wrap) {
+    var mode = String(wrap && wrap.dataset.fitMode ? wrap.dataset.fitMode : 'contain').toLowerCase();
+    return mode === 'cover' ? 'cover' : 'contain';
+  }
+
+  function getStableMermaidViewBox(svg) {
+    if (!svg) return null;
+    var rawViewBox = svg.dataset.rawViewBox || svg.getAttribute('viewBox');
+    if (!rawViewBox) return null;
+    if (!svg.dataset.rawViewBox) svg.dataset.rawViewBox = rawViewBox;
+
+    var parts = rawViewBox.split(/[\s,]+/).map(Number);
+    if (parts.length !== 4 || parts.some(function(v){ return Number.isNaN(v); })) return null;
+
+    var fallbackPad = 60;
+    var viewBox = [parts[0] - fallbackPad, parts[1] - fallbackPad, parts[2] + fallbackPad * 2, parts[3] + fallbackPad * 2];
+
+    try {
+      var box = typeof svg.getBBox === 'function' ? svg.getBBox() : null;
+      if (box && box.width > 0 && box.height > 0) {
+        var padX = Math.max(36, Math.min(72, box.width * 0.08));
+        var padY = Math.max(32, Math.min(72, box.height * 0.12));
+        viewBox = [box.x - padX, box.y - padY, box.width + padX * 2, box.height + padY * 2];
+      }
+    } catch (e) {
+      /* Fallback keeps a stable padded viewBox based on the original bounds. */
+    }
+
+    return viewBox;
+  }
+
   function autoFit() {
     document.querySelectorAll('.mermaid').forEach(function(mDiv) {
       var svg = mDiv.querySelector('svg');
       if (!svg) return;
-      /* Expand viewBox by 60px on each side to prevent clipping of node text */
-      var vb = svg.getAttribute('viewBox');
-      if (vb) {
-        var parts = vb.split(/[\s,]+/).map(Number);
-        if (parts.length === 4) {
-          var pad = 60;
-          parts = [parts[0] - pad, parts[1] - pad, parts[2] + pad * 2, parts[3] + pad * 2];
-          svg.setAttribute('viewBox', parts.join(' '));
-        }
-      }
-      /* Read intrinsic size from viewBox */
-      vb = svg.getAttribute('viewBox');
-      if (!vb) return;
-      var vp = vb.split(/[\s,]+/).map(Number);
+      var vp = getStableMermaidViewBox(svg);
+      if (!vp) return;
+      svg.setAttribute('viewBox', vp.join(' '));
       var vw = vp[2], vh = vp[3];
       /* Get available container size */
+      var wrap = mDiv.closest('.mermaid-wrap');
       var scroll = mDiv.closest('.mermaid-scroll');
       var cw = scroll ? scroll.clientWidth : mDiv.parentElement.clientWidth;
       var ch = scroll ? scroll.clientHeight : mDiv.parentElement.clientHeight;
-      /* Scale SVG to fit container, maintaining aspect ratio */
-      var scale = Math.min(cw / vw, ch / vh, 1);
+      var safeCw = Math.max(1, cw || 0);
+      var safeCh = Math.max(1, ch || 0);
+      var fitMode = getFitMode(wrap);
+      /* Scale SVG to fit container (contain) or fill panel (cover), keeping aspect ratio */
+      var rawScale = fitMode === 'cover'
+        ? Math.max(safeCw / vw, safeCh / vh)
+        : Math.min(safeCw / vw, safeCh / vh);
+      var scale = Math.min(rawScale, getFitScaleMax(wrap));
+      if (!isFinite(scale) || scale <= 0) scale = 1;
+      var fittedWidth = Math.round(vw * scale);
+      var fittedHeight = Math.round(vh * scale);
       svg.removeAttribute('height');
       svg.removeAttribute('width');
-      svg.style.width = Math.round(vw * scale) + 'px';
-      svg.style.height = Math.round(vh * scale) + 'px';
+      svg.style.width = '100%';
+      svg.style.height = '100%';
       /* Store base dimensions for zoom layout calculations */
-      mDiv.dataset.baseW = Math.round(vw * scale);
-      mDiv.dataset.baseH = Math.round(vh * scale);
+      mDiv.dataset.baseW = fittedWidth;
+      mDiv.dataset.baseH = fittedHeight;
+      mDiv.style.width = fittedWidth + 'px';
+      mDiv.style.height = fittedHeight + 'px';
+      if (wrap) delete wrap.dataset.centeredZoom;
     });
     document.querySelectorAll('.slide__kpi-val').forEach(function(el) {
       if (el.scrollWidth > el.clientWidth) {
@@ -2952,10 +3834,19 @@ graph LR
   }
   mermaid.run().then(function() {
     autoFit();
-    window.addEventListener('resize', autoFit, { passive: true });
+    window.addEventListener('resize', function() {
+      autoFit();
+      document.querySelectorAll('.slide.visible .mermaid-wrap').forEach(function(w){ updateZoomLayout(w); scheduleCenterMermaidViewport(w, true); });
+    }, { passive: true });
     /* Initialise zoom layout so .mermaid divs have explicit dimensions */
     enforcePart0GrayMarkers();
-    document.querySelectorAll('.mermaid-wrap').forEach(function(w){ var t=w.querySelector('.mermaid'); var z=getInitialZoom(w); t.dataset.zoom=String(z); t.style.transform='scale('+z+')'; updateZoomState(w); updateZoomLayout(w); });
+    document.querySelectorAll('.mermaid-wrap').forEach(function(w){ var t=w.querySelector('.mermaid'); var z=getInitialZoom(w); t.dataset.zoom=String(z); t.style.transform='none'; updateZoomState(w); updateZoomLayout(w); });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function() {
+        autoFit();
+        document.querySelectorAll('.slide.visible .mermaid-wrap').forEach(function(w){ updateZoomLayout(w); scheduleCenterMermaidViewport(w, true); });
+      });
+    }
     new SlideEngine();
   });
 </script>
@@ -3080,17 +3971,218 @@ graph LR
 
 
   /* ============ Embed iframe controls ============ */
+  function isLikeC4Embed(wrap) {
+    return !!(wrap && wrap.dataset.embedKind === 'likec4');
+  }
+  function isManualEmbed(wrap) {
+    return !!(wrap && wrap.dataset.loadMode === 'manual');
+  }
+  function getEmbedTimeout(wrap) {
+    var timeout = parseInt(wrap && wrap.dataset.embedTimeout ? wrap.dataset.embedTimeout : '', 10);
+    if (!isNaN(timeout) && timeout > 0) return timeout;
+    return isManualEmbed(wrap) ? 10000 : 6000;
+  }
+  function clearEmbedFallbackTimer(wrap) {
+    if (wrap && wrap._embedFallbackTimer) {
+      window.clearTimeout(wrap._embedFallbackTimer);
+      wrap._embedFallbackTimer = 0;
+    }
+  }
+  function updateLikeC4ActionState(wrap) {
+    var button = wrap ? wrap.querySelector('.embed-likec4-cta') : null;
+    var label = button ? button.querySelector('.embed-likec4-cta__label') : null;
+    if (!button || !label) return;
+
+    var isLoading = wrap.classList.contains('is-loading');
+    var isLoaded = wrap.classList.contains('is-loaded');
+    var isFallback = wrap.classList.contains('is-fallback');
+
+    button.disabled = !!isLoading;
+    button.classList.toggle('is-busy', isLoading);
+    button.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+    label.textContent = isLoading ? 'Chargement LikeC4…' : 'Rendu LikeC4';
+
+    if (isLoading) {
+      button.setAttribute('title', 'Chargement du rendu LikeC4');
+      button.setAttribute('aria-label', 'Chargement du rendu LikeC4');
+    } else if (isLoaded) {
+      button.setAttribute('title', 'Recharger le rendu LikeC4');
+      button.setAttribute('aria-label', 'Recharger le rendu LikeC4');
+    } else if (isFallback) {
+      button.setAttribute('title', 'Réessayer le rendu LikeC4');
+      button.setAttribute('aria-label', 'Réessayer le rendu LikeC4');
+    } else {
+      button.setAttribute('title', 'Charger le rendu LikeC4');
+      button.setAttribute('aria-label', 'Charger le rendu LikeC4');
+    }
+  }
+  function updateEmbedLoaderState(wrap, isLoading) {
+    var loader = wrap ? wrap.querySelector('.embed-loader') : null;
+    if (!loader) return;
+    var button = loader.querySelector('.embed-loader__button');
+    var hint = loader.querySelector('.embed-loader__hint');
+    if (button) {
+      button.disabled = !!isLoading;
+      button.textContent = isLoading ? 'Chargement LikeC4…' : 'Charger le rendu LikeC4';
+    }
+    if (hint) {
+      hint.textContent = isLoading
+        ? 'Le rendu démarre… je lui laisse un peu plus de temps avant le fallback.'
+        : 'Déclenche le chargement quand tu veux.';
+    }
+  }
+  function ensureLikeC4PrimaryAction(wrap) {
+    if (!isLikeC4Embed(wrap) || isManualEmbed(wrap) || wrap.querySelector('.embed-likec4-cta')) return;
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'embed-likec4-cta';
+    button.innerHTML = [
+      '<span class="embed-likec4-cta__status" aria-hidden="true"></span>',
+      '<span class="embed-likec4-cta__label">Rendu LikeC4</span>'
+    ].join('');
+    button.addEventListener('click', function() {
+      startEmbedLoad(wrap, { forceReload: wrap.classList.contains('is-loaded') || wrap.classList.contains('is-fallback') });
+    });
+    wrap.appendChild(button);
+  }
+  function ensureManualEmbedLoader(wrap) {
+    if (!isManualEmbed(wrap) || wrap.querySelector('.embed-loader')) return;
+    var fallback = wrap.querySelector('.embed-fallback');
+    var loader = document.createElement('div');
+    loader.className = 'embed-loader';
+    loader.setAttribute('aria-live', 'polite');
+    loader.innerHTML = [
+      '<button type="button" class="embed-loader__button">Charger le rendu LikeC4</button>'
+    ].join('');
+    loader.querySelector('.embed-loader__button').addEventListener('click', function() {
+      startEmbedLoad(wrap);
+    });
+    if (fallback) {
+      wrap.insertBefore(loader, fallback);
+    } else {
+      wrap.appendChild(loader);
+    }
+  }
+  function markEmbedLoaded(wrap) {
+    clearEmbedFallbackTimer(wrap);
+    wrap.classList.remove('is-loading', 'is-fallback');
+    wrap.classList.add('is-loaded');
+    var fallback = wrap.querySelector('.embed-fallback');
+    if (fallback) fallback.classList.remove('visible');
+    updateEmbedLoaderState(wrap, false);
+    updateLikeC4ActionState(wrap);
+  }
+  function showEmbedFallback(wrap) {
+    clearEmbedFallbackTimer(wrap);
+    wrap.classList.remove('is-loading', 'is-loaded');
+    wrap.classList.add('is-fallback');
+    var fallback = wrap.querySelector('.embed-fallback');
+    if (fallback) fallback.classList.add('visible');
+    updateEmbedLoaderState(wrap, false);
+    updateLikeC4ActionState(wrap);
+  }
+  function armEmbedFallbackTimer(wrap, iframe) {
+    clearEmbedFallbackTimer(wrap);
+    wrap._embedFallbackTimer = window.setTimeout(function() {
+      try {
+        var doc = iframe.contentDocument || iframe.contentWindow.document;
+        if (doc && doc.body && doc.body.children.length > 0) {
+          markEmbedLoaded(wrap);
+          return;
+        }
+      } catch (e) {
+        /* Cross-origin or blocked — fall through to the fallback overlay. */
+      }
+      showEmbedFallback(wrap);
+    }, getEmbedTimeout(wrap));
+  }
+  function startEmbedLoad(wrap, options) {
+    if (!wrap) return;
+    var iframe = wrap.querySelector('iframe');
+    var fallback = wrap.querySelector('.embed-fallback');
+    var forceReload = !!(options && options.forceReload);
+    if (!iframe || !iframe.dataset.src) return;
+    if (wrap.classList.contains('is-loading') && !forceReload) return;
+    wrap._embedRequested = true;
+    delete wrap.dataset.likec4ViewportTunedFor;
+    if (fallback) fallback.classList.remove('visible');
+    wrap.classList.remove('is-fallback', 'is-loaded');
+    wrap.classList.add('is-loading');
+    updateEmbedLoaderState(wrap, true);
+    updateLikeC4ActionState(wrap);
+
+    if (forceReload && iframe.src) {
+      iframe.src = iframe.src;
+    } else if (!iframe.src || forceReload) {
+      iframe.src = iframe.dataset.src;
+    }
+
+    armEmbedFallbackTimer(wrap, iframe);
+  }
   function reloadEmbed(btn) {
     var wrap = btn.closest('.embed-wrap');
-    var iframe = wrap.querySelector('iframe');
-    if (iframe.src) { iframe.src = iframe.src; }
-    else if (iframe.dataset.src) { iframe.src = iframe.dataset.src; }
+    startEmbedLoad(wrap, { forceReload: true });
   }
   function openEmbedExternal(btn) {
     var wrap = btn.closest('.embed-wrap');
     var iframe = wrap.querySelector('iframe');
     var url = iframe.src || iframe.dataset.src;
     if (url) window.open(url, '_blank');
+  }
+  function shouldTuneLikeC4Viewport(wrap) {
+    if (!isLikeC4Embed(wrap)) return false;
+    var fitOnLoad = String(wrap && wrap.dataset.likec4FitOnLoad ? wrap.dataset.likec4FitOnLoad : '').toLowerCase() === 'true';
+    var zoomOutSteps = parseInt(wrap && wrap.dataset.likec4ZoomoutSteps ? wrap.dataset.likec4ZoomoutSteps : '', 10);
+    return fitOnLoad || (!isNaN(zoomOutSteps) && zoomOutSteps > 0);
+  }
+  function getLikeC4ZoomOutSteps(wrap) {
+    var steps = parseInt(wrap && wrap.dataset.likec4ZoomoutSteps ? wrap.dataset.likec4ZoomoutSteps : '', 10);
+    return !isNaN(steps) && steps > 0 ? steps : 0;
+  }
+  function triggerLikeC4Control(doc, selector, count) {
+    var remaining = Math.max(0, count || 0);
+    var clicks = 0;
+    while (remaining > 0) {
+      var btn = doc.querySelector(selector);
+      if (!btn || btn.disabled) break;
+      btn.click();
+      clicks += 1;
+      remaining -= 1;
+    }
+    return clicks;
+  }
+  function applyLikeC4ViewportTuning(wrap) {
+    if (!shouldTuneLikeC4Viewport(wrap)) return false;
+    var iframe = wrap.querySelector('iframe');
+    if (!iframe || !iframe.contentWindow) return false;
+    try {
+      var doc = iframe.contentDocument || iframe.contentWindow.document;
+      if (!doc || !doc.body) return false;
+      var fitClicks = String(wrap.dataset.likec4FitOnLoad || '').toLowerCase() === 'true' ? 1 : 0;
+      var fitDone = triggerLikeC4Control(doc, '.react-flow__controls-fitview', fitClicks);
+      var zoomOutDone = triggerLikeC4Control(doc, '.react-flow__controls-zoomout', getLikeC4ZoomOutSteps(wrap));
+      return !!(fitDone || zoomOutDone);
+    } catch (e) {
+      return false;
+    }
+  }
+  function scheduleLikeC4ViewportTuning(wrap, force) {
+    if (!wrap || !shouldTuneLikeC4Viewport(wrap)) return;
+    var iframe = wrap.querySelector('iframe');
+    var stamp = iframe ? (iframe.src || iframe.dataset.src || wrap.id || '') : (wrap.id || '');
+    if (force) delete wrap.dataset.likec4ViewportTunedFor;
+    if (!force && wrap.dataset.likec4ViewportTunedFor === stamp) return;
+    if (Array.isArray(wrap._likec4ViewportTimers)) {
+      wrap._likec4ViewportTimers.forEach(function(id) { window.clearTimeout(id); });
+    }
+    wrap._likec4ViewportTimers = [80, 220, 480].map(function(delay) {
+      return window.setTimeout(function() {
+        if (wrap.dataset.likec4ViewportTunedFor === stamp) return;
+        if (applyLikeC4ViewportTuning(wrap)) {
+          wrap.dataset.likec4ViewportTunedFor = stamp;
+        }
+      }, delay);
+    });
   }
   function toggleC2UnifiedView(btn) {
     var slide = btn.closest('.slide--c2-unified');
@@ -3103,45 +4195,61 @@ graph LR
     btn.setAttribute('aria-label', nextIsLikeC4 ? 'Afficher le bloc Mermaid' : 'Afficher le bloc code et l\'aperçu LikeC4');
     btn.textContent = nextIsLikeC4 ? 'Mermaid' : 'LikeC4';
 
-    if (nextIsLikeC4) {
-      slide.querySelectorAll('.embed-wrap iframe[data-src]').forEach(function(iframe) {
-        if (!iframe.src) {
-          iframe.src = iframe.dataset.src;
-        }
-      });
-    }
-
     window.requestAnimationFrame(function() {
       autoFit();
-      updateZoomLayout(slide.querySelector('.mermaid-wrap'));
+      var likec4Wrap = slide.querySelector('.c2-unified__view--likec4 .embed-wrap');
+      if (nextIsLikeC4 && likec4Wrap && likec4Wrap.classList.contains('is-loaded')) {
+        scheduleLikeC4ViewportTuning(likec4Wrap, true);
+      }
+      var mermaidWrap = slide.querySelector('.c2-unified__view--mermaid .mermaid-wrap');
+      if (mermaidWrap) {
+        updateZoomLayout(mermaidWrap);
+        scheduleCenterMermaidViewport(mermaidWrap, true);
+      }
     });
+  }
+  function toggleLiveCodingView(btn) {
+    var slide = btn.closest('.slide--live-coding');
+    if (!slide) return;
+    var current = slide.getAttribute('data-view') === 'detail' ? 'detail' : 'launcher';
+    var next = current === 'launcher' ? 'detail' : 'launcher';
+    slide.setAttribute('data-view', next);
+
+    var launcherButton = slide.querySelector('.live-coding__launcher-btn');
+    if (launcherButton) {
+      launcherButton.setAttribute('aria-expanded', String(next === 'detail'));
+    }
+
+    if (next === 'detail') {
+      var wrap = slide.querySelector('.live-coding__embed-wrap');
+      if (wrap) startEmbedLoad(wrap);
+    }
   }
   /* Lazy-load embeds when their slide becomes visible + detect load errors */
   (function initEmbeds() {
     document.querySelectorAll('.embed-wrap iframe[data-src]').forEach(function(iframe) {
-
       var wrap = iframe.closest('.embed-wrap');
-      var fallback = wrap.querySelector('.embed-fallback');
-      var loaded = false;
+      var manual = isManualEmbed(wrap);
+
+      ensureLikeC4PrimaryAction(wrap);
+      ensureManualEmbedLoader(wrap);
+      updateEmbedLoaderState(wrap, false);
+      updateLikeC4ActionState(wrap);
+
+      iframe.addEventListener('load', function() {
+        if (manual && !wrap._embedRequested) return;
+        markEmbedLoaded(wrap);
+        scheduleLikeC4ViewportTuning(wrap, true);
+      });
+
+      iframe.addEventListener('error', function() {
+        if (manual && !wrap._embedRequested) return;
+        showEmbedFallback(wrap);
+      });
 
       function tryLoad() {
-        if (loaded) return;
-        loaded = true;
-        iframe.src = iframe.dataset.src;
-
-        /* Detect load failure after a timeout — file:// iframes don't always fire error events */
-        setTimeout(function() {
-          try {
-            /* If we can access contentDocument, it loaded (same-origin file://) */
-            var doc = iframe.contentDocument || iframe.contentWindow.document;
-            if (!doc || !doc.body || doc.body.children.length === 0) {
-              if (fallback) fallback.classList.add('visible');
-            }
-          } catch (e) {
-            /* Cross-origin or blocked — show fallback */
-            if (fallback) fallback.classList.add('visible');
-          }
-        }, 3000);
+        if (manual) return;
+        startEmbedLoad(wrap);
       }
 
       /* Use IntersectionObserver to lazy-load when slide scrolls into view */
@@ -3160,23 +4268,94 @@ graph LR
 
   /* ============ Mermaid zoom controls ============ */
   function getInitialZoom(w){return parseFloat(w.dataset.initialZoom||'1')||1;}
+  function getCurrentZoom(w){var t=w&&w.querySelector?w.querySelector('.mermaid'):null;return parseFloat(t&&t.dataset.zoom||getInitialZoom(w))||getInitialZoom(w);}
+  function getZoomMin(w){var min=parseFloat(w&&w.dataset.zoomMin?w.dataset.zoomMin:'');return !isNaN(min)&&min>0?min:0.6;}
+  function getZoomMax(w){var max=parseFloat(w&&w.dataset.zoomMax?w.dataset.zoomMax:'');return !isNaN(max)&&max>getZoomMin(w)?max:4;}
+  function clampDiagramZoom(w,zoom){return Math.min(getZoomMax(w),Math.max(getZoomMin(w),zoom));}
+  function shouldCenterMermaidViewport(w,zoom){
+    if(!w)return false;
+    var mode=String(w.dataset.centerViewportOnReveal||'').toLowerCase();
+    var currentZoom=typeof zoom==='number'?zoom:getCurrentZoom(w);
+    if(mode==='true'||mode==='always')return true;
+    if(mode==='false'||mode==='never')return false;
+    return currentZoom>1.01;
+  }
   function updateZoomState(w){var t=w.querySelector('.mermaid');var z=parseFloat(t.dataset.zoom||getInitialZoom(w));w.classList.toggle('is-zoomed',z>1);}
+  function updateMermaidViewportAlignment(w){
+    if(!w)return;
+    var sc=w.querySelector('.mermaid-scroll');
+    var t=w.querySelector('.mermaid');
+    if(!sc||!t)return;
+    var overflowX=Math.ceil(t.offsetWidth)>sc.clientWidth+1;
+    var overflowY=Math.ceil(t.offsetHeight)>sc.clientHeight+1;
+    sc.classList.toggle('has-overflow-x',overflowX);
+    sc.classList.toggle('has-overflow-y',overflowY);
+    w.classList.toggle('can-pan',overflowX||overflowY||getCurrentZoom(w)>1.01);
+  }
   function updateZoomLayout(w){
     var t=w.querySelector('.mermaid');
     var z=parseFloat(t.dataset.zoom||getInitialZoom(w));
     var bw=parseFloat(t.dataset.baseW||'0');
     var bh=parseFloat(t.dataset.baseH||'0');
-    if(bw&&bh){t.style.width=Math.ceil(bw*z)+'px';t.style.height=Math.ceil(bh*z)+'px';}
+    if(bw&&bh){t.style.width=Math.ceil(bw*z)+'px';t.style.height=Math.ceil(bh*z)+'px';t.style.transform='none';}
+    updateMermaidViewportAlignment(w);
   }
-  function zoomDiagram(b,f){var w=b.closest('.mermaid-wrap');var t=w.querySelector('.mermaid');var c=parseFloat(t.dataset.zoom||getInitialZoom(w));var n=c*f;t.dataset.zoom=n;t.style.transform='scale('+n+')';updateZoomState(w);updateZoomLayout(w);}
-  function resetZoom(b){var w=b.closest('.mermaid-wrap');var t=w.querySelector('.mermaid');var z=getInitialZoom(w);t.dataset.zoom=String(z);t.style.transform='scale('+z+')';updateZoomState(w);updateZoomLayout(w);}
+  function setDiagramZoom(w,zoom,centerOnContent){
+    if(!w)return;
+    var t=w.querySelector('.mermaid');
+    if(!t)return;
+    t.dataset.zoom=String(clampDiagramZoom(w,zoom));
+    updateZoomState(w);
+    updateZoomLayout(w);
+    if(centerOnContent)scheduleCenterMermaidViewport(w,true);
+  }
+  function scheduleCenterMermaidViewport(w,force){
+    if(!w)return;
+    if(Array.isArray(w._centerViewportTimers))w._centerViewportTimers.forEach(function(id){window.clearTimeout(id);});
+    w._centerViewportTimers=[0,90,220].map(function(delay){
+      return window.setTimeout(function(){
+        updateZoomLayout(w);
+        queueCenterMermaidViewport(w,force);
+      },delay);
+    });
+  }
+  function queueCenterMermaidViewport(w,force){
+    if(!w)return;
+    var sc=w.querySelector('.mermaid-scroll');
+    var t=w.querySelector('.mermaid');
+    var svg=w.querySelector('.mermaid svg');
+    if(!sc||!t||!svg)return;
+    var zoom=getCurrentZoom(w);
+    if(!shouldCenterMermaidViewport(w,zoom)){delete w.dataset.centeredZoom;return;}
+    var zoomKey=String(zoom);
+    if(!force&&w.dataset.centeredZoom===zoomKey)return;
+    window.requestAnimationFrame(function(){window.requestAnimationFrame(function(){var scRect=sc.getBoundingClientRect();var svgRect=svg.getBoundingClientRect();var contentLeft=sc.scrollLeft+(svgRect.left-scRect.left);var contentTop=sc.scrollTop+(svgRect.top-scRect.top);var renderLeft=contentLeft;var renderTop=contentTop;var renderWidth=svgRect.width;var renderHeight=svgRect.height;try{var box=typeof svg.getBBox==='function'?svg.getBBox():null;var viewBox=svg.viewBox&&svg.viewBox.baseVal;var viewBoxX=viewBox&&isFinite(viewBox.x)?viewBox.x:0;var viewBoxY=viewBox&&isFinite(viewBox.y)?viewBox.y:0;var viewBoxW=(viewBox&&viewBox.width)||svg.clientWidth||svgRect.width||1;var viewBoxH=(viewBox&&viewBox.height)||svg.clientHeight||svgRect.height||1;var scaleX=svgRect.width/viewBoxW;var scaleY=svgRect.height/viewBoxH;if(box&&box.width&&box.height&&isFinite(scaleX)&&scaleX>0&&isFinite(scaleY)&&scaleY>0){renderLeft=contentLeft+((box.x-viewBoxX)*scaleX);renderTop=contentTop+((box.y-viewBoxY)*scaleY);renderWidth=box.width*scaleX;renderHeight=box.height*scaleY;}}catch(e){}var targetLeft=renderLeft+(renderWidth*0.5)-(sc.clientWidth*0.5);var targetTop=renderTop+(renderHeight*0.5)-(sc.clientHeight*0.5);var maxScrollLeft=Math.max(0,sc.scrollWidth-sc.clientWidth);var maxScrollTop=Math.max(0,sc.scrollHeight-sc.clientHeight);sc.scrollLeft=Math.max(0,Math.min(maxScrollLeft,Math.round(targetLeft)));sc.scrollTop=Math.max(0,Math.min(maxScrollTop,Math.round(targetTop)));w.dataset.centeredZoom=zoomKey;});});
+  }
+  function zoomDiagram(b,f){var w=b.closest('.mermaid-wrap');setDiagramZoom(w,getCurrentZoom(w)*f,true);}
+  function resetZoom(b){var w=b.closest('.mermaid-wrap');setDiagramZoom(w,getInitialZoom(w),true);}
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.zoom-controls button[data-zoom-action]');
+    if (!btn) return;
+    e.preventDefault();
+    var action = btn.dataset.zoomAction;
+    if (action === 'reset') {
+      resetZoom(btn);
+      return;
+    }
+    var factor = parseFloat(btn.dataset.zoomFactor || '1');
+    if (!isFinite(factor) || factor <= 0 || factor === 1) return;
+    zoomDiagram(btn, factor);
+  });
   document.querySelectorAll('.mermaid-wrap').forEach(function(w){
     var sc=w.querySelector('.mermaid-scroll')||w;
-    w.addEventListener('wheel',function(e){if(!e.ctrlKey&&!e.metaKey)return;e.preventDefault();var t=w.querySelector('.mermaid');var c=parseFloat(t.dataset.zoom||getInitialZoom(w));var f=e.deltaY<0?1.1:0.9;var n=c*f;t.dataset.zoom=n;t.style.transform='scale('+n+')';updateZoomState(w);updateZoomLayout(w);},{passive:false});
-    var sX,sY,sL,sT;
-    w.addEventListener('mousedown',function(e){if(e.target.closest('.zoom-controls'))return;e.preventDefault();w.classList.add('is-panning');sX=e.clientX;sY=e.clientY;sL=sc.scrollLeft;sT=sc.scrollTop;});
-    window.addEventListener('mousemove',function(e){if(!w.classList.contains('is-panning'))return;sc.scrollLeft=sL-(e.clientX-sX);sc.scrollTop=sT-(e.clientY-sY);});
-    window.addEventListener('mouseup',function(){w.classList.remove('is-panning');});
+    w.addEventListener('wheel',function(e){var freeWheel=String(w.dataset.wheelZoom||'').toLowerCase()==='true';if(!freeWheel&&!e.ctrlKey&&!e.metaKey)return;e.preventDefault();setDiagramZoom(w,getCurrentZoom(w)*(e.deltaY<0?1.1:0.9),true);},{passive:false});
+    var activePointerId=null,sX,sY,sL,sT;
+    sc.addEventListener('pointerdown',function(e){if(e.pointerType==='touch'||e.button!==0||e.target.closest('.zoom-controls')||!w.classList.contains('can-pan'))return;e.preventDefault();activePointerId=e.pointerId;w.classList.add('is-panning');sX=e.clientX;sY=e.clientY;sL=sc.scrollLeft;sT=sc.scrollTop;if(sc.setPointerCapture)sc.setPointerCapture(e.pointerId);});
+    sc.addEventListener('pointermove',function(e){if(activePointerId!==e.pointerId||!w.classList.contains('is-panning'))return;sc.scrollLeft=sL-(e.clientX-sX);sc.scrollTop=sT-(e.clientY-sY);});
+    function stopPan(e){if(activePointerId===null)return;if(e&&typeof e.pointerId==='number'&&e.pointerId!==activePointerId)return;activePointerId=null;w.classList.remove('is-panning');}
+    sc.addEventListener('pointerup',stopPan);
+    sc.addEventListener('pointercancel',stopPan);
+    sc.addEventListener('lostpointercapture',stopPan);
   });
 
   /* ============ Codespace popup ============ */
@@ -3276,7 +4455,7 @@ graph LR
   };
   SlideEngine.prototype.observe=function(){
     var self=this;
-    var obs=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');self.current=self.slides.indexOf(entry.target);self.update();}});},{threshold:0.5});
+    var obs=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');entry.target.querySelectorAll('.mermaid-wrap').forEach(function(w){scheduleCenterMermaidViewport(w,true);});self.current=self.slides.indexOf(entry.target);self.update();}});},{threshold:0.5});
     this.slides.forEach(function(s){obs.observe(s);});
     /* Restore slide from URL hash on load — use instant scroll to avoid
        IntersectionObserver race conditions during smooth-scroll */

@@ -647,9 +647,9 @@ CSS `zoom` actually changes the element's layout size. The content grows downwar
 ```html
 <div class="mermaid-wrap">
   <div class="zoom-controls">
-    <button onclick="zoomDiagram(this, 1.2)" title="Zoom in">+</button>
-    <button onclick="zoomDiagram(this, 0.8)" title="Zoom out">&minus;</button>
-    <button onclick="resetZoom(this)" title="Reset zoom">&#8634;</button>
+    <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom in">+</button>
+    <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom out">&minus;</button>
+    <button type="button" data-zoom-action="reset" title="Reset zoom">&#8634;</button>
   </div>
   <pre class="mermaid">
     graph TD
@@ -681,6 +681,20 @@ function resetZoom(btn) {
   target.dataset.zoom = INITIAL_ZOOM;
   target.style.zoom = INITIAL_ZOOM;
 }
+
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.zoom-controls button[data-zoom-action]');
+  if (!btn) return;
+  e.preventDefault();
+  var action = btn.dataset.zoomAction;
+  if (action === 'reset') {
+    resetZoom(btn);
+    return;
+  }
+  var factor = parseFloat(btn.dataset.zoomFactor || '1');
+  if (!isFinite(factor) || factor <= 0 || factor === 1) return;
+  zoomDiagram(btn, factor);
+});
 
 document.querySelectorAll('.mermaid-wrap').forEach(function(wrap) {
   // Ctrl/Cmd + scroll to zoom
@@ -717,6 +731,8 @@ document.querySelectorAll('.mermaid-wrap').forEach(function(wrap) {
 ```
 
 Scroll-to-zoom requires Ctrl/Cmd+scroll to avoid hijacking normal page scroll. Cursor changes to `grab`/`grabbing` to signal pan mode. The zoom range is capped at 0.5x–5x.
+
+Use `data-zoom-action` / `data-zoom-factor` plus one delegated click handler instead of inline `onclick` attributes. The pattern is more robust in slide decks that mix module and non-module scripts, and it keeps the HTML snippet reusable.
 
 ## Grid Layouts
 

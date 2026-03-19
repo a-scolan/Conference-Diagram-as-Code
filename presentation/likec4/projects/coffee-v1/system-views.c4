@@ -55,5 +55,7 @@ views 'Use Cases' {
     barista -> alefestCoffee.preparationService 'PATCH status preparing/ready'
     alefestCoffee.preparationService -> alefestCoffee.eventBus 'order.preparing/order.ready'
     barista -> festivalier 'Remet le café'
+
+	include alefestCoffee
   }
 }

@@ -685,9 +685,9 @@ Full-viewport Mermaid diagram. Max 8–10 nodes (presentation scale — fewer, l
   <h2 class="slide__heading reveal">Diagram Title</h2>
   <div class="mermaid-wrap reveal" style="flex:1; min-height:0;">
     <div class="zoom-controls">
-      <button onclick="zoomDiagram(this,1.2)" title="Zoom in">+</button>
-      <button onclick="zoomDiagram(this,0.8)" title="Zoom out">&minus;</button>
-      <button onclick="resetZoom(this)" title="Reset">&#8634;</button>
+      <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom in">+</button>
+      <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom out">&minus;</button>
+      <button type="button" data-zoom-action="reset" title="Reset">&#8634;</button>
     </div>
     <pre class="mermaid">
       graph TD

@@ -4,11 +4,12 @@ const { spawnSync } = require('child_process');
 
 const presentationDir = __dirname;
 const publicAssetsDir = path.join(presentationDir, 'public', 'assets');
-const likec4Bin = path.join(
+const likec4CliEntry = path.join(
   presentationDir,
   'node_modules',
-  '.bin',
-  process.platform === 'win32' ? 'likec4.cmd' : 'likec4'
+  'likec4',
+  'bin',
+  'likec4.mjs'
 );
 
 const projects = [
@@ -22,28 +23,11 @@ const projects = [
   },
 ];
 
-function quoteForWindowsCmd(value) {
-  const stringValue = String(value);
-
-  if (!/[\s"&()^<>|]/.test(stringValue)) {
-    return stringValue;
-  }
-
-  return `"${stringValue.replace(/"/g, '""')}"`;
-}
-
 function spawnCommand(command, args, cwd) {
-  if (process.platform === 'win32') {
-    const commandLine = [command, ...args].map(quoteForWindowsCmd).join(' ');
-    return spawnSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', commandLine], {
-      cwd,
-      stdio: 'inherit',
-    });
-  }
-
   return spawnSync(command, args, {
     cwd,
     stdio: 'inherit',
+    windowsHide: true,
   });
 }
 
@@ -52,9 +36,9 @@ function ensureDir(dirPath) {
 }
 
 function ensureLikeC4Installed() {
-  if (!fs.existsSync(likec4Bin)) {
+  if (!fs.existsSync(likec4CliEntry)) {
     throw new Error(
-      `Binaire LikeC4 introuvable: ${likec4Bin}. Exécute d'abord "npm install" dans presentation/.`
+      `Entrée CLI LikeC4 introuvable: ${likec4CliEntry}. Exécute d'abord "npm install" dans presentation/.`
     );
   }
 }
@@ -83,8 +67,9 @@ function runLikeC4Build({ projectName, assetFolder }) {
   ensureDir(outputDir);
 
   const result = spawnCommand(
-    likec4Bin,
+    process.execPath,
     [
+      likec4CliEntry,
       'build',
       '.',
       '--output',

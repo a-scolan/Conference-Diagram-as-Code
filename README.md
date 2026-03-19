@@ -19,6 +19,10 @@ npm start
 
 Puis ouvrez `http://localhost:4000/presentation-diagram-as-code.html`.
 
+Les vues **LikeC4** intégrées dans les slides se chargent désormais **à la demande** : le bouton *Rendu LikeC4* est visible avant chargement puis disparaît automatiquement une fois le schéma affiché, avec un délai de fallback plus tolérant pour éviter les faux échecs au démarrage.
+
+Les slides **Mermaid** interactives utilisent désormais un cadrage plus large, un recentrage fiable, le zoom via boutons ou molette sur les vues dédiées, et un **mouse-pan** par glisser-déposer quand le diagramme dépasse le cadre.
+
 ## Publier la présentation sur GitHub Pages
 
 Un workflow CI/CD est fourni dans `.github/workflows/github-pages.yml`.
@@ -53,32 +57,36 @@ Ils :
 
 ## Explorer les modèles LikeC4
 
-Les projets principaux sont :
+Les projets principaux sont dans `presentation/likec4/projects/` :
 
-- `projects/coffee-v1` — **AleFest Coffee V1 - Le Comptoir** (version démo conférence)
-- `projects/coffee-v2` — **AleFest Coffee V2 - Le Café Mobile** (version démo conférence)
-- `projects/alefest-v1` — AleFest Coffee V1 (version originale complète)
-- `projects/alefest-v2` — AleFest Coffee V2 (version originale complète)
-- `projects/exemple-likeC4` — exemple minimal pédagogique
-- `projects/shared` — spécifications et ressources partagées
+- `presentation/likec4/projects/coffee-adr001` — **ADR-001 fidèle au besoin initial comptoir**
+- `presentation/likec4/projects/coffee-v1` — **AleFest Coffee V1 - Le Comptoir** (version démo conférence)
+- `presentation/likec4/projects/coffee-v2` — **AleFest Coffee V2 - Le Café Mobile** (version démo conférence)
+- `presentation/likec4/projects/alefest-v1` — AleFest Coffee V1 (version originale complète)
+- `presentation/likec4/projects/alefest-v2` — AleFest Coffee V2 (version originale complète)
+- `presentation/likec4/projects/exemple-likeC4` — exemple minimal pédagogique
+- `presentation/likec4/projects/shared` — spécifications et ressources partagées
 
 Pour lancer un projet LikeC4 en local :
 
 ```bash
-cd projects/coffee-v2
+cd presentation/likec4/projects/coffee-v2
 npx likec4 serve
 ```
 
-Vous pouvez faire la même chose avec `projects/coffee-v1` pour comparer les deux versions.
+Vous pouvez faire la même chose avec `presentation/likec4/projects/coffee-v1` pour comparer les deux versions,
+ou avec `presentation/likec4/projects/coffee-adr001` pour explorer la modélisation issue directement de l'ADR.
 
 ## Fichiers clés
 
 - `AleFest.md` — décision architecturale et contexte métier source
-- `projects/coffee-v2/system-model.c4` — modèle système V2
-- `projects/coffee-v2/system-views.c4` — vues C1, C2 et dynamiques
+- `presentation/likec4/projects/coffee-adr001/system-model.c4` — modèle ADR-001 fidèle au besoin initial
+- `presentation/likec4/projects/coffee-adr001/system-views.c4` — vues C1, C2 et scénario dynamique ADR-001
+- `presentation/likec4/projects/coffee-v2/system-model.c4` — modèle système V2
+- `presentation/likec4/projects/coffee-v2/system-views.c4` — vues C1, C2 et dynamiques
 - `presentation/public/assets/coffee-v1-single/index.html` — build single-file LikeC4 pour la V1
 - `presentation/public/assets/coffee-v2-single/index.html` — build single-file LikeC4 pour la V2
-- `presentation/build-single-assets.js` — script de synchronisation des builds LikeC4 vers les assets publics
+- `presentation/build-single-assets.js` — script de synchronisation des builds LikeC4 vers les assets publics, en utilisant la dépendance locale `presentation/node_modules/likec4`
 - `Draft déroulé.md` — déroulé éditorial de la session
 
 ## Structure rapide

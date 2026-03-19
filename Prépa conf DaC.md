@@ -17,6 +17,6 @@ revue/démo/dry run hebdo
 - [x] Mettre en place un outil cible ⏫ ➕ 2026-02-20 📅 2026-02-27
 - [x] Définir un point de départ et d'arrivée ⏫ ➕ 2026-02-20 📅 2026-02-27 ✅ 2026-03-10
 - [x] un début de déroulé éprouvé 🔼 ➕ 2026-02-20 📅 2026-02-27 ✅ 2026-03-10
-- [ ] peaufiner le déroulé 🔼 ➕ 2026-03-10 📅 2026-03-12 
+- [x] peaufiner le déroulé 🔼 ➕ 2026-03-10 📅 2026-03-12 
 
 
