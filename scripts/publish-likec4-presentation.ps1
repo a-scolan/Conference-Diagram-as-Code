@@ -14,12 +14,12 @@ if ($null -eq $OutPath) {
   $OutPath = Join-Path $RootDir $OutDir
 }
 
-Write-Host "[1/6] Nettoyage export: $OutPath"
+Write-Host "[1/7] Nettoyage export: $OutPath"
 if (Test-Path $OutPath) { Remove-Item -Recurse -Force $OutPath }
 New-Item -ItemType Directory -Force -Path (Join-Path $OutPath ".github/workflows") | Out-Null
 New-Item -ItemType Directory -Force -Path (Join-Path $OutPath "likec4/projects") | Out-Null
 
-Write-Host "[2/6] Copie des fichiers strictement nécessaires"
+Write-Host "[2/7] Copie des fichiers strictement nécessaires"
 Copy-Item (Join-Path $SrcDir "package.json") $OutPath
 Copy-Item (Join-Path $SrcDir "package-lock.json") $OutPath
 Copy-Item (Join-Path $SrcDir "build-single-assets.js") $OutPath
@@ -39,7 +39,7 @@ foreach ($p in $toRemove) {
   if (Test-Path $full) { Remove-Item -Recurse -Force $full }
 }
 
-Write-Host "[3/6] Écriture workflow GitHub Pages + fichiers racine"
+Write-Host "[3/7] Écriture workflow GitHub Pages + fichiers racine"
 @'
 name: Deploy presentation to GitHub Pages
 
@@ -162,19 +162,32 @@ Repo minimal pour builder et publier la présentation sur GitHub Pages.
 Le site statique servi par Pages est dans `public/`.
 "@ | Set-Content -NoNewline (Join-Path $OutPath "README.md")
 
-Write-Host "[4/6] Validation build"
+Write-Host "[4/7] Validation build"
 Push-Location $OutPath
 npm ci
 npm run build
 Pop-Location
 
-Write-Host "[5/6] Commit"
+Write-Host "[5/7] Copie du code source LikeC4 dans public/"
+$SourceOut = Join-Path $OutPath "public/likec4-source"
+New-Item -ItemType Directory -Force -Path $SourceOut | Out-Null
+foreach ($project in @("coffee-v1", "coffee-v2")) {
+  $projOut = Join-Path $SourceOut $project
+  New-Item -ItemType Directory -Force -Path $projOut | Out-Null
+  Copy-Item (Join-Path $OutPath "likec4/projects/$project/*.c4") $projOut
+  Copy-Item (Join-Path $OutPath "likec4/projects/$project/likec4.config.ts") $projOut
+}
+$sharedOut = Join-Path $SourceOut "shared"
+New-Item -ItemType Directory -Force -Path $sharedOut | Out-Null
+Copy-Item (Join-Path $OutPath "likec4/projects/shared/*.c4") $sharedOut
+
+Write-Host "[6/7] Commit"
 Push-Location $OutPath
 git init -b main | Out-Null
 git add .
 git commit -m "chore: publish minimal presentation" | Out-Null
 
-Write-Host "[6/6] Push -> $TargetRepo"
+Write-Host "[7/7] Push -> $TargetRepo"
 git remote add origin $TargetRepo
 if ($NoForcePush) {
   git push -u origin main

@@ -10,11 +10,11 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 SRC_DIR="$ROOT_DIR/presentation"
 OUT_PATH="$(cd "$ROOT_DIR" && mkdir -p "$(dirname "$OUT_DIR")" && cd "$(dirname "$OUT_DIR")" && pwd)/$(basename "$OUT_DIR")"
 
-echo "[1/6] Nettoyage export: $OUT_PATH"
+echo "[1/7] Nettoyage export: $OUT_PATH"
 rm -rf "$OUT_PATH"
 mkdir -p "$OUT_PATH/.github/workflows" "$OUT_PATH/likec4/projects"
 
-echo "[2/6] Copie des fichiers strictement nécessaires"
+echo "[2/7] Copie des fichiers strictement nécessaires"
 cp "$SRC_DIR/package.json" "$OUT_PATH/"
 cp "$SRC_DIR/package-lock.json" "$OUT_PATH/"
 cp "$SRC_DIR/build-single-assets.js" "$OUT_PATH/"
@@ -24,7 +24,7 @@ cp -R "$SRC_DIR/likec4/projects/coffee-v2" "$OUT_PATH/likec4/projects/"
 cp -R "$SRC_DIR/likec4/projects/shared" "$OUT_PATH/likec4/projects/"
 rm -rf "$OUT_PATH/likec4/projects/coffee-v1/dist" "$OUT_PATH/likec4/projects/coffee-v1/dist copy" "$OUT_PATH/likec4/projects/coffee-v1/png" "$OUT_PATH/likec4/projects/coffee-v2/dist"
 
-echo "[3/6] Écriture workflow GitHub Pages + fichiers racine"
+echo "[3/7] Écriture workflow GitHub Pages + fichiers racine"
 cat > "$OUT_PATH/.github/workflows/github-pages.yml" <<'YAML'
 name: Deploy presentation to GitHub Pages
 
@@ -147,13 +147,24 @@ Repo minimal pour builder et publier la présentation sur GitHub Pages.
 Le site statique servi par Pages est dans `public/`.
 MD
 
-echo "[4/6] Validation build"
+echo "[4/7] Validation build"
 (cd "$OUT_PATH" && npm ci && npm run build)
 
-echo "[5/6] Commit"
+echo "[5/7] Copie du code source LikeC4 dans public/"
+SOURCE_OUT="$OUT_PATH/public/likec4-source"
+mkdir -p "$SOURCE_OUT"
+for project in coffee-v1 coffee-v2; do
+  mkdir -p "$SOURCE_OUT/$project"
+  cp "$OUT_PATH/likec4/projects/$project/"*.c4 "$SOURCE_OUT/$project/"
+  cp "$OUT_PATH/likec4/projects/$project/likec4.config.ts" "$SOURCE_OUT/$project/"
+done
+mkdir -p "$SOURCE_OUT/shared"
+cp "$OUT_PATH/likec4/projects/shared/"*.c4 "$SOURCE_OUT/shared/"
+
+echo "[6/7] Commit"
 (cd "$OUT_PATH" && git init -b main >/dev/null && git add . && git commit -m "chore: publish minimal presentation" >/dev/null)
 
-echo "[6/6] Push -> $TARGET_REPO"
+echo "[7/7] Push -> $TARGET_REPO"
 if [[ "$FORCE_PUSH" == "true" ]]; then
   (cd "$OUT_PATH" && git remote add origin "$TARGET_REPO" && git push -u origin main --force)
 else
