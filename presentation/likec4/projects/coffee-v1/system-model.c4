@@ -15,10 +15,6 @@ model {
     '''
   }
 
-  extend festivalier {
-	
-  }
-
   barista = Actor_Staff 'Barista' {
     style {
       icon @/lucide-static/badge.svg
@@ -60,7 +56,7 @@ model {
         Écran de file de préparation en temps réel.
       '''
     }
-
+	
     orderService = Container_Api 'Service de Commandes' {
       technology 'Node.js, Express, RabbitMQ client'
       style {
