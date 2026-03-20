@@ -1407,6 +1407,7 @@
     .slide--adr-preview {
       --code-preview-code-col: 1fr;
       --code-preview-preview-col: 1fr;
+      --code-preview-chip-line: 18px;
     }
     .slide--adr-preview .slide__heading {
       text-align: center;
@@ -1415,6 +1416,13 @@
     .slide--adr-preview .slide__code-block code {
       font-size: 20px;
       line-height: 1.5;
+    }
+    .slide--adr-preview .slide__code-block {
+      margin-top: calc(var(--code-preview-chip-line) + 6px);
+      padding-top: clamp(24px, 3vh, 30px);
+    }
+    .slide--adr-preview .slide__code-block pre {
+      justify-content: flex-start;
     }
     .slide--adr-preview .embed-wrap {
       background: #ffffff;
@@ -2240,7 +2248,7 @@
 
   .qr-spotlight {
     position: relative; display: flex; align-items: center; justify-content: center;
-    width: min(100%, 332px); aspect-ratio: 1 / 1; min-height: auto; padding: 12px; border-radius: 22px;
+    width: min(100%, 312px); aspect-ratio: 1 / 1; min-height: auto; padding: 12px; border-radius: 22px;
     background: linear-gradient(155deg, rgba(22,32,88,0.96), rgba(12,18,56,0.96));
     border: 1px solid rgba(251, 254, 122, 0.12);
     box-shadow: 0 18px 46px rgba(0,0,0,0.20);
@@ -2431,13 +2439,13 @@
         <h2 class="slide__heading reveal" style="font-size:clamp(40px,6vw,72px); line-height:0.95; margin:0;">Alexis Scolan</h2>
         <p class="speaker-intro__role reveal">Architecte technique chez <strong style="color:var(--accent);">onepoint</strong></p>
 		<br>
-        <p class="speaker-intro__lead reveal">J'aide les &eacute;quipes &agrave; garder une <strong>architecture lisible et vivante</strong>, avec une <strong>approche concr&egrave;te et pragmatique</strong>, align&eacute;e avec le terrain et compr&eacute;hensible par tous les acteurs.</p>
+        <p class="speaker-intro__lead reveal">J'aide les &eacute;quipes &agrave; garder une <strong>architecture lisible et vivante</strong>, avec une <strong>approche concr&egrave;te et pragmatique</strong>, compr&eacute;hensible par tous les acteurs.</p>
         <br>
 		<div class="speaker-pill-list reveal">
-          <span class="speaker-pill">Diagram as Code</span>
-          <span class="speaker-pill">C4 model</span>
-          <span class="speaker-pill">Architecture agile</span>
-        </div>
+			<span class="speaker-pill" style="background: rgba(251, 254, 122, 0.12); border-color: rgba(251, 254, 122, 0.28);">Diagram as Code</span>
+			<span class="speaker-pill" style="background: rgba(15, 158, 213, 0.12); border-color: rgba(15, 158, 213, 0.28);">C4 model</span>
+			<span class="speaker-pill" style="background: rgba(92, 192, 56, 0.12); border-color: rgba(92, 192, 56, 0.28);">Architecture agile</span>
+		</div>
       </div>
     </div>
   </section>
@@ -3175,7 +3183,7 @@ Créer un système de prise de commande numérique au comptoir avec :
     <h2 class="slide__heading reveal">La pull request</h2>
     <p class="slide__body reveal">La PR r&eacute;pond ensuite &agrave; ces questions d'un coup d'oeil&nbsp;: branche relue, point de divergence et commit rep&egrave;re.</p>
     <div class="slide__inner">
-      <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="3.2" data-initial-zoom="1.58" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
+      <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="3.2" data-initial-zoom="1.30" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
         <div class="zoom-controls" role="toolbar" aria-label="Commandes de zoom du diagramme git">
           <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom avant" aria-label="Zoom avant">+</button>
           <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom arri&egrave;re" aria-label="Zoom arri&egrave;re">&minus;</button>
@@ -3275,6 +3283,94 @@ graph LR
     </div>
   </section>
   
+  
+  <section class="slide slide--table" data-nav="Avant / Après">
+    <h2 class="slide__heading reveal">Le paradoxe r&eacute;concili&eacute;&nbsp;: avant / apr&egrave;s</h2>
+    <div class="table-wrap reveal" style="flex:1; min-height:0; margin-top:clamp(8px,1.5vh,20px);">
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Sujet</th>
+              <th>Avant &middot; le dessing</th>
+              <th>Apr&egrave;s &middot; le diagram as code</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Source de v&eacute;rit&eacute;</strong></td>
+              <td>Diluée dans Visio, Confluence et le souvenir du dernier atelier</td>
+              <td>Le mod&egrave;le <code>.c4</code> dans Git</td>
+            </tr>
+            <tr>
+              <td><strong>Mise &agrave; jour</strong></td>
+              <td>Nouveau fichier, nouveau dessin</td>
+              <td>Modifier et capitaliser sur l'existant</td>
+            </tr>
+            <tr>
+              <td><strong>Git / PR</strong></td>
+              <td>Le diagramme est sauvegardé quelque part</td>
+              <td>Suivi de version</td>
+            </tr>
+            <tr>
+              <td><strong>Validation</strong></td>
+              <td>Ambiguité sémantique, manque de cohérence</td>
+              <td>Vue g&eacute;n&eacute;r&eacute;e, diff lisible, review partag&eacute;e</td>
+            </tr>
+            <tr>
+              <td><strong>CI/CD</strong></td>
+              <td>Bouton d'export</td>
+              <td>Validation et publication intégrées, comme une livraison de code!</td>
+            </tr>
+            <tr>
+              <td><strong>Prise en main</strong></td>
+              <td>Difficile de produire un sch&eacute;ma fiable et à jour</td>
+              <td>Mon LLM fait presque tout</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+  
+  <section class="slide slide--content slide--portal-vivant" data-nav="Portail vivant" style="background-image:radial-gradient(ellipse at 20% 30%, var(--green-dim) 0%, transparent 40%);">
+    <p class="slide__label reveal">Une architecture vivante et palpitante</p>
+    <h2 class="slide__heading reveal">LikeC4 ne produit pas que des images, mais une app React intégrable</h2>
+    <div class="slide__inner">
+      <div>
+        <ul class="slide__bullets">
+          <li class="reveal">Navigation au clic&nbsp;: de la vue globale au d&eacute;tail</li>
+          <li class="reveal">Liens vers les fichiers du mod&egrave;le et vers les vues g&eacute;n&eacute;r&eacute;es</li>
+          <li class="reveal">Plusieurs publics, plusieurs lectures, <strong>une seule source</strong></li>
+		  <li class="reveal">Intégration de modèles entre eux</li>
+		  <li class="reveal">Export : d2, plantuml, mermaid, png...</li>
+          <li class="reveal"><strong>Le cockpit de votre syst&egrave;me</strong>, pas un screenshot fig&eacute;</li>
+        </ul>
+      </div>
+      <div class="slide__aside reveal">
+        <svg viewBox="0 0 160 160" width="480" height="480">
+          
+          <rect x="10" y="20" width="140" height="110" rx="6" fill="var(--surface)" stroke="var(--border-bright)" stroke-width="1.5"/>
+          <rect x="10" y="20" width="140" height="24" rx="6" fill="var(--surface2)"/>
+          <circle cx="24" cy="32" r="4" fill="#e97132" opacity="0.6"/>
+          <circle cx="36" cy="32" r="4" fill="#fbfe7a" opacity="0.6"/>
+          <circle cx="48" cy="32" r="4" fill="#4ea72e" opacity="0.6"/>
+          <rect x="60" y="26" width="80" height="12" rx="3" fill="var(--surface-elevated)"/>
+          <text x="100" y="36" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--text-dim)">localhost:3000</text>
+          
+          <rect x="30" y="58" width="40" height="18" rx="3" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="1"/>
+          <text x="50" y="70" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--accent)">Client</text>
+          <line x1="70" y1="67" x2="90" y2="67" stroke="var(--text-dim)" stroke-width="1" marker-end="url(#arr)"/>
+          <rect x="90" y="58" width="40" height="18" rx="3" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1"/>
+          <text x="110" y="70" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--accent3)">API</text>
+          
+          <polygon points="105,95 115,105 108,105" fill="var(--accent)" opacity="0.8"/>
+          <text x="90" y="138" text-anchor="middle" font-family="var(--font-mono)" font-size="8" fill="var(--text-dim)">NAVIGABLE</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+  
   <section class="slide slide--content slide--code-preview slide--diagram-flow slide--c2-unified" data-nav="Vue C2 + likeC4" data-view="mermaid" style="background-image:radial-gradient(ellipse at 50% 80%, var(--accent-dim) 0%, transparent 40%);">
     <button
       class="c2-unified__toggle"
@@ -3341,7 +3437,7 @@ graph LR
             </div>
           </div>
           <div class="slide__aside reveal c2-mermaid__pane c2-mermaid__pane--diagram code-preview__pane code-preview__pane--embed">
-              <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="2.2" data-initial-zoom="0.72" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
+              <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="2.2" data-initial-zoom="1.1" data-zoom-min="0.2" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
               <div class="zoom-controls" role="toolbar" aria-label="Commandes de zoom du diagramme C2 Mermaid">
                 <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom avant" aria-label="Zoom avant">+</button>
                 <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom arri&egrave;re" aria-label="Zoom arri&egrave;re">&minus;</button>
@@ -3469,94 +3565,6 @@ flowchart TD
     </div>
   </section>
 
-  
-  <section class="slide slide--table" data-nav="Avant / Après">
-    <h2 class="slide__heading reveal">Le paradoxe r&eacute;concili&eacute;&nbsp;: avant / apr&egrave;s</h2>
-    <div class="table-wrap reveal" style="flex:1; min-height:0; margin-top:clamp(8px,1.5vh,20px);">
-      <div class="table-scroll">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Sujet</th>
-              <th>Avant &middot; le dessing</th>
-              <th>Apr&egrave;s &middot; le diagram as code</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Source de v&eacute;rit&eacute;</strong></td>
-              <td>Diluée dans Visio, Confluence et le souvenir du dernier atelier</td>
-              <td>Le mod&egrave;le <code>.c4</code> dans Git</td>
-            </tr>
-            <tr>
-              <td><strong>Mise &agrave; jour</strong></td>
-              <td>Nouveau fichier, nouveau dessin</td>
-              <td>Modifier et capitaliser sur l'existant</td>
-            </tr>
-            <tr>
-              <td><strong>Git / PR</strong></td>
-              <td>Le diagramme est sauvegardé quelque part</td>
-              <td>Suivi de version</td>
-            </tr>
-            <tr>
-              <td><strong>Validation</strong></td>
-              <td>Ambiguité sémantique, manque de cohérence</td>
-              <td>Vue g&eacute;n&eacute;r&eacute;e, diff lisible, review partag&eacute;e</td>
-            </tr>
-            <tr>
-              <td><strong>CI/CD</strong></td>
-              <td>Bouton d'export</td>
-              <td>Validation et publication intégrées, comme une livraison de code!</td>
-            </tr>
-            <tr>
-              <td><strong>Prise en main</strong></td>
-              <td>Difficile de g&eacute;n&eacute;rer un sch&eacute;ma fiable et à jou</td>
-              <td>Mon LLM fait presque tout !</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-  
-  <section class="slide slide--content slide--portal-vivant" data-nav="Portail vivant" style="background-image:radial-gradient(ellipse at 20% 30%, var(--green-dim) 0%, transparent 40%);">
-    <p class="slide__label reveal">Une architecture vivante et palpitante</p>
-    <h2 class="slide__heading reveal">LikeC4 ne produit pas que des images, mais une app React intégrable</h2>
-    <div class="slide__inner">
-      <div>
-        <ul class="slide__bullets">
-          <li class="reveal">Navigation au clic&nbsp;: de la vue globale au d&eacute;tail</li>
-          <li class="reveal">Liens vers les fichiers du mod&egrave;le et vers les vues g&eacute;n&eacute;r&eacute;es</li>
-          <li class="reveal">Plusieurs publics, plusieurs lectures, <strong>une seule source</strong></li>
-		  <li class="reveal">Intégration de modèles entre eux</li>
-		  <li class="reveal">Export : d2, plantuml, mermaid, png...</li>
-          <li class="reveal"><strong>Le cockpit de votre syst&egrave;me</strong>, pas un screenshot fig&eacute;</li>
-        </ul>
-      </div>
-      <div class="slide__aside reveal">
-        <svg viewBox="0 0 160 160" width="480" height="480">
-          
-          <rect x="10" y="20" width="140" height="110" rx="6" fill="var(--surface)" stroke="var(--border-bright)" stroke-width="1.5"/>
-          <rect x="10" y="20" width="140" height="24" rx="6" fill="var(--surface2)"/>
-          <circle cx="24" cy="32" r="4" fill="#e97132" opacity="0.6"/>
-          <circle cx="36" cy="32" r="4" fill="#fbfe7a" opacity="0.6"/>
-          <circle cx="48" cy="32" r="4" fill="#4ea72e" opacity="0.6"/>
-          <rect x="60" y="26" width="80" height="12" rx="3" fill="var(--surface-elevated)"/>
-          <text x="100" y="36" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--text-dim)">localhost:3000</text>
-          
-          <rect x="30" y="58" width="40" height="18" rx="3" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="1"/>
-          <text x="50" y="70" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--accent)">Client</text>
-          <line x1="70" y1="67" x2="90" y2="67" stroke="var(--text-dim)" stroke-width="1" marker-end="url(#arr)"/>
-          <rect x="90" y="58" width="40" height="18" rx="3" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1"/>
-          <text x="110" y="70" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--accent3)">API</text>
-          
-          <polygon points="105,95 115,105 108,105" fill="var(--accent)" opacity="0.8"/>
-          <text x="90" y="138" text-anchor="middle" font-family="var(--font-mono)" font-size="8" fill="var(--text-dim)">NAVIGABLE</text>
-        </svg>
-      </div>
-    </div>
-  </section>
-
   <section class="slide slide--content" data-nav="Ressources & QR" style="background-image:radial-gradient(ellipse at 80% 20%, var(--accent4-dim) 0%, transparent 40%);">
     <div class="slide__inner">
       <div>
@@ -3584,10 +3592,10 @@ flowchart TD
       <div class="slide__aside reveal" style="display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
         <h3 style="font-size: clamp(16px,2vw,22px); font-weight: 700; color: var(--accent4); margin: 0 0 14px 0;">Et pour l'avenir ?</h3>
         <ul class="slide__bullets" style="margin:0;">
-          <li class="reveal"><strong>Reverse engineering ?</strong> &mdash; Générer des diagrammes à partir d&rsquo;une infrastructure existante (Helm, Azure, AWS&hellip;)</li>
+          <li class="reveal"><strong>Reprendre l'existant ?</strong></li>
           <li class="reveal"><strong>Infrastructure et réseau</strong> &mdash; Déduire des règles de sécurité et pare-feux</li>
-          <li class="reveal"><strong>ArchiMate et TOGAF en LikeC4</strong> &mdash; Implémenter ArchiMate avec skills IA pour standardiser et démocratiser le TOGAF</li>
-          <li class="reveal"><strong>Enterprise</strong> &mdash; Intégrer LikeC4 aux outils d&rsquo;architecture d&rsquo;entreprise existants</li>
+          <li class="reveal"><strong>Des modélisations plus poussées</strong></li>
+          <li class="reveal"><strong>Intégrer LikeC4 dans les référentiels d'architecture</strong></li>
           <li class="reveal" style="color:var(--accent);"><strong>Vos idées ?</strong> C'est libre et opensource</li>
         </ul>
       </div>
@@ -3605,7 +3613,7 @@ flowchart TD
 	</div>
     <div class="slide__content">
       <p class="slide__label reveal" style="color:var(--accent4); letter-spacing:2px;">Questions / Réponses</p>
-      <h2 class="slide__heading reveal" style="font-weight:900; font-size:clamp(40px,7vw,80px);">Merci !</h2>
+      <h2 class="slide__heading reveal" style="font-weight:900; font-size:clamp(40px,7vw,80px);">Eclatez-vous</h2>
       <p class="slide__subtitle reveal" style="color:#e2edf7; margin-top:16px; font-size:clamp(14px,2vw,22px);">
         Ne dessinez plus vos architectures &mdash; codez-les, versionnez-les, publiez-les.
       </p>
@@ -3748,40 +3756,45 @@ flowchart TD
     return viewBox;
   }
 
+  /* Fit a single .mermaid element; returns true if dimensions were valid */
+  function autoFitMermaid(mDiv) {
+    var svg = mDiv.querySelector('svg');
+    if (!svg) return false;
+    var vp = getStableMermaidViewBox(svg);
+    if (!vp) return false;
+    svg.setAttribute('viewBox', vp.join(' '));
+    var vw = vp[2], vh = vp[3];
+    var wrap = mDiv.closest('.mermaid-wrap');
+    var scroll = mDiv.closest('.mermaid-scroll');
+    var cw = scroll ? scroll.clientWidth : mDiv.parentElement.clientWidth;
+    var ch = scroll ? scroll.clientHeight : mDiv.parentElement.clientHeight;
+    /* Skip elements whose container has no real dimensions (off-screen / display:none) */
+    if (!cw || cw < 40 || !ch || ch < 40) return false;
+    var fitMode = getFitMode(wrap);
+    var rawScale = fitMode === 'cover'
+      ? Math.max(cw / vw, ch / vh)
+      : Math.min(cw / vw, ch / vh);
+    var scale = Math.min(rawScale, getFitScaleMax(wrap));
+    if (!isFinite(scale) || scale <= 0) scale = 1;
+    var fittedWidth = Math.round(vw * scale);
+    var fittedHeight = Math.round(vh * scale);
+    svg.removeAttribute('height');
+    svg.removeAttribute('width');
+    svg.style.width = '100%';
+    svg.style.height = '100%';
+    svg.style.maxWidth = 'none';
+    svg.style.maxHeight = 'none';
+    mDiv.dataset.baseW = fittedWidth;
+    mDiv.dataset.baseH = fittedHeight;
+    mDiv.style.width = fittedWidth + 'px';
+    mDiv.style.height = fittedHeight + 'px';
+    if (wrap) delete wrap.dataset.centeredZoom;
+    return true;
+  }
+  window.autoFitMermaid = autoFitMermaid;
   function autoFit() {
     document.querySelectorAll('.mermaid').forEach(function(mDiv) {
-      var svg = mDiv.querySelector('svg');
-      if (!svg) return;
-      var vp = getStableMermaidViewBox(svg);
-      if (!vp) return;
-      svg.setAttribute('viewBox', vp.join(' '));
-      var vw = vp[2], vh = vp[3];
-      /* Get available container size */
-      var wrap = mDiv.closest('.mermaid-wrap');
-      var scroll = mDiv.closest('.mermaid-scroll');
-      var cw = scroll ? scroll.clientWidth : mDiv.parentElement.clientWidth;
-      var ch = scroll ? scroll.clientHeight : mDiv.parentElement.clientHeight;
-      var safeCw = Math.max(1, cw || 0);
-      var safeCh = Math.max(1, ch || 0);
-      var fitMode = getFitMode(wrap);
-      /* Scale SVG to fit container (contain) or fill panel (cover), keeping aspect ratio */
-      var rawScale = fitMode === 'cover'
-        ? Math.max(safeCw / vw, safeCh / vh)
-        : Math.min(safeCw / vw, safeCh / vh);
-      var scale = Math.min(rawScale, getFitScaleMax(wrap));
-      if (!isFinite(scale) || scale <= 0) scale = 1;
-      var fittedWidth = Math.round(vw * scale);
-      var fittedHeight = Math.round(vh * scale);
-      svg.removeAttribute('height');
-      svg.removeAttribute('width');
-      svg.style.width = '100%';
-      svg.style.height = '100%';
-      /* Store base dimensions for zoom layout calculations */
-      mDiv.dataset.baseW = fittedWidth;
-      mDiv.dataset.baseH = fittedHeight;
-      mDiv.style.width = fittedWidth + 'px';
-      mDiv.style.height = fittedHeight + 'px';
-      if (wrap) delete wrap.dataset.centeredZoom;
+      autoFitMermaid(mDiv);
     });
     document.querySelectorAll('.slide__kpi-val').forEach(function(el) {
       if (el.scrollWidth > el.clientWidth) {
@@ -3800,6 +3813,7 @@ flowchart TD
     });
     updateMerciQrSpotlightPosition();
   }
+  window.autoFit = autoFit;
 
 
   function enforcePart0GrayMarkers() {
@@ -3826,7 +3840,7 @@ flowchart TD
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(function() {
         autoFit();
-        document.querySelectorAll('.slide.visible .mermaid-wrap').forEach(function(w){ updateZoomLayout(w); scheduleCenterMermaidViewport(w, true); });
+        document.querySelectorAll('.mermaid-wrap').forEach(function(w){ updateZoomLayout(w); scheduleCenterMermaidViewport(w, true); });
       });
     }
     new SlideEngine();
@@ -4185,6 +4199,24 @@ flowchart TD
       }
       var mermaidWrap = slide.querySelector('.c2-unified__view--mermaid .mermaid-wrap');
       if (mermaidWrap) {
+        var mt = mermaidWrap.querySelector('.mermaid');
+        if (mt && (!mt.dataset.baseW || parseFloat(mt.dataset.baseW) < 40)) {
+          var ok = autoFitMermaid(mt);
+          if (!ok) {
+            window.requestAnimationFrame(function(){window.requestAnimationFrame(function(){
+              autoFitMermaid(mt);
+              var mz2 = getInitialZoom(mermaidWrap);
+              mt.dataset.zoom = String(mz2);
+              updateZoomState(mermaidWrap);
+              updateZoomLayout(mermaidWrap);
+              scheduleCenterMermaidViewport(mermaidWrap, true);
+            });});
+            return;
+          }
+          var mz = getInitialZoom(mermaidWrap);
+          mt.dataset.zoom = String(mz);
+          updateZoomState(mermaidWrap);
+        }
         updateZoomLayout(mermaidWrap);
         scheduleCenterMermaidViewport(mermaidWrap, true);
       }
@@ -4319,6 +4351,7 @@ flowchart TD
     var btn = e.target.closest('.zoom-controls button[data-zoom-action]');
     if (!btn) return;
     e.preventDefault();
+    e.stopPropagation();
     var action = btn.dataset.zoomAction;
     if (action === 'reset') {
       resetZoom(btn);
@@ -4437,7 +4470,7 @@ flowchart TD
   };
   SlideEngine.prototype.observe=function(){
     var self=this;
-    var obs=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');entry.target.querySelectorAll('.mermaid-wrap').forEach(function(w){scheduleCenterMermaidViewport(w,true);});self.current=self.slides.indexOf(entry.target);self.update();}});},{threshold:0.5});
+    var obs=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');entry.target.querySelectorAll('.mermaid-wrap').forEach(function(w){var t=w.querySelector('.mermaid');if(t&&(!t.dataset.baseW||parseFloat(t.dataset.baseW)<40)){var ok=autoFitMermaid(t);if(!ok){/* SVG may not have viewBox yet (was in display:none) — retry after layout */window.requestAnimationFrame(function(){window.requestAnimationFrame(function(){autoFitMermaid(t);var z2=getInitialZoom(w);t.dataset.zoom=String(z2);updateZoomState(w);updateZoomLayout(w);scheduleCenterMermaidViewport(w,true);});});return;}var z=getInitialZoom(w);t.dataset.zoom=String(z);updateZoomState(w);updateZoomLayout(w);}scheduleCenterMermaidViewport(w,true);});self.current=self.slides.indexOf(entry.target);self.update();}});},{threshold:0.5});
     this.slides.forEach(function(s){obs.observe(s);});
     /* Restore slide from URL hash on load — use instant scroll to avoid
        IntersectionObserver race conditions during smooth-scroll */

@@ -16,11 +16,9 @@ Ce document reprend le **déroulé réel de la conférence tel qu’il apparaît
 >
 > Merci d’être là, et merci aux organisateurs et à Onepoint
 >
-> C'est un vrai plaisir de partager ce sujet avec un public étendu, hors du cadre des réunions du quotidien. 
-> Parce que l'architecture, c'est typiquement le genre de sujet qui réunit vite une grande diversité de profils. Mais rarement pour parler de la méthode de travail, seulement du contenu.
-> Et c'est justement ce qui va nous intéresser : comment faire vivre une architecture, qu'on puisse la partager, la faire évoluer, et qu'elle ne finit pas oubliée dans un dossier ou un wiki.
->
-> Avec l'ambition de vous faire interroger quelques façons de travailler bien ancrées.
+> C'est un plaisir de partager ce sujet avec un public étendu, en dehors du cadre des réunions du quotidien. 
+> Parce que l'architecture, c'est typiquement le genre de sujet qui réunit vite une grande diversité de profils. Mais rarement pour parler de méthode et outils.
+> Et c'est justement ce qui va nous intéresser : comment faire vivre une architecture, pour qu'on puisse la partager, la faire évoluer, et qu'elle ne finisse pas oubliée dans un dossier ou un wiki. Avec l'ambition de vous faire interroger quelques façons de travailler bien ancrées.
 
 **Intention orale :**
 - Saluer la salle et installer une adresse directe aux personnes présentes.
