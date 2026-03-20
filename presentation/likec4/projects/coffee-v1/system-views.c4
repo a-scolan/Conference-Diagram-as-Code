@@ -16,7 +16,7 @@ views 'C1' {
       Le barista prépare et remet la boisson au stand.
     '''
 
-    include festivalier, barista, alefestCoffee, festivalSystem
+    include festivalier, barista, alefestCoffee
 
     autoLayout TopBottom
   }
@@ -30,7 +30,7 @@ views 'C2' {
       RabbitMQ et PostgreSQL.
     '''
 
-    include festivalier, barista, alefestCoffee.*, festivalSystem.*
+    include festivalier, barista, alefestCoffee.*
     include -> alefestCoffee
     include alefestCoffee ->
     include festivalier -> alefestCoffee.counterApp
