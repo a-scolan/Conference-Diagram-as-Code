@@ -48,11 +48,23 @@
   }
   .zoom-controls button:hover { background: var(--accent); color: #ffffff; }
   .zoom-controls button:active { background: var(--accent2); color: #ffffff; }
+  .slide--diagram .mermaid text,
+  .slide--diagram .mermaid tspan,
   .slide--diagram .mermaid .cluster text,
   .slide--diagram .mermaid .cluster-label text,
   .slide--diagram .mermaid .cluster span,
+  .slide--diagram .mermaid .cluster p,
+  .slide--diagram .mermaid .cluster .nodeLabel,
+  .slide--diagram .mermaid .cluster-label span,
+  .slide--diagram .mermaid .nodeLabel,
+  .slide--diagram .mermaid .nodeLabel span,
+  .slide--diagram .mermaid .nodeLabel p,
+  .slide--diagram .mermaid .node text,
+  .slide--diagram .mermaid .node tspan,
+  .slide--diagram .mermaid .node .label,
   .slide--diagram .mermaid text.actor,
   .slide--diagram .mermaid .titleText,
+  .slide--diagram .mermaid .flowchartTitleText,
   .slide--diagram .mermaid .noteText,
   .slide--diagram .mermaid .noteText tspan,
   .slide--diagram .mermaid .edgeLabel span,
@@ -64,12 +76,48 @@
   .slide--diagram .mermaid .messageText tspan,
   .slide--diagram .mermaid .classTitleText,
   .slide--diagram .mermaid .er text,
-  .slide--diagram .mermaid .mindmap-node text {
+  .slide--diagram .mermaid .mindmap-node text,
+  .slide--diagram .mermaid .commit-label,
+  .slide--diagram .mermaid [class*="branch-label"],
+  .slide--diagram .mermaid [class*="commit-label"],
+  .mermaid-wrap .mermaid text,
+  .mermaid-wrap .mermaid tspan,
+  .mermaid-wrap .mermaid .cluster text,
+  .mermaid-wrap .mermaid .cluster-label text,
+  .mermaid-wrap .mermaid .cluster span,
+  .mermaid-wrap .mermaid .cluster p,
+  .mermaid-wrap .mermaid .cluster .nodeLabel,
+  .mermaid-wrap .mermaid .cluster-label span,
+  .mermaid-wrap .mermaid .nodeLabel,
+  .mermaid-wrap .mermaid .nodeLabel span,
+  .mermaid-wrap .mermaid .nodeLabel p,
+  .mermaid-wrap .mermaid .node text,
+  .mermaid-wrap .mermaid .node tspan,
+  .mermaid-wrap .mermaid .node .label,
+  .mermaid-wrap .mermaid text.actor,
+  .mermaid-wrap .mermaid .titleText,
+  .mermaid-wrap .mermaid .flowchartTitleText,
+  .mermaid-wrap .mermaid .noteText,
+  .mermaid-wrap .mermaid .noteText tspan,
+  .mermaid-wrap .mermaid .edgeLabel span,
+  .mermaid-wrap .mermaid .labelText,
+  .mermaid-wrap .mermaid .labelText tspan,
+  .mermaid-wrap .mermaid .loopText,
+  .mermaid-wrap .mermaid .loopText tspan,
+  .mermaid-wrap .mermaid .messageText,
+  .mermaid-wrap .mermaid .messageText tspan,
+  .mermaid-wrap .mermaid .classTitleText,
+  .mermaid-wrap .mermaid .er text,
+  .mermaid-wrap .mermaid .mindmap-node text,
+  .mermaid-wrap .mermaid .commit-label,
+  .mermaid-wrap .mermaid [class*="branch-label"],
+  .mermaid-wrap .mermaid [class*="commit-label"] {
     color: var(--text) !important;
     fill: var(--text) !important;
     stroke: none !important;
   }
-  .slide--diagram .mermaid .nodeLabel {
+  .slide--diagram .mermaid .nodeLabel,
+  .mermaid-wrap .mermaid .nodeLabel {
     font-family: var(--font-body) !important;
     font-size: var(--diagram-node-font-size) !important;
     white-space: normal !important;
@@ -78,16 +126,21 @@
     font-weight: 600 !important;
   }
   .slide--diagram .mermaid .edgeLabel,
-  .slide--diagram .mermaid .edgeLabel span {
+  .slide--diagram .mermaid .edgeLabel span,
+  .mermaid-wrap .mermaid .edgeLabel,
+  .mermaid-wrap .mermaid .edgeLabel span {
     font-family: var(--font-mono) !important;
     font-size: var(--diagram-edge-label-size) !important;
     overflow: visible !important;
   }
-  .slide--diagram .mermaid .edgeLabel foreignObject {
+  .slide--diagram .mermaid .edgeLabel foreignObject,
+  .mermaid-wrap .mermaid .edgeLabel foreignObject {
     overflow: visible !important;
   }
   .slide--diagram .mermaid .edgeLabel .label,
-  .slide--diagram .mermaid .labelBox {
+  .slide--diagram .mermaid .labelBox,
+  .mermaid-wrap .mermaid .edgeLabel .label,
+  .mermaid-wrap .mermaid .labelBox {
     white-space: nowrap !important;
     padding: 2px 6px !important;
     background: var(--surface) !important;
@@ -96,7 +149,10 @@
   }
   .slide--diagram .mermaid .nodeLabel p,
   .slide--diagram .mermaid .edgeLabel p,
-  .slide--diagram .mermaid .labelText p {
+  .slide--diagram .mermaid .labelText p,
+  .mermaid-wrap .mermaid .nodeLabel p,
+  .mermaid-wrap .mermaid .edgeLabel p,
+  .mermaid-wrap .mermaid .labelText p {
     margin: 0 !important;
   }
   .slide--diagram .mermaid .node rect,
@@ -109,59 +165,96 @@
   .slide--diagram .mermaid .classBox,
   .slide--diagram .mermaid .mindmap-node rect,
   .slide--diagram .mermaid .stateGroup rect,
-  .slide--diagram .mermaid .statediagram-cluster rect {
+  .slide--diagram .mermaid .statediagram-cluster rect,
+  .mermaid-wrap .mermaid .node rect,
+  .mermaid-wrap .mermaid .node circle,
+  .mermaid-wrap .mermaid .node polygon,
+  .mermaid-wrap .mermaid .note,
+  .mermaid-wrap .mermaid .note rect,
+  .mermaid-wrap .mermaid .cluster rect,
+  .mermaid-wrap .mermaid .er.entityBox,
+  .mermaid-wrap .mermaid .classBox,
+  .mermaid-wrap .mermaid .mindmap-node rect,
+  .mermaid-wrap .mermaid .stateGroup rect,
+  .mermaid-wrap .mermaid .statediagram-cluster rect {
     stroke-width: 2px;
   }
   .slide--diagram .mermaid .edgeLabel rect,
   .slide--diagram .mermaid .labelBox,
-  .slide--diagram .mermaid .label-container rect {
+  .slide--diagram .mermaid .label-container rect,
+  .mermaid-wrap .mermaid .edgeLabel rect,
+  .mermaid-wrap .mermaid .labelBox {
     fill: var(--surface) !important;
     stroke: var(--border) !important;
   }
-  .slide--diagram .mermaid .labelBkg {
+  .slide--diagram .mermaid .labelBkg,
+  .mermaid-wrap .mermaid .labelBkg {
     fill: var(--surface) !important;
   }
   .slide--diagram .mermaid .cluster rect,
   .slide--diagram .mermaid .stateGroup rect,
-  .slide--diagram .mermaid .statediagram-cluster rect {
+  .slide--diagram .mermaid .statediagram-cluster rect,
+  .mermaid-wrap .mermaid .cluster rect,
+  .mermaid-wrap .mermaid .stateGroup rect,
+  .mermaid-wrap .mermaid .statediagram-cluster rect {
     fill: var(--surface2) !important;
     stroke: var(--border-bright) !important;
   }
   .slide--diagram .mermaid .node.gold rect,
   .slide--diagram .mermaid .node.gold circle,
   .slide--diagram .mermaid .node.gold polygon,
-  .slide--diagram .mermaid .node.gold path {
+  .slide--diagram .mermaid .node.gold path,
+  .mermaid-wrap .mermaid .node.gold rect,
+  .mermaid-wrap .mermaid .node.gold circle,
+  .mermaid-wrap .mermaid .node.gold polygon,
+  .mermaid-wrap .mermaid .node.gold path {
     fill: var(--diagram-gold-dim) !important;
     stroke: var(--diagram-gold) !important;
   }
   .slide--diagram .mermaid .node.blue rect,
   .slide--diagram .mermaid .node.blue circle,
   .slide--diagram .mermaid .node.blue polygon,
-  .slide--diagram .mermaid .node.blue path {
+  .slide--diagram .mermaid .node.blue path,
+  .mermaid-wrap .mermaid .node.blue rect,
+  .mermaid-wrap .mermaid .node.blue circle,
+  .mermaid-wrap .mermaid .node.blue polygon,
+  .mermaid-wrap .mermaid .node.blue path {
     fill: var(--diagram-blue-dim) !important;
     stroke: var(--diagram-blue) !important;
   }
   .slide--diagram .mermaid .node.green rect,
   .slide--diagram .mermaid .node.green circle,
   .slide--diagram .mermaid .node.green polygon,
-  .slide--diagram .mermaid .node.green path {
+  .slide--diagram .mermaid .node.green path,
+  .mermaid-wrap .mermaid .node.green rect,
+  .mermaid-wrap .mermaid .node.green circle,
+  .mermaid-wrap .mermaid .node.green polygon,
+  .mermaid-wrap .mermaid .node.green path {
     fill: var(--diagram-green-dim) !important;
     stroke: var(--diagram-green) !important;
   }
   .slide--diagram .mermaid rect.actor,
   .slide--diagram .mermaid .er.entityBox,
   .slide--diagram .mermaid .classBox,
-  .slide--diagram .mermaid .mindmap-node rect {
+  .slide--diagram .mermaid .mindmap-node rect,
+  .mermaid-wrap .mermaid rect.actor,
+  .mermaid-wrap .mermaid .er.entityBox,
+  .mermaid-wrap .mermaid .classBox,
+  .mermaid-wrap .mermaid .mindmap-node rect {
     fill: var(--diagram-gold-dim) !important;
     stroke: var(--diagram-gold) !important;
   }
   .slide--diagram .mermaid .activation0,
-  .slide--diagram .mermaid .activation1 {
+  .slide--diagram .mermaid .activation1,
+  .mermaid-wrap .mermaid .activation0,
+  .mermaid-wrap .mermaid .activation1 {
     fill: rgba(251,254,122,0.12) !important;
     stroke: rgba(251,254,122,0.28) !important;
   }
   .slide--diagram .mermaid .note,
-  .slide--diagram .mermaid .note rect {
+  .slide--diagram .mermaid .note rect,
+  .mermaid-wrap .mermaid .note,
+  .mermaid-wrap .mermaid .note rect {
     fill: var(--surface) !important;
     stroke: rgba(160,184,208,0.44) !important;
   }
@@ -172,43 +265,74 @@
   .slide--diagram .mermaid .actor-line,
   .slide--diagram .mermaid .loopLine,
   .slide--diagram .mermaid .relationshipLine,
-  .slide--diagram .mermaid .transition {
+  .slide--diagram .mermaid .transition,
+  .mermaid-wrap .mermaid .flowchart-link,
+  .mermaid-wrap .mermaid .edgePath .path,
+  .mermaid-wrap .mermaid .messageLine0,
+  .mermaid-wrap .mermaid .messageLine1,
+  .mermaid-wrap .mermaid .actor-line,
+  .mermaid-wrap .mermaid .loopLine,
+  .mermaid-wrap .mermaid .relationshipLine,
+  .mermaid-wrap .mermaid .transition {
     stroke: var(--text-dim) !important;
   }
   .slide--diagram .mermaid .arrowheadPath,
-  .slide--diagram .mermaid marker path {
+  .slide--diagram .mermaid .arrowMarkerPath,
+  .slide--diagram .mermaid marker path,
+  .slide--diagram .mermaid marker polygon,
+  .slide--diagram .mermaid marker circle,
+  .mermaid-wrap .mermaid .arrowheadPath,
+  .mermaid-wrap .mermaid .arrowMarkerPath,
+  .mermaid-wrap .mermaid marker path,
+  .mermaid-wrap .mermaid marker polygon,
+  .mermaid-wrap .mermaid marker circle {
     fill: var(--text-dim) !important;
     stroke: var(--text-dim) !important;
   }
   .slide--diagram .mermaid .actor-man line,
   .slide--diagram .mermaid .actor-man circle,
-  .slide--diagram .mermaid .actor-man path {
+  .slide--diagram .mermaid .actor-man path,
+  .mermaid-wrap .mermaid .actor-man line,
+  .mermaid-wrap .mermaid .actor-man circle,
+  .mermaid-wrap .mermaid .actor-man path {
     stroke: var(--text-dim) !important;
     fill: none !important;
   }
-  .slide--diagram .mermaid .sequenceNumber {
+  .slide--diagram .mermaid .sequenceNumber,
+  .mermaid-wrap .mermaid .sequenceNumber {
     fill: var(--text) !important;
   }
   .slide--diagram .mermaid #sequencenumber,
-  .slide--diagram .mermaid #sequencenumber circle {
+  .slide--diagram .mermaid #sequencenumber circle,
+  .mermaid-wrap .mermaid #sequencenumber,
+  .mermaid-wrap .mermaid #sequencenumber circle {
     fill: color-mix(in srgb, var(--diagram-blue) 72%, var(--surface2) 28%) !important;
     stroke: var(--diagram-blue) !important;
   }
   .slide--diagram-flow .mermaid .edgeLabel,
   .slide--diagram-flow .mermaid .edgeLabel span,
   .slide--diagram-flow .mermaid .edgeLabel p,
-  .slide--diagram-flow .mermaid .labelBkg {
-    background: var(--surface) !important;
-    background-color: var(--surface) !important;
+  .slide--diagram-flow .mermaid .edgeLabel text,
+  .slide--diagram-flow .mermaid .edgeLabel tspan {
     color: var(--text) !important;
-    fill: var(--surface) !important;
+    fill: var(--text) !important;
+  }
+  .slide--diagram-flow .mermaid .labelBkg,
+  .slide--diagram .mermaid .labelBkg,
+  .mermaid-wrap .mermaid .labelBkg {
+    background: var(--surface2) !important;
+    background-color: var(--surface2) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 4px !important;
+    padding: 2px 6px !important;
+    color: var(--text) !important;
     opacity: 1 !important;
   }
   .slide--diagram-flow .mermaid .edgeLabel rect,
   .slide--diagram-flow .mermaid .labelBox,
   .slide--diagram-flow .mermaid .label-container rect {
-    fill: var(--surface) !important;
-    stroke: rgba(160,184,208,0.28) !important;
+    fill: var(--surface2) !important;
+    stroke: var(--border) !important;
   }
   .slide--diagram-sequence .mermaid rect.actor[name="App"],
   .slide--diagram-sequence .mermaid rect.actor[name="Bar"] {
@@ -277,14 +401,13 @@
     font-size: calc(13px + var(--font-bump)) !important;
     font-weight: 700 !important;
   }
-  .slide--diagram .mermaid .node foreignObject {
+  .slide--diagram .mermaid .node foreignObject,
+  .mermaid-wrap .mermaid .node foreignObject {
     overflow: visible !important;
   }
-  .slide--diagram .mermaid .node foreignObject > div {
+  .slide--diagram .mermaid .node foreignObject > div,
+  .mermaid-wrap .mermaid .node foreignObject > div {
     overflow: visible !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
   }
 
   /* ============ SLIDE TYPE: DEMO / FULLSCREEN CODE ============ */
@@ -980,14 +1103,14 @@
     }
     .slide--workspace-tree .slide__inner {
       display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
       gap: clamp(16px, 2.2vw, 28px);
       align-items: stretch;
       min-height: 0;
       flex: 1 1 auto;
       width: 100%;
     }
-    @media (max-width: 1080px) {
+    @media (max-width: 1080px) and (orientation: portrait) {
       .slide--workspace-tree .slide__inner {
         grid-template-columns: 1fr !important;
         overflow-y: auto !important;
@@ -997,21 +1120,73 @@
         margin-top: 16px;
       }
     }
-    .slide--workspace-tree .workspace-tree__code-stack {
-      display: grid;
-      grid-template-rows: repeat(2, minmax(0, 1fr));
-      gap: clamp(14px, 1.8vh, 20px);
+    .slide--workspace-tree .workspace-tree__pane {
+      display: flex;
+      flex-direction: column;
       min-height: 0;
+      height: 100%;
     }
-    .slide--workspace-tree .workspace-tree__code-stack .slide__code-block {
-      padding-top: clamp(16px, 2vh, 22px);
+    .slide--workspace-tree .workspace-tree__tab-frame {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-height: 0;
+      height: 100%;
+      border-radius: 12px;
+      border: 1.5px solid var(--border-bright);
+      background: var(--surface);
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
     }
-    .slide--workspace-tree .workspace-tree__code-stack .slide__code-block pre {
+    .slide--workspace-tree .workspace-tree__tab-bar {
+      display: flex;
+      gap: 4px;
+      padding: 6px 10px 0;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border-bright);
+    }
+    .slide--workspace-tree .workspace-tree__tab-btn {
+      font-family: var(--font-mono);
+      font-size: calc(clamp(10px, 0.9vw, 12px) + var(--font-bump));
+      font-weight: 600;
+      padding: 6px 14px;
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      touch-action: manipulation;
+    }
+    .slide--workspace-tree .workspace-tree__tab-btn:hover {
+      color: var(--text);
+      background: color-mix(in srgb, var(--surface) 50%, transparent 50%);
+    }
+    .slide--workspace-tree .workspace-tree__tab-btn.is-active {
+      background: var(--surface);
+      color: var(--accent);
+      border-color: var(--border-bright);
+      border-bottom: 2px solid var(--accent);
+      margin-bottom: -1px;
+    }
+    .slide--workspace-tree .workspace-tree__tab-content {
+      flex: 1 1 auto;
+      height: 100%;
+      margin: 0;
+      padding: clamp(14px, 2vh, 22px) clamp(12px, 1.4vw, 18px);
+      overflow: auto;
+    }
+    .slide--workspace-tree .workspace-tree__tab-content pre {
+      height: 100%;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
       justify-content: flex-start;
     }
-    .slide--workspace-tree .workspace-tree__code-stack .code-preview__frame,
     .slide--workspace-tree .workspace-tree__ascii-frame {
       min-height: 0;
+      height: 100%;
     }
     .slide--workspace-tree .workspace-tree__ascii-frame .slide__code-block {
       margin-top: var(--code-preview-chip-line);
@@ -1022,11 +1197,11 @@
       justify-content: flex-start;
     }
     .slide--workspace-tree .slide__code-block code {
-      font-size: calc(clamp(9.5px, 0.78vw, 11px) + var(--font-bump));
-      line-height: 1.42;
+      font-size: calc(clamp(10px, 0.88vw, 12px) + var(--font-bump));
+      line-height: 1.45;
     }
     .slide--workspace-tree .workspace-tree__ascii-frame .slide__code-block code {
-      font-size: calc(clamp(10px, 0.82vw, 12px) + var(--font-bump));
+      font-size: calc(clamp(10px, 0.84vw, 12px) + var(--font-bump));
       line-height: 1.55;
       color: var(--text-dim);
     }
@@ -1203,22 +1378,28 @@
       fill: var(--surface2) !important;
       stroke: var(--border) !important;
     }
-    .slide--pr-review .mermaid .branch-label0 {
+    .slide--pr-review .mermaid .branch-label0,
+    .slide--pr-review .mermaid .branch-label1,
+    .slide--pr-review .mermaid [class*="branch-label"],
+    .slide--pr-review .mermaid text.branch-label0,
+    .slide--pr-review .mermaid text.branch-label1,
+    .slide--pr-review .mermaid g.label text {
       fill: var(--text) !important;
-      font-weight: 650;
-    }
-    .slide--pr-review .mermaid .branch-label1 {
-      fill: var(--text) !important;
+      color: var(--text) !important;
+      stroke: none !important;
       font-weight: 650;
     }
     .slide--pr-review .mermaid .commit-label-bkg {
-      fill: var(--surface) !important;
+      fill: var(--surface2) !important;
       stroke: var(--border-bright) !important;
       stroke-width: 1px !important;
       opacity: 1 !important;
     }
-    .slide--pr-review .mermaid .commit-label {
+    .slide--pr-review .mermaid .commit-label,
+    .slide--pr-review .mermaid text.commit-label {
       fill: var(--text) !important;
+      color: var(--text) !important;
+      stroke: none !important;
       font-weight: 650;
       letter-spacing: 0.01em;
     }
@@ -1397,8 +1578,8 @@
       top: 0;
       color: var(--card-accent, var(--accent));
       font-weight: 700;
-      font-size: 13px;
-      line-height: 1.45;
+      font-size: inherit;
+      line-height: inherit;
     }
 
     .slide--review-questions {
@@ -2015,14 +2196,23 @@
   }
 
   .lane-card li {
-    position: relative; padding-left: 18px; margin: 8px 0;
+    position: relative;
+    padding: 0 0 0 18px;
+    margin: 8px 0;
     color: color-mix(in srgb, var(--text) 94%, var(--lane-color) 6%);
     line-height: 1.5;
   }
 
   .lane-card li::before {
-    content: ''; position: absolute; left: 0; top: 10px;
-    width: 6px; height: 6px; border-radius: 50%;
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.75em;
+    top: 0.5lh;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
     background: var(--lane-color);
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--lane-color-dim) 64%, transparent 36%);
   }

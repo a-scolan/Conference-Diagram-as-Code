@@ -3,11 +3,15 @@
 - [x] 1. Ajustement typographique et visibilité fond de salle
   - [x] 1.1 Réévaluer les valeurs minimales des `clamp()` pour les titres et les paragraphes dans les styles
   - [x] 1.2 Augmenter la taille de police par défaut des blocs de code pour atteindre au moins 15px
-- [ ] 2. Support responsive Mobile Landscape et blocage obligatoire en portrait (Gardé ouvert pour perfectionnement V2)
-  - [ ] 2.1 Concevoir le calque bloquant `.orientation-lock-overlay` avec animation SVG de rotation de smartphone
-  - [ ] 2.2 Verrouiller totalement l'accès au deck lorsque l'appareil est en mode portrait (`@media (orientation: portrait) and (max-width: 899px)`)
-  - [ ] 2.3 Implémenter les règles compactes `@media (orientation: landscape) and (max-height: 520px)` (paddings minimes, ascenseur doux interne)
-  - [ ] 2.4 Tester la navigation tactile sur appareil mobile en paysage
+- [x] 2. Support responsive Mobile Landscape et ergonomie de lecture autonome
+  - [x] 2.1 Concevoir le calque bloquant `.orientation-lock-overlay` avec animation SVG de rotation de smartphone
+  - [x] 2.2 Verrouiller totalement l'accès au deck lorsque l'appareil est en mode portrait (`@media (orientation: portrait) and (max-width: 899px)`)
+  - [x] 2.3 Implémenter les règles compactes `@media (orientation: landscape) and (max-height: 560px)` (paddings minimes, ascenseur doux interne, masquage des scrollbars)
+  - [x] 2.4 Tester la navigation tactile sur appareil mobile en paysage
+  - [x] 2.5 Refonte ergonomique de la slide 24 (specs & arborescence) avec onglets de code interactifs 2 colonnes sans chevauchement
+  - [x] 2.6 Implémenter le sanctuaire tactile (protection multi-touch / pinch-to-zoom et exclusion des zones de code/schémas des swipes verticaux)
+  - [x] 2.7 Supprimer les éléments décoratifs et hachures en superposition sur les slides denses (17, 31, 32) en mode mobile
+  - [x] 2.8 Rééquilibrer l'aération et la respiration des slides de concepts (6, 14, 25) et de split comparatif (3)
 - [x] 3. Refonte du tableau récapitulatif de fin de conférence
   - [x] 3.1 Concevoir le composant de cartes comparatives Avant / Après (`.benefit-card`)
   - [x] 3.2 Remplacer la table HTML par une séquence de cartes aérées et contrastées

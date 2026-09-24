@@ -92,12 +92,18 @@
 
     var self = this;
     this.slides.forEach(function(slide, idx) {
-      // Décorations périphériques réparties sur toutes les diapos où l'espace le permet (titres, dividers, citations, splits, concept-cards...)
-      // On exclut uniquement les diapos denses de code interactif et diagrammes pleine largeur pour éviter les collisions visuelles
+      // Décorations périphériques réparties sur toutes les diapos où l'espace le permet (titres, dividers, citations, splits légers...)
+      // On exclut les diapos denses de code, diagrammes, schémas larges, comparatifs chargés et portail pour éviter toute superposition
       var isDense = slide.classList.contains('slide--code-preview') ||
                     slide.classList.contains('slide--diagram') ||
                     slide.classList.contains('slide--c4-zoom') ||
-                    slide.getAttribute('data-nav') === 'Ressources & QR';
+                    slide.classList.contains('slide--portal-vivant') ||
+                    (slide.getAttribute('data-nav') && (
+                      slide.getAttribute('data-nav').indexOf('Ressources') > -1 ||
+                      slide.getAttribute('data-nav') === 'V1 vs V2' ||
+                      slide.getAttribute('data-nav') === 'Avant / Après' ||
+                      slide.getAttribute('data-nav') === 'Portail vivant'
+                    ));
       if (isDense) return;
       if (slide.querySelector('.blueprint-deco-frame')) return;
 
@@ -127,7 +133,7 @@
       '</svg>';
 
     var targets = document.querySelectorAll(
-      '.concept-card, .benefit-card, .review-questions__card, .lane-card, .key-card, .speaker-card, .speaker-panel, .slide--split .slide__panel'
+      '.concept-card:not(.benefit-card), .review-questions__card, .lane-card, .key-card, .speaker-card, .speaker-panel, .slide--split:not([data-nav="V1 vs V2"]) .slide__panel'
     );
     targets.forEach(function(el) {
       if (el.querySelector('.card-hatch-strip')) return;
@@ -209,18 +215,25 @@
       tY = e.touches[0].clientY;
       tX = e.touches[0].clientX;
     },{passive:true});
+    this.deck.addEventListener('touchmove',function(e){
+      if(e.touches && e.touches.length > 1){
+        isMultiTouch = true;
+      }
+    },{passive:true});
     this.deck.addEventListener('touchend',function(e){
       if(isMultiTouch){
-        isMultiTouch = false;
+        if(!e.touches || e.touches.length === 0){
+          isMultiTouch = false;
+        }
         return;
       }
       // Si l'utilisateur est en train de zoomer dans la page (pinch-to-zoom), ne pas changer de diapositive
       if(window.visualViewport && window.visualViewport.scale > 1.05){
         return;
       }
-      // Ne pas intercepter les swipes à l'intérieur des conteneurs interactifs, diagrammes, iframes ou contrôles
+      // Ne pas intercepter les swipes à l'intérieur des conteneurs interactifs, diagrammes, iframes, blocs de code ou contrôles
       if(e.target && typeof e.target.closest === 'function'){
-        if(e.target.closest('.mermaid-wrap, .embed-wrap, iframe, .code-preview__pane, .zoom-controls, .embed-controls, button, a, select, input, textarea')){
+        if(e.target.closest('.mermaid-wrap, .embed-wrap, iframe, .code-preview__pane, .slide__code-block, pre, code, .workspace-tree__tab-bar, .zoom-controls, .embed-controls, button, a, select, input, textarea')){
           return;
         }
       }

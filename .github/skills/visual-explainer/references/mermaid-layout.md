@@ -56,11 +56,38 @@ mermaid.initialize({
   overflow: visible !important;
 }
 
+/* Ensure theme-aware text contrast across light/dark modes */
+.mermaid text,
+.mermaid tspan,
+.mermaid .nodeLabel,
+.mermaid .nodeLabel span,
+.mermaid .nodeLabel p,
+.mermaid .node text,
+.mermaid .node tspan,
+.mermaid .node .label,
+.mermaid .cluster text,
+.mermaid .cluster-label text,
+.mermaid .cluster span,
+.mermaid .cluster p,
+.mermaid .cluster .nodeLabel,
+.mermaid .commit-label,
+.mermaid [class*="branch-label"],
+.mermaid [class*="commit-label"],
+.mermaid .edgeLabel,
+.mermaid .edgeLabel span,
+.mermaid .edgeLabel p,
+.mermaid .edgeLabel text,
+.mermaid .edgeLabel tspan {
+  color: var(--text) !important;
+  fill: var(--text) !important;
+}
+
 .mermaid .edgeLabel .label,
 .mermaid .labelBox {
   line-height: 1.25 !important;
 }
 
+/* Never set display: flex on .node foreignObject > div — breaks Mermaid Dagre text measurement */
 .mermaid .edgeLabel foreignObject,
 .mermaid .node foreignObject,
 .mermaid .node foreignObject > div {

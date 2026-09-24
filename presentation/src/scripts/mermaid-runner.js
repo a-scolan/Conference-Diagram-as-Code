@@ -46,20 +46,30 @@ function getMermaidConfig() {
       background:          'transparent',
       mainBkg:             '#0f172a',
       textColor:           '#f8fafc',
-      clusterBkg:          '#0f172a',
-      clusterBorder:       '#475569',
+      clusterBkg:          '#1e293b',
+      clusterBorder:       'rgba(255, 255, 255, 0.35)',
       actorBkg:            '#1e293b',
       actorBorder:         '#38bdf8',
       actorTextColor:      '#f8fafc',
       actorLineColor:      '#94a3b8',
       signalColor:         '#94a3b8',
       signalTextColor:     '#f8fafc',
-      labelBoxBkgColor:    '#0f172a',
-      labelBoxBorderColor: '#475569',
+      labelBoxBkgColor:    '#1e293b',
+      labelBoxBorderColor: 'rgba(255, 255, 255, 0.12)',
       labelTextColor:      '#f8fafc',
       loopTextColor:       '#f8fafc',
       titleColor:          '#f8fafc',
-      edgeLabelBackground: '#0f172a',
+      edgeLabelBackground: '#1e293b',
+      git0:                '#38bdf8',
+      git1:                '#34d399',
+      git2:                '#fb923c',
+      git3:                '#818cf8',
+      gitBranchLabel0:     '#f8fafc',
+      gitBranchLabel1:     '#f8fafc',
+      commitLabelColor:    '#f8fafc',
+      commitLabelBackground: '#1e293b',
+      tagLabelColor:       '#ffffff',
+      tagLabelBackground:  '#38bdf8',
     } : {
       // Theme clair : Google Blueprint Light (Haute lisibilité vidéo-projecteur)
       primaryColor:        '#e8f0fe',
@@ -95,11 +105,27 @@ function getMermaidConfig() {
       loopTextColor:       '#0f172a',
       titleColor:          '#0f172a',
       edgeLabelBackground: '#ffffff',
+      git0:                '#1a73e8',
+      git1:                '#16a34a',
+      git2:                '#ea580c',
+      git3:                '#0284c7',
+      gitBranchLabel0:     '#0f172a',
+      gitBranchLabel1:     '#0f172a',
+      commitLabelColor:    '#0f172a',
+      commitLabelBackground: '#f1f5f9',
+      tagLabelColor:       '#ffffff',
+      tagLabelBackground:  '#1a73e8',
     }
   };
 }
 
 async function initMermaid() {
+  document.querySelectorAll('.mermaid').forEach(function(el) {
+    if (!el.dataset.mermaidSource) {
+      el.dataset.mermaidSource = el.textContent;
+    }
+  });
+
   var mInstance = window.mermaid || null;
   if (!mInstance) {
     try {
@@ -170,24 +196,12 @@ function updateMerciQrSpotlightPosition() {
     if (!rawViewBox) return null;
     if (!svg.dataset.rawViewBox) svg.dataset.rawViewBox = rawViewBox;
 
-    var parts = rawViewBox.split(/[\s,]+/).map(Number);
+    var parts = svg.dataset.rawViewBox.split(/[\s,]+/).map(Number);
     if (parts.length !== 4 || parts.some(function(v){ return Number.isNaN(v); })) return null;
 
-    var fallbackPad = 60;
-    var viewBox = [parts[0] - fallbackPad, parts[1] - fallbackPad, parts[2] + fallbackPad * 2, parts[3] + fallbackPad * 2];
-
-    try {
-      var box = typeof svg.getBBox === 'function' ? svg.getBBox() : null;
-      if (box && box.width > 0 && box.height > 0) {
-        var padX = Math.max(36, Math.min(72, box.width * 0.08));
-        var padY = Math.max(32, Math.min(72, box.height * 0.12));
-        viewBox = [box.x - padX, box.y - padY, box.width + padX * 2, box.height + padY * 2];
-      }
-    } catch (e) {
-      /* Fallback keeps a stable padded viewBox based on the original bounds. */
-    }
-
-    return viewBox;
+    var padX = Math.max(36, Math.min(72, parts[2] * 0.08));
+    var padY = Math.max(32, Math.min(72, parts[3] * 0.08));
+    return [parts[0] - padX, parts[1] - padY, parts[2] + padX * 2, parts[3] + padY * 2];
   }
 
   /* Fit a single .mermaid element; returns true if dimensions were valid */
@@ -282,11 +296,35 @@ function updateMerciQrSpotlightPosition() {
     initMermaid();
   }
 
-  window.addEventListener('deck-theme-change', function() {
+  window.addEventListener('deck-theme-change', async function() {
     if (window.mermaid) {
       try {
         window.mermaid.initialize(getMermaidConfig());
-      } catch(e) {}
+        var wraps = document.querySelectorAll('.mermaid-wrap');
+        for (var i = 0; i < wraps.length; i++) {
+          var w = wraps[i];
+          var m = w.querySelector('.mermaid');
+          if (m && m.dataset.mermaidSource) {
+            var uniqueId = 'mermaid-theme-' + i + '-' + Date.now();
+            var res = await window.mermaid.render(uniqueId, m.dataset.mermaidSource);
+            m.innerHTML = res.svg;
+            autoFitMermaid(m);
+          }
+        }
+      } catch(e) {
+        console.warn('Erreur re-render Mermaid:', e);
+      }
     }
     autoFit();
+    enforcePart0GrayMarkers();
+    document.querySelectorAll('.mermaid-wrap').forEach(function(w){
+      var t = w.querySelector('.mermaid');
+      var z = getInitialZoom(w);
+      if (t) {
+        t.dataset.zoom = String(z);
+        t.style.transform = 'none';
+      }
+      updateZoomState(w);
+      updateZoomLayout(w);
+    });
   });

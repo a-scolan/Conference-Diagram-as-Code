@@ -291,6 +291,22 @@
       if (wrap) startEmbedLoad(wrap);
     }
   }
+
+  function switchWorkspaceTreeTab(btn, tabId) {
+    var frame = btn.closest('.workspace-tree__tab-frame');
+    if (!frame) return;
+    frame.querySelectorAll('.workspace-tree__tab-btn').forEach(function(b) {
+      var isActive = (b.getAttribute('data-tab-target') === tabId);
+      b.classList.toggle('is-active', isActive);
+      b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+    frame.querySelectorAll('.workspace-tree__tab-content').forEach(function(content) {
+      var isMatch = (content.getAttribute('data-tab-id') === tabId);
+      content.style.display = isMatch ? 'block' : 'none';
+    });
+  }
+  window.switchWorkspaceTreeTab = switchWorkspaceTreeTab;
+
   function toggleCodePreviewSplit(btn) {
     var slide = btn.closest('.slide--code-preview');
     if (!slide) return;

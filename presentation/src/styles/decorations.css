@@ -154,10 +154,26 @@
   opacity: 0.65;
 }
 
-@media (max-width: 768px), (max-height: 560px) {
-  .blueprint-deco-frame {
+@media (max-width: 960px), (max-height: 560px) {
+  .blueprint-deco-frame,
+  .card-hatch-strip-wrap {
     display: none !important;
   }
+}
+
+/* Désactivation des hachures sur la slide 31 (fiches Avant / Après) et la slide 17 (V1 vs V2) */
+.benefit-card .card-hatch-strip-wrap,
+.slide[data-nav="Avant / Après"] .card-hatch-strip-wrap,
+.slide[data-nav="V1 vs V2"] .card-hatch-strip-wrap {
+  display: none !important;
+}
+
+/* Désactivation des mires blueprint sur les slides denses (17, 31, 32) */
+.slide[data-nav="V1 vs V2"] > .blueprint-deco-frame,
+.slide[data-nav="Avant / Après"] > .blueprint-deco-frame,
+.slide[data-nav="Portail vivant"] > .blueprint-deco-frame,
+.slide--portal-vivant > .blueprint-deco-frame {
+  display: none !important;
 }
 
 /* ==========================================================================
@@ -290,6 +306,20 @@
    MOBILE LANDSCAPE COMPACT RULES (Écran paysage compact <= 560px)
    ========================================================================== */
 @media screen and (orientation: landscape) and (max-height: 560px) {
+  /* Masquage global des ascenseurs inesthétiques tout en préservant le défilement tactile */
+  * {
+    scrollbar-width: none !important;
+  }
+  *::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Aucune superposition décorative sur mobile paysage */
+  .blueprint-deco-frame,
+  .card-hatch-strip-wrap {
+    display: none !important;
+  }
+
   .deck-counter {
     display: none !important;
   }
@@ -356,15 +386,95 @@
 
   .slide__bullets li {
     font-size: clamp(12px, 2.8vh, 15px) !important;
-    padding: 4px 0 4px 18px !important;
-    margin-bottom: 4px !important;
+    padding: 0 0 0 18px !important;
+    margin-bottom: 6px !important;
     line-height: 1.4 !important;
   }
 
   .slide__bullets li::before {
-    top: 10px !important;
+    top: 0.7em !important;
+    top: 0.5lh !important;
+    transform: translateY(-50%) !important;
     width: 4px !important;
     height: 4px !important;
+  }
+
+  /* Speaker */
+  .slide--speaker .slide__heading {
+    font-size: clamp(24px, 5vh, 34px) !important;
+    line-height: 1 !important;
+    margin-bottom: 4px !important;
+  }
+  .slide--speaker .speaker-intro__role {
+    font-size: clamp(12px, 2.5vh, 15px) !important;
+    margin-bottom: 6px !important;
+  }
+  .slide--speaker .speaker-intro__lead {
+    font-size: clamp(11px, 2.2vh, 13.5px) !important;
+    line-height: 1.35 !important;
+    max-width: 90% !important;
+  }
+  .slide--speaker br {
+    display: none !important;
+  }
+  .slide--speaker .speaker-pill-list {
+    margin-top: 8px !important;
+    gap: 6px !important;
+  }
+  .slide--speaker .speaker-pill {
+    font-size: 10px !important;
+    padding: 3px 8px !important;
+  }
+
+  /* Fil rouge */
+  .slide--fil-rouge .speaker-card {
+    padding: 10px 14px !important;
+  }
+  .slide--fil-rouge .speaker-card__name {
+    font-size: 16px !important;
+  }
+  .slide--fil-rouge .speaker-card__meta {
+    font-size: 10.5px !important;
+    margin-bottom: 2px !important;
+  }
+  .slide--fil-rouge .speaker-roadmap li {
+    font-size: 10px !important;
+    padding: 2.5px 0 !important;
+    margin-bottom: 2.5px !important;
+  }
+  .slide--fil-rouge .speaker-panel {
+    padding: 10px 14px !important;
+  }
+
+  /* Cas d'étude */
+  .slide[data-nav="Cas d'étude"] .slide__inner {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) !important;
+    align-items: center !important;
+    gap: 14px !important;
+  }
+  .slide[data-nav="Cas d'étude"] .slide__aside--meme img {
+    max-height: clamp(130px, 46vh, 190px) !important;
+    width: auto !important;
+  }
+
+  /* C4 zoom */
+  .slide--c4-zoom .slide__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) !important;
+    gap: 12px !important;
+    align-items: center !important;
+  }
+  .slide--c4-zoom .slide__heading {
+    font-size: clamp(14px, 2.8vh, 18px) !important;
+    margin-bottom: 4px !important;
+  }
+  .slide--c4-zoom .slide__bullets li {
+    font-size: 9.5px !important;
+    padding: 0 0 0 10px !important;
+    margin-bottom: 3px !important;
+    line-height: 1.25 !important;
+  }
+  .slide--c4-zoom svg {
+    max-height: clamp(140px, 44vh, 200px) !important;
   }
 
   /* Citations et callouts */
@@ -402,10 +512,19 @@
   }
 
   /* Pull request */
+  .slide--pr-review {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+  .slide--pr-review .slide__body {
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+    margin-bottom: 4px !important;
+  }
   .slide--pr-review .mermaid-wrap {
-    height: clamp(130px, 34vh, 180px) !important;
+    height: clamp(120px, 30vh, 160px) !important;
     padding: 6px !important;
-    margin-top: 4px !important;
+    margin-top: 2px !important;
   }
   .slide--pr-review .pr-review__status {
     margin-top: 0 !important;
@@ -413,6 +532,24 @@
   .slide--pr-review .pr-review__badge {
     padding: 4px 10px !important;
     font-size: 10.5px !important;
+  }
+  .slide--pr-review .pr-review__cta {
+    margin-top: 4px !important;
+  }
+  .slide--pr-review .launcher__btn {
+    padding: 4px 12px !important;
+    font-size: 11px !important;
+    min-height: 32px !important;
+  }
+
+  /* Diagrammes Mermaid génériques */
+  .slide--diagram .mermaid-wrap {
+    height: clamp(150px, 46vh, 220px) !important;
+    touch-action: pan-x pan-y pinch-zoom !important;
+  }
+  .slide--diagram .mermaid-scroll {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
   }
 
   /* Questions de review */
@@ -497,6 +634,43 @@
     display: flex !important;
   }
 
+  /* Slide 24: Specs & arborescence avec tabs */
+  .slide--workspace-tree .slide__inner {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr) !important;
+    gap: 10px !important;
+  }
+  .slide--workspace-tree .workspace-tree__tab-bar {
+    padding: 3px 6px 0 !important;
+    gap: 3px !important;
+  }
+  .slide--workspace-tree .workspace-tree__tab-btn {
+    font-size: 9px !important;
+    padding: 3px 8px !important;
+  }
+  .slide--workspace-tree .workspace-tree__tab-content,
+  .slide--workspace-tree .workspace-tree__ascii-block {
+    padding: 6px 8px !important;
+  }
+  .slide--workspace-tree .slide__code-block code {
+    font-size: 9px !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Boutons de bascule de split et contrôles tactiles */
+  .code-preview__split-toggle {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 12px !important;
+    touch-action: manipulation;
+  }
+  .c2-unified__toggle,
+  .live-coding__toggle {
+    min-height: 32px !important;
+    padding: 4px 10px !important;
+    font-size: 11px !important;
+    touch-action: manipulation;
+  }
+
   /* Ressources et liste */
   .resource-item {
     padding: 4px 6px !important;
@@ -514,6 +688,16 @@
   .resource-item__body a {
     font-size: 11.5px !important;
     margin-bottom: 2px !important;
+  }
+  .slide[data-nav*="Ressources"] .slide__aside h3 {
+    font-size: 13px !important;
+    margin-bottom: 4px !important;
+  }
+  .slide[data-nav*="Ressources"] .slide__bullets li {
+    font-size: 9.5px !important;
+    padding: 0 0 0 10px !important;
+    margin-bottom: 3px !important;
+    line-height: 1.25 !important;
   }
 
   /* Commandes de zoom et contrôles tactiles */

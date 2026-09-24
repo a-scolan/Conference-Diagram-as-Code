@@ -2,10 +2,14 @@
     <p class="slide__label reveal">Collaborer</p>
     <h2 class="slide__heading reveal">Uniformiser les pratiques de codage, et la sémantique visuelle</h2>
     <div class="slide__inner">
-      <div class="code-preview__pane workspace-tree__code-stack">
-        <div class="code-preview__frame reveal">
-          <span class="slide__code-filename">spec-containers.c4</span>
-          <div class="slide__code-block">
+      <div class="code-preview__pane workspace-tree__pane">
+        <div class="code-preview__frame workspace-tree__tab-frame reveal">
+          <div class="workspace-tree__tab-bar" role="tablist" aria-label="Fichiers de modélisation">
+            <button type="button" class="workspace-tree__tab-btn is-active" role="tab" aria-selected="true" data-tab-target="spec" onclick="switchWorkspaceTreeTab(this, 'spec')">spec-containers.c4</button>
+            <button type="button" class="workspace-tree__tab-btn" role="tab" aria-selected="false" data-tab-target="model" onclick="switchWorkspaceTreeTab(this, 'model')">system-model.c4</button>
+          </div>
+
+          <div class="slide__code-block workspace-tree__tab-content" data-tab-id="spec">
             <pre><code><span class="kw">specification</span> {
   <span class="kw">tag</span> <span class="hl">Container</span>
   <span class="kw">tag</span> <span class="hl">MobileApp</span>
@@ -23,11 +27,8 @@
   }
 }</code></pre>
           </div>
-        </div>
 
-        <div class="code-preview__frame reveal">
-          <span class="slide__code-filename">system-model.c4</span>
-          <div class="slide__code-block">
+          <div class="slide__code-block workspace-tree__tab-content" data-tab-id="model" style="display:none;">
             <pre><code><span class="kw">model</span> {
   alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
     counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span>
