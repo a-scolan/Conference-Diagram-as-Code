@@ -1,0 +1,104 @@
+<section class="slide slide--content slide--c4-zoom" data-nav="C4 zoom" data-part="0">
+    <div class="slide__inner" style="align-items:center; gap:clamp(14px, 2.2vw, 32px);">
+      <div style="min-width:0; flex:1 1 52%;">
+        <p class="slide__label reveal">Modélisation C4</p>
+        <h2 class="slide__heading reveal" style="font-size:calc(clamp(20px, 2.5vw, 34px) + var(--font-bump)); line-height:1.2; max-width:26ch;">C4 = un découpage simple de vos architectures</h2>
+        <ul class="slide__bullets" style="margin-top:clamp(8px, 1.5vh, 14px);">
+          <li class="reveal" style="font-size:calc(clamp(11px, 1.1vw, 14px) + var(--font-bump)); line-height:1.35; padding:2px 0 2px 14px; margin-bottom:4px;"><strong class="c4-level c4-level--c1">C1 — Contexte</strong> : avec quoi interagit ce système ?</li>
+          <li class="reveal" style="font-size:calc(clamp(11px, 1.1vw, 14px) + var(--font-bump)); line-height:1.35; padding:2px 0 2px 14px; margin-bottom:4px;"><strong class="c4-level c4-level--c2">C2 — Containers</strong> : comment le système fonctionne-t-il ?</li>
+          <li class="reveal" style="font-size:calc(clamp(11px, 1.1vw, 14px) + var(--font-bump)); line-height:1.35; padding:2px 0 2px 14px; margin-bottom:4px;"><strong class="c4-level c4-level--c3">C3 — Components</strong> : comment se compose un container ?</li>
+          <li class="reveal" style="font-size:calc(clamp(11px, 1.1vw, 14px) + var(--font-bump)); line-height:1.35; padding:2px 0 2px 14px; margin-bottom:4px;"><strong class="c4-level c4-level--c4">C4 — Code</strong> : quelles classes / quels modules implémentent les composants ?</li>
+          <li class="reveal" style="font-size:calc(clamp(11px, 1.1vw, 14px) + var(--font-bump)); line-height:1.35; padding:2px 0 2px 14px; margin-bottom:4px;"><strong>Optionnel — Dynamique / Déploiement</strong> : comment ça s'exécute, où ça tourne ?</li>
+        </ul>
+      </div>
+      <div class="slide__aside reveal c4-zoom__viewport" style="flex:1 1 48%; min-width:0; position:relative; z-index:2; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:12px; mask-image:linear-gradient(to right, black 82%, transparent 100%), linear-gradient(to bottom, black 85%, transparent 100%); -webkit-mask-image:linear-gradient(to right, black 82%, transparent 100%), linear-gradient(to bottom, black 85%, transparent 100%); mask-composite:intersect; -webkit-mask-composite:source-in;">
+        <svg viewBox="0 0 350 310" width="100%" height="auto" style="max-height:clamp(220px, 50vh, 400px); overflow:visible;" aria-label="Imbrication C1 C2 C3 C4 et fantôme d'un second système">
+          <defs>
+            <linearGradient id="ghostFadeX" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#fff" stop-opacity="0.85"/>
+              <stop offset="60%" stop-color="#fff" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="ghostMaskRight">
+              <rect x="0" y="0" width="260" height="260" fill="url(#ghostFadeX)"/>
+            </mask>
+          </defs>
+          
+          <rect x="8" y="8" width="244" height="244" rx="10" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="2" opacity="0.42"/>
+          <text x="18" y="27" font-family="var(--font-mono)" font-size="11" fill="var(--accent)">C1 - Système</text>
+
+          
+          <rect x="22" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.58"/>
+          <text x="30" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Front</text>
+
+          
+          <rect x="30" y="64" width="88" height="76" rx="6" fill="var(--green-dim)" stroke="var(--green)" stroke-width="1.6" opacity="0.7"/>
+          <text x="36" y="78" font-family="var(--font-mono)" font-size="8" fill="var(--green)">C3 - UI</text>
+          <rect x="36" y="84" width="34" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
+          <text x="40" y="98" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - A</text>
+          <rect x="74" y="84" width="38" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
+          <text x="78" y="98" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - B</text>
+
+          <rect x="30" y="148" width="88" height="76" rx="6" fill="var(--green-dim)" stroke="var(--green)" stroke-width="1.6" opacity="0.7"/>
+          <text x="36" y="162" font-family="var(--font-mono)" font-size="8" fill="var(--green)">C3 - Client API</text>
+          <rect x="36" y="168" width="34" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
+          <text x="40" y="182" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - C</text>
+          <rect x="74" y="168" width="38" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
+          <text x="78" y="182" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - D</text>
+
+          
+          <rect x="134" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.58"/>
+          <text x="142" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Back</text>
+
+          
+          <rect x="142" y="64" width="88" height="76" rx="6" fill="var(--green-dim)" stroke="var(--green)" stroke-width="1.6" opacity="0.7"/>
+          <text x="148" y="78" font-family="var(--font-mono)" font-size="8" fill="var(--green)">C3 - Controller</text>
+          <rect x="148" y="84" width="34" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
+          <text x="152" y="98" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - E</text>
+          <rect x="186" y="84" width="38" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
+          <text x="190" y="98" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - F</text>
+
+          <rect x="142" y="148" width="88" height="76" rx="6" fill="var(--green-dim)" stroke="var(--green)" stroke-width="1.6" opacity="0.7"/>
+          <text x="148" y="162" font-family="var(--font-mono)" font-size="8" fill="var(--green)">C3 - Domain</text>
+          <rect x="148" y="168" width="34" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
+          <text x="152" y="182" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - G</text>
+          <rect x="186" y="168" width="38" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
+          <text x="190" y="182" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - H</text>
+
+          
+          <g transform="translate(260 0)" opacity="0.44">
+            <rect x="8" y="8" width="244" height="244" rx="10" fill="var(--accent-dim)" stroke="var(--accent3)" stroke-width="2" stroke-dasharray="7 7" opacity="0.52"/>
+            <text x="18" y="27" font-family="var(--font-mono)" font-size="11" fill="var(--accent3)">C1 - Autre système</text>
+
+            <rect x="22" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.62"/>
+            <text x="30" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Front</text>
+
+            <rect x="134" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.62"/>
+            <text x="142" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Back</text>
+          </g>
+          
+          <g transform="translate(0 260)" opacity="0.44">
+            <rect x="8" y="8" width="244" height="244" rx="10" fill="var(--accent-dim)" stroke="var(--accent3)" stroke-width="2" stroke-dasharray="7 7" opacity="0.52"/>
+            <text x="18" y="27" font-family="var(--font-mono)" font-size="11" fill="var(--accent3)">C1 - Autre système</text>
+
+            <rect x="22" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.62"/>
+            <text x="30" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Front</text>
+
+            <rect x="134" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.62"/>
+            <text x="142" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Back</text>
+          </g>
+          
+          <g transform="translate(260 260)" opacity="0.44">
+            <rect x="8" y="8" width="244" height="244" rx="10" fill="var(--accent-dim)" stroke="var(--accent3)" stroke-width="2" stroke-dasharray="7 7" opacity="0.52"/>
+            <text x="18" y="27" font-family="var(--font-mono)" font-size="11" fill="var(--accent3)">C1 - Autre système</text>
+
+            <rect x="22" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.62"/>
+            <text x="30" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Front</text>
+
+            <rect x="134" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.62"/>
+            <text x="142" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Back</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>

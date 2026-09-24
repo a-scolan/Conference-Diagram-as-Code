@@ -1,0 +1,396 @@
+/* ============ Embed iframe controls ============ */
+  function isLikeC4Embed(wrap) {
+    return !!(wrap && wrap.dataset.embedKind === 'likec4');
+  }
+  function isManualEmbed(wrap) {
+    return !!(wrap && wrap.dataset.loadMode === 'manual');
+  }
+  function getEmbedTimeout(wrap) {
+    var timeout = parseInt(wrap && wrap.dataset.embedTimeout ? wrap.dataset.embedTimeout : '', 10);
+    if (!isNaN(timeout) && timeout > 0) return timeout;
+    return isManualEmbed(wrap) ? 10000 : 6000;
+  }
+  function clearEmbedFallbackTimer(wrap) {
+    if (wrap && wrap._embedFallbackTimer) {
+      window.clearTimeout(wrap._embedFallbackTimer);
+      wrap._embedFallbackTimer = 0;
+    }
+  }
+  function updateLikeC4ActionState(wrap) {
+    var button = wrap ? wrap.querySelector('.embed-likec4-cta') : null;
+    var label = button ? button.querySelector('.embed-likec4-cta__label') : null;
+    if (!button || !label) return;
+
+    var isLoading = wrap.classList.contains('is-loading');
+    var isLoaded = wrap.classList.contains('is-loaded');
+    var isFallback = wrap.classList.contains('is-fallback');
+
+    button.disabled = !!isLoading;
+    button.classList.toggle('is-busy', isLoading);
+    button.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+    label.textContent = isLoading ? 'Chargement LikeC4…' : 'Rendu LikeC4';
+
+    if (isLoading) {
+      button.setAttribute('title', 'Chargement du rendu LikeC4');
+      button.setAttribute('aria-label', 'Chargement du rendu LikeC4');
+    } else if (isLoaded) {
+      button.setAttribute('title', 'Recharger le rendu LikeC4');
+      button.setAttribute('aria-label', 'Recharger le rendu LikeC4');
+    } else if (isFallback) {
+      button.setAttribute('title', 'Réessayer le rendu LikeC4');
+      button.setAttribute('aria-label', 'Réessayer le rendu LikeC4');
+    } else {
+      button.setAttribute('title', 'Charger le rendu LikeC4');
+      button.setAttribute('aria-label', 'Charger le rendu LikeC4');
+    }
+  }
+  function updateEmbedLoaderState(wrap, isLoading) {
+    var loader = wrap ? wrap.querySelector('.embed-loader') : null;
+    if (!loader) return;
+    var button = loader.querySelector('.embed-loader__button');
+    var hint = loader.querySelector('.embed-loader__hint');
+    if (button) {
+      button.disabled = !!isLoading;
+      button.textContent = isLoading ? 'Chargement LikeC4…' : 'Charger le rendu LikeC4';
+    }
+    if (hint) {
+      hint.textContent = isLoading
+        ? 'Le rendu démarre… je lui laisse un peu plus de temps avant le fallback.'
+        : 'Déclenche le chargement quand tu veux.';
+    }
+  }
+  function ensureLikeC4PrimaryAction(wrap) {
+    if (!isLikeC4Embed(wrap) || isManualEmbed(wrap) || wrap.querySelector('.embed-likec4-cta')) return;
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'embed-likec4-cta';
+    button.innerHTML = [
+      '<span class="embed-likec4-cta__status" aria-hidden="true"></span>',
+      '<span class="embed-likec4-cta__label">Rendu LikeC4</span>'
+    ].join('');
+    button.addEventListener('click', function() {
+      startEmbedLoad(wrap, { forceReload: wrap.classList.contains('is-loaded') || wrap.classList.contains('is-fallback') });
+    });
+    wrap.appendChild(button);
+  }
+  function ensureManualEmbedLoader(wrap) {
+    if (!isManualEmbed(wrap) || wrap.querySelector('.embed-loader')) return;
+    var fallback = wrap.querySelector('.embed-fallback');
+    var loader = document.createElement('div');
+    loader.className = 'embed-loader';
+    loader.setAttribute('aria-live', 'polite');
+    loader.innerHTML = [
+      '<button type="button" class="embed-loader__button">Charger le rendu LikeC4</button>'
+    ].join('');
+    loader.querySelector('.embed-loader__button').addEventListener('click', function() {
+      startEmbedLoad(wrap);
+    });
+    if (fallback) {
+      wrap.insertBefore(loader, fallback);
+    } else {
+      wrap.appendChild(loader);
+    }
+  }
+  function markEmbedLoaded(wrap) {
+    clearEmbedFallbackTimer(wrap);
+    wrap.classList.remove('is-loading', 'is-fallback');
+    wrap.classList.add('is-loaded');
+    var fallback = wrap.querySelector('.embed-fallback');
+    if (fallback) fallback.classList.remove('visible');
+    updateEmbedLoaderState(wrap, false);
+    updateLikeC4ActionState(wrap);
+  }
+  function showEmbedFallback(wrap) {
+    clearEmbedFallbackTimer(wrap);
+    wrap.classList.remove('is-loading', 'is-loaded');
+    wrap.classList.add('is-fallback');
+    var fallback = wrap.querySelector('.embed-fallback');
+    if (fallback) fallback.classList.add('visible');
+    updateEmbedLoaderState(wrap, false);
+    updateLikeC4ActionState(wrap);
+  }
+  function armEmbedFallbackTimer(wrap, iframe) {
+    clearEmbedFallbackTimer(wrap);
+    wrap._embedFallbackTimer = window.setTimeout(function() {
+      try {
+        var doc = iframe.contentDocument || iframe.contentWindow.document;
+        if (doc && doc.body && doc.body.children.length > 0) {
+          markEmbedLoaded(wrap);
+          return;
+        }
+      } catch (e) {
+        /* Cross-origin or blocked — fall through to the fallback overlay. */
+      }
+      showEmbedFallback(wrap);
+    }, getEmbedTimeout(wrap));
+  }
+  function getThemeAdjustedUrl(rawUrl) {
+    if (!rawUrl) return '';
+    var isDark = document.documentElement.getAttribute('data-theme') === 'slate-architect' || document.documentElement.getAttribute('data-theme') === 'dark';
+    var targetTheme = isDark ? 'dark' : 'light';
+    if (rawUrl.indexOf('theme=') !== -1) {
+      return rawUrl.replace(/theme=(dark|light)/g, 'theme=' + targetTheme);
+    }
+    if (rawUrl.indexOf('#') !== -1) {
+      var parts = rawUrl.split('#');
+      var path = parts[0];
+      var hash = parts[1];
+      var joiner = hash.indexOf('?') !== -1 ? '&' : '?';
+      return path + '#' + hash + joiner + 'theme=' + targetTheme;
+    }
+    return rawUrl + (rawUrl.indexOf('?') !== -1 ? '&' : '?') + 'theme=' + targetTheme;
+  }
+
+  function startEmbedLoad(wrap, options) {
+    if (!wrap) return;
+    var iframe = wrap.querySelector('iframe');
+    var fallback = wrap.querySelector('.embed-fallback');
+    var forceReload = !!(options && options.forceReload);
+    if (!iframe || !iframe.dataset.src) return;
+    if (wrap.classList.contains('is-loading') && !forceReload) return;
+    wrap._embedRequested = true;
+    delete wrap.dataset.likec4ViewportTunedFor;
+    if (fallback) fallback.classList.remove('visible');
+    wrap.classList.remove('is-fallback', 'is-loaded');
+    wrap.classList.add('is-loading');
+    updateEmbedLoaderState(wrap, true);
+    updateLikeC4ActionState(wrap);
+
+    var targetUrl = getThemeAdjustedUrl(iframe.dataset.src);
+    if (forceReload && iframe.src) {
+      iframe.src = targetUrl;
+    } else if (!iframe.src || forceReload) {
+      iframe.src = targetUrl;
+    }
+
+    armEmbedFallbackTimer(wrap, iframe);
+  }
+  function reloadEmbed(btn) {
+    var wrap = btn.closest('.embed-wrap');
+    startEmbedLoad(wrap, { forceReload: true });
+  }
+  function openEmbedExternal(btn) {
+    var wrap = btn.closest('.embed-wrap');
+    var iframe = wrap.querySelector('iframe');
+    var url = iframe.src || iframe.dataset.src;
+    if (url) window.open(url, '_blank');
+  }
+  function shouldTuneLikeC4Viewport(wrap) {
+    return isLikeC4Embed(wrap);
+  }
+  function getLikeC4ZoomOutSteps(wrap) {
+    var steps = parseInt(wrap && wrap.dataset.likec4ZoomoutSteps ? wrap.dataset.likec4ZoomoutSteps : '', 10);
+    return !isNaN(steps) && steps > 0 ? steps : 0;
+  }
+  function triggerLikeC4Control(doc, selector, count) {
+    var remaining = Math.max(0, count || 0);
+    var clicks = 0;
+    while (remaining > 0) {
+      var btn = doc.querySelector(selector);
+      if (!btn || btn.disabled) break;
+      btn.click();
+      clicks += 1;
+      remaining -= 1;
+    }
+    return clicks;
+  }
+  function applyLikeC4ViewportTuning(wrap) {
+    if (!shouldTuneLikeC4Viewport(wrap)) return false;
+    var iframe = wrap.querySelector('iframe');
+    if (!iframe || !iframe.contentWindow) return false;
+    try {
+      var doc = iframe.contentDocument || iframe.contentWindow.document;
+      if (!doc || !doc.body) return false;
+      // Par défaut toujours fitview pour bien centrer le contenu au chargement
+      var fitClicks = String(wrap.dataset.likec4FitOnLoad || 'true').toLowerCase() === 'false' ? 0 : 1;
+      var fitDone = triggerLikeC4Control(doc, '.react-flow__controls-fitview', fitClicks);
+      var zoomOutDone = triggerLikeC4Control(doc, '.react-flow__controls-zoomout', getLikeC4ZoomOutSteps(wrap));
+      return !!(fitDone || zoomOutDone);
+    } catch (e) {
+      return false;
+    }
+  }
+  function scheduleLikeC4ViewportTuning(wrap, force) {
+    if (!wrap || !shouldTuneLikeC4Viewport(wrap)) return;
+    var iframe = wrap.querySelector('iframe');
+    var stamp = iframe ? (iframe.src || iframe.dataset.src || wrap.id || '') : (wrap.id || '');
+    if (force) delete wrap.dataset.likec4ViewportTunedFor;
+    if (!force && wrap.dataset.likec4ViewportTunedFor === stamp) return;
+    if (Array.isArray(wrap._likec4ViewportTimers)) {
+      wrap._likec4ViewportTimers.forEach(function(id) { window.clearTimeout(id); });
+    }
+    wrap._likec4ViewportTimers = [80, 220, 480].map(function(delay) {
+      return window.setTimeout(function() {
+        if (wrap.dataset.likec4ViewportTunedFor === stamp) return;
+        if (applyLikeC4ViewportTuning(wrap)) {
+          wrap.dataset.likec4ViewportTunedFor = stamp;
+        }
+      }, delay);
+    });
+  }
+  function toggleC2UnifiedView(btn) {
+    var slide = btn.closest('.slide--c2-unified');
+    if (!slide) return;
+    var current = slide.getAttribute('data-view') === 'likec4' ? 'likec4' : 'mermaid';
+    var next = current === 'mermaid' ? 'likec4' : 'mermaid';
+    var nextIsLikeC4 = next === 'likec4';
+    slide.setAttribute('data-view', next);
+    btn.setAttribute('aria-pressed', String(nextIsLikeC4));
+    btn.setAttribute('aria-label', nextIsLikeC4 ? 'Afficher le bloc Mermaid' : 'Afficher le bloc code et l\'aperçu LikeC4');
+    btn.textContent = nextIsLikeC4 ? 'Mermaid' : 'LikeC4';
+
+    window.requestAnimationFrame(function() {
+      autoFit();
+      var likec4Wrap = slide.querySelector('.c2-unified__view--likec4 .embed-wrap');
+      if (nextIsLikeC4 && likec4Wrap && likec4Wrap.classList.contains('is-loaded')) {
+        scheduleLikeC4ViewportTuning(likec4Wrap, true);
+      }
+      var mermaidWrap = slide.querySelector('.c2-unified__view--mermaid .mermaid-wrap');
+      if (mermaidWrap) {
+        var mt = mermaidWrap.querySelector('.mermaid');
+        if (mt && (!mt.dataset.baseW || parseFloat(mt.dataset.baseW) < 40)) {
+          var ok = autoFitMermaid(mt);
+          if (!ok) {
+            window.requestAnimationFrame(function(){window.requestAnimationFrame(function(){
+              autoFitMermaid(mt);
+              var mz2 = getInitialZoom(mermaidWrap);
+              mt.dataset.zoom = String(mz2);
+              updateZoomState(mermaidWrap);
+              updateZoomLayout(mermaidWrap);
+              scheduleCenterMermaidViewport(mermaidWrap, true);
+            });});
+            return;
+          }
+          var mz = getInitialZoom(mermaidWrap);
+          mt.dataset.zoom = String(mz);
+          updateZoomState(mermaidWrap);
+        }
+        updateZoomLayout(mermaidWrap);
+        scheduleCenterMermaidViewport(mermaidWrap, true);
+      }
+    });
+  }
+  function toggleLiveCodingView(btn) {
+    var slide = btn.closest('.slide--live-coding');
+    if (!slide) return;
+    var current = slide.getAttribute('data-view') === 'detail' ? 'detail' : 'launcher';
+    var next = current === 'launcher' ? 'detail' : 'launcher';
+    slide.setAttribute('data-view', next);
+
+    var launcherButton = slide.querySelector('.live-coding__launcher-btn');
+    if (launcherButton) {
+      launcherButton.setAttribute('aria-expanded', String(next === 'detail'));
+    }
+
+    if (next === 'detail') {
+      var wrap = slide.querySelector('.live-coding__embed-wrap');
+      if (wrap) startEmbedLoad(wrap);
+    }
+  }
+  function toggleCodePreviewSplit(btn) {
+    var slide = btn.closest('.slide--code-preview');
+    if (!slide) return;
+    var mode = slide.getAttribute('data-split-mode') || 'half'; // 'half' ou 'two-thirds'
+    var current = slide.getAttribute('data-split') || 'third';
+    var next;
+    if (mode === 'two-thirds') {
+      next = current === 'two-thirds' ? 'third' : 'two-thirds';
+      btn.setAttribute('aria-label', next === 'two-thirds' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 2/3 code, 1/3 schéma');
+      btn.setAttribute('title', next === 'two-thirds' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 2/3 - 1/3');
+    } else {
+      next = current === 'half' ? 'third' : 'half';
+      btn.setAttribute('aria-label', next === 'half' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 50/50');
+      btn.setAttribute('title', next === 'half' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 1/2 - 1/2');
+    }
+    slide.setAttribute('data-split', next);
+
+    // Réajuster les diagrammes ou iframes au redimensionnement
+    window.requestAnimationFrame(function() {
+      if (typeof window.autoFit === 'function') window.autoFit();
+      var likec4Wrap = slide.querySelector('.embed-wrap');
+      if (likec4Wrap && likec4Wrap.classList.contains('is-loaded')) {
+        scheduleLikeC4ViewportTuning(likec4Wrap, true);
+      }
+    });
+  }
+  window.toggleCodePreviewSplit = toggleCodePreviewSplit;
+
+  function ensureCodePreviewSplitToggles() {
+    document.querySelectorAll('.slide--code-preview:not(.slide--live-coding):not(.slide--workspace-tree)').forEach(function(slide) {
+      var inner = slide.querySelector('.slide__inner');
+      if (!inner || inner.querySelector('.code-preview__split-toggle')) return;
+      var mode = slide.getAttribute('data-split-mode') || 'half';
+      var current = slide.getAttribute('data-split') || (mode === 'two-thirds' ? 'two-thirds' : 'third');
+      var initialTitle;
+      if (mode === 'two-thirds') {
+        initialTitle = current === 'two-thirds' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 2/3 - 1/3';
+      } else {
+        initialTitle = current === 'half' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 1/2 - 1/2';
+      }
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'code-preview__split-toggle';
+      btn.innerHTML = '&lt;&gt;';
+      btn.setAttribute('title', initialTitle);
+      btn.setAttribute('aria-label', initialTitle);
+      btn.addEventListener('click', function() {
+        toggleCodePreviewSplit(btn);
+      });
+      inner.appendChild(btn);
+    });
+  }
+
+  /* Lazy-load embeds when their slide becomes visible + detect load errors */
+  (function initEmbeds() {
+    ensureCodePreviewSplitToggles();
+    document.querySelectorAll('.embed-wrap iframe[data-src]').forEach(function(iframe) {
+      var wrap = iframe.closest('.embed-wrap');
+      var manual = isManualEmbed(wrap);
+
+      ensureLikeC4PrimaryAction(wrap);
+      ensureManualEmbedLoader(wrap);
+      updateEmbedLoaderState(wrap, false);
+      updateLikeC4ActionState(wrap);
+
+      iframe.addEventListener('load', function() {
+        if (manual && !wrap._embedRequested) return;
+        markEmbedLoaded(wrap);
+        scheduleLikeC4ViewportTuning(wrap, true);
+        try {
+          var currentTheme = document.documentElement.getAttribute('data-theme') || 'google-blueprint-light';
+          iframe.contentWindow.postMessage({ type: 'deck-theme-change', theme: currentTheme }, '*');
+        } catch (e) {}
+      });
+
+      iframe.addEventListener('error', function() {
+        if (manual && !wrap._embedRequested) return;
+        showEmbedFallback(wrap);
+      });
+
+      function tryLoad() {
+        if (manual) return;
+        startEmbedLoad(wrap);
+      }
+
+      /* Use IntersectionObserver to lazy-load when slide scrolls into view */
+      if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) { tryLoad(); obs.disconnect(); }
+          });
+        }, { threshold: 0.1 });
+        obs.observe(wrap);
+      } else {
+        tryLoad();
+      }
+    });
+  })();
+
+  // Synchroniser le thème des iframes LikeC4 au changement de thème du diaporama
+  window.addEventListener('deck-theme-change', function() {
+    document.querySelectorAll('.embed-wrap iframe').forEach(function(iframe) {
+      if (iframe.src) {
+        iframe.src = getThemeAdjustedUrl(iframe.src);
+      }
+    });
+  });

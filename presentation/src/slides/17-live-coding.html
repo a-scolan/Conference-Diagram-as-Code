@@ -1,0 +1,73 @@
+<section class="slide slide--content slide--code-preview slide--live-coding" data-nav="Live coding" data-view="launcher">
+    <div class="live-coding__view live-coding__view--launcher">
+      <div class="live-coding__launcher reveal">
+        <button
+          class="launcher__btn live-coding__launcher-btn"
+          type="button"
+          onclick="toggleLiveCodingView(this)"
+          aria-label="Afficher le live coding de coffee-v2"
+          aria-expanded="false"
+        >Live coding</button>
+      </div>
+    </div>
+
+    <div class="live-coding__view live-coding__view--detail">
+      <p class="slide__label reveal">V2 &middot; live coding</p>
+      <h2 class="slide__heading reveal">Le mod&egrave;le V2 : ce qui change vraiment par rapport &agrave; coffee-v1</h2>
+      <div class="slide__inner">
+        <div class="code-preview__pane code-preview__pane--code">
+          <div class="code-preview__frame reveal">
+            <span class="slide__code-filename"> coffee-v2/system-model.c4 &middot; diff vs coffee-v1</span>
+            <div class="slide__code-block live-coding__code-block">
+              <pre><code><span class="line-ctx"><span class="kw">model</span> {</span>
+<span class="line-add">  festivalSystem = <span class="hl">System_External</span> <span class="str">'Syst&egrave;me Festival'</span> {</span>
+<span class="line-add">    festivalApp = <span class="hl">Container_MobileApp</span> <span class="str">'Application Festival'</span> { <span class="cm">...</span> }</span>
+<span class="line-add">    festivalService = <span class="hl">Container_Api</span> <span class="str">'Service Festival'</span> { <span class="cm">...</span> }</span>
+<span class="line-add">    festivalApp -[<span class="hl">calls</span>]-&gt; festivalService <span class="str">'API mobile festival'</span> { <span class="kw">technology</span> <span class="str">'HTTPS'</span> }</span>
+<span class="line-add">  }</span>
+<span class="line-ctx">  alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {</span>
+<span class="line-ctx">    counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span> { <span class="cm">...</span> }</span>
+<span class="line-ctx">    baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span> { <span class="cm">...</span> }</span>
+<span class="line-ctx">    orderService = <span class="hl">Container_Api</span> <span class="str">'Service de Commandes'</span> { <span class="cm">...</span> }</span>
+<span class="line-ctx">    preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span> { <span class="cm">...</span> }</span>
+<span class="line-add">    notificationService = <span class="hl">Container_Api</span> <span class="str">'Service Notification'</span> { <span class="cm">...</span> }</span>
+<span class="line-ctx">    eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span> { <span class="cm">...</span> }</span>
+<span class="line-add">    eventBus -[<span class="hl">async</span>]-&gt; notificationService <span class="str">'Livre order.preparing / order.ready'</span> {</span>
+<span class="line-add">      <span class="kw">technology</span> <span class="str">'AMQP'</span></span>
+<span class="line-add">    }</span>
+<span class="line-add">    notificationService -[<span class="hl">uses</span>]-&gt; festivalSystem.festivalApp <span class="str">'Envoie push notification'</span> {</span>
+<span class="line-add">      <span class="kw">technology</span> <span class="str">'Firebase Cloud Messaging'</span></span>
+<span class="line-add">    }</span>
+<span class="line-ctx">  }</span>
+<span class="line-add">  festivalier -[<span class="hl">uses</span>]-&gt; festivalSystem.festivalApp <span class="str">'Commande mobile et suivi'</span></span>
+<span class="line-mod">  festivalier -[<span class="hl">uses</span>]-&gt; alefestCoffee.counterApp <span class="str">'Commande au comptoir (fallback)'</span></span>
+<span class="line-ctx">  barista -[<span class="hl">uses</span>]-&gt; alefestCoffee.baristaScreen <span class="str">'Pr&eacute;pare et remet la boisson'</span></span>
+<span class="line-add">  festivalSystem.festivalService -[<span class="hl">uses</span>]-&gt; alefestCoffee.orderService <span class="str">'Int&eacute;gration des commandes partenaire'</span> { <span class="kw">technology</span> <span class="str">'HTTPS'</span> }</span>
+<span class="line-ctx">}</span></code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide__aside reveal code-preview__pane code-preview__pane--embed">
+          <div class="code-preview__frame">
+            <span class="slide__code-filename">Vue C2</span>
+            <div class="embed-wrap live-coding__embed-wrap" id="coffee-v2-c2-live-coding-embed" data-embed-timeout="10000">
+              <div class="embed-controls">
+                <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
+                <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
+              </div>
+              <iframe
+                title="LikeC4 coffee-v2 C2 live coding"
+                loading="lazy"
+                data-src="assets/coffee-v2-single/index.html#/project/coffee-v2/view/c2_containers"
+              ></iframe>
+              <div class="embed-fallback" aria-live="polite">
+                <span>Impossible de charger l'aper&ccedil;u ici.</span>
+                <a href="assets/coffee-v2-single/index.html#/project/coffee-v2/view/c2_containers" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v2 (vue C2)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

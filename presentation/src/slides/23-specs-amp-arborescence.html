@@ -1,0 +1,68 @@
+<section class="slide slide--content slide--code-preview slide--diagram-flow slide--workspace-tree" data-nav="Specs &amp; arborescence">
+    <p class="slide__label reveal">Collaborer</p>
+    <h2 class="slide__heading reveal">Uniformiser les pratiques de codage, et la sémantique visuelle</h2>
+    <div class="slide__inner">
+      <div class="code-preview__pane workspace-tree__code-stack">
+        <div class="code-preview__frame reveal">
+          <span class="slide__code-filename">spec-containers.c4</span>
+          <div class="slide__code-block">
+            <pre><code><span class="kw">specification</span> {
+  <span class="kw">tag</span> <span class="hl">Container</span>
+  <span class="kw">tag</span> <span class="hl">MobileApp</span>
+  <span class="kw">tag</span> <span class="hl">Database</span>
+
+  <span class="kw">element</span> <span class="hl">Container_MobileApp</span> {
+    #Container #MobileApp
+    notation <span class="str">&quot;Mobile application&quot;</span>
+    <span class="kw">style</span> { shape mobile; icon @/custom/smartphone.svg }
+  }
+
+  <span class="kw">element</span> <span class="hl">Container_Database</span> {
+    #Container #Database
+    <span class="kw">style</span> { color storage; shape storage; icon @/lucide-static/database.svg }
+  }
+}</code></pre>
+          </div>
+        </div>
+
+        <div class="code-preview__frame reveal">
+          <span class="slide__code-filename">system-model.c4</span>
+          <div class="slide__code-block">
+            <pre><code><span class="kw">model</span> {
+  alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
+    counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span>
+    baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span>
+    orderService = <span class="hl">Container_Api</span> <span class="str">'Service de Commandes'</span>
+    preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span>
+    notificationService = <span class="hl">Container_Api</span> <span class="str">'Service Notification'</span>
+    eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span>
+    database = <span class="hl">Container_Database</span> <span class="str">'PostgreSQL'</span>
+  }
+}</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide__aside code-preview__pane">
+        <div class="code-preview__frame workspace-tree__ascii-frame reveal">
+          <span class="slide__code-filename">Arborescence de projet</span>
+          <div class="slide__code-block workspace-tree__ascii-block" aria-label="Arborescence ASCII du dossier projects avec coffee-v2 et shared, le dossier images n'&eacute;tant pas d&eacute;pli&eacute;.">
+            <pre><code><span class="kw">projects/</span>
+├─ <span class="hl">coffee-v2/</span>
+│  ├─ likec4.config.ts
+│  ├─ system-model.c4
+│  └─ system-views.c4
+└─ <span class="hl">shared/</span>
+   ├─ images/
+   ├─ SPEC_CHEATSHEET.md
+   ├─ spec-code.c4
+   ├─ spec-components.c4
+   ├─ spec-containers.c4
+   ├─ spec-context.c4
+   ├─ spec-deployment.c4
+   └─ spec-global.c4</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

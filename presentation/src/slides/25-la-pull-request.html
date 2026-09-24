@@ -1,0 +1,40 @@
+<section class="slide slide--diagram slide--pr-review" data-nav="La pull request">
+    <p class="slide__label reveal">Revue d'architecture</p>
+    <h2 class="slide__heading reveal">La pull request</h2>
+    <p class="slide__body reveal">La PR r&eacute;pond ensuite &agrave; ces questions d'un coup d'oeil&nbsp;: branche relue, point de divergence et commit rep&egrave;re.</p>
+    <div class="slide__inner">
+      <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="2.5" data-initial-zoom="1.0" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
+        <div class="zoom-controls" role="toolbar" aria-label="Commandes de zoom du diagramme git">
+          <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom avant" aria-label="Zoom avant">+</button>
+          <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom arri&egrave;re" aria-label="Zoom arri&egrave;re">&minus;</button>
+          <button type="button" data-zoom-action="reset" title="R&eacute;initialiser le zoom" aria-label="R&eacute;initialiser le zoom">&#8634;</button>
+        </div>
+        <div class="mermaid-scroll" role="img" aria-label="Diagramme git de la pull request montrant la branche v2_png issue de main et le point de revue PR 1.">
+          <pre class="mermaid">
+gitGraph
+   commit id: "v1"
+   branch alefest_coffee_v2
+   checkout alefest_coffee_v2
+   commit id: "v2"
+   commit id: "review" type: HIGHLIGHT tag: "Pull request"
+   checkout main
+   commit id: "bugfix #1"
+   commit id: "bugfix #2"
+          </pre>
+        </div>
+      </div>
+
+	  <div class="pr-review__status reveal">
+		<span class="pr-review__badge"><code>feat/alefest_coffee_v2</code> → <code>main</code></span>
+	  </div>
+      <div class="pr-review__cta reveal">
+        <a class="launcher__btn" href="https://github.com/a-scolan/likec4-presentation/pull/1/changes" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir la page GitHub de diff de la pull request">
+          <span>Ouvrir la PR</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 7H17V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>

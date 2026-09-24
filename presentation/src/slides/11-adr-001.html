@@ -1,0 +1,61 @@
+<section class="slide slide--code slide--code-preview slide--adr-preview" data-nav="ADR-001">
+    <h2 class="slide__heading reveal">ADR-001&nbsp;: digitaliser le stand caf&eacute;</h2>
+    <div class="slide__inner">
+      <div class="code-preview__pane code-preview__pane--code">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename">ADR-001 Digital coffee.md</span>
+          <div class="slide__code-block reveal">
+            <pre><code><span class="cm"># ADR-001 : le stand café numérique</span>
+## Status
+Accepted
+
+## Contexte
+Le stand café du festival AleFest souffre de 3 problèmes :
+- File d'attente physique : les festivaliers bloquent 15 min et ratent des concerts
+- Pas de visibilité sur le temps d'attente
+- Baristas débordés sans priorisation ni suivi des commandes
+
+## Décision
+Créer un système de prise de commande numérique au comptoir avec :
+- Une borne/tablette pour saisir les commandes (staff ou self-service)
+- Un écran barista affichant la file de préparation	
+- Un backend simple gérant commandes, un autre backend les présentant aux baristas
+- Une file de messages faisant communiquer les backends et permettant de découpler les traitements
+- Une base de données pour persistence des états et  de la comptabilité
+
+## Contraintes
+- Les baristas doivent pouvoir marquer une commande "prête" en un tap
+- Le festivalier attend au comptoir jusqu'à la remise de la boisson
+
+## Conséquences
+- Réduit la file physique au comptoir
+- Donne une meilleure visibilité aux baristas sur les commandes en cours
+- Pose une base simple pour une évolution mobile ultérieure</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="slide__aside reveal code-preview__pane code-preview__pane--embed">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename">Copilot replay</span>
+          <div class="embed-wrap reveal" id="adr-001-c1-embed">
+            <div class="embed-controls">
+              <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
+              <button onclick="openEmbedExternal(this)" title="Ouvrir dans un nouvel onglet">↗</button>
+            </div>
+            <iframe
+              title="Copilot replay"
+              loading="lazy"
+              data-src="assets/replay_ADR.html"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms allow-modals allow-downloads"
+              allow="clipboard-read; clipboard-write"
+            ></iframe>
+            <div class="embed-fallback" aria-live="polite">
+              <p style="font-size:18px;">Impossible de charger l'aper&ccedil;u ici.</p>
+              <p style="font-size:14px; max-width:560px;">Le replay est disponible localement dans <code>presentation/public/assets/replay_ADR.html</code>.</p>
+              <a href="assets/replay_ADR.html" target="_blank" rel="noopener noreferrer">Ouvrir le Copilot replay</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

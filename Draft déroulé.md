@@ -446,7 +446,7 @@ positif:
 ---
 ### Les outils existants 
 
-![[Projects/OnePoint/Évènements/Le diagram as code en 2025/.assets/Le diagram as code en 2025-20251216091835.png]]
+![[Projects/OnePoint/Articles/Advent of tech 2025/Le diagram as code en 2025/.assets/Le diagram as code en 2025-20251216091835.png]]
 [Diagram as Code en 2025 : Le repas de famille des outils - DEV Community](https://dev.to/onepoint/diagram-as-code-en-2025-le-repas-de-famille-des-outils-1gdp)
 
 ---

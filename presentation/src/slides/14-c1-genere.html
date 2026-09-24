@@ -1,0 +1,54 @@
+<section class="slide slide--content slide--c1-generated slide--code-preview" data-nav="C1 généré">
+    <p class="slide__label reveal">V1 &middot; le diagramme</p>
+    <h2 class="slide__heading reveal"></h2>
+    <div class="slide__inner">
+      <div class="c1-generated__pane c1-generated__pane--code code-preview__pane code-preview__pane--code">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename"> coffee-v1/system-model.c4</span>
+          <div class="slide__code-block reveal">
+            <pre><code style="font-size:clamp(10.5px,1.05vw,13px); line-height:1.4;"><span class="kw">model</span> {
+  <span class="hl">extend</span> alefestCoffee {
+      counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span> { <span class="cm">...</span> }
+      baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span> { <span class="cm">...</span> }
+
+      orderService = <span class="hl">Container_Api</span> <span class="str">'Service de Commandes'</span> { <span class="cm">...</span> }
+      preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span> { <span class="cm">...</span> }
+
+      eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span> { <span class="cm">...</span> }
+      database = <span class="hl">Container_Database</span> <span class="str">'PostgreSQL'</span> { <span class="cm">...</span> }
+
+      counterApp -[<span class="hl">calls</span>]-&gt; orderService <span class="str">'POST /orders'</span>
+      baristaScreen -[<span class="hl">calls</span>]-&gt; preparationService <span class="str">'WebSocket'</span>
+
+      orderService -[<span class="hl">async</span>]-&gt; eventBus <span class="str">'Publie order.placed'</span>
+      eventBus -[<span class="hl">async</span>]-&gt; preparationService <span class="str">'Livre order.placed'</span>
+
+      orderService -[<span class="hl">writes</span>]-&gt; database <span class="str">'Commande'</span>
+      preparationService -[<span class="hl">writes</span>]-&gt; database <span class="str">'Statut'</span>
+    }
+}</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="slide__aside reveal c1-generated__pane c1-generated__pane--embed code-preview__pane code-preview__pane--embed">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename">Vue C2</span>
+          <div class="embed-wrap reveal" id="coffee-v2-c2-embed" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000">
+            <div class="embed-controls">
+              <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
+              <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
+            </div>
+            <iframe
+              title="LikeC4 coffee-v1 C2"
+              loading="lazy"
+              data-src="assets/coffee-v1-single/index.html#/view/c2_containers/"
+            ></iframe>
+            <div class="embed-fallback" aria-live="polite">
+              <span>Impossible de charger l'aper&ccedil;u ici.</span>
+              <a href="assets/coffee-v1-single/index.html#/view/c2_containers/" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v1 (vue C2)</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

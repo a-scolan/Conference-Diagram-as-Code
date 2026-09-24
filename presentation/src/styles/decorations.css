@@ -1,0 +1,365 @@
+/* ==========================================================================
+   BLUEPRINT DECORATIONS & VISUAL TEXTURES
+   Rappels d'ingénierie et papier millimétré d'architecture vivante.
+   ========================================================================== */
+
+/* Fond en papier millimétré technique pour le deck et les diapositives */
+.deck,
+.slide {
+  background-color: var(--bg);
+  background-image: var(--blueprint-grid);
+  background-size: var(--blueprint-grid-size);
+}
+
+/* Mires techniques de coin (+) sur les cadres et conteneurs principaux */
+.code-preview__frame,
+.mermaid-wrap,
+.benefit-cards-grid {
+  position: relative;
+}
+
+/* Mires techniques de coin (+) ciblées uniquement sur les grands cadres de code et diagrammes */
+.code-preview__frame,
+.mermaid-wrap {
+  position: relative;
+}
+
+.code-preview__frame::before,
+.code-preview__frame::after,
+.mermaid-wrap::before,
+.mermaid-wrap::after {
+  content: "+";
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.65;
+  pointer-events: none;
+  z-index: 10;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.code-preview__frame::before,
+.mermaid-wrap::before {
+  top: -8px;
+  left: -8px;
+}
+
+.code-preview__frame::after,
+.mermaid-wrap::after {
+  bottom: -8px;
+  right: -8px;
+}
+
+/* Mires blueprint discrètes uniquement aux 2 angles extrêmes des slides de titre et intercalaires */
+.slide--cover::before,
+.slide--cover::after,
+.slide--divider::before,
+.slide--divider::after {
+  content: "+";
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 1;
+  user-select: none;
+}
+
+.slide--cover::before,
+.slide--divider::before {
+  top: 18px;
+  left: 22px;
+}
+
+.slide--cover::after,
+.slide--divider::after {
+  bottom: 18px;
+  right: 22px;
+}
+
+/* Aucune mire intrusive sur les slides de contenu et spécifiquement la slide 7 et slide 31 */
+.slide--content::before,
+.slide--content::after,
+.slide--c4-zoom::before,
+.slide--c4-zoom::after,
+.benefit-card::before,
+.benefit-card::after,
+.comparison-card::before,
+.comparison-card::after,
+.benefit-cards-grid::before,
+.benefit-cards-grid::after {
+  display: none !important;
+}
+
+/* ==========================================================================
+   CRISTAUX BLUEPRINT COLORÉS (Constellation de mires superposées en fond)
+   ========================================================================== */
+.slide-crystals-wrap {
+  position: absolute;
+  bottom: 18px;
+  right: 28px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.70;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+[data-theme="slate-architect"] .slide-crystals-wrap,
+[data-theme="dark"] .slide-crystals-wrap {
+  opacity: 0.85;
+}
+
+.slide--cover .slide-crystals-wrap {
+  bottom: 34px;
+  right: 48px;
+  transform: scale(1.30);
+}
+
+.slide--divider .slide-crystals-wrap {
+  bottom: 34px;
+  right: 48px;
+  transform: scale(1.20);
+}
+
+.slide-crystals {
+  display: block;
+  overflow: visible;
+}
+
+@media (max-width: 768px), (max-height: 560px) {
+  .slide-crystals-wrap {
+    transform: scale(0.70);
+    bottom: 8px;
+    right: 12px;
+    opacity: 0.45;
+  }
+}
+
+/* ==========================================================================
+   MOBILE ORIENTATION LOCK OVERLAY (Blocage obligatoire en mode portrait)
+   ========================================================================== */
+.orientation-lock-overlay {
+  display: none;
+}
+
+@media screen and (orientation: portrait) and (max-width: 899px) {
+  .orientation-lock-overlay {
+    display: flex !important;
+    position: fixed;
+    inset: 0;
+    z-index: 2147483646;
+    background-color: var(--bg);
+    color: var(--text);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    text-align: center;
+    user-select: none;
+  }
+
+  .orientation-lock-card {
+    background: var(--surface);
+    border: 2px solid var(--border-bright);
+    border-radius: 16px;
+    padding: 36px 28px;
+    max-width: 360px;
+    width: 100%;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .orientation-lock-icon {
+    width: 64px;
+    height: 64px;
+    color: var(--accent);
+    animation: rotatePhone 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .orientation-lock-title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text);
+    margin: 0;
+  }
+
+  .orientation-lock-desc {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-dim);
+    margin: 0;
+  }
+
+  @keyframes rotatePhone {
+    0%, 15% {
+      transform: rotate(0deg);
+    }
+    45%, 75% {
+      transform: rotate(90deg);
+    }
+    90%, 100% {
+      transform: rotate(0deg);
+    }
+  }
+}
+
+/* ==========================================================================
+   MOBILE LANDSCAPE COMPACT RULES (Écran paysage compact <= 560px)
+   ========================================================================== */
+@media screen and (orientation: landscape) and (max-height: 560px) {
+  .deck-counter {
+    display: none !important;
+  }
+
+  .slide {
+    padding: clamp(6px, 1.5vh, 12px) clamp(16px, 3vw, 28px) !important;
+  }
+
+  .slide__inner,
+  .slide__panels,
+  .slide__content {
+    max-height: 94vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding-right: 2px;
+  }
+
+  /* Éviter les ascenseurs disgracieux sur les sous-colonnes */
+  .code-preview__pane,
+  .slide__aside {
+    overflow: visible !important;
+  }
+
+  .slide__code-filename {
+    font-size: 9.5px !important;
+    padding: 2px 8px !important;
+    top: -10px !important;
+  }
+
+  .code-preview__frame > .slide__code-filename {
+    font-size: 9.5px !important;
+    padding: 2px 8px !important;
+  }
+
+  .slide__display {
+    font-size: clamp(28px, 8vh, 48px) !important;
+    line-height: 1 !important;
+  }
+
+  .slide__heading {
+    font-size: clamp(18px, 4vh, 26px) !important;
+    margin-bottom: 6px !important;
+    line-height: 1.15 !important;
+  }
+
+  .slide__label {
+    font-size: 10px !important;
+    margin-bottom: 4px !important;
+    letter-spacing: 1px !important;
+  }
+
+  .slide__subtitle {
+    font-size: 11px !important;
+    margin-top: 4px !important;
+  }
+
+  .slide__bullets li {
+    font-size: clamp(12px, 2.8vh, 15px) !important;
+    padding: 4px 0 4px 18px !important;
+    margin-bottom: 4px !important;
+    line-height: 1.4 !important;
+  }
+
+  .slide__bullets li::before {
+    top: 10px !important;
+    width: 4px !important;
+    height: 4px !important;
+  }
+
+  /* Citations et callouts */
+  .slide--quote {
+    padding: 16px 24px !important;
+  }
+  .slide--quote .callout {
+    padding: clamp(14px, 2.5vh, 24px) clamp(16px, 2.5vw, 28px) !important;
+    font-size: clamp(16px, 3.8vh, 22px) !important;
+    line-height: 1.35 !important;
+    max-width: 90% !important;
+  }
+
+  /* Fiches avant / après */
+  .benefit-cards-grid {
+    gap: 6px !important;
+    margin-top: 6px !important;
+  }
+  .benefit-card {
+    padding: 6px 10px !important;
+    gap: 4px !important;
+  }
+  .benefit-card__title {
+    font-size: 12px !important;
+  }
+  .benefit-card__section {
+    padding: 4px 8px !important;
+  }
+  .benefit-card__label {
+    font-size: 9.5px !important;
+  }
+  .benefit-card__text {
+    font-size: 10.5px !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Pull request */
+  .slide--pr-review .mermaid-wrap {
+    height: clamp(130px, 34vh, 180px) !important;
+    padding: 6px !important;
+    margin-top: 4px !important;
+  }
+  .slide--pr-review .pr-review__status {
+    margin-top: 0 !important;
+  }
+  .slide--pr-review .pr-review__badge {
+    padding: 4px 10px !important;
+    font-size: 10.5px !important;
+  }
+
+  /* Questions de review */
+  .slide--review-questions .review-questions__card {
+    min-height: auto !important;
+    padding: 10px 14px !important;
+    gap: 6px !important;
+  }
+  .slide--review-questions .review-questions__question {
+    font-size: 13px !important;
+  }
+
+  /* Code preview & LikeC4 */
+  .slide--code-preview .slide__code-block code {
+    font-size: 10.5px !important;
+    line-height: 1.3 !important;
+  }
+  .slide--code-preview .embed-wrap {
+    height: clamp(130px, 40vh, 200px) !important;
+  }
+
+  .deck-nav {
+    transform: scale(0.80);
+    transform-origin: bottom center;
+  }
+
+  /* Désactivation du pointeur laser sur mobile tactile */
+  .laser-pointer {
+    display: none !important;
+  }
+}

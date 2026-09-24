@@ -1,0 +1,78 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--text);
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  body.laser-cursor-enabled,
+  body.laser-cursor-enabled * {
+    cursor: none !important;
+  }
+
+  .laser-pointer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 48px;
+    height: 48px;
+    pointer-events: none;
+    z-index: 2147483647;
+    opacity: 0;
+    transform: translate3d(-999px, -999px, 0) translate(-50%, -50%) scale(1);
+    transition: opacity 90ms linear, transform 60ms ease-out;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+  }
+  .laser-pointer::before,
+  .laser-pointer::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+  }
+  /* Halo circulaire architectural (dégradé doux non tronqué) */
+  .laser-pointer::before {
+    inset: 4px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+      var(--laser-glow) 0%,
+      var(--laser-glow-soft) 48%,
+      transparent 72%);
+    border: 1px solid var(--laser-ring);
+    box-shadow: 0 0 12px var(--laser-glow);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+  }
+  /* Mire technique blueprint (cercle + réticule en croix de précision) */
+  .laser-pointer::after {
+    inset: 14px;
+    border-radius: 50%;
+    border: 1.5px solid var(--laser-hot);
+    background:
+      linear-gradient(var(--laser-hot), var(--laser-hot)) center / 1.5px 100% no-repeat,
+      linear-gradient(var(--laser-hot), var(--laser-hot)) center / 100% 1.5px no-repeat,
+      radial-gradient(circle, var(--laser-core) 0%, var(--laser-core) 1.5px, transparent 2.5px) center / 5px 5px no-repeat;
+    filter: drop-shadow(0 0 2px var(--laser-glow));
+    transition: transform 0.15s ease;
+  }
+  .laser-pointer.is-visible { opacity: 1; }
+  .laser-pointer.is-active::before {
+    transform: scale(1.15);
+    border-color: var(--laser-hot);
+    box-shadow: 0 0 16px var(--laser-glow);
+  }
+  .laser-pointer.is-active::after {
+    transform: scale(0.92);
+  }
+
+  /* ============ GLOBAL SCROLLBAR STYLING ============ */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  *::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
+  *::-webkit-scrollbar-thumb:active { background: var(--accent2); }

@@ -3,7 +3,7 @@ name: model-deployment-infrastructure
 description: Use when modeling deployment infrastructure (environments, zones, VMs, apps, instanceOf links). Covers hierarchy, naming conventions ({Environment}{Service}Vm), rich descriptions with network specs.
 ---
 
-# Model Deployment Infrastructure
+## Model Deployment Infrastructure
 
 Use this skill when defining physical infrastructure in deployment.c4 and operations.c4 files.
 
@@ -11,7 +11,7 @@ Use this skill when defining physical infrastructure in deployment.c4 and operat
 
 **Next steps:** For advanced tier organization, see `structure-deployment-tiers` skill.
 
-## Core Requirements
+### Core Requirements
 
 | Requirement | Rule |
 |-------------|------|
@@ -23,9 +23,9 @@ Use this skill when defining physical infrastructure in deployment.c4 and operat
 | **Metadata** | Optional - only add if automation queries these fields |
 | **instanceOf** | Link Node_App to model Container using FQN - relationships are inherited automatically |
 
-## Naming Convention Patterns
+### Naming Convention Patterns
 
-### Virtual Machines (VMs)
+#### Virtual Machines (VMs)
 
 **Pattern:** `{Environment}{ServiceName}Vm` (PascalCase)
 
@@ -41,7 +41,7 @@ DevDatabaseVm    // dev + database + Vm
 - Service name: Meaningful abbreviation
 - Suffix: Always `Vm` (consistent casing)
 
-### Zones (Network Segments)
+#### Zones (Network Segments)
 
 **Pattern:** `{Tier}Tier` for layered architecture or `{Function}Zone` for specialized infrastructure
 
@@ -57,7 +57,7 @@ SecZone     // Security & monitoring
 InfraZone   // Backup & disaster recovery
 ```
 
-### Environments
+#### Environments
 
 **Pattern:** Single word, PascalCase
 
@@ -68,7 +68,7 @@ Dev         // Development
 Test        // Testing
 ```
 
-## Hierarchy Structure
+### Hierarchy Structure
 
 **ALWAYS maintain parent-child relationships:**
 
@@ -81,7 +81,7 @@ Node_Environment (Production/Staging/Dev)
 
 **Critical:** VMs never float outside zones, zones never float outside environments.
 
-## Rich Descriptions: Markdown Tables
+### Rich Descriptions: Markdown Tables
 
 Every VM and zone should include a Markdown table with specs. **Always put network interfaces first (eth0, eth1):**
 
@@ -131,7 +131,7 @@ AppTier = Zone "Application Tier (VLAN 101: 10.1.0.0/24)" {
 }
 ```
 
-## Relationship Inheritance via instanceOf
+### Relationship Inheritance via instanceOf
 
 **Critical:** You do NOT need to create deployment relationships explicitly. They are inherited automatically from the system model:
 
@@ -158,7 +158,7 @@ Prod.ProcTier.ProdQueueVm.queueApp {
 
 **When to add deployment relationships:** Only for infrastructure-specific connections NOT in the system model (e.g., monitoring systems, backup agents, log collectors).
 
-## Optional: Metadata Fields
+### Optional: Metadata Fields
 
 Only add metadata if automation queries these fields:
 
@@ -179,7 +179,7 @@ metadata {
 }
 ```
 
-## Multiple instanceOf (Shared Services)
+### Multiple instanceOf (Shared Services)
 
 If a single deployed unit serves multiple logical containers:
 
@@ -192,17 +192,17 @@ ldapInstance = Node_App "LDAP Service" {
 
 **Guideline:** Use multiple `instanceOf` only when services are truly deployed together and managed as one unit. Otherwise, create separate Node_App instances.
 
-## Complete Examples
+### Complete Examples
 
 For comprehensive multi-environment setups with all tiers, zone descriptions, VM specifications, and inter-tier relationships, reference the examples in your project's deployment.c4 file or multi-tier patterns in `structure-deployment-tiers`skill.
 
-## Related Skills
+### Related Skills
 
 - **structure-deployment-tiers** — Advanced: organizing zones into DMZ→AppTier→ProcTier→DataTier with firewall rules
 - **write-rich-descriptions** — Markdown table formatting for deployment specs
 - **design-view** — Creating deployment views that visualize this infrastructure
 
-## Checklist
+### Checklist
 
 - [ ] Element kinds from shared spec (no custom kinds)
 - [ ] Hierarchy: Environment → Zone → VM → Node_App

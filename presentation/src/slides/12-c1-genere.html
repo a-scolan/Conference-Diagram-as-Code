@@ -1,0 +1,44 @@
+<section class="slide slide--content slide--c1-generated slide--code-preview" data-nav="C1 généré">
+    <p class="slide__label reveal">V1 &middot; le diagramme</p>
+    <h2 class="slide__heading reveal">La spec devient une vue navigable du système...</h2>
+    <div class="slide__inner">
+      <div class="c1-generated__pane c1-generated__pane--code code-preview__pane code-preview__pane--code">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename"> coffee-v1/system-model.c4</span>
+          <div class="slide__code-block reveal">
+            <pre><code style="font-size:clamp(10.5px,1.05vw,13px); line-height:1.4;"><span class="kw">model</span> {
+  festivalier = <span class="hl">Actor_Person</span> <span class="str">'Festivalier'</span> { <span class="cm">...</span> }
+  barista = <span class="hl">Actor_Staff</span> <span class="str">'Barista'</span> { <span class="cm">...</span> }
+
+  alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
+    <span class="cm">// description, style, puis les containers plus bas...</span>
+  }
+
+  festivalier -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Passe sa commande au comptoir'</span>
+  barista -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Pr&eacute;pare et suit les commandes'</span>
+}</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="slide__aside reveal c1-generated__pane c1-generated__pane--embed code-preview__pane code-preview__pane--embed">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename">Vue C1</span>
+          <div class="embed-wrap reveal" id="coffee-v2-c1-embed" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000">
+            <div class="embed-controls">
+              <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
+              <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
+            </div>
+            <iframe
+              title="LikeC4 coffee-v1 C1"
+              loading="lazy"
+              data-src="assets/coffee-v1-single/index.html#/view/c1_context/"
+            ></iframe>
+            <div class="embed-fallback" aria-live="polite">
+              <span>Impossible de charger l'aper&ccedil;u ici.</span>
+              <a href="assets/coffee-v1-single/index.html#/view/c1_context/" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v1 (vue C1)</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

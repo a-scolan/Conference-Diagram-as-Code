@@ -1,0 +1,22 @@
+## Tasks
+
+- [x] 1. Ajustement typographique et visibilité fond de salle
+  - [x] 1.1 Réévaluer les valeurs minimales des `clamp()` pour les titres et les paragraphes dans les styles
+  - [x] 1.2 Augmenter la taille de police par défaut des blocs de code pour atteindre au moins 15px
+- [x] 2. Support responsive Mobile Landscape et blocage obligatoire en portrait
+  - [x] 2.1 Concevoir le calque bloquant `.orientation-lock-overlay` avec animation SVG de rotation de smartphone
+  - [x] 2.2 Verrouiller totalement l'accès au deck lorsque l'appareil est en mode portrait (`@media (orientation: portrait) and (max-width: 899px)`)
+  - [x] 2.3 Implémenter les règles compactes `@media (orientation: landscape) and (max-height: 520px)` (paddings minimes, ascenseur doux interne)
+  - [x] 2.4 Tester la navigation tactile sur appareil mobile en paysage
+- [x] 3. Refonte du tableau récapitulatif de fin de conférence
+  - [x] 3.1 Concevoir le composant de cartes comparatives Avant / Après (`.benefit-card`)
+  - [x] 3.2 Remplacer la table HTML par une séquence de cartes aérées et contrastées
+- [x] 4. Implémentation du système de surbrillance de lignes de code
+  - [x] 4.1 Créer la règle CSS pour `.line-highlight` et l'estompage des lignes passives
+  - [x] 4.2 Ajouter le support de l'attribut `data-highlight` sur les blocs de code des slides C1 et C2
+- [x] 5. Aération des diapositives textuelles
+  - [x] 5.1 Réduire le nombre de points d'énumération par slide à 3 ou 4 maximum
+  - [x] 5.2 Créer des diapositives de respiration intermédiaires avant les phases de démonstration
+- [x] 6. Consolidation du protocole de Live-Coding
+  - [x] 6.1 Documenter la checklist de configuration avant-scène dans `deroule-conference-slides.md`
+  - [x] 6.2 Valider le basculement fluide entre la présentation et la session de code

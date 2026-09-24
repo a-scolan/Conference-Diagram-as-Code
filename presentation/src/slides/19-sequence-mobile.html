@@ -1,0 +1,54 @@
+<section class="slide slide--content slide--seq-likec4 slide--code-preview" data-nav="Séquence mobile" data-split-mode="two-thirds" data-split="two-thirds">
+    <h2 class="slide__heading reveal">Une vue comportementale raconte l'utilisation</h2>
+    <div class="slide__inner">
+      <div class="seq-likec4__pane seq-likec4__pane--code code-preview__pane code-preview__pane--code">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename"> coffee-v2/system-views.c4  </span>
+          <div class="slide__code-block reveal">
+            <pre><code><span class="kw">dynamic view</span> order_mobile_flow {
+  festivalier -&gt; festivalSystem.festivalApp <span class="str">'Commande un flat white'</span>
+  festivalSystem.festivalApp -&gt; festivalSystem.festivalService <span class="str">'POST /orders'</span>
+  festivalSystem.festivalService -&gt; alefestCoffee.orderService <span class="str">'POST /orders'</span>
+  alefestCoffee.orderService -&gt; alefestCoffee.database <span class="str">'INSERT order'</span>
+  alefestCoffee.orderService -&gt; alefestCoffee.eventBus <span class="str">'order.placed'</span>
+  festivalSystem.festivalService -&gt; festivalSystem.festivalApp <span class="str">'Confirme orderId'</span>
+  festivalSystem.festivalApp -&gt; festivalier <span class="str">'Commande confirm&eacute;e'</span>
+
+  alefestCoffee.eventBus -&gt; alefestCoffee.preparationService <span class="str">'order.placed'</span>
+  alefestCoffee.preparationService -&gt; alefestCoffee.baristaScreen <span class="str">'WebSocket push file'</span>
+  alefestCoffee.baristaScreen -&gt; barista <span class="str">'Affiche commande'</span>
+  barista -&gt; alefestCoffee.preparationService <span class="str">'PATCH preparing'</span>
+  alefestCoffee.preparationService -&gt; alefestCoffee.eventBus <span class="str">'order.preparing'</span>
+
+  barista -&gt; alefestCoffee.preparationService <span class="str">'PATCH ready'</span>
+  alefestCoffee.preparationService -&gt; alefestCoffee.eventBus <span class="str">'order.ready'</span>
+  alefestCoffee.eventBus -&gt; alefestCoffee.notificationService <span class="str">'order.ready'</span>
+  alefestCoffee.notificationService -&gt; festivalSystem.festivalApp <span class="str">'Push : votre caf&eacute; est pr&ecirc;t'</span>
+  festivalSystem.festivalApp -&gt; festivalier <span class="str">'Notification re&ccedil;ue'</span>
+  festivalier -&gt; barista <span class="str">'R&eacute;cup&egrave;re sa boisson'</span>
+}</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="slide__aside reveal seq-likec4__pane seq-likec4__pane--embed code-preview__pane code-preview__pane--embed">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename">Use Case</span>
+          <div class="embed-wrap reveal" id="coffee-v2-seq-embed-likec4" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000">
+            <div class="embed-controls">
+              <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
+              <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
+            </div>
+            <iframe
+              title="LikeC4 coffee-v2 S&eacute;quence mobile"
+              loading="lazy"
+              data-src="assets/coffee-v2-single/index.html#/project/coffee-v2/view/order_mobile_flow"
+            ></iframe>
+            <div class="embed-fallback" aria-live="polite">
+              <span>Impossible de charger l'aper&ccedil;u ici.</span>
+              <a href="assets/coffee-v2-single/index.html#/project/coffee-v2/view/order_mobile_flow" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v2 (vue s&eacute;quence)</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

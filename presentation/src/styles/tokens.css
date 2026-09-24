@@ -1,0 +1,12 @@
+/* ==========================================================================
+   SHARED DESIGN TOKENS & TYPOGRAPHY
+   ========================================================================== */
+
+:root {
+  --font-body: 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  --font-bump: 4px;
+
+  /* Assets graphiques réutilisables */
+  --quote-bg: url("./assets/quote.png");
+}

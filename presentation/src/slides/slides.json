@@ -1,0 +1,177 @@
+[
+  {
+    "index": 0,
+    "filename": "00-titre.html",
+    "title": "Titre"
+  },
+  {
+    "index": 1,
+    "filename": "01-speaker.html",
+    "title": "Speaker"
+  },
+  {
+    "index": 2,
+    "filename": "02-le-probleme-reel.html",
+    "title": "Le problème réel"
+  },
+  {
+    "index": 3,
+    "filename": "03-le-probleme-reel-message.html",
+    "title": "Le problème réel — message"
+  },
+  {
+    "index": 4,
+    "filename": "04-le-probleme-reel-dessin.html",
+    "title": "Le problème réel — dessin"
+  },
+  {
+    "index": 5,
+    "filename": "05-changer-de-paradigme.html",
+    "title": "Changer de paradigme"
+  },
+  {
+    "index": 6,
+    "filename": "06-c4-zoom.html",
+    "title": "C4 zoom"
+  },
+  {
+    "index": 7,
+    "filename": "07-c4-zoom-image-mentale.html",
+    "title": "C4 zoom — image mentale"
+  },
+  {
+    "index": 8,
+    "filename": "08-partie-1.html",
+    "title": "Partie 1"
+  },
+  {
+    "index": 9,
+    "filename": "09-fil-rouge.html",
+    "title": "Fil rouge"
+  },
+  {
+    "index": 10,
+    "filename": "10-cas-d-etude.html",
+    "title": "Cas d'étude"
+  },
+  {
+    "index": 11,
+    "filename": "11-adr-001.html",
+    "title": "ADR-001"
+  },
+  {
+    "index": 12,
+    "filename": "12-c1-genere.html",
+    "title": "C1 généré"
+  },
+  {
+    "index": 13,
+    "filename": "13-briques-c2.html",
+    "title": "Briques C2"
+  },
+  {
+    "index": 14,
+    "filename": "14-c1-genere.html",
+    "title": "C1 généré"
+  },
+  {
+    "index": 15,
+    "filename": "15-partie-2.html",
+    "title": "Partie 2"
+  },
+  {
+    "index": 16,
+    "filename": "16-v1-vs-v2.html",
+    "title": "V1 vs V2"
+  },
+  {
+    "index": 17,
+    "filename": "17-live-coding.html",
+    "title": "Live coding"
+  },
+  {
+    "index": 18,
+    "filename": "18-cas-d-etude-promesse.html",
+    "title": "Cas d'étude — promesse"
+  },
+  {
+    "index": 19,
+    "filename": "19-sequence-mobile.html",
+    "title": "Séquence mobile"
+  },
+  {
+    "index": 20,
+    "filename": "20-impact-ux.html",
+    "title": "Impact UX"
+  },
+  {
+    "index": 21,
+    "filename": "21-portail-vivant-benefice.html",
+    "title": "Portail vivant — bénéfice"
+  },
+  {
+    "index": 22,
+    "filename": "22-partie-3.html",
+    "title": "Partie 3"
+  },
+  {
+    "index": 23,
+    "filename": "23-specs-amp-arborescence.html",
+    "title": "Specs &amp; arborescence"
+  },
+  {
+    "index": 24,
+    "filename": "24-questions-de-review.html",
+    "title": "Questions de review"
+  },
+  {
+    "index": 25,
+    "filename": "25-la-pull-request.html",
+    "title": "La pull request"
+  },
+  {
+    "index": 26,
+    "filename": "26-review-benefice.html",
+    "title": "Review — bénéfice"
+  },
+  {
+    "index": 27,
+    "filename": "27-partie-4.html",
+    "title": "Partie 4"
+  },
+  {
+    "index": 28,
+    "filename": "28-pipeline-ci-cd.html",
+    "title": "Pipeline CI/CD"
+  },
+  {
+    "index": 29,
+    "filename": "29-partie-5.html",
+    "title": "Partie 5"
+  },
+  {
+    "index": 30,
+    "filename": "30-avant-apres.html",
+    "title": "Avant / Après"
+  },
+  {
+    "index": 31,
+    "filename": "31-portail-vivant.html",
+    "title": "Portail vivant"
+  },
+  {
+    "index": 32,
+    "filename": "32-vue-c2-likec4.html",
+    "title": "Vue C2 + likeC4"
+  },
+  {
+    "index": 33,
+    "filename": "33-ressources-qr.html",
+    "title": "Ressources & QR"
+  },
+  {
+    "index": 34,
+    "filename": "34-merci.html",
+    "title": "Merci"
+  }
+]

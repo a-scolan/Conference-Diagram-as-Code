@@ -1,0 +1,18 @@
+{
+  "event": {
+    "name": "Conférence Architecture & Tech",
+    "edition": "2026",
+    "theme": "google-blueprint-light",
+    "subtitle": "Diagram as Code & Architecture Vivante"
+  },
+  "speaker": {
+    "name": "Alexis Scolan",
+    "role": "Architecte technique",
+    "company": "onepoint",
+    "bio": "J'aide les équipes à garder une architecture lisible et vivante, avec une approche concrète et pragmatique, compréhensible par tous les acteurs."
+  },
+  "feedback": {
+    "caption": "OpenFeedback",
+    "qrImage": "./assets/image.png"
+  }
+}

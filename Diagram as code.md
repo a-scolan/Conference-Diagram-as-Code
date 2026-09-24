@@ -1,49 +1,64 @@
-## CFP : Ne dessinez plus vos architectures : codez-les 
+# CFP — Ne dessinez plus vos architectures : codez-les !
 
-### Abstract
-Nous connaissons tous ce scénario : une architecture née sur un tableau blanc, figée dans un schéma statique puis lentement oubliée. Le code continue d'évoluer, mais la carte ne correspond plus au territoire. Ce fossé crée une dette de documentation que nous finissons par accepter comme une fatalité.
+> Proposition de résumé et de plan pour soumission.
 
-Pourtant, le **Diagram-as-Code** change la donne. En traitant les diagrammes comme du code source, nous gagnons la puissance du versionning (Git), l'analyse des changements (Diffs) et l'automatisation (CI/CD). Mieux encore, l'augmentation des outil de code par l'IA nous permet désormais de générer et maintenir ces modèles très aisément.
+## Abstract
 
-Dans cette session de **Live Coding**, nous dépasserons la théorie. Nous partirons d'un besoin métier brut (un ADR en Markdown) pour construire, itération après itération, une **cartographie vivante** avec **LikeC4**.
-Nous verrons comment réconcilier la **vision** (le _Pourquoi_) et **l'implémentation** (le _Comment_) dans un modèle unique, navigable et interactif, intégré au cycle de vie du logiciel.
+Une architecture naît souvent sur un tableau blanc, finit exportée en image, puis vieillit en silence. Pendant que le code évolue, la documentation se fige — et les équipes apprennent à vivre avec cet écart.
 
-Fini les gribouillis obsolètes : compilons la documentation.
+Cette session propose une autre approche : traiter l’architecture comme un artefact de développement à part entière. 
+À partir d’un besoin métier formalisé dans un **ADR**, nous construirons en direct **une modélisation C4** avec **LikeC4**, puis nous le ferons évoluer comme du code : **vue de contexte**, zoom sur les **conteneurs**, **scénario dynamique**, revue en Pull Request, et portail navigable pour plusieurs publics.
 
-### Références 
+L’objectif sera de montrer comment rendre des choix d’architecture explicites, versionnés, relus et partageables avec le même sérieux que le reste du logiciel. 
+Les assistants IA peuvent accélérer l’amorçage du modèle.
+La vraie valeur vient du workflow collectif : diff, review, validation et publication.
+
+Une session concrète pour voir comment passer d’une documentation figée à une architecture vivante.
+
 ## Plan détaillé de la session (45 min)
 
-**1. Le constat : La faillite du schéma statique (5 min)**
--   Pourquoi nos diagrammes meurent-ils ? (La complexité, l'ambiguité, la friction de la mise à jour).
--   Le changement de paradigme : Séparer le **Modèle** (la vérité structurelle unique) de la **Vue** (projection contextuelle).
-	-   La méthode : C4 et le découpage en niveaux de vue (Context, Containers, Components, Code). 
--   L'outil : LikeC4, un DSL unifié pour générer toutes les vues à partir d'une source de vérité unique.
+**1. Le constat : la faillite du schéma statique (5 min)**
 
-**2. Live Demo Partie 1 : De l'ADR au Modèle (10 min)**
--   *Scénario :* Point de départ avec un "Architecture Decision Record" textuel décrivant une nouvelle feature. Approfondissement des premiers niveaux de C4.
--   *Action :* Production de code LikeC4 assistée par IA, pour extraire les entités et relations des ADR et modéliser superficiellement le système cible.
--   *Résultat :* Génération immédiate d'une **Vue de Contexte** (C4 Level 1) pour valider le périmètre fonctionnel avec le métier.
+- Pourquoi nos diagrammes meurent : complexité, ambiguïté, friction de mise à jour.
+- Changer de paradigme : séparer **Modèle** et **Vues**.
+- La méthode : **C4** pour structurer les niveaux de lecture.
+- L’outil : **LikeC4**, pour générer plusieurs vues depuis une source unique.
 
-**3. Live Demo Partie 2 : Le niveau Conteneurs (C2) et les comportements (15 min)**
--   *Scénario :* On "zoome" à l'intérieur du système pour raffiner les choix techniques (**Niveau C2 - Containers**).
--   *Action :* Raffinement du modèle pour détailler les briques logicielles (API, SPA, BDD, Bus) et lever les ambiguïtés structurelles.
--   *Technique :* Utilisation des propriétés et prédicats pour générer deux perspectives complémentaires :
-	-   **Vue Statique :** La cartographie des services et leurs interactions (qui parle à qui).
-	-   **Vue séquence :** Le scénario d'exécution d'une requête traversant ces conteneurs (Activités).
--   *Résultat :* Navigation interactive drill-down (du système global vers le détail des conteneurs) dans le diagramme interactif
+**2. Live Demo Partie 1 : de l’ADR au modèle (10 min)**
 
-**4. Live Demo Partie 3 : La Collaboration (10 min)**
--   *Le Workflow :* Simulation d'une évolution d'architecture via une **Pull Request**.
--   *L'Architecture Diff :* Démonstration de l'outil de revue visuelle (ce lien est rouge = supprimé, ce lien est vert = ajouté). C'est la preuve par l'image de l'intérêt du "As Code" pour la validation humaine.
--   *(Bonus/Off)* : Aperçu du pipeline CI/CD complet qui déploie la documentation statique.
+- **Scénario :** départ depuis un ADR décrivant un besoin métier.
+- **Action :** construire un premier modèle LikeC4 à partir du texte.
+- **Approche :** montrer comment l’IA peut aider à amorcer, sans remplacer la validation humaine.
+- **Résultat :** générer une **vue de contexte (C1)** pour cadrer le périmètre.
+
+**3. Live Demo Partie 2 : le niveau Conteneurs (C2) et les comportements (15 min)**
+
+- **Scénario :** zoom dans le système pour détailler responsabilités et choix techniques.
+- **Action :** enrichir le modèle avec les briques clés : frontends, API, base, bus, notifications.
+- **Technique :** générer deux vues complémentaires :
+  - **Vue statique :** qui parle à qui.
+  - **Vue dynamique :** comment un cas d’usage traverse le système.
+- **Résultat :** obtenir une lecture à la fois structurelle et comportementale du système.
+
+**4. Live Demo Partie 3 : la collaboration (10 min)**
+
+- **Workflow :** faire évoluer l’architecture dans un repo via **Pull Request**.
+- **Review :** rendre visibles les changements d’architecture dans la discussion d’équipe.
+- **Organisation :** distinguer specs partagées, modèle métier et vues générées.
+- **Résultat :** montrer qu’un diagramme peut devenir un **portail vivant**, pas une image figée.
+- **Bonus / off :** aperçu CI/CD, validation, publication, aides IA.
 
 **5. Conclusion et Q&A (5 min)**
--   Synthèse : Le diagramme n'est plus un artefact mort, mais un produit vivant.
 
-## Quelques références 
-- https://dev.to/onepoint/diagram-as-code-en-2025-le-repas-de-famille-des-outils-1gdp : article publié pour l'advent of code. Le JUG Nantes m'a demandé un talk suite à cet article par ailleurs
-- Repo de démo (architecture monilithique et refactor microservices), produit avec copilot : https://github.com/a-scolan/c4-hands-on-demo
-- Github Page de la démo : https://a-scolan.github.io/c4-hands-on-demo/#/
-- Un template de projet LikeC4 : https://github.com/a-scolan/c4-template
-- Github page lié au repo démo : https://a-scolan.github.io/c4-hands-on-demo/#/projects/
+- Le diagramme n’est plus un livrable mort.
+- Il devient un **artefact versionné, relu et navigable**.
+- Ouverture : adoption progressive, industrialisation, IA en appui.
+
+## Quelques références
+
+- [Diagram as Code en 2025 : Le repas de famille des outils](https://dev.to/onepoint/diagram-as-code-en-2025-le-repas-de-famille-des-outils-1gdp) — article publié sur dev.to.
+- [c4-hands-on-demo](https://github.com/a-scolan/c4-hands-on-demo) — repo de démo.
+- [GitHub Pages de la démo](https://a-scolan.github.io/c4-hands-on-demo/#/)
+- [Template LikeC4](https://github.com/a-scolan/c4-template)
+- [Vue publiée du repo de démo](https://a-scolan.github.io/c4-hands-on-demo/#/projects/)
 

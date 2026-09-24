@@ -88,32 +88,25 @@ ou avec `presentation/likec4/projects/coffee-adr001` pour explorer la modélisat
 - `presentation/public/assets/coffee-v2-single/index.html` — build single-file LikeC4 pour la V2
 - `presentation/build-single-assets.js` — script de synchronisation des builds LikeC4 vers les assets publics, en utilisant la dépendance locale `presentation/node_modules/likec4`
 - `Draft déroulé.md` — déroulé éditorial de la session
+- `openspec/` — spécifications formelles (fonctionnalités interactives, contenu, narration) et propositions de refactoring
 
-## Structure rapide
+## Structure du projet
 
 ```text
-projects/
-├── coffee-v1/
-├── coffee-v2/
-├── alefest-v1/
-├── alefest-v2/
-│   └── ADR/
-├── exemple-likeC4/
-└── shared/
-Test LikeC4/
-presentation/
-├── public/
-│   ├── assets/
-│   └── presentation-diagram-as-code.html
-├── likec4/
-│   └── projects/
-├── build-single-assets.js
-└── server.js
-server/
-├── public/
-│   ├── assets/
-│   └── presentation-diagram-as-code.html
-└── server.js
+├── openspec/                          # Spécifications OpenSpec et propositions de refactoring
+│   ├── specs/                         # Spécifications de référence (techniques & contenus)
+│   └── changes/                       # Changements de refactoring proposés
+├── presentation/                      # Application de présentation et modèles LikeC4
+│   ├── public/                        # Site web statique distribué
+│   │   ├── assets/                    # Bundles LikeC4 compilés (single-file) et médias
+│   │   └── presentation-diagram-as-code.html
+│   ├── likec4/
+│   │   └── projects/                  # Modèles LikeC4 sources (coffee-v1, coffee-v2, shared)
+│   ├── build-single-assets.js         # Compilation LikeC4 vers assets publics
+│   ├── package.json                   # Dépendances Node.js du serveur et build LikeC4
+│   └── server.js                      # Serveur local Express anti-restrictions iframe
+├── scripts/                           # Scripts d'exportation et publication minimale
+└── deroule-conference-slides.md       # Déroulé synchronisé avec les slides
 ```
 
 ## Ressources utiles

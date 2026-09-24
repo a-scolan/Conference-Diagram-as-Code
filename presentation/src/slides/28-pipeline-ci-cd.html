@@ -1,0 +1,30 @@
+<section class="slide slide-&#45;diagram slide-&#45;diagram-flow" data-nav="Pipeline CI/CD">
+    <h2 class="slide__heading reveal">Pipeline&nbsp;: du texte brut au portail d'architecture</h2>
+    <div class="mermaid-wrap reveal">
+      <div class="zoom-controls">
+        <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom in">+</button>
+        <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom out">&minus;</button>
+        <button type="button" data-zoom-action="reset" title="Reset">&#8634;</button>
+      </div>
+      <div class="mermaid-scroll">
+      <pre class="mermaid">
+graph LR
+  ADR["📝 ADR / Markdown"] --> Model["🧩 Modèle .c4"]
+  Model --> PR["🔀 Pull Request<br/>review technique + archi"]
+  PR --> Validate["✅ Validation LikeC4"]
+  Validate --> Render["🎨 Génération HTML / vues"]
+  Render --> VisualDiff["👁️ Visual diff"]
+  VisualDiff --> Publish["🚀 Publication"]
+  Publish --> Portal["🗺️ Portail vivant"]
+
+  classDef gold stroke-width:2px;
+  classDef blue stroke-width:2px;
+  classDef green stroke-width:2px;
+
+  class ADR,Model,PR gold
+  class Validate,Render,VisualDiff blue
+  class Publish,Portal green
+      </pre>
+      </div>
+    </div>
+  </section>

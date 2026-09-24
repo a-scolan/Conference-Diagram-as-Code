@@ -5,7 +5,7 @@ Ecrire un texte d'intro à lire pour être bien formel et clair : pas de "je", q
 Trouver un moyen d'interpeller sur l'impact, appel à l'action
 
 setup de départ :
-- vs code zoomé et au propre
+- vs code zoomé et au propre avec un thème LIGHT
 - github chargé
 - images de la PR à côté
 - navigateur chargé et VRAIMENT en plein écran

@@ -1,0 +1,187 @@
+<section class="slide slide--content slide--code-preview slide--diagram-flow slide--c2-unified" data-nav="Vue C2 + likeC4" data-view="mermaid">
+    <button
+      class="c2-unified__toggle"
+      type="button"
+      onclick="toggleC2UnifiedView(this)"
+      aria-pressed="false"
+      aria-label="Afficher le bloc code et l'aperçu LikeC4"
+    >LikeC4</button>
+    <h2 class="slide__heading reveal">Comparer l'outil LikeC4</h2>
+    <div class="c2-unified__views">
+      <div class="c2-unified__view c2-unified__view--mermaid">
+        <div class="slide__inner">
+          <div class="c2-mermaid__pane c2-mermaid__pane--code code-preview__pane code-preview__pane--code">
+            <div class="code-preview__frame">
+              <span class="slide__code-filename">coffee-v1/c2-containers.mmd</span>
+              <div class="slide__code-block reveal">
+                <pre><code>flowchart TD
+  Fest["Festivalier"]
+  Bar["Barista"]
+
+  classDef gold fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px
+  classDef blue fill:#e0f2fe,stroke:#0284c7,stroke-width:2px
+  classDef green fill:#dcfce7,stroke:#16a34a,stroke-width:2px
+
+  subgraph Frontends
+    direction LR
+    App["Festival App"]
+    Counter["Counter App"]
+    Screen["Barista Screen"]
+  end
+
+  subgraph Services
+    direction LR
+    Order["Order Service"]
+    MQ{{"RabbitMQ"}}
+    Prep["Preparation Service"]
+    Notif["Notification Service"]
+  end
+
+  DB[("PostgreSQL")]
+
+  class Fest,Bar,App,Counter,Screen gold
+  class Order,Prep,Notif blue
+  class MQ,DB green
+
+  Fest --> App
+  Fest --> Counter
+  Bar --> Screen
+  App -->|POST /orders| Order
+  Counter -->|POST /orders| Order
+  Screen &lt;--&gt;|WebSocket| Prep
+  Order -->|publish order.placed| MQ
+  MQ -->|consume order.placed| Prep
+  Prep -->|publish order.ready| MQ
+  MQ -->|consume order.ready| Notif
+  Notif -->|Push Firebase| App
+  Order --> DB
+  Prep --> DB
+  Notif --> DB</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="slide__aside reveal c2-mermaid__pane c2-mermaid__pane--diagram code-preview__pane code-preview__pane--embed">
+              <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="1.5" data-initial-zoom="0.82" data-zoom-min="0.2" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
+              <div class="zoom-controls" role="toolbar" aria-label="Commandes de zoom du diagramme C2 Mermaid">
+                <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom avant" aria-label="Zoom avant">+</button>
+                <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom arri&egrave;re" aria-label="Zoom arri&egrave;re">&minus;</button>
+                <button type="button" data-zoom-action="reset" title="R&eacute;initialiser le zoom" aria-label="R&eacute;initialiser le zoom">&#8634;</button>
+              </div>
+              <div class="mermaid-scroll" role="img" aria-label="Diagramme Mermaid C2 d'AleFest Coffee avec frontends, services, bus d'&eacute;v&eacute;nements et base PostgreSQL.">
+              <pre class="mermaid">
+flowchart TD
+  Fest["Festivalier"]
+  Bar["Barista"]
+
+  classDef gold stroke-width:2px;
+  classDef blue stroke-width:2px;
+  classDef green stroke-width:2px;
+
+  subgraph Frontends
+    direction LR
+    App["Festival App"]
+    Counter["Counter App"]
+    Screen["Barista Screen"]
+  end
+
+  subgraph Services
+    direction LR
+    Order["Order Service"]
+    MQ{{"RabbitMQ"}}
+    Prep["Preparation Service"]
+    Notif["Notification Service"]
+  end
+
+  DB[("PostgreSQL")]
+
+  class Fest,Bar,App,Counter,Screen gold
+  class Order,Prep,Notif blue
+  class MQ,DB green
+
+  Fest --> App
+  Fest --> Counter
+  Bar --> Screen
+  App -->|POST /orders| Order
+  Counter -->|POST /orders| Order
+  Screen <-->|WebSocket| Prep
+  Order -->|publish order.placed| MQ
+  MQ -->|consume order.placed| Prep
+  Prep -->|publish order.ready| MQ
+  MQ -->|consume order.ready| Notif
+  Notif -->|Push Firebase| App
+  Order --> DB
+  Prep --> DB
+  Notif --> DB
+              </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="c2-unified__view c2-unified__view--likec4">
+        <div class="slide__inner">
+          <div class="c2-likec4__pane c2-likec4__pane--code code-preview__pane code-preview__pane--code">
+            <div class="code-preview__frame">
+              <span class="slide__code-filename"> coffee-v2/system-model.c4 · likeC4</span>
+              <div class="slide__code-block reveal">
+                  <pre><code style="font-size:clamp(10.5px,1.05vw,13px); line-height:1.4;"><span class="kw">model</span> {
+  festivalier = <span class="hl">Actor_Person</span> <span class="str">'Festivalier'</span> { <span class="cm">...</span> }
+  barista = <span class="hl">Actor_Staff</span> <span class="str">'Barista'</span> { <span class="cm">...</span> }
+
+  festivalSystem = <span class="hl">System_External</span> <span class="str">'Syst&egrave;me Festival'</span> {
+    festivalApp = <span class="hl">Container_MobileApp</span> <span class="str">'Application Festival'</span> {
+      technology <span class="str">'React Native, Expo'</span>
+    }
+    festivalService = <span class="hl">Container_Api</span> <span class="str">'Service Festival'</span> {
+      technology <span class="str">'Node.js, Express'</span>
+    }
+    festivalApp -[<span class="hl">calls</span>]-&gt; festivalService <span class="str">'API mobile festival'</span> { <span class="cm">...</span> }
+  }
+
+  alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
+    counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span> { <span class="cm">...</span> }
+    baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span> { <span class="cm">...</span> }
+    orderService = <span class="hl">Container_Api</span> <span class="str">'Service de Commandes'</span> { technology <span class="str">'Node.js, Express, ...'</span> }
+    preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span> { technology <span class="str">'Node.js, WebSocket, ...'</span> }
+    notificationService = <span class="hl">Container_Api</span> <span class="str">'Service Notification'</span> { technology <span class="str">'Node.js, Firebase, ...'</span> }
+    eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span> { technology <span class="str">'RabbitMQ 3.12'</span> }
+    database = <span class="hl">Container_Database</span> <span class="str">'PostgreSQL'</span> { technology <span class="str">'PostgreSQL 16'</span> }
+
+    orderService -[<span class="hl">async</span>]-&gt; eventBus <span class="str">'Publie order.placed'</span> { <span class="cm">...</span> }
+    eventBus -[<span class="hl">async</span>]-&gt; preparationService <span class="str">'Livre order.placed'</span> { <span class="cm">...</span> }
+    preparationService -[<span class="hl">async</span>]-&gt; eventBus <span class="str">'Publie order.ready'</span> { <span class="cm">...</span> }
+    orderService -[<span class="hl">writes</span>]-&gt; database <span class="str">'Cr&eacute;er et mettre &agrave; jour commande'</span> { <span class="cm">...</span> }
+    notificationService -[<span class="hl">uses</span>]-&gt; festivalSystem.festivalApp <span class="str">'Envoie push notification'</span> { <span class="cm">...</span> }
+  }
+
+  festivalier -[<span class="hl">uses</span>]-&gt; festivalSystem <span class="str">'Commande mobile et suivi'</span>
+  barista -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Pr&eacute;pare et remet la boisson'</span>
+  festivalSystem -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Int&eacute;gration partenaire'</span> { technology <span class="str">'HTTPS'</span> }
+}</code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="slide__aside reveal c2-likec4__pane c2-likec4__pane--embed code-preview__pane code-preview__pane--embed">
+            <div class="code-preview__frame">
+              <span class="slide__code-filename">Vue C2</span>
+              <div class="embed-wrap reveal" id="coffee-v2-c2-embed-likec4" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000" data-likec4-fit-on-load="true" data-likec4-zoomout-steps="1">
+                <div class="embed-controls">
+                  <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
+                  <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
+                </div>
+                <iframe
+                  title="LikeC4 coffee-v2 C2"
+                  loading="lazy"
+                  data-src="assets/coffee-v2-single/index.html#/project/coffee-v2/view/c2_containers"
+                ></iframe>
+                <div class="embed-fallback" aria-live="polite">
+                  <span>Impossible de charger l'aper&ccedil;u ici.</span>
+                  <a href="assets/coffee-v2-single/index.html#/project/coffee-v2/view/c2_containers" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v2 (vue C2)</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
