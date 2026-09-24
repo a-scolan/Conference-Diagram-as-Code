@@ -1,25 +1,27 @@
-<section class="slide slide--content" data-nav="Briques C2">
-    <div class="slide__inner">
+<section class="slide slide--content slide--concept-cards" data-nav="Briques C2">
+    <div class="slide__inner" style="grid-template-columns:1fr;">
       <div>
         <p class="slide__label reveal">... qui pourrait être détaillée</p>
         <h2 class="slide__heading reveal">On zoome dans le syst&egrave;me<br>et on explicite les briques</h2>
-        <p class="slide__body reveal" style="margin-top:12px; margin-bottom:16px;">
+        <p class="slide__body reveal" style="margin-top:10px; margin-bottom:18px;">
           Quels éléments permettent l'exp&eacute;rience Alefest Coffee&nbsp;?
         </p>
-        <div class="system-lanes">
-          <div class="lane-card lane-card--green reveal">
-            <h3>Frontends</h3>
-            <ul>
-              <li>Counter App &middot; compatibilit&eacute; comptoir</li>
-              <li>Barista Screen &middot; file temps r&eacute;el</li>
+        <div class="concept-grid concept-grid--2">
+          <div class="concept-card concept-card--blue reveal">
+            <p class="concept-card__step">01 &middot; Frontends</p>
+            <h3 class="concept-card__title">Applications &amp; Exp&eacute;rience</h3>
+            <ul class="concept-card__list">
+              <li><strong>Counter App</strong> &middot; compatibilit&eacute; commande comptoir</li>
+              <li><strong>Barista Screen</strong> &middot; file de pr&eacute;paration temps r&eacute;el</li>
             </ul>
           </div>
-          <div class="lane-card lane-card--blue reveal">
-            <h3>Services</h3>
-            <ul>
-              <li>Order Service &middot; prise de commande</li>
-              <li>Preparation Service &middot; accompagne l'activité du barista</li>
-              <li>File de messages &middot; découple la prise de commande de son traitement</li>
+          <div class="concept-card concept-card--orange reveal">
+            <p class="concept-card__step">02 &middot; Services</p>
+            <h3 class="concept-card__title">Traitements &amp; Asynchronisme</h3>
+            <ul class="concept-card__list">
+              <li><strong>Order Service</strong> &middot; prise de commande et persistance</li>
+              <li><strong>Preparation Service</strong> &middot; orchestration baristas</li>
+              <li><strong>File RabbitMQ</strong> &middot; d&eacute;couplage &eacute;v&eacute;nementiel</li>
             </ul>
           </div>
         </div>

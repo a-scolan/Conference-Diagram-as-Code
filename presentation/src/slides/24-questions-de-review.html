@@ -1,22 +1,25 @@
-<section class="slide slide--content slide--review-questions" data-nav="Questions de review">
-    <p class="slide__label reveal">Ce qu'on veut voir en review</p>
-    <div class="slide__inner">
-      <div class="review-questions__hero">
-        <h2 class="slide__heading reveal">En revue, la question devient simple&nbsp;: qu'est-ce qui change dans l'architecture&nbsp;?</h2>
-      </div>
-      <div class="review-questions__story">
-        <article class="review-questions__card reveal">
-          <p class="review-questions__step">01 &middot; Ce qui entre</p>
-          <h3 class="review-questions__question">Quels nouveaux éléments apparaissent&nbsp;?</h3>
-        </article>
-        <article class="review-questions__card reveal">
-          <p class="review-questions__step">02 &middot; Ce qui bouge</p>
-          <h3 class="review-questions__question">Qui parle &agrave; qui apr&egrave;s le changement&nbsp;?</h3>
-        </article>
-        <article class="review-questions__card reveal">
-          <p class="review-questions__step">03 &middot; Ce qui devient sensible</p>
-          <h3 class="review-questions__question">Cr&eacute;e-t-on un point chaud, une boucle ou une fragilit&eacute;&nbsp;?</h3>
-        </article>
+<section class="slide slide--content slide--review-questions slide--concept-cards" data-nav="Questions de review">
+    <div class="slide__inner" style="grid-template-columns:1fr;">
+      <div>
+        <p class="slide__label reveal">Ce qu'on veut voir en review</p>
+        <h2 class="slide__heading reveal">En revue, la question devient simple&nbsp;:<br>qu'est-ce qui change dans l'architecture&nbsp;?</h2>
+        <div class="concept-grid concept-grid--3" style="margin-top:clamp(16px, 2.5vh, 28px);">
+          <article class="concept-card concept-card--blue review-questions__card reveal">
+            <p class="concept-card__step">01 &middot; Ce qui entre</p>
+            <h3 class="concept-card__title">Quels nouveaux éléments apparaissent&nbsp;?</h3>
+            <p class="concept-card__desc">Nouveaux services, composants externes ou interfaces ajoutés au système.</p>
+          </article>
+          <article class="concept-card concept-card--orange review-questions__card reveal">
+            <p class="concept-card__step">02 &middot; Ce qui bouge</p>
+            <h3 class="concept-card__title">Qui parle &agrave; qui apr&egrave;s le changement&nbsp;?</h3>
+            <p class="concept-card__desc">Nouvelles relations, flux asynchrones ou appels d'API modifiés.</p>
+          </article>
+          <article class="concept-card concept-card--green review-questions__card reveal">
+            <p class="concept-card__step">03 &middot; Ce qui devient sensible</p>
+            <h3 class="concept-card__title">Cr&eacute;e-t-on un point chaud ou une fragilit&eacute;&nbsp;?</h3>
+            <p class="concept-card__desc">Boucle de dépendance, couplage fort ou goulot d'étranglement potentiel.</p>
+          </article>
+        </div>
       </div>
     </div>
   </section>

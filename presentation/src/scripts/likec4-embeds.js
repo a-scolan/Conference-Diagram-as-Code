@@ -235,15 +235,19 @@
     var next = current === 'mermaid' ? 'likec4' : 'mermaid';
     var nextIsLikeC4 = next === 'likec4';
     slide.setAttribute('data-view', next);
-    btn.setAttribute('aria-pressed', String(nextIsLikeC4));
-    btn.setAttribute('aria-label', nextIsLikeC4 ? 'Afficher le bloc Mermaid' : 'Afficher le bloc code et l\'aperçu LikeC4');
-    btn.textContent = nextIsLikeC4 ? 'Mermaid' : 'LikeC4';
+    slide.querySelectorAll('.c2-unified__toggle').forEach(function(b) {
+      b.setAttribute('aria-pressed', String(nextIsLikeC4));
+    });
 
     window.requestAnimationFrame(function() {
       autoFit();
       var likec4Wrap = slide.querySelector('.c2-unified__view--likec4 .embed-wrap');
-      if (nextIsLikeC4 && likec4Wrap && likec4Wrap.classList.contains('is-loaded')) {
-        scheduleLikeC4ViewportTuning(likec4Wrap, true);
+      if (nextIsLikeC4 && likec4Wrap) {
+        if (!likec4Wrap.classList.contains('is-loaded')) {
+          startEmbedLoad(likec4Wrap);
+        } else {
+          scheduleLikeC4ViewportTuning(likec4Wrap, true);
+        }
       }
       var mermaidWrap = slide.querySelector('.c2-unified__view--mermaid .mermaid-wrap');
       if (mermaidWrap) {
@@ -295,48 +299,58 @@
     var next;
     if (mode === 'two-thirds') {
       next = current === 'two-thirds' ? 'third' : 'two-thirds';
-      btn.setAttribute('aria-label', next === 'two-thirds' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 2/3 code, 1/3 schéma');
-      btn.setAttribute('title', next === 'two-thirds' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 2/3 - 1/3');
     } else {
       next = current === 'half' ? 'third' : 'half';
-      btn.setAttribute('aria-label', next === 'half' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 50/50');
-      btn.setAttribute('title', next === 'half' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 1/2 - 1/2');
     }
     slide.setAttribute('data-split', next);
+
+    var nextTitle = (mode === 'two-thirds')
+      ? (next === 'two-thirds' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 2/3 - 1/3')
+      : (next === 'half' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 1/2 - 1/2');
+    var nextAria = (mode === 'two-thirds')
+      ? (next === 'two-thirds' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 2/3 code, 1/3 schéma')
+      : (next === 'half' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 50/50');
+
+    slide.querySelectorAll('.code-preview__split-toggle').forEach(function(b) {
+      b.setAttribute('title', nextTitle);
+      b.setAttribute('aria-label', nextAria);
+    });
 
     // Réajuster les diagrammes ou iframes au redimensionnement
     window.requestAnimationFrame(function() {
       if (typeof window.autoFit === 'function') window.autoFit();
-      var likec4Wrap = slide.querySelector('.embed-wrap');
-      if (likec4Wrap && likec4Wrap.classList.contains('is-loaded')) {
-        scheduleLikeC4ViewportTuning(likec4Wrap, true);
-      }
+      slide.querySelectorAll('.embed-wrap').forEach(function(likec4Wrap) {
+        if (likec4Wrap && likec4Wrap.classList.contains('is-loaded')) {
+          scheduleLikeC4ViewportTuning(likec4Wrap, true);
+        }
+      });
     });
   }
   window.toggleCodePreviewSplit = toggleCodePreviewSplit;
 
   function ensureCodePreviewSplitToggles() {
     document.querySelectorAll('.slide--code-preview:not(.slide--live-coding):not(.slide--workspace-tree)').forEach(function(slide) {
-      var inner = slide.querySelector('.slide__inner');
-      if (!inner || inner.querySelector('.code-preview__split-toggle')) return;
-      var mode = slide.getAttribute('data-split-mode') || 'half';
-      var current = slide.getAttribute('data-split') || (mode === 'two-thirds' ? 'two-thirds' : 'third');
-      var initialTitle;
-      if (mode === 'two-thirds') {
-        initialTitle = current === 'two-thirds' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 2/3 - 1/3';
-      } else {
-        initialTitle = current === 'half' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 1/2 - 1/2';
-      }
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'code-preview__split-toggle';
-      btn.innerHTML = '&lt;&gt;';
-      btn.setAttribute('title', initialTitle);
-      btn.setAttribute('aria-label', initialTitle);
-      btn.addEventListener('click', function() {
-        toggleCodePreviewSplit(btn);
+      slide.querySelectorAll('.slide__inner').forEach(function(inner) {
+        if (inner.querySelector('.code-preview__split-toggle')) return;
+        var mode = slide.getAttribute('data-split-mode') || 'half';
+        var current = slide.getAttribute('data-split') || (mode === 'two-thirds' ? 'two-thirds' : 'third');
+        var initialTitle;
+        if (mode === 'two-thirds') {
+          initialTitle = current === 'two-thirds' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 2/3 - 1/3';
+        } else {
+          initialTitle = current === 'half' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 1/2 - 1/2';
+        }
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'code-preview__split-toggle';
+        btn.innerHTML = '&lt;&gt;';
+        btn.setAttribute('title', initialTitle);
+        btn.setAttribute('aria-label', initialTitle);
+        btn.addEventListener('click', function() {
+          toggleCodePreviewSplit(btn);
+        });
+        inner.appendChild(btn);
       });
-      inner.appendChild(btn);
     });
   }
 

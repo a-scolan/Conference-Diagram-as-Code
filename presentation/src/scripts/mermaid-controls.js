@@ -1,5 +1,7 @@
 /* ============ Mermaid zoom controls ============ */
-  function getInitialZoom(w){return parseFloat(w.dataset.initialZoom||'1')||1;}
+  function getInitialZoom(w){
+    return parseFloat(w && w.dataset && w.dataset.initialZoom ? w.dataset.initialZoom : '1') || 1;
+  }
   function getCurrentZoom(w){var t=w&&w.querySelector?w.querySelector('.mermaid'):null;return parseFloat(t&&t.dataset.zoom||getInitialZoom(w))||getInitialZoom(w);}
   function getZoomMin(w){var min=parseFloat(w&&w.dataset.zoomMin?w.dataset.zoomMin:'');return !isNaN(min)&&min>0?min:0.6;}
   function getZoomMax(w){var max=parseFloat(w&&w.dataset.zoomMax?w.dataset.zoomMax:'');return !isNaN(max)&&max>getZoomMin(w)?max:4;}

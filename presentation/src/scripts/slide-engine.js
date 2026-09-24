@@ -16,6 +16,7 @@
       this.deck.scrollTop=targetTop;
     }
     this.injectCrystals();
+    this.injectCardHatchStrips();
     this.buildSectionMap();this.buildChrome();this.bindEvents();this.observe();this.update();
     if(initIdx>0){
       var self=this;
@@ -23,63 +24,119 @@
     }
   }
   SlideEngine.prototype.injectCrystals=function(){
-    var svgContentRight =
-      '<svg viewBox="0 0 160 140" width="160" height="140" class="slide-crystals" aria-hidden="true" focusable="false">' +
-        '<g transform="translate(60, 50)">' +
-          // Mire d'alignement principale (cercle + réticule en croix + ticks)
-          '<circle cx="0" cy="0" r="30" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.6"/>' +
-          '<circle cx="0" cy="0" r="16" fill="var(--accent)" opacity="0.08"/>' +
-          '<circle cx="0" cy="0" r="4" fill="var(--accent)" opacity="0.8"/>' +
-          '<line x1="-38" y1="0" x2="38" y2="0" stroke="var(--accent)" stroke-width="1.5" opacity="0.75"/>' +
-          '<line x1="0" y1="-38" x2="0" y2="38" stroke="var(--accent)" stroke-width="1.5" opacity="0.75"/>' +
-          '<line x1="-15" y1="-6" x2="-15" y2="6" stroke="var(--accent)" stroke-width="1" opacity="0.5"/>' +
-          '<line x1="15" y1="-6" x2="15" y2="6" stroke="var(--accent)" stroke-width="1" opacity="0.5"/>' +
-          '<line x1="-6" y1="-15" x2="6" y2="-15" stroke="var(--accent)" stroke-width="1" opacity="0.5"/>' +
-          '<line x1="-6" y1="15" x2="6" y2="15" stroke="var(--accent)" stroke-width="1" opacity="0.5"/>' +
-          // Deuxième mire décalée façon test de registre d'imprimerie (PJ 2)
-          '<circle cx="44" cy="22" r="22" fill="none" stroke="var(--accent2)" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.55"/>' +
-          '<line x1="20" y1="22" x2="68" y2="22" stroke="var(--accent2)" stroke-width="1.2" opacity="0.65"/>' +
-          '<line x1="44" y1="-2" x2="44" y2="46" stroke="var(--accent2)" stroke-width="1.2" opacity="0.65"/>' +
-          '<circle cx="44" cy="22" r="2.5" fill="var(--accent2)" opacity="0.85"/>' +
-          // Troisième mire cyan
-          '<circle cx="-28" cy="28" r="14" fill="none" stroke="var(--accent3)" stroke-width="1" opacity="0.5"/>' +
-          '<line x1="-44" y1="28" x2="-12" y2="28" stroke="var(--accent3)" stroke-width="1" opacity="0.55"/>' +
-          '<line x1="-28" y1="12" x2="-28" y2="44" stroke="var(--accent3)" stroke-width="1" opacity="0.55"/>' +
-          // Barrette de test d'impression \\\\\\\\ (PJ 1)
-          '<g transform="translate(-40, 56)">' +
-            '<line x1="0" y1="10" x2="8" y2="0" stroke="var(--accent3)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="7" y1="10" x2="15" y2="0" stroke="var(--accent3)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="14" y1="10" x2="22" y2="0" stroke="var(--accent)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="21" y1="10" x2="29" y2="0" stroke="var(--accent)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="28" y1="10" x2="36" y2="0" stroke="var(--accent2)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="35" y1="10" x2="43" y2="0" stroke="var(--accent2)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="42" y1="10" x2="50" y2="0" stroke="var(--green)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="49" y1="10" x2="57" y2="0" stroke="var(--green)" stroke-width="1.8" opacity="0.75"/>' +
-          '</g>' +
-          // Nuancier quadrichromie CMYK (PJ 2)
-          '<g transform="translate(32, 60)">' +
-            '<rect x="0" y="0" width="7" height="7" rx="1" fill="var(--accent3)" opacity="0.8"/>' +
-            '<rect x="9" y="0" width="7" height="7" rx="1" fill="var(--accent4, #db2777)" opacity="0.8"/>' +
-            '<rect x="18" y="0" width="7" height="7" rx="1" fill="var(--accent2)" opacity="0.8"/>' +
-            '<rect x="27" y="0" width="7" height="7" rx="1" fill="var(--text)" opacity="0.7"/>' +
-          '</g>' +
+    // 1. Haut gauche : Mire circulaire de registre d'angle avec réticule étendu et micro-repères
+    var svgTopLeft =
+      '<svg viewBox="0 0 64 64" width="64" height="64" class="blueprint-deco blueprint-deco--tl" aria-hidden="true" focusable="false">' +
+        '<g transform="translate(32, 32)">' +
+          '<circle cx="0" cy="0" r="22" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.6"/>' +
+          '<circle cx="0" cy="0" r="10" fill="none" stroke="var(--accent)" stroke-width="0.8" opacity="0.45"/>' +
+          '<path d="M0,0 L-22,0 A22,22 0 0,1 0,-22 Z" fill="var(--accent)" opacity="0.2"/>' +
+          '<path d="M0,0 L22,0 A22,22 0 0,1 0,22 Z" fill="var(--accent)" opacity="0.2"/>' +
+          '<line x1="-30" y1="0" x2="30" y2="0" stroke="var(--accent)" stroke-width="1.2" opacity="0.8"/>' +
+          '<line x1="0" y1="-30" x2="0" y2="30" stroke="var(--accent)" stroke-width="1.2" opacity="0.8"/>' +
+          '<circle cx="0" cy="0" r="1.5" fill="var(--accent)" opacity="0.95"/>' +
+        '</g>' +
+      '</svg>';
+
+    // 2. Haut droite : Échelle de calibration quadrichromie CMYK avec pastilles et repères fins
+    var svgTopRight =
+      '<svg viewBox="0 0 130 26" width="130" height="26" class="blueprint-deco blueprint-deco--tr" aria-hidden="true" focusable="false">' +
+        '<g transform="translate(0, 4)">' +
+          '<rect x="0" y="0" width="14" height="12" rx="2" fill="var(--accent3)" opacity="0.85"/>' +
+          '<rect x="18" y="0" width="14" height="12" rx="2" fill="var(--accent4, #db2777)" opacity="0.85"/>' +
+          '<rect x="36" y="0" width="14" height="12" rx="2" fill="var(--accent2)" opacity="0.85"/>' +
+          '<rect x="54" y="0" width="14" height="12" rx="2" fill="var(--text)" opacity="0.75"/>' +
+          '<text x="7" y="10" font-family="var(--font-mono)" font-size="7" font-weight="700" fill="#ffffff" text-anchor="middle">C</text>' +
+          '<text x="25" y="10" font-family="var(--font-mono)" font-size="7" font-weight="700" fill="#ffffff" text-anchor="middle">M</text>' +
+          '<text x="43" y="10" font-family="var(--font-mono)" font-size="7" font-weight="700" fill="#ffffff" text-anchor="middle">Y</text>' +
+          '<text x="61" y="10" font-family="var(--font-mono)" font-size="7" font-weight="700" fill="#ffffff" text-anchor="middle">K</text>' +
+          '<line x1="74" y1="6" x2="120" y2="6" stroke="var(--border-bright)" stroke-width="1.2" stroke-dasharray="3 3"/>' +
+          '<circle cx="124" cy="6" r="2" fill="none" stroke="var(--accent)" stroke-width="1"/>' +
+        '</g>' +
+      '</svg>';
+
+    // 3. Bas gauche : Barrette de hachures biseautées \\\\\\\\\\\\\\\\ bicolore (2 intensités alternées, PJ 1)
+    var svgBottomLeft =
+      '<svg viewBox="0 0 180 32" width="180" height="32" class="blueprint-deco blueprint-deco--bl" aria-hidden="true" focusable="false">' +
+        '<g transform="translate(4, 2)">' +
+          '<line x1="0" y1="20" x2="12" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="11" y1="20" x2="23" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="22" y1="20" x2="34" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="33" y1="20" x2="45" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="44" y1="20" x2="56" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="55" y1="20" x2="67" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="66" y1="20" x2="78" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="77" y1="20" x2="89" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="88" y1="20" x2="100" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="99" y1="20" x2="111" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="110" y1="20" x2="122" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="121" y1="20" x2="133" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="132" y1="20" x2="144" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="143" y1="20" x2="155" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="154" y1="20" x2="166" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="0" y1="26" x2="168" y2="26" stroke="var(--accent)" stroke-width="1.2" opacity="0.45" stroke-dasharray="3 3"/>' +
+        '</g>' +
+      '</svg>';
+
+    // 4. Bas droite : Cible stellaire technique / mire de précision circulaire
+    var svgBottomRight =
+      '<svg viewBox="0 0 54 54" width="54" height="54" class="blueprint-deco blueprint-deco--br" aria-hidden="true" focusable="false">' +
+        '<g transform="translate(27, 27)">' +
+          '<circle cx="0" cy="0" r="20" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.6"/>' +
+          '<circle cx="0" cy="0" r="10" fill="none" stroke="var(--accent2)" stroke-width="1" stroke-dasharray="2 2" opacity="0.65"/>' +
+          '<line x1="-25" y1="0" x2="25" y2="0" stroke="var(--accent)" stroke-width="1.2" opacity="0.75"/>' +
+          '<line x1="0" y1="-25" x2="0" y2="25" stroke="var(--accent)" stroke-width="1.2" opacity="0.75"/>' +
+          '<circle cx="0" cy="0" r="2" fill="var(--accent)" opacity="0.9"/>' +
         '</g>' +
       '</svg>';
 
     var self = this;
     this.slides.forEach(function(slide, idx) {
-      // Décoration uniquement sur la couverture, les intercalaires et la fin (pas sur les diapositives de contenu)
+      // Décorations périphériques réparties uniquement sur couverture, intercalaires et fin
       var isTarget = slide.classList.contains('slide--cover') ||
+                     slide.classList.contains('slide--title') ||
                      slide.classList.contains('slide--divider') ||
+                     slide.classList.contains('slide--outro') ||
+                     slide.classList.contains('slide--bleed') ||
                      idx === 0 ||
                      idx === self.slides.length - 1;
       if (!isTarget) return;
-      if (slide.querySelector('.slide-crystals-wrap')) return;
+      if (slide.querySelector('.blueprint-deco-frame')) return;
 
-      var wrap = document.createElement('div');
-      wrap.className = 'slide-crystals-wrap';
-      wrap.innerHTML = svgContentRight;
-      slide.appendChild(wrap);
+      var frame = document.createElement('div');
+      frame.className = 'blueprint-deco-frame';
+      frame.innerHTML = svgTopLeft + svgTopRight + svgBottomLeft + svgBottomRight;
+      slide.appendChild(frame);
+    });
+  };
+  SlideEngine.prototype.injectCardHatchStrips=function(){
+    // Barrette de hachures biseautées identique à la planche de référence et aux diapos titres
+    var svgHatch =
+      '<svg viewBox="0 0 100 24" width="100" height="24" class="card-hatch-strip" aria-hidden="true" focusable="false">' +
+        '<g transform="translate(3, 2)">' +
+          '<line x1="0" y1="15" x2="9" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="9" y1="15" x2="18" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.22"/>' +
+          '<line x1="18" y1="15" x2="27" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="27" y1="15" x2="36" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.22"/>' +
+          '<line x1="36" y1="15" x2="45" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="45" y1="15" x2="54" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.22"/>' +
+          '<line x1="54" y1="15" x2="63" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="63" y1="15" x2="72" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.22"/>' +
+          '<line x1="72" y1="15" x2="81" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="81" y1="15" x2="90" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.22"/>' +
+          '<line x1="0" y1="19" x2="92" y2="19" stroke="currentColor" stroke-width="1.2" opacity="0.45" stroke-dasharray="2.5 2.5"/>' +
+        '</g>' +
+      '</svg>';
+
+    var targets = document.querySelectorAll(
+      '.concept-card, .benefit-card, .review-questions__card, .lane-card, .key-card, .speaker-card, .speaker-panel, .slide--split .slide__panel'
+    );
+    targets.forEach(function(el) {
+      if (el.querySelector('.card-hatch-strip')) return;
+      var div = document.createElement('div');
+      div.className = 'card-hatch-strip-wrap';
+      div.innerHTML = svgHatch;
+      el.appendChild(div);
     });
   };
   SlideEngine.prototype.buildChrome=function(){

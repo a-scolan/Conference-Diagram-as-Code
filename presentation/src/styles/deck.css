@@ -125,20 +125,22 @@
 
   .deck-counter {
     position: fixed;
-    top: 18px;
-    right: 20px;
+    top: 14px;
+    right: 18px;
     bottom: auto;
     font-family: var(--font-mono);
-    font-size: calc(13px + var(--font-bump));
-    font-weight: 700;
+    font-size: calc(11px + var(--font-bump));
+    font-weight: 500;
     color: var(--text-dim);
-    background: color-mix(in srgb, var(--surface) 90%, transparent 10%);
-    border: 1px solid var(--border-bright);
+    background: color-mix(in srgb, var(--surface) 75%, transparent 25%);
+    border: 1px solid var(--border);
     border-radius: 999px;
-    padding: 4px 12px;
+    padding: 2px 9px;
     z-index: 100;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: none;
+    opacity: 0.65;
     pointer-events: none;
+    transition: opacity 0.2s ease;
   }
 
   .deck-hints {

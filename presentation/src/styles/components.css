@@ -462,15 +462,60 @@
     color: var(--text) !important;
   }
 
-  /* ============ SLIDE TYPE: FULL-BLEED ============ */
-  .slide--bleed { padding: 0; justify-content: flex-end; }
-  .slide__bg { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; }
-  .slide__bg--gradient {
-    background: linear-gradient(135deg, #040818 0%, #080d2a 40%, #0c1238 100%);
+  /* ============ SLIDE TYPE: OUTRO (Slide 35) ============ */
+  .slide--outro {
+    justify-content: center;
+    align-items: center;
+    padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 56px);
   }
-  .slide--bleed .slide__content { position: relative; z-index: 2; padding: clamp(40px,6vh,80px) clamp(40px,8vw,120px); color: #fff; }
-  .slide--bleed .slide__heading { color: #fff; }
-  .slide--bleed .slide__subtitle { color: #e2edf7; }
+  .slide--outro .slide__inner {
+    flex: 1 1 auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .outro-card {
+    max-width: 840px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    border-radius: 20px;
+    border: 1.5px solid var(--border-bright);
+    background: color-mix(in srgb, var(--surface) 90%, transparent 10%);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    padding: clamp(32px, 5vh, 56px) clamp(28px, 4vw, 56px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .outro-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent3), var(--accent), var(--accent2));
+  }
+  .outro-card .slide__heading {
+    color: var(--text) !important;
+  }
+  .outro-card .slide__subtitle {
+    color: var(--text-subtitle) !important;
+  }
+
+  /* Éléments mis en valeur harmonisés (Slides 2, 7, 10, 35) */
+  .slide--fil-rouge .speaker-card,
+  .slide--fil-rouge .speaker-panel,
+  .c4-zoom__viewport {
+    border-radius: 18px !important;
+    border: 1.5px solid var(--border-bright) !important;
+    background: color-mix(in srgb, var(--surface) 86%, transparent 14%) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05) !important;
+  }
 
   /* ============ SLIDE TYPE: EMBED (local HTML iframe) ============ */
   .slide--embed { padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 60px); }
@@ -1102,6 +1147,144 @@
       fill: #ffffff !important;
     }
 
+    /* ============ UNIFIED CONCEPT CARDS (Slides 6, 14, 25, 31) ============ */
+    .concept-grid {
+      display: grid;
+      gap: clamp(14px, 1.8vw, 24px);
+      width: 100%;
+      align-items: stretch;
+    }
+    .concept-grid--2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .concept-grid--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .concept-grid--6 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(10px, 1.4vh, 18px);
+    }
+    @media (max-width: 900px) {
+      .concept-grid--3,
+      .concept-grid--2 {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+      }
+    }
+
+    .concept-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: clamp(140px, 20vh, 220px);
+      padding: clamp(18px, 2.4vh, 26px);
+      border-radius: 16px;
+      border: 1.5px solid var(--border-bright);
+      background: var(--surface);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .concept-card:hover {
+      border-color: var(--card-accent, var(--accent));
+      transform: translateY(-2px);
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.08);
+    }
+    .concept-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--card-accent, var(--accent));
+      opacity: 0.95;
+    }
+
+    /* Couleurs de cartes diversifiées et vibrantes */
+    .concept-card--blue {
+      --card-accent: var(--accent);
+      background: linear-gradient(175deg, color-mix(in srgb, var(--accent) 8%, var(--surface)) 0%, var(--surface) 38%);
+    }
+    .concept-card--cyan {
+      --card-accent: var(--accent3);
+      background: linear-gradient(175deg, color-mix(in srgb, var(--accent3) 8%, var(--surface)) 0%, var(--surface) 38%);
+    }
+    .concept-card--orange {
+      --card-accent: var(--accent2);
+      background: linear-gradient(175deg, color-mix(in srgb, var(--accent2) 8%, var(--surface)) 0%, var(--surface) 38%);
+    }
+    .concept-card--green {
+      --card-accent: var(--green);
+      background: linear-gradient(175deg, color-mix(in srgb, var(--green) 8%, var(--surface)) 0%, var(--surface) 38%);
+    }
+    .concept-card--purple {
+      --card-accent: var(--accent4, #db2777);
+      background: linear-gradient(175deg, color-mix(in srgb, var(--accent4, #db2777) 8%, var(--surface)) 0%, var(--surface) 38%);
+    }
+    .concept-card--teal {
+      --card-accent: #0f766e;
+      background: linear-gradient(175deg, color-mix(in srgb, #0f766e 8%, var(--surface)) 0%, var(--surface) 38%);
+    }
+
+    .concept-card__step {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: calc(clamp(11px, 1.2vw, 13px) + var(--font-bump));
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--card-accent, var(--accent));
+    }
+
+    .concept-card__title {
+      margin: 0;
+      font-size: calc(clamp(17px, 1.9vw, 23px) + var(--font-bump));
+      line-height: 1.25;
+      font-weight: 700;
+      color: var(--text);
+      min-height: calc(2.5em + var(--font-bump));
+      display: flex;
+      align-items: flex-start;
+      text-wrap: balance;
+    }
+
+    .concept-card__desc {
+      margin: 0;
+      font-size: calc(clamp(13px, 1.45vw, 16px) + var(--font-bump));
+      line-height: 1.5;
+      color: var(--text-subtitle);
+      text-wrap: pretty;
+      font-weight: 500;
+    }
+
+    .concept-card__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .concept-card__list li {
+      position: relative;
+      padding-left: 18px;
+      font-size: calc(clamp(13px, 1.45vw, 16px) + var(--font-bump));
+      line-height: 1.45;
+      color: var(--text);
+    }
+    .concept-card__list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--card-accent, var(--accent));
+    }
+
     .slide--review-questions {
       justify-content: center;
     }
@@ -1154,41 +1337,8 @@
       position: absolute;
       inset: 0 0 auto 0;
       height: 4px;
-      background: var(--accent);
+      background: var(--card-accent, var(--accent));
       opacity: 0.95;
-    }
-    .slide--review-questions .review-questions__card:nth-child(1) {
-      background: linear-gradient(175deg, color-mix(in srgb, var(--accent) 7%, var(--surface)) 0%, var(--surface) 38%);
-    }
-    .slide--review-questions .review-questions__card:nth-child(2) {
-      background: linear-gradient(175deg, color-mix(in srgb, var(--accent3) 7%, var(--surface)) 0%, var(--surface) 38%);
-    }
-    .slide--review-questions .review-questions__card:nth-child(2)::before {
-      background: var(--accent3);
-    }
-    .slide--review-questions .review-questions__card:nth-child(3) {
-      background: linear-gradient(175deg, color-mix(in srgb, var(--accent2) 7%, var(--surface)) 0%, var(--surface) 38%);
-    }
-    .slide--review-questions .review-questions__card:nth-child(3)::before {
-      background: var(--accent2);
-    }
-    /* Barrette de test d'impression \\\\\\\\ sur les cartes de review (PJ 1) */
-    .slide--review-questions .review-questions__card::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      right: 18px;
-      width: 40px;
-      height: 5px;
-      background: repeating-linear-gradient(-45deg, var(--accent) 0, var(--accent) 2px, transparent 2px, transparent 6px);
-      opacity: 0.70;
-      border-radius: 3px 3px 0 0;
-    }
-    .slide--review-questions .review-questions__card:nth-child(2)::after {
-      background: repeating-linear-gradient(-45deg, var(--accent3) 0, var(--accent3) 2px, transparent 2px, transparent 6px);
-    }
-    .slide--review-questions .review-questions__card:nth-child(3)::after {
-      background: repeating-linear-gradient(-45deg, var(--accent2) 0, var(--accent2) 2px, transparent 2px, transparent 6px);
     }
     .slide--review-questions .review-questions__step {
       margin: 0;
@@ -1197,20 +1347,17 @@
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--accent);
-    }
-    .slide--review-questions .review-questions__card:nth-child(2) .review-questions__step {
-      color: var(--accent3);
-    }
-    .slide--review-questions .review-questions__card:nth-child(3) .review-questions__step {
-      color: var(--accent2);
+      color: var(--card-accent, var(--accent));
     }
     .slide--review-questions .review-questions__question {
       margin: 0;
-      font-size: calc(clamp(20px, 2.2vw, 26px) + var(--font-bump));
-      line-height: 1.22;
+      font-size: calc(clamp(17px, 1.9vw, 23px) + var(--font-bump));
+      line-height: 1.25;
       font-weight: 700;
       color: var(--text);
+      min-height: calc(2.5em + var(--font-bump));
+      display: flex;
+      align-items: flex-start;
       text-wrap: balance;
     }
     .slide--review-questions .review-questions__detail {
@@ -1224,35 +1371,52 @@
     /* ============ SLIDE TUNING: C2 unified toggle (Mermaid <-> likeC4) ============ */
     .slide--c2-unified {
       position: relative;
-      padding-top: clamp(52px, 7vh, 86px);
+      padding-top: clamp(48px, 6.5vh, 78px);
       padding-bottom: clamp(18px, 2.8vh, 30px);
     }
     .slide--c2-unified > .slide__heading {
-      margin-bottom: clamp(12px, 1.6vh, 20px);
+      margin-bottom: clamp(10px, 1.5vh, 18px);
       max-width: none;
       text-wrap: balance;
     }
+    .slide--c2-unified .slide__aside {
+      position: relative;
+    }
     .slide--c2-unified .c2-unified__toggle {
       position: absolute;
-      top: clamp(14px, 2vh, 22px);
-      right: clamp(20px, 3vw, 34px);
-      z-index: 22;
-      border: 1px solid var(--border-bright);
-      background: color-mix(in srgb, var(--surface) 86%, transparent 14%);
-      color: var(--text);
+      top: -34px;
+      right: 0;
+      z-index: 40;
+      border: 1.5px solid var(--border-bright);
+      background: var(--surface);
+      color: var(--accent);
       border-radius: 999px;
-      padding: 8px 14px;
+      padding: 4px 13px;
       font-family: var(--font-mono);
-      font-size: calc(12px + var(--font-bump));
-      font-weight: 600;
-      letter-spacing: 0.04em;
+      font-size: calc(11.5px + var(--font-bump));
+      font-weight: 700;
+      letter-spacing: 0.03em;
       cursor: pointer;
-      transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .slide--c2-unified .c2-unified__toggle:hover {
       border-color: var(--accent);
-      color: var(--accent);
-      background: color-mix(in srgb, var(--accent-dim) 72%, var(--surface) 28%);
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(26, 115, 232, 0.28);
+    }
+    @media (max-width: 900px), (max-height: 560px) {
+      .slide--c2-unified .c2-unified__toggle {
+        top: -28px;
+        right: 0;
+        padding: 3px 10px;
+        font-size: 10px;
+      }
     }
     .slide--c2-unified .c2-unified__views {
       flex: 1 1 auto;
@@ -1271,21 +1435,19 @@
       display: flex;
       flex-direction: column;
     }
-    .slide--c2-unified .c2-unified__view--mermaid .slide__inner {
+    .slide--c2-unified .c2-unified__view .slide__inner {
       flex: 1 1 auto;
       min-height: 0;
+      grid-template-columns: minmax(0, var(--code-preview-code-col)) minmax(0, var(--code-preview-preview-col));
     }
-    .slide--c2-unified[data-view="mermaid"] .c2-unified__view--mermaid .slide__inner {
-      grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
-    }
-    .slide--c2-unified .c2-mermaid__pane {
+    .slide--c2-unified .code-preview__pane {
       min-width: 0;
     }
-    .slide--c2-unified .c2-mermaid__pane--code .slide__code-block {
+    .slide--c2-unified .code-preview__pane--code .slide__code-block {
       flex: 1 1 auto;
       min-height: 0;
     }
-    .slide--c2-unified .c2-mermaid__pane--code .slide__code-block pre {
+    .slide--c2-unified .code-preview__pane--code .slide__code-block pre {
       height: 100%;
     }
     .slide--c2-unified .c2-unified__view--mermaid .mermaid-wrap {
@@ -1670,8 +1832,15 @@
   }
 
   .key-card strong {
-    display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: var(--text);
-    font-size: calc(clamp(16px, 1.9vw, 20px) + var(--font-bump));
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: var(--text);
+    font-size: calc(clamp(15px, 1.7vw, 19px) + var(--font-bump));
+    line-height: 1.25;
+    min-height: calc(2.5em + var(--font-bump));
+    text-wrap: balance;
   }
 
   .key-card__marker {
@@ -1888,10 +2057,12 @@
   }
 
   .benefit-card {
+    position: relative;
+    overflow: hidden;
     background: var(--surface);
     border: 1.5px solid var(--border-bright);
     border-radius: 14px;
-    padding: clamp(10px, 1.3vh, 14px);
+    padding: clamp(12px, 1.4vh, 16px) clamp(10px, 1.3vw, 14px) clamp(10px, 1.3vh, 14px);
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -1899,6 +2070,16 @@
     min-height: 0;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .benefit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.5px;
+    background: var(--card-accent, var(--accent));
   }
 
   .benefit-card:hover {

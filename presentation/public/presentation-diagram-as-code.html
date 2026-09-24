@@ -286,47 +286,109 @@
 }
 
 /* ==========================================================================
-   CRISTAUX BLUEPRINT COLORÉS (Constellation de mires superposées en fond)
+   BLUEPRINT PERIPHERAL DECORATIONS (Mires réparties aux 4 angles)
    ========================================================================== */
-.slide-crystals-wrap {
-  position: absolute;
-  bottom: 18px;
-  right: 28px;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.70;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+.blueprint-deco-frame,
+.slide > .blueprint-deco-frame,
+.slide--title > .blueprint-deco-frame,
+.slide--divider > .blueprint-deco-frame {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  overflow: hidden !important;
 }
 
-[data-theme="slate-architect"] .slide-crystals-wrap,
-[data-theme="dark"] .slide-crystals-wrap {
-  opacity: 0.85;
-}
-
-.slide--cover .slide-crystals-wrap {
-  bottom: 34px;
-  right: 48px;
-  transform: scale(1.30);
-}
-
-.slide--divider .slide-crystals-wrap {
-  bottom: 34px;
-  right: 48px;
-  transform: scale(1.20);
-}
-
-.slide-crystals {
-  display: block;
+.blueprint-deco {
+  position: absolute !important;
+  pointer-events: none !important;
   overflow: visible;
+  transition: opacity 0.3s ease;
+}
+
+[data-theme="slate-architect"] .blueprint-deco,
+[data-theme="dark"] .blueprint-deco {
+  filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.15));
+}
+
+.blueprint-deco--tl {
+  top: clamp(16px, 2.8vh, 32px);
+  left: clamp(20px, 2.8vw, 36px);
+  opacity: 0.50;
+}
+
+.blueprint-deco--tr {
+  top: clamp(16px, 2.8vh, 32px);
+  right: clamp(72px, 6vw, 92px); /* Évite la capsule du compteur */
+  opacity: 0.55;
+}
+
+.blueprint-deco--bl {
+  bottom: clamp(18px, 3vh, 34px);
+  left: clamp(20px, 2.8vw, 36px);
+  opacity: 0.70;
+}
+
+.blueprint-deco--br {
+  bottom: clamp(18px, 3vh, 34px);
+  right: clamp(24px, 3.2vw, 40px);
+  opacity: 0.65;
 }
 
 @media (max-width: 768px), (max-height: 560px) {
-  .slide-crystals-wrap {
-    transform: scale(0.70);
-    bottom: 8px;
-    right: 12px;
-    opacity: 0.45;
+  .blueprint-deco-frame {
+    display: none !important;
   }
+}
+
+/* ==========================================================================
+   CARD CALIBRATION STRIPS (Hachures SVG bicolores identiques aux titres)
+   ========================================================================== */
+.card-hatch-strip-wrap {
+  position: absolute;
+  bottom: 8px;
+  right: 14px;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+  line-height: 0;
+}
+
+.concept-card .card-hatch-strip-wrap {
+  color: var(--card-accent, var(--accent));
+}
+
+.benefit-card .card-hatch-strip-wrap {
+  color: var(--card-accent, var(--accent));
+  bottom: 6px;
+  right: 12px;
+}
+
+.slide--split .slide__panel--primary .card-hatch-strip-wrap {
+  color: var(--accent2);
+}
+
+.slide--split .slide__panel--secondary .card-hatch-strip-wrap {
+  color: var(--green);
+}
+
+.card-hatch-strip {
+  display: block;
+  overflow: visible;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.concept-card:hover .card-hatch-strip,
+.benefit-card:hover .card-hatch-strip,
+.review-questions__card:hover .card-hatch-strip {
+  transform: scale(1.08);
 }
 
 /* ==========================================================================
@@ -762,20 +824,22 @@
 
   .deck-counter {
     position: fixed;
-    top: 18px;
-    right: 20px;
+    top: 14px;
+    right: 18px;
     bottom: auto;
     font-family: var(--font-mono);
-    font-size: calc(13px + var(--font-bump));
-    font-weight: 700;
+    font-size: calc(11px + var(--font-bump));
+    font-weight: 500;
     color: var(--text-dim);
-    background: color-mix(in srgb, var(--surface) 90%, transparent 10%);
-    border: 1px solid var(--border-bright);
+    background: color-mix(in srgb, var(--surface) 75%, transparent 25%);
+    border: 1px solid var(--border);
     border-radius: 999px;
-    padding: 4px 12px;
+    padding: 2px 9px;
     z-index: 100;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: none;
+    opacity: 0.65;
     pointer-events: none;
+    transition: opacity 0.2s ease;
   }
 
   .deck-hints {
@@ -836,7 +900,7 @@
     overflow: hidden;
   }
 
-  .slide--title > * {
+  .slide--title > *:not(.blueprint-deco-frame) {
     position: relative;
     z-index: 1;
   }
@@ -858,7 +922,24 @@
     flex-direction: column;
     justify-content: center;
     min-width: 0;
-    gap: clamp(12px, 1.8vh, 22px);
+    gap: clamp(10px, 1.6vh, 20px);
+    border-radius: 18px;
+    border: 1.5px solid var(--border-bright);
+    background: color-mix(in srgb, var(--surface) 86%, transparent 14%);
+    padding: clamp(26px, 3.8vh, 44px) clamp(28px, 3.8vw, 52px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .speaker-intro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--accent);
   }
 
   .slide--speaker .speaker-intro > .reveal {
@@ -1167,20 +1248,20 @@
 
   /* ============ SLIDE TYPE: SPLIT ============ */
   .slide--split {
-    padding: clamp(36px, 5vh, 60px) clamp(28px, 4vw, 56px);
+    padding: clamp(28px, 4.5vh, 52px) clamp(24px, 3.5vw, 48px);
   }
   .slide--split .slide__panels {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(20px, 2.5vw, 36px);
+    gap: clamp(16px, 2.2vw, 32px);
     height: 100%;
     align-items: stretch;
   }
   .slide--split .slide__panel {
-    padding: clamp(24px, 3.8vh, 44px) clamp(22px, 2.8vw, 36px);
+    padding: clamp(24px, 3.6vh, 40px) clamp(22px, 2.8vw, 36px);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     border-radius: 16px;
     border: 1.5px solid var(--border-bright);
     background: color-mix(in srgb, var(--surface) 62%, transparent 38%);
@@ -1189,6 +1270,28 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     position: relative;
     overflow: hidden;
+  }
+  .slide--split .slide__panel .slide__label {
+    margin-top: 0;
+    margin-bottom: clamp(6px, 1.2vh, 12px);
+    font-size: calc(clamp(11px, 1.2vw, 13px) + var(--font-bump));
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+  .slide--split .slide__panel .slide__heading {
+    margin: 0;
+    font-size: calc(clamp(20px, 2.5vw, 32px) + var(--font-bump));
+    line-height: 1.22;
+    min-height: calc(2.44em + var(--font-bump));
+    text-wrap: balance;
+    display: flex;
+    align-items: flex-start;
+  }
+  .slide--split .slide__panel .slide__bullets {
+    margin-top: clamp(14px, 2vh, 22px);
+    flex: 1 1 auto;
   }
   .slide--split .slide__panel--primary::before {
     content: '';
@@ -1207,29 +1310,6 @@
     right: 0;
     height: 4px;
     background: var(--green);
-  }
-  /* Barrette de calibration d'imprimerie \\\\\\\\ en bas des panneaux (PJ 1) */
-  .slide--split .slide__panel--primary::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    right: 20px;
-    width: 44px;
-    height: 5px;
-    background: repeating-linear-gradient(-45deg, var(--accent2) 0, var(--accent2) 2px, transparent 2px, transparent 6px);
-    opacity: 0.70;
-    border-radius: 3px 3px 0 0;
-  }
-  .slide--split .slide__panel--secondary::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    right: 20px;
-    width: 44px;
-    height: 5px;
-    background: repeating-linear-gradient(-45deg, var(--green) 0, var(--green) 2px, transparent 2px, transparent 6px);
-    opacity: 0.70;
-    border-radius: 3px 3px 0 0;
   }
   .slide--split .slide__panel--primary {
     color: var(--text);
@@ -1760,15 +1840,60 @@
     color: var(--text) !important;
   }
 
-  /* ============ SLIDE TYPE: FULL-BLEED ============ */
-  .slide--bleed { padding: 0; justify-content: flex-end; }
-  .slide__bg { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; }
-  .slide__bg--gradient {
-    background: linear-gradient(135deg, #040818 0%, #080d2a 40%, #0c1238 100%);
+  /* ============ SLIDE TYPE: OUTRO (Slide 35) ============ */
+  .slide--outro {
+    justify-content: center;
+    align-items: center;
+    padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 56px);
   }
-  .slide--bleed .slide__content { position: relative; z-index: 2; padding: clamp(40px,6vh,80px) clamp(40px,8vw,120px); color: #fff; }
-  .slide--bleed .slide__heading { color: #fff; }
-  .slide--bleed .slide__subtitle { color: #e2edf7; }
+  .slide--outro .slide__inner {
+    flex: 1 1 auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .outro-card {
+    max-width: 840px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    border-radius: 20px;
+    border: 1.5px solid var(--border-bright);
+    background: color-mix(in srgb, var(--surface) 90%, transparent 10%);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    padding: clamp(32px, 5vh, 56px) clamp(28px, 4vw, 56px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .outro-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent3), var(--accent), var(--accent2));
+  }
+  .outro-card .slide__heading {
+    color: var(--text) !important;
+  }
+  .outro-card .slide__subtitle {
+    color: var(--text-subtitle) !important;
+  }
+
+  /* Éléments mis en valeur harmonisés (Slides 2, 7, 10, 35) */
+  .slide--fil-rouge .speaker-card,
+  .slide--fil-rouge .speaker-panel,
+  .c4-zoom__viewport {
+    border-radius: 18px !important;
+    border: 1.5px solid var(--border-bright) !important;
+    background: color-mix(in srgb, var(--surface) 86%, transparent 14%) !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05) !important;
+  }
 
   /* ============ SLIDE TYPE: EMBED (local HTML iframe) ============ */
   .slide--embed { padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 60px); }
@@ -2400,6 +2525,144 @@
       fill: #ffffff !important;
     }
 
+    /* ============ UNIFIED CONCEPT CARDS (Slides 6, 14, 25, 31) ============ */
+    .concept-grid {
+      display: grid;
+      gap: clamp(14px, 1.8vw, 24px);
+      width: 100%;
+      align-items: stretch;
+    }
+    .concept-grid--2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .concept-grid--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .concept-grid--6 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(10px, 1.4vh, 18px);
+    }
+    @media (max-width: 900px) {
+      .concept-grid--3,
+      .concept-grid--2 {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+      }
+    }
+
+    .concept-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: clamp(140px, 20vh, 220px);
+      padding: clamp(18px, 2.4vh, 26px);
+      border-radius: 16px;
+      border: 1.5px solid var(--border-bright);
+      background: var(--surface);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .concept-card:hover {
+      border-color: var(--card-accent, var(--accent));
+      transform: translateY(-2px);
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.08);
+    }
+    .concept-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--card-accent, var(--accent));
+      opacity: 0.95;
+    }
+
+    /* Couleurs de cartes diversifiées et vibrantes */
+    .concept-card--blue {
+      --card-accent: var(--accent);
+      background: linear-gradient(175deg, color-mix(in srgb, var(--accent) 8%, var(--surface)) 0%, var(--surface) 38%);
+    }
+    .concept-card--cyan {
+      --card-accent: var(--accent3);
+      background: linear-gradient(175deg, color-mix(in srgb, var(--accent3) 8%, var(--surface)) 0%, var(--surface) 38%);
+    }
+    .concept-card--orange {
+      --card-accent: var(--accent2);
+      background: linear-gradient(175deg, color-mix(in srgb, var(--accent2) 8%, var(--surface)) 0%, var(--surface) 38%);
+    }
+    .concept-card--green {
+      --card-accent: var(--green);
+      background: linear-gradient(175deg, color-mix(in srgb, var(--green) 8%, var(--surface)) 0%, var(--surface) 38%);
+    }
+    .concept-card--purple {
+      --card-accent: var(--accent4, #db2777);
+      background: linear-gradient(175deg, color-mix(in srgb, var(--accent4, #db2777) 8%, var(--surface)) 0%, var(--surface) 38%);
+    }
+    .concept-card--teal {
+      --card-accent: #0f766e;
+      background: linear-gradient(175deg, color-mix(in srgb, #0f766e 8%, var(--surface)) 0%, var(--surface) 38%);
+    }
+
+    .concept-card__step {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: calc(clamp(11px, 1.2vw, 13px) + var(--font-bump));
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--card-accent, var(--accent));
+    }
+
+    .concept-card__title {
+      margin: 0;
+      font-size: calc(clamp(17px, 1.9vw, 23px) + var(--font-bump));
+      line-height: 1.25;
+      font-weight: 700;
+      color: var(--text);
+      min-height: calc(2.5em + var(--font-bump));
+      display: flex;
+      align-items: flex-start;
+      text-wrap: balance;
+    }
+
+    .concept-card__desc {
+      margin: 0;
+      font-size: calc(clamp(13px, 1.45vw, 16px) + var(--font-bump));
+      line-height: 1.5;
+      color: var(--text-subtitle);
+      text-wrap: pretty;
+      font-weight: 500;
+    }
+
+    .concept-card__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .concept-card__list li {
+      position: relative;
+      padding-left: 18px;
+      font-size: calc(clamp(13px, 1.45vw, 16px) + var(--font-bump));
+      line-height: 1.45;
+      color: var(--text);
+    }
+    .concept-card__list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--card-accent, var(--accent));
+    }
+
     .slide--review-questions {
       justify-content: center;
     }
@@ -2452,41 +2715,8 @@
       position: absolute;
       inset: 0 0 auto 0;
       height: 4px;
-      background: var(--accent);
+      background: var(--card-accent, var(--accent));
       opacity: 0.95;
-    }
-    .slide--review-questions .review-questions__card:nth-child(1) {
-      background: linear-gradient(175deg, color-mix(in srgb, var(--accent) 7%, var(--surface)) 0%, var(--surface) 38%);
-    }
-    .slide--review-questions .review-questions__card:nth-child(2) {
-      background: linear-gradient(175deg, color-mix(in srgb, var(--accent3) 7%, var(--surface)) 0%, var(--surface) 38%);
-    }
-    .slide--review-questions .review-questions__card:nth-child(2)::before {
-      background: var(--accent3);
-    }
-    .slide--review-questions .review-questions__card:nth-child(3) {
-      background: linear-gradient(175deg, color-mix(in srgb, var(--accent2) 7%, var(--surface)) 0%, var(--surface) 38%);
-    }
-    .slide--review-questions .review-questions__card:nth-child(3)::before {
-      background: var(--accent2);
-    }
-    /* Barrette de test d'impression \\\\\\\\ sur les cartes de review (PJ 1) */
-    .slide--review-questions .review-questions__card::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      right: 18px;
-      width: 40px;
-      height: 5px;
-      background: repeating-linear-gradient(-45deg, var(--accent) 0, var(--accent) 2px, transparent 2px, transparent 6px);
-      opacity: 0.70;
-      border-radius: 3px 3px 0 0;
-    }
-    .slide--review-questions .review-questions__card:nth-child(2)::after {
-      background: repeating-linear-gradient(-45deg, var(--accent3) 0, var(--accent3) 2px, transparent 2px, transparent 6px);
-    }
-    .slide--review-questions .review-questions__card:nth-child(3)::after {
-      background: repeating-linear-gradient(-45deg, var(--accent2) 0, var(--accent2) 2px, transparent 2px, transparent 6px);
     }
     .slide--review-questions .review-questions__step {
       margin: 0;
@@ -2495,20 +2725,17 @@
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--accent);
-    }
-    .slide--review-questions .review-questions__card:nth-child(2) .review-questions__step {
-      color: var(--accent3);
-    }
-    .slide--review-questions .review-questions__card:nth-child(3) .review-questions__step {
-      color: var(--accent2);
+      color: var(--card-accent, var(--accent));
     }
     .slide--review-questions .review-questions__question {
       margin: 0;
-      font-size: calc(clamp(20px, 2.2vw, 26px) + var(--font-bump));
-      line-height: 1.22;
+      font-size: calc(clamp(17px, 1.9vw, 23px) + var(--font-bump));
+      line-height: 1.25;
       font-weight: 700;
       color: var(--text);
+      min-height: calc(2.5em + var(--font-bump));
+      display: flex;
+      align-items: flex-start;
       text-wrap: balance;
     }
     .slide--review-questions .review-questions__detail {
@@ -2522,35 +2749,52 @@
     /* ============ SLIDE TUNING: C2 unified toggle (Mermaid <-> likeC4) ============ */
     .slide--c2-unified {
       position: relative;
-      padding-top: clamp(52px, 7vh, 86px);
+      padding-top: clamp(48px, 6.5vh, 78px);
       padding-bottom: clamp(18px, 2.8vh, 30px);
     }
     .slide--c2-unified > .slide__heading {
-      margin-bottom: clamp(12px, 1.6vh, 20px);
+      margin-bottom: clamp(10px, 1.5vh, 18px);
       max-width: none;
       text-wrap: balance;
     }
+    .slide--c2-unified .slide__aside {
+      position: relative;
+    }
     .slide--c2-unified .c2-unified__toggle {
       position: absolute;
-      top: clamp(14px, 2vh, 22px);
-      right: clamp(20px, 3vw, 34px);
-      z-index: 22;
-      border: 1px solid var(--border-bright);
-      background: color-mix(in srgb, var(--surface) 86%, transparent 14%);
-      color: var(--text);
+      top: -34px;
+      right: 0;
+      z-index: 40;
+      border: 1.5px solid var(--border-bright);
+      background: var(--surface);
+      color: var(--accent);
       border-radius: 999px;
-      padding: 8px 14px;
+      padding: 4px 13px;
       font-family: var(--font-mono);
-      font-size: calc(12px + var(--font-bump));
-      font-weight: 600;
-      letter-spacing: 0.04em;
+      font-size: calc(11.5px + var(--font-bump));
+      font-weight: 700;
+      letter-spacing: 0.03em;
       cursor: pointer;
-      transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     .slide--c2-unified .c2-unified__toggle:hover {
       border-color: var(--accent);
-      color: var(--accent);
-      background: color-mix(in srgb, var(--accent-dim) 72%, var(--surface) 28%);
+      background: var(--accent);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(26, 115, 232, 0.28);
+    }
+    @media (max-width: 900px), (max-height: 560px) {
+      .slide--c2-unified .c2-unified__toggle {
+        top: -28px;
+        right: 0;
+        padding: 3px 10px;
+        font-size: 10px;
+      }
     }
     .slide--c2-unified .c2-unified__views {
       flex: 1 1 auto;
@@ -2569,21 +2813,19 @@
       display: flex;
       flex-direction: column;
     }
-    .slide--c2-unified .c2-unified__view--mermaid .slide__inner {
+    .slide--c2-unified .c2-unified__view .slide__inner {
       flex: 1 1 auto;
       min-height: 0;
+      grid-template-columns: minmax(0, var(--code-preview-code-col)) minmax(0, var(--code-preview-preview-col));
     }
-    .slide--c2-unified[data-view="mermaid"] .c2-unified__view--mermaid .slide__inner {
-      grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
-    }
-    .slide--c2-unified .c2-mermaid__pane {
+    .slide--c2-unified .code-preview__pane {
       min-width: 0;
     }
-    .slide--c2-unified .c2-mermaid__pane--code .slide__code-block {
+    .slide--c2-unified .code-preview__pane--code .slide__code-block {
       flex: 1 1 auto;
       min-height: 0;
     }
-    .slide--c2-unified .c2-mermaid__pane--code .slide__code-block pre {
+    .slide--c2-unified .code-preview__pane--code .slide__code-block pre {
       height: 100%;
     }
     .slide--c2-unified .c2-unified__view--mermaid .mermaid-wrap {
@@ -2968,8 +3210,15 @@
   }
 
   .key-card strong {
-    display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: var(--text);
-    font-size: calc(clamp(16px, 1.9vw, 20px) + var(--font-bump));
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: var(--text);
+    font-size: calc(clamp(15px, 1.7vw, 19px) + var(--font-bump));
+    line-height: 1.25;
+    min-height: calc(2.5em + var(--font-bump));
+    text-wrap: balance;
   }
 
   .key-card__marker {
@@ -3186,10 +3435,12 @@
   }
 
   .benefit-card {
+    position: relative;
+    overflow: hidden;
     background: var(--surface);
     border: 1.5px solid var(--border-bright);
     border-radius: 14px;
-    padding: clamp(10px, 1.3vh, 14px);
+    padding: clamp(12px, 1.4vh, 16px) clamp(10px, 1.3vw, 14px) clamp(10px, 1.3vh, 14px);
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -3197,6 +3448,16 @@
     min-height: 0;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .benefit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.5px;
+    background: var(--card-accent, var(--accent));
   }
 
   .benefit-card:hover {
@@ -3445,7 +3706,7 @@
   </section>
 
   <!-- Slide 2: Le problème réel -->
-<section class="slide slide--split slide--split-bleed" data-nav="Le problème réel" data-part="0">
+<section class="slide slide--split" data-nav="Le problème réel" data-part="0">
     <div class="slide__panels">
       <div class="slide__panel slide__panel--primary">
         <p class="slide__label reveal" style="color:var(--accent);">Point de situation</p>
@@ -3456,7 +3717,7 @@
           <li class="reveal">Qui ose encore dire &laquo;&nbsp;ce PNG refl&egrave;te l'&eacute;tat de notre syst&egrave;me&nbsp;&raquo;&nbsp;?</li>
         </ul>
       </div>
-      <div class="slide__panel slide__panel--secondary" style="display:flex; flex-direction:column; justify-content:center; gap:16px;">
+      <div class="slide__panel slide__panel--secondary">
         <p class="slide__label reveal">Le vrai co&ucirc;t cach&eacute;</p>
         <h2 class="slide__heading reveal">Le PNG meurt en silence</h2>
         <ul class="slide__bullets" style="margin-top:16px;">
@@ -3484,23 +3745,26 @@
   </section>
 
   <!-- Slide 5: Changer de paradigme -->
-<section class="slide slide--content" data-nav="Changer de paradigme" data-part="0">
+<section class="slide slide--content slide--concept-cards" data-nav="Changer de paradigme" data-part="0">
     <div class="slide__inner" style="grid-template-columns:1fr;">
       <div>
         <p class="slide__label reveal">Changer de paradigme</p>
         <h2 class="slide__heading reveal">Trois principes pour une<br>architecture vivante</h2>
-        <div class="key-grid">
-          <div class="key-card reveal">
-            <strong><span class="key-card__marker">1.</span> Une unique source de v&eacute;rit&eacute;</strong>
-            <span>Une sémantique complète, à même de représenter tout le système clairement. Lâcher le dessin, passer au diagramme.</span>
+        <div class="concept-grid concept-grid--3">
+          <div class="concept-card concept-card--blue reveal">
+            <p class="concept-card__step">01 &middot; Vérité</p>
+            <h3 class="concept-card__title">Une unique source de v&eacute;rit&eacute;</h3>
+            <p class="concept-card__desc">Une sémantique complète, à même de représenter tout le système clairement. Lâcher le dessin, passer au diagramme.</p>
           </div>
-          <div class="key-card reveal">
-            <strong><span class="key-card__marker">2.</span> Des perspectives  multiples</strong>
-            <span>Contexte, structure, comportements, niveaux de détail : représenter un seul syst&egrave;me sous différents angles</span>
+          <div class="concept-card concept-card--orange reveal">
+            <p class="concept-card__step">02 &middot; Perspectives</p>
+            <h3 class="concept-card__title">Des perspectives multiples</h3>
+            <p class="concept-card__desc">Contexte, structure, comportements, niveaux de détail : représenter un seul syst&egrave;me sous différents angles.</p>
           </div>
-          <div class="key-card reveal">
-            <strong><span class="key-card__marker">3.</span> Un vrai cycle de vie</strong>
-            <span>Le développement logiciel a ses cycles : réconcilions l'architecture avec ces processus</span>
+          <div class="concept-card concept-card--green reveal">
+            <p class="concept-card__step">03 &middot; Cycle de vie</p>
+            <h3 class="concept-card__title">Un vrai cycle de vie</h3>
+            <p class="concept-card__desc">Le développement logiciel a ses cycles : réconcilions l'architecture avec ces processus.</p>
           </div>
         </div>
       </div>
@@ -3791,28 +4055,30 @@ Créer un système de prise de commande numérique au comptoir avec :
   </section>
 
   <!-- Slide 13: Briques C2 -->
-<section class="slide slide--content" data-nav="Briques C2">
-    <div class="slide__inner">
+<section class="slide slide--content slide--concept-cards" data-nav="Briques C2">
+    <div class="slide__inner" style="grid-template-columns:1fr;">
       <div>
         <p class="slide__label reveal">... qui pourrait être détaillée</p>
         <h2 class="slide__heading reveal">On zoome dans le syst&egrave;me<br>et on explicite les briques</h2>
-        <p class="slide__body reveal" style="margin-top:12px; margin-bottom:16px;">
+        <p class="slide__body reveal" style="margin-top:10px; margin-bottom:18px;">
           Quels éléments permettent l'exp&eacute;rience Alefest Coffee&nbsp;?
         </p>
-        <div class="system-lanes">
-          <div class="lane-card lane-card--green reveal">
-            <h3>Frontends</h3>
-            <ul>
-              <li>Counter App &middot; compatibilit&eacute; comptoir</li>
-              <li>Barista Screen &middot; file temps r&eacute;el</li>
+        <div class="concept-grid concept-grid--2">
+          <div class="concept-card concept-card--blue reveal">
+            <p class="concept-card__step">01 &middot; Frontends</p>
+            <h3 class="concept-card__title">Applications &amp; Exp&eacute;rience</h3>
+            <ul class="concept-card__list">
+              <li><strong>Counter App</strong> &middot; compatibilit&eacute; commande comptoir</li>
+              <li><strong>Barista Screen</strong> &middot; file de pr&eacute;paration temps r&eacute;el</li>
             </ul>
           </div>
-          <div class="lane-card lane-card--blue reveal">
-            <h3>Services</h3>
-            <ul>
-              <li>Order Service &middot; prise de commande</li>
-              <li>Preparation Service &middot; accompagne l'activité du barista</li>
-              <li>File de messages &middot; découple la prise de commande de son traitement</li>
+          <div class="concept-card concept-card--orange reveal">
+            <p class="concept-card__step">02 &middot; Services</p>
+            <h3 class="concept-card__title">Traitements &amp; Asynchronisme</h3>
+            <ul class="concept-card__list">
+              <li><strong>Order Service</strong> &middot; prise de commande et persistance</li>
+              <li><strong>Preparation Service</strong> &middot; orchestration baristas</li>
+              <li><strong>File RabbitMQ</strong> &middot; d&eacute;couplage &eacute;v&eacute;nementiel</li>
             </ul>
           </div>
         </div>
@@ -3900,7 +4166,7 @@ Créer un système de prise de commande numérique au comptoir avec :
           <li class="reveal">Le festivalier attend au stand jusqu'&agrave; la remise de la boisson</li>
         </ul>
       </div>
-      <div class="slide__panel slide__panel--secondary" style="display:flex; flex-direction:column; justify-content:center; gap:16px;">
+      <div class="slide__panel slide__panel--secondary">
         <p class="slide__label reveal" style="color:var(--green);">V2 &middot; Le caf&eacute; mobile</p>
         <h2 class="slide__heading reveal">Syst&egrave;me intégré,<br>festivalier lib&eacute;r&eacute;</h2>
         <ul class="slide__bullets" style="margin-top:16px;">
@@ -4061,7 +4327,7 @@ Créer un système de prise de commande numérique au comptoir avec :
           <li class="reveal">Le barista subit les impatients</li>
         </ul>
       </div>
-      <div class="slide__panel slide__panel--secondary" style="display:flex; flex-direction:column; justify-content:center; gap:16px;">
+      <div class="slide__panel slide__panel--secondary">
         <p class="slide__label reveal" style="color:var(--green);">Apr&egrave;s</p>
         <h2 class="slide__heading reveal">V2&nbsp;: il commande,<br>profite du festival, vient quand c'est pr&ecirc;t</h2>
         <ul class="slide__bullets" style="margin-top:16px;">
@@ -4159,25 +4425,28 @@ Créer un système de prise de commande numérique au comptoir avec :
   </section>
 
   <!-- Slide 24: Questions de review -->
-<section class="slide slide--content slide--review-questions" data-nav="Questions de review">
-    <p class="slide__label reveal">Ce qu'on veut voir en review</p>
-    <div class="slide__inner">
-      <div class="review-questions__hero">
-        <h2 class="slide__heading reveal">En revue, la question devient simple&nbsp;: qu'est-ce qui change dans l'architecture&nbsp;?</h2>
-      </div>
-      <div class="review-questions__story">
-        <article class="review-questions__card reveal">
-          <p class="review-questions__step">01 &middot; Ce qui entre</p>
-          <h3 class="review-questions__question">Quels nouveaux éléments apparaissent&nbsp;?</h3>
-        </article>
-        <article class="review-questions__card reveal">
-          <p class="review-questions__step">02 &middot; Ce qui bouge</p>
-          <h3 class="review-questions__question">Qui parle &agrave; qui apr&egrave;s le changement&nbsp;?</h3>
-        </article>
-        <article class="review-questions__card reveal">
-          <p class="review-questions__step">03 &middot; Ce qui devient sensible</p>
-          <h3 class="review-questions__question">Cr&eacute;e-t-on un point chaud, une boucle ou une fragilit&eacute;&nbsp;?</h3>
-        </article>
+<section class="slide slide--content slide--review-questions slide--concept-cards" data-nav="Questions de review">
+    <div class="slide__inner" style="grid-template-columns:1fr;">
+      <div>
+        <p class="slide__label reveal">Ce qu'on veut voir en review</p>
+        <h2 class="slide__heading reveal">En revue, la question devient simple&nbsp;:<br>qu'est-ce qui change dans l'architecture&nbsp;?</h2>
+        <div class="concept-grid concept-grid--3" style="margin-top:clamp(16px, 2.5vh, 28px);">
+          <article class="concept-card concept-card--blue review-questions__card reveal">
+            <p class="concept-card__step">01 &middot; Ce qui entre</p>
+            <h3 class="concept-card__title">Quels nouveaux éléments apparaissent&nbsp;?</h3>
+            <p class="concept-card__desc">Nouveaux services, composants externes ou interfaces ajoutés au système.</p>
+          </article>
+          <article class="concept-card concept-card--orange review-questions__card reveal">
+            <p class="concept-card__step">02 &middot; Ce qui bouge</p>
+            <h3 class="concept-card__title">Qui parle &agrave; qui apr&egrave;s le changement&nbsp;?</h3>
+            <p class="concept-card__desc">Nouvelles relations, flux asynchrones ou appels d'API modifiés.</p>
+          </article>
+          <article class="concept-card concept-card--green review-questions__card reveal">
+            <p class="concept-card__step">03 &middot; Ce qui devient sensible</p>
+            <h3 class="concept-card__title">Cr&eacute;e-t-on un point chaud ou une fragilit&eacute;&nbsp;?</h3>
+            <p class="concept-card__desc">Boucle de dépendance, couplage fort ou goulot d'étranglement potentiel.</p>
+          </article>
+        </div>
       </div>
     </div>
   </section>
@@ -4288,7 +4557,7 @@ graph LR
     <p class="slide__label reveal">Synthèse</p>
     <h2 class="slide__heading reveal">Le paradoxe r&eacute;concili&eacute;&nbsp;: avant / apr&egrave;s</h2>
     <div class="benefit-cards-grid reveal">
-      <div class="benefit-card">
+      <div class="benefit-card concept-card--blue">
         <div class="benefit-card__header">
           <h3 class="benefit-card__title">Source de v&eacute;rit&eacute;</h3>
           <span class="benefit-card__badge">01</span>
@@ -4305,7 +4574,7 @@ graph LR
         </div>
       </div>
 
-      <div class="benefit-card">
+      <div class="benefit-card concept-card--orange">
         <div class="benefit-card__header">
           <h3 class="benefit-card__title">Mise &agrave; jour</h3>
           <span class="benefit-card__badge">02</span>
@@ -4322,7 +4591,7 @@ graph LR
         </div>
       </div>
 
-      <div class="benefit-card">
+      <div class="benefit-card concept-card--green">
         <div class="benefit-card__header">
           <h3 class="benefit-card__title">Validation en équipe</h3>
           <span class="benefit-card__badge">03</span>
@@ -4339,7 +4608,7 @@ graph LR
         </div>
       </div>
 
-      <div class="benefit-card">
+      <div class="benefit-card concept-card--purple">
         <div class="benefit-card__header">
           <h3 class="benefit-card__title">Industrialisation &amp; CI/CD</h3>
           <span class="benefit-card__badge">04</span>
@@ -4356,7 +4625,7 @@ graph LR
         </div>
       </div>
 
-      <div class="benefit-card">
+      <div class="benefit-card concept-card--teal">
         <div class="benefit-card__header">
           <h3 class="benefit-card__title">Cycle de vie &amp; Git</h3>
           <span class="benefit-card__badge">05</span>
@@ -4373,7 +4642,7 @@ graph LR
         </div>
       </div>
 
-      <div class="benefit-card">
+      <div class="benefit-card concept-card--cyan">
         <div class="benefit-card__header">
           <h3 class="benefit-card__title">Appui de l'IA</h3>
           <span class="benefit-card__badge">06</span>
@@ -4433,13 +4702,6 @@ graph LR
 
   <!-- Slide 32: Vue C2 + likeC4 -->
 <section class="slide slide--content slide--code-preview slide--diagram-flow slide--c2-unified" data-nav="Vue C2 + likeC4" data-view="mermaid">
-    <button
-      class="c2-unified__toggle"
-      type="button"
-      onclick="toggleC2UnifiedView(this)"
-      aria-pressed="false"
-      aria-label="Afficher le bloc code et l'aperçu LikeC4"
-    >LikeC4</button>
     <h2 class="slide__heading reveal">Comparer l'outil LikeC4</h2>
     <div class="c2-unified__views">
       <div class="c2-unified__view c2-unified__view--mermaid">
@@ -4495,7 +4757,8 @@ graph LR
             </div>
           </div>
           <div class="slide__aside reveal c2-mermaid__pane c2-mermaid__pane--diagram code-preview__pane code-preview__pane--embed">
-              <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="1.5" data-initial-zoom="0.82" data-zoom-min="0.2" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
+              <button class="c2-unified__toggle" type="button" onclick="toggleC2UnifiedView(this)" aria-pressed="false" aria-label="Afficher l'aperçu LikeC4">Vue LikeC4 ↗</button>
+              <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="1.5" data-initial-zoom="1.0" data-zoom-min="0.2" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
               <div class="zoom-controls" role="toolbar" aria-label="Commandes de zoom du diagramme C2 Mermaid">
                 <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom avant" aria-label="Zoom avant">+</button>
                 <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom arri&egrave;re" aria-label="Zoom arri&egrave;re">&minus;</button>
@@ -4556,7 +4819,7 @@ flowchart TD
         <div class="slide__inner">
           <div class="c2-likec4__pane c2-likec4__pane--code code-preview__pane code-preview__pane--code">
             <div class="code-preview__frame">
-              <span class="slide__code-filename"> coffee-v2/system-model.c4 · likeC4</span>
+              <span class="slide__code-filename">coffee-v2/system-model.c4</span>
               <div class="slide__code-block reveal">
                   <pre><code style="font-size:clamp(10.5px,1.05vw,13px); line-height:1.4;"><span class="kw">model</span> {
   festivalier = <span class="hl">Actor_Person</span> <span class="str">'Festivalier'</span> { <span class="cm">...</span> }
@@ -4596,6 +4859,7 @@ flowchart TD
             </div>
           </div>
           <div class="slide__aside reveal c2-likec4__pane c2-likec4__pane--embed code-preview__pane code-preview__pane--embed">
+            <button class="c2-unified__toggle" type="button" onclick="toggleC2UnifiedView(this)" aria-pressed="true" aria-label="Afficher le diagramme Mermaid">Vue Mermaid ↗</button>
             <div class="code-preview__frame">
               <span class="slide__code-filename">Vue C2</span>
               <div class="embed-wrap reveal" id="coffee-v2-c2-embed-likec4" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000" data-likec4-fit-on-load="true" data-likec4-zoomout-steps="1">
@@ -4663,24 +4927,25 @@ flowchart TD
   </section>
 
   <!-- Slide 34: Merci -->
-<section class="slide slide--bleed" data-nav="Merci">
-    <div class="slide__bg slide__bg--gradient"></div>
-    <div class="slide__content" style="max-width:960px; margin:0 auto; text-align:center; align-items:center;">
-      <p class="slide__label reveal" style="color:var(--accent); letter-spacing:2px;">Questions / Réponses</p>
-      <h2 class="slide__heading reveal" style="font-weight:900; font-size:clamp(44px,7.5vw,84px); margin-bottom:12px;">Merci !</h2>
-      <p class="slide__subtitle reveal" style="color:var(--text-subtitle); margin-top:8px; font-size:clamp(16px,2.2vw,24px); text-transform:none;">
-        Ne dessinez plus vos architectures &mdash; codez-les, versionnez-les, publiez-les.
-      </p>
-      <div class="reveal" style="margin-top:36px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
-        <span class="badge badge--accent">Architecture</span>
-        <span class="badge badge--blue">Diagram as code</span>
-        <span class="badge badge--green">C4 Model</span>
-        <span class="badge badge--orange">LikeC4</span>
-      </div>
-      <div class="reveal" style="margin-top:36px;">
-        <p style="font-size:calc(clamp(15px, 1.8vw, 20px) + var(--font-bump)); color:var(--text-dim);">
-          Alexis Scolan &mdash; <strong style="color:var(--accent);">Architecte technique</strong>
+<section class="slide slide--content slide--outro" data-nav="Merci">
+    <div class="slide__inner" style="grid-template-columns:1fr; justify-content:center; align-items:center;">
+      <div class="outro-card reveal">
+        <p class="slide__label" style="letter-spacing:2.5px; margin-bottom:8px;">Questions / Réponses</p>
+        <h2 class="slide__heading" style="font-weight:900; font-size:clamp(38px,6.5vw,72px); margin:0 0 12px; line-height:1.05;">Merci !</h2>
+        <p class="slide__subtitle" style="margin:0; font-size:clamp(16px,2vw,22px); text-transform:none; line-height:1.5; color:var(--text-subtitle);">
+          Ne dessinez plus vos architectures &mdash; codez-les, versionnez-les, publiez-les.
         </p>
+        <div style="margin-top:28px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+          <span class="badge badge--accent">Architecture</span>
+          <span class="badge badge--blue">Diagram as code</span>
+          <span class="badge badge--green">C4 Model</span>
+          <span class="badge badge--orange">LikeC4</span>
+        </div>
+        <div style="margin-top:28px;">
+          <p style="font-size:calc(clamp(15px, 1.8vw, 19px) + var(--font-bump)); color:var(--text-dim); margin:0;">
+            Alexis Scolan &mdash; <strong style="color:var(--accent);">Architecte technique</strong>
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -5086,15 +5351,19 @@ flowchart TD
     var next = current === 'mermaid' ? 'likec4' : 'mermaid';
     var nextIsLikeC4 = next === 'likec4';
     slide.setAttribute('data-view', next);
-    btn.setAttribute('aria-pressed', String(nextIsLikeC4));
-    btn.setAttribute('aria-label', nextIsLikeC4 ? 'Afficher le bloc Mermaid' : 'Afficher le bloc code et l\'aperçu LikeC4');
-    btn.textContent = nextIsLikeC4 ? 'Mermaid' : 'LikeC4';
+    slide.querySelectorAll('.c2-unified__toggle').forEach(function(b) {
+      b.setAttribute('aria-pressed', String(nextIsLikeC4));
+    });
 
     window.requestAnimationFrame(function() {
       autoFit();
       var likec4Wrap = slide.querySelector('.c2-unified__view--likec4 .embed-wrap');
-      if (nextIsLikeC4 && likec4Wrap && likec4Wrap.classList.contains('is-loaded')) {
-        scheduleLikeC4ViewportTuning(likec4Wrap, true);
+      if (nextIsLikeC4 && likec4Wrap) {
+        if (!likec4Wrap.classList.contains('is-loaded')) {
+          startEmbedLoad(likec4Wrap);
+        } else {
+          scheduleLikeC4ViewportTuning(likec4Wrap, true);
+        }
       }
       var mermaidWrap = slide.querySelector('.c2-unified__view--mermaid .mermaid-wrap');
       if (mermaidWrap) {
@@ -5146,48 +5415,58 @@ flowchart TD
     var next;
     if (mode === 'two-thirds') {
       next = current === 'two-thirds' ? 'third' : 'two-thirds';
-      btn.setAttribute('aria-label', next === 'two-thirds' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 2/3 code, 1/3 schéma');
-      btn.setAttribute('title', next === 'two-thirds' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 2/3 - 1/3');
     } else {
       next = current === 'half' ? 'third' : 'half';
-      btn.setAttribute('aria-label', next === 'half' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 50/50');
-      btn.setAttribute('title', next === 'half' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 1/2 - 1/2');
     }
     slide.setAttribute('data-split', next);
+
+    var nextTitle = (mode === 'two-thirds')
+      ? (next === 'two-thirds' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 2/3 - 1/3')
+      : (next === 'half' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 1/2 - 1/2');
+    var nextAria = (mode === 'two-thirds')
+      ? (next === 'two-thirds' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 2/3 code, 1/3 schéma')
+      : (next === 'half' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 50/50');
+
+    slide.querySelectorAll('.code-preview__split-toggle').forEach(function(b) {
+      b.setAttribute('title', nextTitle);
+      b.setAttribute('aria-label', nextAria);
+    });
 
     // Réajuster les diagrammes ou iframes au redimensionnement
     window.requestAnimationFrame(function() {
       if (typeof window.autoFit === 'function') window.autoFit();
-      var likec4Wrap = slide.querySelector('.embed-wrap');
-      if (likec4Wrap && likec4Wrap.classList.contains('is-loaded')) {
-        scheduleLikeC4ViewportTuning(likec4Wrap, true);
-      }
+      slide.querySelectorAll('.embed-wrap').forEach(function(likec4Wrap) {
+        if (likec4Wrap && likec4Wrap.classList.contains('is-loaded')) {
+          scheduleLikeC4ViewportTuning(likec4Wrap, true);
+        }
+      });
     });
   }
   window.toggleCodePreviewSplit = toggleCodePreviewSplit;
 
   function ensureCodePreviewSplitToggles() {
     document.querySelectorAll('.slide--code-preview:not(.slide--live-coding):not(.slide--workspace-tree)').forEach(function(slide) {
-      var inner = slide.querySelector('.slide__inner');
-      if (!inner || inner.querySelector('.code-preview__split-toggle')) return;
-      var mode = slide.getAttribute('data-split-mode') || 'half';
-      var current = slide.getAttribute('data-split') || (mode === 'two-thirds' ? 'two-thirds' : 'third');
-      var initialTitle;
-      if (mode === 'two-thirds') {
-        initialTitle = current === 'two-thirds' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 2/3 - 1/3';
-      } else {
-        initialTitle = current === 'half' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 1/2 - 1/2';
-      }
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'code-preview__split-toggle';
-      btn.innerHTML = '&lt;&gt;';
-      btn.setAttribute('title', initialTitle);
-      btn.setAttribute('aria-label', initialTitle);
-      btn.addEventListener('click', function() {
-        toggleCodePreviewSplit(btn);
+      slide.querySelectorAll('.slide__inner').forEach(function(inner) {
+        if (inner.querySelector('.code-preview__split-toggle')) return;
+        var mode = slide.getAttribute('data-split-mode') || 'half';
+        var current = slide.getAttribute('data-split') || (mode === 'two-thirds' ? 'two-thirds' : 'third');
+        var initialTitle;
+        if (mode === 'two-thirds') {
+          initialTitle = current === 'two-thirds' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 2/3 - 1/3';
+        } else {
+          initialTitle = current === 'half' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 1/2 - 1/2';
+        }
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'code-preview__split-toggle';
+        btn.innerHTML = '&lt;&gt;';
+        btn.setAttribute('title', initialTitle);
+        btn.setAttribute('aria-label', initialTitle);
+        btn.addEventListener('click', function() {
+          toggleCodePreviewSplit(btn);
+        });
+        inner.appendChild(btn);
       });
-      inner.appendChild(btn);
     });
   }
 
@@ -5248,7 +5527,9 @@ flowchart TD
 
   // --- mermaid-controls.js ---
 /* ============ Mermaid zoom controls ============ */
-  function getInitialZoom(w){return parseFloat(w.dataset.initialZoom||'1')||1;}
+  function getInitialZoom(w){
+    return parseFloat(w && w.dataset && w.dataset.initialZoom ? w.dataset.initialZoom : '1') || 1;
+  }
   function getCurrentZoom(w){var t=w&&w.querySelector?w.querySelector('.mermaid'):null;return parseFloat(t&&t.dataset.zoom||getInitialZoom(w))||getInitialZoom(w);}
   function getZoomMin(w){var min=parseFloat(w&&w.dataset.zoomMin?w.dataset.zoomMin:'');return !isNaN(min)&&min>0?min:0.6;}
   function getZoomMax(w){var max=parseFloat(w&&w.dataset.zoomMax?w.dataset.zoomMax:'');return !isNaN(max)&&max>getZoomMin(w)?max:4;}
@@ -5377,6 +5658,7 @@ flowchart TD
       this.deck.scrollTop=targetTop;
     }
     this.injectCrystals();
+    this.injectCardHatchStrips();
     this.buildSectionMap();this.buildChrome();this.bindEvents();this.observe();this.update();
     if(initIdx>0){
       var self=this;
@@ -5384,63 +5666,119 @@ flowchart TD
     }
   }
   SlideEngine.prototype.injectCrystals=function(){
-    var svgContentRight =
-      '<svg viewBox="0 0 160 140" width="160" height="140" class="slide-crystals" aria-hidden="true" focusable="false">' +
-        '<g transform="translate(60, 50)">' +
-          // Mire d'alignement principale (cercle + réticule en croix + ticks)
-          '<circle cx="0" cy="0" r="30" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.6"/>' +
-          '<circle cx="0" cy="0" r="16" fill="var(--accent)" opacity="0.08"/>' +
-          '<circle cx="0" cy="0" r="4" fill="var(--accent)" opacity="0.8"/>' +
-          '<line x1="-38" y1="0" x2="38" y2="0" stroke="var(--accent)" stroke-width="1.5" opacity="0.75"/>' +
-          '<line x1="0" y1="-38" x2="0" y2="38" stroke="var(--accent)" stroke-width="1.5" opacity="0.75"/>' +
-          '<line x1="-15" y1="-6" x2="-15" y2="6" stroke="var(--accent)" stroke-width="1" opacity="0.5"/>' +
-          '<line x1="15" y1="-6" x2="15" y2="6" stroke="var(--accent)" stroke-width="1" opacity="0.5"/>' +
-          '<line x1="-6" y1="-15" x2="6" y2="-15" stroke="var(--accent)" stroke-width="1" opacity="0.5"/>' +
-          '<line x1="-6" y1="15" x2="6" y2="15" stroke="var(--accent)" stroke-width="1" opacity="0.5"/>' +
-          // Deuxième mire décalée façon test de registre d'imprimerie (PJ 2)
-          '<circle cx="44" cy="22" r="22" fill="none" stroke="var(--accent2)" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.55"/>' +
-          '<line x1="20" y1="22" x2="68" y2="22" stroke="var(--accent2)" stroke-width="1.2" opacity="0.65"/>' +
-          '<line x1="44" y1="-2" x2="44" y2="46" stroke="var(--accent2)" stroke-width="1.2" opacity="0.65"/>' +
-          '<circle cx="44" cy="22" r="2.5" fill="var(--accent2)" opacity="0.85"/>' +
-          // Troisième mire cyan
-          '<circle cx="-28" cy="28" r="14" fill="none" stroke="var(--accent3)" stroke-width="1" opacity="0.5"/>' +
-          '<line x1="-44" y1="28" x2="-12" y2="28" stroke="var(--accent3)" stroke-width="1" opacity="0.55"/>' +
-          '<line x1="-28" y1="12" x2="-28" y2="44" stroke="var(--accent3)" stroke-width="1" opacity="0.55"/>' +
-          // Barrette de test d'impression \\\\\\\\ (PJ 1)
-          '<g transform="translate(-40, 56)">' +
-            '<line x1="0" y1="10" x2="8" y2="0" stroke="var(--accent3)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="7" y1="10" x2="15" y2="0" stroke="var(--accent3)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="14" y1="10" x2="22" y2="0" stroke="var(--accent)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="21" y1="10" x2="29" y2="0" stroke="var(--accent)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="28" y1="10" x2="36" y2="0" stroke="var(--accent2)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="35" y1="10" x2="43" y2="0" stroke="var(--accent2)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="42" y1="10" x2="50" y2="0" stroke="var(--green)" stroke-width="1.8" opacity="0.75"/>' +
-            '<line x1="49" y1="10" x2="57" y2="0" stroke="var(--green)" stroke-width="1.8" opacity="0.75"/>' +
-          '</g>' +
-          // Nuancier quadrichromie CMYK (PJ 2)
-          '<g transform="translate(32, 60)">' +
-            '<rect x="0" y="0" width="7" height="7" rx="1" fill="var(--accent3)" opacity="0.8"/>' +
-            '<rect x="9" y="0" width="7" height="7" rx="1" fill="var(--accent4, #db2777)" opacity="0.8"/>' +
-            '<rect x="18" y="0" width="7" height="7" rx="1" fill="var(--accent2)" opacity="0.8"/>' +
-            '<rect x="27" y="0" width="7" height="7" rx="1" fill="var(--text)" opacity="0.7"/>' +
-          '</g>' +
+    // 1. Haut gauche : Mire circulaire de registre d'angle avec réticule étendu et micro-repères
+    var svgTopLeft =
+      '<svg viewBox="0 0 64 64" width="64" height="64" class="blueprint-deco blueprint-deco--tl" aria-hidden="true" focusable="false">' +
+        '<g transform="translate(32, 32)">' +
+          '<circle cx="0" cy="0" r="22" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.6"/>' +
+          '<circle cx="0" cy="0" r="10" fill="none" stroke="var(--accent)" stroke-width="0.8" opacity="0.45"/>' +
+          '<path d="M0,0 L-22,0 A22,22 0 0,1 0,-22 Z" fill="var(--accent)" opacity="0.2"/>' +
+          '<path d="M0,0 L22,0 A22,22 0 0,1 0,22 Z" fill="var(--accent)" opacity="0.2"/>' +
+          '<line x1="-30" y1="0" x2="30" y2="0" stroke="var(--accent)" stroke-width="1.2" opacity="0.8"/>' +
+          '<line x1="0" y1="-30" x2="0" y2="30" stroke="var(--accent)" stroke-width="1.2" opacity="0.8"/>' +
+          '<circle cx="0" cy="0" r="1.5" fill="var(--accent)" opacity="0.95"/>' +
+        '</g>' +
+      '</svg>';
+
+    // 2. Haut droite : Échelle de calibration quadrichromie CMYK avec pastilles et repères fins
+    var svgTopRight =
+      '<svg viewBox="0 0 130 26" width="130" height="26" class="blueprint-deco blueprint-deco--tr" aria-hidden="true" focusable="false">' +
+        '<g transform="translate(0, 4)">' +
+          '<rect x="0" y="0" width="14" height="12" rx="2" fill="var(--accent3)" opacity="0.85"/>' +
+          '<rect x="18" y="0" width="14" height="12" rx="2" fill="var(--accent4, #db2777)" opacity="0.85"/>' +
+          '<rect x="36" y="0" width="14" height="12" rx="2" fill="var(--accent2)" opacity="0.85"/>' +
+          '<rect x="54" y="0" width="14" height="12" rx="2" fill="var(--text)" opacity="0.75"/>' +
+          '<text x="7" y="10" font-family="var(--font-mono)" font-size="7" font-weight="700" fill="#ffffff" text-anchor="middle">C</text>' +
+          '<text x="25" y="10" font-family="var(--font-mono)" font-size="7" font-weight="700" fill="#ffffff" text-anchor="middle">M</text>' +
+          '<text x="43" y="10" font-family="var(--font-mono)" font-size="7" font-weight="700" fill="#ffffff" text-anchor="middle">Y</text>' +
+          '<text x="61" y="10" font-family="var(--font-mono)" font-size="7" font-weight="700" fill="#ffffff" text-anchor="middle">K</text>' +
+          '<line x1="74" y1="6" x2="120" y2="6" stroke="var(--border-bright)" stroke-width="1.2" stroke-dasharray="3 3"/>' +
+          '<circle cx="124" cy="6" r="2" fill="none" stroke="var(--accent)" stroke-width="1"/>' +
+        '</g>' +
+      '</svg>';
+
+    // 3. Bas gauche : Barrette de hachures biseautées \\\\\\\\\\\\\\\\ bicolore (2 intensités alternées, PJ 1)
+    var svgBottomLeft =
+      '<svg viewBox="0 0 180 32" width="180" height="32" class="blueprint-deco blueprint-deco--bl" aria-hidden="true" focusable="false">' +
+        '<g transform="translate(4, 2)">' +
+          '<line x1="0" y1="20" x2="12" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="11" y1="20" x2="23" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="22" y1="20" x2="34" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="33" y1="20" x2="45" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="44" y1="20" x2="56" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="55" y1="20" x2="67" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="66" y1="20" x2="78" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="77" y1="20" x2="89" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="88" y1="20" x2="100" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="99" y1="20" x2="111" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="110" y1="20" x2="122" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="121" y1="20" x2="133" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="132" y1="20" x2="144" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="143" y1="20" x2="155" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.25"/>' +
+          '<line x1="154" y1="20" x2="166" y2="2" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="0" y1="26" x2="168" y2="26" stroke="var(--accent)" stroke-width="1.2" opacity="0.45" stroke-dasharray="3 3"/>' +
+        '</g>' +
+      '</svg>';
+
+    // 4. Bas droite : Cible stellaire technique / mire de précision circulaire
+    var svgBottomRight =
+      '<svg viewBox="0 0 54 54" width="54" height="54" class="blueprint-deco blueprint-deco--br" aria-hidden="true" focusable="false">' +
+        '<g transform="translate(27, 27)">' +
+          '<circle cx="0" cy="0" r="20" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.6"/>' +
+          '<circle cx="0" cy="0" r="10" fill="none" stroke="var(--accent2)" stroke-width="1" stroke-dasharray="2 2" opacity="0.65"/>' +
+          '<line x1="-25" y1="0" x2="25" y2="0" stroke="var(--accent)" stroke-width="1.2" opacity="0.75"/>' +
+          '<line x1="0" y1="-25" x2="0" y2="25" stroke="var(--accent)" stroke-width="1.2" opacity="0.75"/>' +
+          '<circle cx="0" cy="0" r="2" fill="var(--accent)" opacity="0.9"/>' +
         '</g>' +
       '</svg>';
 
     var self = this;
     this.slides.forEach(function(slide, idx) {
-      // Décoration uniquement sur la couverture, les intercalaires et la fin (pas sur les diapositives de contenu)
+      // Décorations périphériques réparties uniquement sur couverture, intercalaires et fin
       var isTarget = slide.classList.contains('slide--cover') ||
+                     slide.classList.contains('slide--title') ||
                      slide.classList.contains('slide--divider') ||
+                     slide.classList.contains('slide--outro') ||
+                     slide.classList.contains('slide--bleed') ||
                      idx === 0 ||
                      idx === self.slides.length - 1;
       if (!isTarget) return;
-      if (slide.querySelector('.slide-crystals-wrap')) return;
+      if (slide.querySelector('.blueprint-deco-frame')) return;
 
-      var wrap = document.createElement('div');
-      wrap.className = 'slide-crystals-wrap';
-      wrap.innerHTML = svgContentRight;
-      slide.appendChild(wrap);
+      var frame = document.createElement('div');
+      frame.className = 'blueprint-deco-frame';
+      frame.innerHTML = svgTopLeft + svgTopRight + svgBottomLeft + svgBottomRight;
+      slide.appendChild(frame);
+    });
+  };
+  SlideEngine.prototype.injectCardHatchStrips=function(){
+    // Barrette de hachures biseautées identique à la planche de référence et aux diapos titres
+    var svgHatch =
+      '<svg viewBox="0 0 100 24" width="100" height="24" class="card-hatch-strip" aria-hidden="true" focusable="false">' +
+        '<g transform="translate(3, 2)">' +
+          '<line x1="0" y1="15" x2="9" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="9" y1="15" x2="18" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.22"/>' +
+          '<line x1="18" y1="15" x2="27" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="27" y1="15" x2="36" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.22"/>' +
+          '<line x1="36" y1="15" x2="45" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="45" y1="15" x2="54" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.22"/>' +
+          '<line x1="54" y1="15" x2="63" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="63" y1="15" x2="72" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.22"/>' +
+          '<line x1="72" y1="15" x2="81" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.95"/>' +
+          '<line x1="81" y1="15" x2="90" y2="1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.22"/>' +
+          '<line x1="0" y1="19" x2="92" y2="19" stroke="currentColor" stroke-width="1.2" opacity="0.45" stroke-dasharray="2.5 2.5"/>' +
+        '</g>' +
+      '</svg>';
+
+    var targets = document.querySelectorAll(
+      '.concept-card, .benefit-card, .review-questions__card, .lane-card, .key-card, .speaker-card, .speaker-panel, .slide--split .slide__panel'
+    );
+    targets.forEach(function(el) {
+      if (el.querySelector('.card-hatch-strip')) return;
+      var div = document.createElement('div');
+      div.className = 'card-hatch-strip-wrap';
+      div.innerHTML = svgHatch;
+      el.appendChild(div);
     });
   };
   SlideEngine.prototype.buildChrome=function(){
