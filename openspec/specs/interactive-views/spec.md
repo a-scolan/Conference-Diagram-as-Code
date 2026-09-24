@@ -54,3 +54,16 @@ Les extraits de code doivent être présentés dans des cadres structurés imita
 #### Scenario: Affichage d'un bloc de code avec en-tête de fichier
 - **WHEN** Un bloc `.code-preview__frame` est rendu
 - **THEN** Il affiche une bannière supérieure avec le nom du fichier (`.slide__code-filename`), un conteneur défilant à police à espacement fixe (`JetBrains Mono`), et des classes de mise en valeur pour les mots-clés (`.kw`), types (`.hl`), chaînes (`.str`) et commentaires (`.cm`).
+
+---
+
+### Requirement: Bascule interactive des proportions code et aperçu (Split Toggle)
+Les diapositives de prévisualisation de code (`.slide--code-preview`) DOIVENT (SHALL) proposer un bouton interactif de bascule de proportions (`.code-preview__split-toggle`) permettant à l'orateur d'agrandir à la demande la zone de code ou la zone de diagramme selon l'explication en cours.
+
+#### Scenario: Bascule des proportions en mode deux tiers
+- **WHEN** L'orateur clique sur le bouton `<>` sur une slide en mode `two-thirds`
+- **THEN** L'attribut `data-split` alterne entre `two-thirds` (2/3 code, 1/3 schéma) et `third` (1/3 code, 2/3 schéma), les attributs d'accessibilité `aria-label` et `title` sont synchronisés, et les conteneurs Mermaid (`autoFit`) ainsi que LikeC4 (`scheduleLikeC4ViewportTuning`) recalculent instantanément leur échelle sans déformation.
+
+#### Scenario: Bascule des proportions en mode moitié
+- **WHEN** L'orateur clique sur le bouton `<>` sur une slide en mode `half`
+- **THEN** L'attribut `data-split` alterne entre `half` (1/2 - 1/2) et `third` (1/3 code, 2/3 schéma), permettant de focaliser alternativement sur le détail du DSL ou sur la vue globale.

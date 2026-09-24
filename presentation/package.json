@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Serveur local pour la présentation Diagram as Code — contourne les restrictions iframe file:// de Firefox",
   "scripts": {
-    "build": "node build-single-assets.js && node build-deck.js",
-    "build:deck": "node build-deck.js",
+    "build": "node generate-qr.js && node build-single-assets.js && node build-deck.js",
+    "build:deck": "node generate-qr.js && node build-deck.js",
     "build:likec4-single-assets": "node build-single-assets.js",
+    "generate:qr": "node generate-qr.js",
     "start": "node server.js",
     "dev": "node server.js"
   },

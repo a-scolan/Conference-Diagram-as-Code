@@ -5,27 +5,30 @@
         <div class="code-preview__frame">
           <span class="slide__code-filename"> coffee-v2/system-views.c4  </span>
           <div class="slide__code-block reveal">
-            <pre><code><span class="kw">dynamic view</span> order_mobile_flow {
-  festivalier -&gt; festivalSystem.festivalApp <span class="str">'Commande un flat white'</span>
-  festivalSystem.festivalApp -&gt; festivalSystem.festivalService <span class="str">'POST /orders'</span>
-  festivalSystem.festivalService -&gt; alefestCoffee.orderService <span class="str">'POST /orders'</span>
-  alefestCoffee.orderService -&gt; alefestCoffee.database <span class="str">'INSERT order'</span>
-  alefestCoffee.orderService -&gt; alefestCoffee.eventBus <span class="str">'order.placed'</span>
-  festivalSystem.festivalService -&gt; festivalSystem.festivalApp <span class="str">'Confirme orderId'</span>
-  festivalSystem.festivalApp -&gt; festivalier <span class="str">'Commande confirm&eacute;e'</span>
+            <pre><code><span class="kw">dynamic view</span> <span class="hl">order_mobile_flow</span> {
+  <span class="cm">// 1. Commande mobile</span>
+  festivalier <span class="hl">-&gt;</span> festivalSystem.festivalApp <span class="str">'Commande un flat white'</span>
+  festivalSystem.festivalApp <span class="hl">-&gt;</span> festivalSystem.festivalService <span class="str">'POST /orders'</span>
+  festivalSystem.festivalService <span class="hl">-&gt;</span> alefestCoffee.orderService <span class="str">'POST /orders'</span>
+  alefestCoffee.orderService <span class="hl">-&gt;</span> alefestCoffee.database <span class="str">'INSERT order'</span>
+  alefestCoffee.orderService <span class="hl">-&gt;</span> alefestCoffee.eventBus <span class="str">'order.placed'</span>
+  festivalSystem.festivalService <span class="hl">-&gt;</span> festivalSystem.festivalApp <span class="str">'Confirme orderId'</span>
+  festivalSystem.festivalApp <span class="hl">-&gt;</span> festivalier <span class="str">'Commande confirm&eacute;e'</span>
 
-  alefestCoffee.eventBus -&gt; alefestCoffee.preparationService <span class="str">'order.placed'</span>
-  alefestCoffee.preparationService -&gt; alefestCoffee.baristaScreen <span class="str">'WebSocket push file'</span>
-  alefestCoffee.baristaScreen -&gt; barista <span class="str">'Affiche commande'</span>
-  barista -&gt; alefestCoffee.preparationService <span class="str">'PATCH preparing'</span>
-  alefestCoffee.preparationService -&gt; alefestCoffee.eventBus <span class="str">'order.preparing'</span>
+  <span class="cm">// 2. Pr&eacute;paration barista</span>
+  alefestCoffee.eventBus <span class="hl">-&gt;</span> alefestCoffee.preparationService <span class="str">'order.placed'</span>
+  alefestCoffee.preparationService <span class="hl">-&gt;</span> alefestCoffee.baristaScreen <span class="str">'WebSocket push file'</span>
+  alefestCoffee.baristaScreen <span class="hl">-&gt;</span> barista <span class="str">'Affiche commande'</span>
+  barista <span class="hl">-&gt;</span> alefestCoffee.preparationService <span class="str">'PATCH preparing'</span>
+  alefestCoffee.preparationService <span class="hl">-&gt;</span> alefestCoffee.eventBus <span class="str">'order.preparing'</span>
 
-  barista -&gt; alefestCoffee.preparationService <span class="str">'PATCH ready'</span>
-  alefestCoffee.preparationService -&gt; alefestCoffee.eventBus <span class="str">'order.ready'</span>
-  alefestCoffee.eventBus -&gt; alefestCoffee.notificationService <span class="str">'order.ready'</span>
-  alefestCoffee.notificationService -&gt; festivalSystem.festivalApp <span class="str">'Push : votre caf&eacute; est pr&ecirc;t'</span>
-  festivalSystem.festivalApp -&gt; festivalier <span class="str">'Notification re&ccedil;ue'</span>
-  festivalier -&gt; barista <span class="str">'R&eacute;cup&egrave;re sa boisson'</span>
+  <span class="cm">// 3. Notification &amp; retrait</span>
+  barista <span class="hl">-&gt;</span> alefestCoffee.preparationService <span class="str">'PATCH ready'</span>
+  alefestCoffee.preparationService <span class="hl">-&gt;</span> alefestCoffee.eventBus <span class="str">'order.ready'</span>
+  alefestCoffee.eventBus <span class="hl">-&gt;</span> alefestCoffee.notificationService <span class="str">'order.ready'</span>
+  alefestCoffee.notificationService <span class="hl">-&gt;</span> festivalSystem.festivalApp <span class="str">'Push : votre caf&eacute; est pr&ecirc;t'</span>
+  festivalSystem.festivalApp <span class="hl">-&gt;</span> festivalier <span class="str">'Notification re&ccedil;ue'</span>
+  festivalier <span class="hl">-&gt;</span> barista <span class="str">'R&eacute;cup&egrave;re sa boisson'</span>
 }</code></pre>
           </div>
         </div>

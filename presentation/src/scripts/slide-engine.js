@@ -92,15 +92,13 @@
 
     var self = this;
     this.slides.forEach(function(slide, idx) {
-      // Décorations périphériques réparties uniquement sur couverture, intercalaires et fin
-      var isTarget = slide.classList.contains('slide--cover') ||
-                     slide.classList.contains('slide--title') ||
-                     slide.classList.contains('slide--divider') ||
-                     slide.classList.contains('slide--outro') ||
-                     slide.classList.contains('slide--bleed') ||
-                     idx === 0 ||
-                     idx === self.slides.length - 1;
-      if (!isTarget) return;
+      // Décorations périphériques réparties sur toutes les diapos où l'espace le permet (titres, dividers, citations, splits, concept-cards...)
+      // On exclut uniquement les diapos denses de code interactif et diagrammes pleine largeur pour éviter les collisions visuelles
+      var isDense = slide.classList.contains('slide--code-preview') ||
+                    slide.classList.contains('slide--diagram') ||
+                    slide.classList.contains('slide--c4-zoom') ||
+                    slide.getAttribute('data-nav') === 'Ressources & QR';
+      if (isDense) return;
       if (slide.querySelector('.blueprint-deco-frame')) return;
 
       var frame = document.createElement('div');
@@ -201,9 +199,41 @@
       else if(e.key==='End'){e.preventDefault();self.goTo(self.total-1);}
       self.fadeHints();
     });
-    var tY;
-    this.deck.addEventListener('touchstart',function(e){tY=e.touches[0].clientY;},{passive:true});
-    this.deck.addEventListener('touchend',function(e){var dy=tY-e.changedTouches[0].clientY;if(Math.abs(dy)>50){dy>0?self.next():self.prev();}});
+    var tY, tX, isMultiTouch = false;
+    this.deck.addEventListener('touchstart',function(e){
+      if(e.touches && e.touches.length > 1){
+        isMultiTouch = true;
+        return;
+      }
+      isMultiTouch = false;
+      tY = e.touches[0].clientY;
+      tX = e.touches[0].clientX;
+    },{passive:true});
+    this.deck.addEventListener('touchend',function(e){
+      if(isMultiTouch){
+        isMultiTouch = false;
+        return;
+      }
+      // Si l'utilisateur est en train de zoomer dans la page (pinch-to-zoom), ne pas changer de diapositive
+      if(window.visualViewport && window.visualViewport.scale > 1.05){
+        return;
+      }
+      // Ne pas intercepter les swipes à l'intérieur des conteneurs interactifs, diagrammes, iframes ou contrôles
+      if(e.target && typeof e.target.closest === 'function'){
+        if(e.target.closest('.mermaid-wrap, .embed-wrap, iframe, .code-preview__pane, .zoom-controls, .embed-controls, button, a, select, input, textarea')){
+          return;
+        }
+      }
+      if(typeof tY !== 'number') return;
+      var dy = tY - e.changedTouches[0].clientY;
+      var dx = (typeof tX === 'number') ? Math.abs(tX - e.changedTouches[0].clientX) : 0;
+      // Valider un swipe résolument vertical
+      if(Math.abs(dy) > 50 && Math.abs(dy) > dx * 1.2){
+        dy > 0 ? self.next() : self.prev();
+      }
+      tY = null;
+      tX = null;
+    });
     this.deck.addEventListener('scroll',function(){
       clearTimeout(self.scrollTimer);
       self.scrollTimer=setTimeout(function(){self.snapToNearest();},140);

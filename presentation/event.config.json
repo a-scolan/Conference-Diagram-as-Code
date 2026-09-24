@@ -11,6 +11,11 @@
     "company": "onepoint",
     "bio": "J'aide les équipes à garder une architecture lisible et vivante, avec une approche concrète et pragmatique, compréhensible par tous les acteurs."
   },
+  "support": {
+    "title": "Support de présentation",
+    "url": "https://a-scolan.github.io/Conference-Diagram-as-Code/presentation-diagram-as-code.html",
+    "qrImage": "./assets/presentation-qr.png"
+  },
   "feedback": {
     "caption": "OpenFeedback",
     "qrImage": "./assets/image.png"

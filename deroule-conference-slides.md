@@ -375,61 +375,80 @@ Ce document reprend le **déroulé réel de la conférence tel qu’il apparaît
 - Déplacer la discussion d’architecture dans le terrain naturel des équipes : la PR.
 - Montrer que la review ne parle pas seulement de fichiers, mais d'une branche et d'une histoire de changements.
 
-> Remarque : une partie “industrialisation / pipeline CI-CD” existe dans le HTML mais elle est commentée, donc non affichée dans la version actuelle des slides.
+### 26. Review — bénéfice
+**Slide :** _La review d'architecture devient visuelle et immédiate_
+
+- Les impacts sur les flux et conteneurs sautent aux yeux dans le diff
+- Fin des désynchronisations cachées entre intention et réalisation
+
+---
+
+## Partie 4 — Industrialisation & CI/CD
+
+### 27. Intertitre partie 4
+**Slide :** _Industrialisation & CI/CD_
+
+- Automatiser la compilation, la validation et la publication du modèle
+
+### 28. Pipeline CI/CD
+**Slide :** _L'architecture devient un livrable continu_
+
+- Validation syntaxique et sémantique à chaque commit
+- Génération des artefacts et déploiement du portail de documentation vivant
 
 ---
 
 ## Partie 5 — Bilan & conclusion
 
-### 26. Intertitre partie 5
+### 29. Intertitre partie 5
 **Slide :** _Bilan & conclusion_
 
 - Ce qu’on retient
 - Ce qu’on embarque
 - Comment repartir avec du concret
 
-### 27. Avant / Après
+### 30. Avant / Après
 **Slide :** _Le paradoxe réconcilié : avant / après_
 
-| Sujet | Avant · PNG statique | Après · Diagram as Code |
-|---|---|---|
-| Source de vérité | Entre Visio, Confluence et les souvenirs | Le modèle `.c4` dans Git |
-| Mise à jour | Il faut redessiner | On refactorise le code du modèle |
-| Validation | Ambiguë, tardive | Vue générée, diff lisible, review partagée |
-| Git / PR | Diagramme séparé du code | La PR expose l’intention architecturale |
-| CI/CD | Manuel, fragile | Validation et publication automatisées |
-| IA | Difficile de générer un schéma fiable | Facile d’amorcer du code de modélisation puis de le valider |
+Présentation sous forme de fiches de bénéfices visuelles séquencées :
+1. **01 · Source de vérité :** Éparpillée dans Visio/Confluence vs Le modèle `.c4` versionné dans Git.
+2. **02 · Mise à jour :** Redessiner à la main à chaque changement vs Refactoriser le code du modèle.
+3. **03 · Validation en équipe :** Ambiguïté sémantique et validation tardive vs Vue générée, diff visuel en PR et review partagée.
+4. **04 · Industrialisation & CI/CD :** Exports manuels oubliés et obsolescence vs Build automatique, validation syntaxique et publication en portail.
+5. **05 · Cycle de vie & Git :** Schéma déconnecté vs L'architecture avance au rythme des branches et releases.
+6. **06 · Appui de l'IA :** Difficile d'automatiser un dessin vectoriel propriétaire vs Modélisation DSL accélérée par copilote.
 
-**Message clé :**
-- Le diagram as code réconcilie lisibilité, collaboration, industrialisation et outillage moderne.
+### 31. Portail vivant
+**Slide :** _Portail vivant_
 
-### 28. Ressources & QR
-**Slide :** _Pour refaire ça chez vous_
+- Exploration autonome des vues par les équipes
+- Zoom interactif et liens directs vers le code source
+
+### 32. Vue C2 + likeC4
+**Slide :** _Vue C2 LikeC4 interactive_
+
+- Manipulation en direct de l'iframe LikeC4 compilée
+
+### 33. Ressources
+**Slide :** _Pour manipuler et approfondir_
 
 **Ressources montrées :**
-- `https://likec4.dev`
-- `https://github.com/a-scolan/c4-hands-on-demo`
-- `https://github.com/a-scolan/c4-template`
-- `https://dev.to/onepoint/diagram-as-code-en-2025-le-repas-de-famille-des-outils-1gdp`
+- `https://likec4.dev` — Documentation officielle et extension VS Code
+- `https://a-scolan.github.io/c4-hands-on-demo/` — Repo d'exploration et de prise en main
+- `https://github.com/a-scolan/c4-template` — Template prêt à l'emploi avec skills C4 pour LLM
+- `https://dev.to/onepoint/diagram-as-code-en-2025-le-repas-de-famille-des-outils-1gdp` — Article dev.to
 
-**Élément visuel important :**
-- QR code OpenFeedback pour recueillir les retours.
+**Et pour l'avenir :**
+- Reprendre l'existant, infrastructure et pare-feux, intégration aux référentiels d'architecture.
 
-### 28. Merci / Q&A
+### 34. Merci / Q&A
 **Slide :** _Merci !_
 
 - Questions / réponses
-- Message final :
-  - Ne dessinez plus vos architectures
-  - Codez-les
-  - Versionnez-les
-  - Publiez-les
-
-**Ouverture finale :**
-- Et ensuite ?
-  - génération depuis le code existant,
-  - graphes inter-projets,
-  - davantage d’automatisation utile.
+- Message clé (titre officiel) :
+  - **Ne dessinez plus vos architectures : codez-les**
+- Support de présentation : QR Code vers `https://a-scolan.github.io/Conference-Diagram-as-Code/presentation-diagram-as-code.html`
+- Alexis Scolan — Architecte technique
 
 ---
 

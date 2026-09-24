@@ -85,10 +85,52 @@
     var sc=w.querySelector('.mermaid-scroll')||w;
     w.addEventListener('wheel',function(e){var freeWheel=String(w.dataset.wheelZoom||'').toLowerCase()==='true';if(!freeWheel&&!e.ctrlKey&&!e.metaKey)return;e.preventDefault();setDiagramZoom(w,getCurrentZoom(w)*(e.deltaY<0?1.1:0.9),true);},{passive:false});
     var activePointerId=null,sX,sY,sL,sT;
-    sc.addEventListener('pointerdown',function(e){if(e.pointerType==='touch'||e.button!==0||e.target.closest('.zoom-controls')||!w.classList.contains('can-pan'))return;e.preventDefault();activePointerId=e.pointerId;w.classList.add('is-panning');sX=e.clientX;sY=e.clientY;sL=sc.scrollLeft;sT=sc.scrollTop;if(sc.setPointerCapture)sc.setPointerCapture(e.pointerId);});
-    sc.addEventListener('pointermove',function(e){if(activePointerId!==e.pointerId||!w.classList.contains('is-panning'))return;sc.scrollLeft=sL-(e.clientX-sX);sc.scrollTop=sT-(e.clientY-sY);});
-    function stopPan(e){if(activePointerId===null)return;if(e&&typeof e.pointerId==='number'&&e.pointerId!==activePointerId)return;activePointerId=null;w.classList.remove('is-panning');}
+    sc.addEventListener('pointerdown',function(e){
+      if(e.target.closest('.zoom-controls')||!w.classList.contains('can-pan'))return;
+      if(e.pointerType==='mouse'&&e.button!==0)return;
+      activePointerId=e.pointerId;
+      w.classList.add('is-panning');
+      sX=e.clientX;sY=e.clientY;sL=sc.scrollLeft;sT=sc.scrollTop;
+      if(sc.setPointerCapture)try{sc.setPointerCapture(e.pointerId);}catch(err){}
+    });
+    sc.addEventListener('pointermove',function(e){
+      if(activePointerId!==e.pointerId||!w.classList.contains('is-panning'))return;
+      sc.scrollLeft=sL-(e.clientX-sX);
+      sc.scrollTop=sT-(e.clientY-sY);
+    });
+    function stopPan(e){
+      if(activePointerId===null)return;
+      if(e&&typeof e.pointerId==='number'&&e.pointerId!==activePointerId)return;
+      activePointerId=null;
+      w.classList.remove('is-panning');
+    }
     sc.addEventListener('pointerup',stopPan);
     sc.addEventListener('pointercancel',stopPan);
     sc.addEventListener('lostpointercapture',stopPan);
+
+    // Support tactile pinch-to-zoom sur les diagrammes Mermaid
+    var pinchDistStart = 0;
+    var pinchZoomStart = 1;
+    w.addEventListener('touchstart',function(e){
+      if(e.touches && e.touches.length === 2){
+        var dx = e.touches[0].clientX - e.touches[1].clientX;
+        var dy = e.touches[0].clientY - e.touches[1].clientY;
+        pinchDistStart = Math.hypot(dx, dy);
+        pinchZoomStart = getCurrentZoom(w);
+      }
+    },{passive:true});
+    w.addEventListener('touchmove',function(e){
+      if(e.touches && e.touches.length === 2 && pinchDistStart > 0){
+        var dx = e.touches[0].clientX - e.touches[1].clientX;
+        var dy = e.touches[0].clientY - e.touches[1].clientY;
+        var dist = Math.hypot(dx, dy);
+        var factor = dist / pinchDistStart;
+        setDiagramZoom(w, pinchZoomStart * factor, false);
+      }
+    },{passive:true});
+    w.addEventListener('touchend',function(e){
+      if(!e.touches || e.touches.length < 2){
+        pinchDistStart = 0;
+      }
+    },{passive:true});
   });

@@ -51,9 +51,39 @@ Chaque grande partie de la conférence possède un code couleur d'identification
 
 ---
 
-### Requirement: Habillage géométrique et éléments décoratifs de fond
-Des dégradés radiaux asymétriques et des formes polygonales géométriques doivent structurer l'espace visuel sans concurrencer la lecture des schémas.
+### Requirement: Habillage géométrique et éléments décoratifs de fond (Blueprint & Calibration)
+Le système visuel DOIT (SHALL) habiller les fonds de diapositives et les conteneurs avec une trame sobre de type plan d'ingénierie (blueprint), intégrant des dégradés radiaux asymétriques et des repères techniques d'impression et de calibration (mires de registre, échelle CMYK, barrettes de hachures biseautées, réglettes d'étalonnage sur cartes) sans concurrencer la lisibilité des schémas.
 
 #### Scenario: Rendu des fonds de diapositives
 - **WHEN** Une diapositive de contenu est affichée
-- **THEN** Elle combine un dégradé radial localisé (ex: `radial-gradient(ellipse at 80% 80%, var(--accent2-dim) 0%, transparent 45%)`) et l'overlay SVG translucide des cristaux.
+- **THEN** Elle combine un dégradé radial localisé (ex: `radial-gradient(ellipse at 80% 80%, var(--accent2-dim) 0%, transparent 45%)`) et l'injection dynamique des quatre ornements blueprint aux angles (`.blueprint-deco--tl`, `.blueprint-deco--tr`, `.blueprint-deco--bl`, `.blueprint-deco--br`).
+
+#### Scenario: Réglettes d'étalonnage sur les composants de cartes
+- **WHEN** Une carte de contenu (`.concept-card`, `.benefit-card`, etc.) est injectée
+- **THEN** Une barrette de micro-hachures biseautées bicolores (`.card-calibration-strip`) est apposée en bas de la carte pour rappeler l'esthétique blueprint d'ingénierie technique.
+
+---
+
+### Requirement: Configuration centralisée des métadonnées de conférence
+Le projet DOIT (SHALL) isoler l'ensemble des données contextuelles liées à l'événement et à l'orateur dans un fichier de configuration standardisé (`event.config.json`).
+
+#### Scenario: Remplacement des informations de conférence
+- **WHEN** L'utilisateur modifie le nom de l'événement, la date ou l'URL de feedback dans `event.config.json`
+- **THEN** Le diaporama met à jour automatiquement la slide de titre, le bandeau de présentation du speaker et la slide finale de remerciement lors de la compilation sans modification manuelle du balisage.
+
+---
+
+### Requirement: Thèmes visuels interchangeables et sélecteur interactif
+Le moteur de présentation DOIT (SHALL) supporter la sélection dynamique ou par configuration d'un thème visuel parmi plusieurs feuilles de style prédéfinies (dont un thème neutre par défaut pour Diagram as Code), et fournir un mécanisme de bascule (*theme switch*) interactif dans le code (raccourci clavier `T`, paramètre d'URL `?theme=` ou sélecteur discret d'interface).
+
+#### Scenario: Sélection d'un thème alternatif en cours de session
+- **WHEN** L'utilisateur presse la touche `T` ou sélectionne un thème dans le sélecteur d'interface
+- **THEN** Le diaporama met à jour l'attribut `data-theme` sur l'élément racine `<html>`, applique instantanément la feuille de variables correspondante, mémorise le choix dans le `localStorage` et réinitialise les styles Mermaid et LikeC4.
+
+#### Scenario: Chargement avec un paramètre d'URL explicite
+- **WHEN** L'URL contient un paramètre de thème (ex: `?theme=slate-architect`)
+- **THEN** Le diaporama applique directement ce thème au chargement sans recourir au thème par défaut.
+
+#### Scenario: Suppression de l'habillage décoratif propriétaire
+- **WHEN** La présentation charge avec le thème neutre par défaut
+- **THEN** L'injection des polygones décoratifs spécifiques à l'ancien événement est absente, laissant un fond sobre et texturé compatible avec tout type de salle.

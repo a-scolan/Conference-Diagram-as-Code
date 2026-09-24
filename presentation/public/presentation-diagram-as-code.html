@@ -2,7 +2,7 @@
 <html lang="fr" data-theme="google-blueprint-light">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 <title>Diagram as Code | Conférence Architecture & Tech</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -353,8 +353,8 @@
    ========================================================================== */
 .card-hatch-strip-wrap {
   position: absolute;
-  bottom: 8px;
-  right: 14px;
+  bottom: -3px;
+  right: 16px;
   pointer-events: none;
   z-index: 2;
   overflow: visible;
@@ -363,20 +363,31 @@
 
 .concept-card .card-hatch-strip-wrap {
   color: var(--card-accent, var(--accent));
+  bottom: -3px;
+  right: 18px;
 }
 
 .benefit-card .card-hatch-strip-wrap {
   color: var(--card-accent, var(--accent));
-  bottom: 6px;
-  right: 12px;
+  bottom: -3px;
+  right: 18px;
+}
+
+.review-questions__card .card-hatch-strip-wrap {
+  bottom: -3px;
+  right: 18px;
 }
 
 .slide--split .slide__panel--primary .card-hatch-strip-wrap {
   color: var(--accent2);
+  bottom: -3px;
+  right: 20px;
 }
 
 .slide--split .slide__panel--secondary .card-hatch-strip-wrap {
   color: var(--green);
+  bottom: -3px;
+  right: 20px;
 }
 
 .card-hatch-strip {
@@ -491,14 +502,22 @@
   }
 
   .slide__code-filename {
-    font-size: 9.5px !important;
-    padding: 2px 8px !important;
+    font-size: clamp(7.5px, 2vw, 9.5px) !important;
+    padding: 2px 7px !important;
     top: -10px !important;
+    white-space: nowrap !important;
+    max-width: calc(100% - 24px) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
   .code-preview__frame > .slide__code-filename {
-    font-size: 9.5px !important;
-    padding: 2px 8px !important;
+    font-size: clamp(7.5px, 2.2cqw, 9.5px) !important;
+    padding: 2px 7px !important;
+    white-space: nowrap !important;
+    max-width: calc(100% - 20px) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
   .slide__display {
@@ -601,6 +620,111 @@
   }
   .slide--code-preview .embed-wrap {
     height: clamp(130px, 40vh, 200px) !important;
+  }
+
+  /* Forcer l'affichage 2 colonnes et la présence de aside en mode paysage mobile */
+  .slide--content .slide__aside {
+    display: flex !important;
+  }
+  .slide--content .slide__inner {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) !important;
+    gap: clamp(10px, 2vw, 20px) !important;
+  }
+  .slide--content .slide__inner > :only-child {
+    grid-column: 1 / -1 !important;
+  }
+
+  /* Grilles de concepts en mode paysage mobile : préserver les colonnes côte-à-côte */
+  .concept-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+    overflow-y: visible !important;
+  }
+  .concept-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+    overflow-y: visible !important;
+  }
+  .concept-card {
+    min-height: auto !important;
+    padding: 6px 10px !important;
+    gap: 3px !important;
+    border-radius: 12px !important;
+  }
+  .concept-card__step {
+    font-size: 8.5px !important;
+    margin-bottom: 1px !important;
+  }
+  .concept-card__title {
+    font-size: 11px !important;
+    margin-bottom: 2px !important;
+    line-height: 1.2 !important;
+  }
+  .concept-card__desc {
+    font-size: 9.5px !important;
+    line-height: 1.25 !important;
+  }
+  .concept-card__list {
+    margin: 3px 0 0 !important;
+    padding-left: 12px !important;
+  }
+  .concept-card__list li {
+    font-size: 9px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 2px !important;
+  }
+
+  /* Split code-preview en paysage mobile */
+  .slide--code-preview .slide__inner {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr) !important;
+    gap: 10px !important;
+  }
+  .slide--code-preview .slide__aside {
+    display: flex !important;
+  }
+
+  /* Ressources et liste */
+  .resource-item {
+    padding: 4px 6px !important;
+    gap: 6px !important;
+  }
+  .resource-item__tag {
+    min-width: 52px !important;
+    font-size: 9.5px !important;
+    letter-spacing: 0.8px !important;
+  }
+  .resource-item__body {
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+  }
+  .resource-item__body a {
+    font-size: 11.5px !important;
+    margin-bottom: 2px !important;
+  }
+
+  /* Commandes de zoom et contrôles tactiles */
+  .zoom-controls {
+    padding: 2px !important;
+    gap: 3px !important;
+  }
+  .zoom-controls button {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 16px !important;
+    touch-action: manipulation;
+  }
+  .embed-wrap .embed-controls button {
+    width: 32px !important;
+    height: 32px !important;
+    touch-action: manipulation;
+  }
+  .mermaid-wrap {
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+  .mermaid-wrap.is-panning {
+    touch-action: none;
   }
 
   .deck-nav {
@@ -1248,32 +1372,44 @@
 
   /* ============ SLIDE TYPE: SPLIT ============ */
   .slide--split {
-    padding: clamp(28px, 4.5vh, 52px) clamp(24px, 3.5vw, 48px);
+    padding: clamp(24px, 4vh, 52px) clamp(24px, 4vw, 64px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   .slide--split .slide__panels {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(16px, 2.2vw, 32px);
-    height: 100%;
+    gap: clamp(16px, 2.4vw, 32px);
+    width: 100%;
+    max-width: min(100%, 1180px);
+    margin: 0 auto;
+    height: auto;
     align-items: stretch;
   }
+  /* Slide 3 plus aérée et compacte pour laisser respirer le fond */
+  .slide--split[data-nav="Le problème réel"] .slide__panels {
+    max-width: min(100%, 980px);
+  }
   .slide--split .slide__panel {
-    padding: clamp(24px, 3.6vh, 40px) clamp(22px, 2.8vw, 36px);
+    padding: clamp(20px, 3vh, 34px) clamp(20px, 2.5vw, 34px);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    border-radius: 16px;
+    border-radius: 18px;
     border: 1.5px solid var(--border-bright);
-    background: color-mix(in srgb, var(--surface) 62%, transparent 38%);
+    background: color-mix(in srgb, var(--surface) 68%, transparent 32%);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     position: relative;
     overflow: hidden;
+    min-height: auto;
   }
   .slide--split .slide__panel .slide__label {
     margin-top: 0;
-    margin-bottom: clamp(6px, 1.2vh, 12px);
+    margin-bottom: clamp(6px, 1.2vh, 10px);
     font-size: calc(clamp(11px, 1.2vw, 13px) + var(--font-bump));
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -1282,15 +1418,15 @@
   }
   .slide--split .slide__panel .slide__heading {
     margin: 0;
-    font-size: calc(clamp(20px, 2.5vw, 32px) + var(--font-bump));
-    line-height: 1.22;
-    min-height: calc(2.44em + var(--font-bump));
+    font-size: calc(clamp(17px, 2vw, 26px) + var(--font-bump));
+    line-height: 1.25;
+    min-height: auto;
     text-wrap: balance;
     display: flex;
     align-items: flex-start;
   }
   .slide--split .slide__panel .slide__bullets {
-    margin-top: clamp(14px, 2vh, 22px);
+    margin-top: clamp(10px, 1.6vh, 18px);
     flex: 1 1 auto;
   }
   .slide--split .slide__panel--primary::before {
@@ -1750,8 +1886,17 @@
   }
   .slide__code-filename {
     position: absolute; top: -12px; left: 24px;
-    font-family: var(--font-mono); font-size: calc(12px + var(--font-bump)); font-weight: 600;
-    padding: 4px 12px; border-radius: 4px; background: var(--accent); color: var(--bg);
+    font-family: var(--font-mono);
+    font-size: calc(clamp(8px, 1.05vw, 12px) + var(--font-bump));
+    font-weight: 600;
+    padding: 3px clamp(6px, 0.8vw, 12px);
+    border-radius: 4px;
+    background: var(--accent);
+    color: var(--bg);
+    white-space: nowrap;
+    max-width: calc(100% - 32px);
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .slide__code-block pre { margin: 0; overflow-x: auto; }
   .slide__code-block code { font-family: var(--font-mono); font-size: calc(clamp(14px, 1.6vw, 18px) + var(--font-bump)); line-height: 1.7; color: var(--code-text); }
@@ -1842,34 +1987,101 @@
 
   /* ============ SLIDE TYPE: OUTRO (Slide 35) ============ */
   .slide--outro {
-    justify-content: center;
-    align-items: center;
-    padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 56px);
+    padding: clamp(28px, 5vh, 64px) clamp(28px, 5vw, 80px);
   }
   .slide--outro .slide__inner {
-    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(460px, 1fr);
+    gap: clamp(36px, 5vw, 76px);
+    align-items: center;
     width: 100%;
+    max-width: min(100%, 1500px);
+    margin: 0 auto;
+  }
+  .slide--outro .outro-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+  .slide--outro .outro-qr-pane {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .outro-card {
-    max-width: 840px;
     width: 100%;
-    margin: 0 auto;
+  }
+  .outro-qr-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    border-radius: 20px;
+    width: min(100%, 560px);
+    padding: clamp(28px, 4vh, 42px) clamp(32px, 3.5vw, 52px);
+    border-radius: 24px;
     border: 1.5px solid var(--border-bright);
-    background: color-mix(in srgb, var(--surface) 90%, transparent 10%);
+    background: color-mix(in srgb, var(--surface) 88%, transparent 12%);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    padding: clamp(32px, 5vh, 56px) clamp(28px, 4vw, 56px);
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.08);
     position: relative;
     overflow: hidden;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
   }
-  .outro-card::before {
+  .outro-qr-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent3), var(--accent), var(--accent2));
+  }
+  .outro-qr__title {
+    font-family: var(--font-heading);
+    font-size: calc(clamp(18px, 1.8vw, 23px) + var(--font-bump));
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 20px 0;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .outro-qr-card .qr-spotlight {
+    width: clamp(210px, 20vw, 290px);
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    padding: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  .outro-qr__url {
+    margin-top: 20px;
+    font-size: calc(clamp(11.5px, 1.05vw, 13.5px) + var(--font-bump));
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    text-decoration: none;
+    line-height: 1.35;
+    white-space: nowrap;
+    display: inline-block;
+    padding: 6px 14px;
+    background: color-mix(in srgb, var(--accent) 8%, transparent 92%);
+    border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent 76%);
+    border-radius: 8px;
+    transition: all 0.15s ease;
+  }
+  .outro-qr__url:hover {
+    text-decoration: none;
+    background: color-mix(in srgb, var(--accent) 15%, transparent 85%);
+  }
+  @media (max-width: 880px) {
+    .slide--outro .slide__inner {
+      grid-template-columns: 1fr;
+      text-align: center;
+      gap: 24px;
+    }
+    .slide--outro .outro-main {
+      align-items: center;
+    }
+  }
     content: '';
     position: absolute;
     top: 0;
@@ -2138,7 +2350,8 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .slide--code-preview[data-split="half"] .code-preview__split-toggle {
+    .slide--code-preview[data-split="half"] .code-preview__split-toggle,
+    .slide--code-preview[data-split-mode="half"]:not([data-split="third"]) .code-preview__split-toggle {
       left: 50%;
     }
     .slide--code-preview[data-split="two-thirds"] .code-preview__split-toggle {
@@ -2171,11 +2384,18 @@
       flex: 1 1 auto;
       min-height: 0;
       padding-top: 0;
+      container-type: inline-size;
     }
     .slide--code-preview .code-preview__frame > .slide__code-filename {
       top: var(--code-preview-chip-line);
       transform: translateY(-50%);
       z-index: 20;
+      white-space: nowrap;
+      max-width: calc(100% - 24px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: calc(clamp(7.5px, 2.3cqw, 11.5px) + var(--font-bump));
+      padding: 2.5px clamp(5px, 1.2cqw, 10px);
     }
     .slide--code-preview .slide__code-block {
       flex: 1 1 auto;
@@ -2224,20 +2444,26 @@
 
     /* Slide 20 (Séquence mobile) tuning pour lisibilité optimale du code DSL */
     .slide--seq-likec4 .slide__code-block {
-      padding: clamp(12px, 1.6vh, 18px) clamp(10px, 1.2vw, 16px);
+      padding: clamp(14px, 1.8vh, 22px) clamp(12px, 1.4vw, 18px);
     }
     .slide--seq-likec4 .slide__code-block pre {
       overflow-y: auto;
     }
     .slide--seq-likec4 .slide__code-block code {
-      font-size: calc(clamp(8.8px, 0.8vw, 11.2px) + var(--font-bump));
-      line-height: 1.32;
+      font-size: calc(clamp(11px, 0.95vw, 13px) + var(--font-bump));
+      line-height: 1.44;
+      font-weight: 500;
+      letter-spacing: -0.01em;
     }
 
     .slide--adr-preview {
       --code-preview-code-col: 1fr;
       --code-preview-preview-col: 1fr;
       --code-preview-chip-line: 18px;
+    }
+    .slide--adr-preview:not([data-split="third"]) .code-preview__split-toggle,
+    .slide--adr-preview[data-split="half"] .code-preview__split-toggle {
+      left: 50%;
     }
     .slide--adr-preview .slide__heading {
       text-align: center;
@@ -2526,14 +2752,36 @@
     }
 
     /* ============ UNIFIED CONCEPT CARDS (Slides 6, 14, 25, 31) ============ */
+    .slide--concept-cards {
+      justify-content: center;
+      align-items: center;
+    }
+    .slide--concept-cards .slide__inner {
+      grid-template-columns: 1fr;
+      width: 100%;
+      max-width: min(100%, 1060px);
+      margin: 0 auto;
+    }
+
+    .slide--concept-cards .slide__heading {
+      font-size: calc(clamp(18px, 2.2vw, 28px) + var(--font-bump));
+      line-height: 1.22;
+      margin-top: 0;
+      margin-bottom: clamp(6px, 1.2vh, 12px);
+      max-width: 32ch;
+    }
+
     .concept-grid {
       display: grid;
       gap: clamp(14px, 1.8vw, 24px);
       width: 100%;
       align-items: stretch;
+      margin-top: clamp(14px, 2.2vh, 24px);
     }
     .concept-grid--2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: min(100%, 860px);
+      margin: clamp(14px, 2.2vh, 24px) auto 0 auto;
     }
     .concept-grid--3 {
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2554,9 +2802,9 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      min-height: clamp(140px, 20vh, 220px);
-      padding: clamp(18px, 2.4vh, 26px);
+      gap: clamp(8px, 1.2vh, 12px);
+      min-height: auto;
+      padding: clamp(16px, 2.4vh, 26px) clamp(16px, 2vw, 24px);
       border-radius: 16px;
       border: 1.5px solid var(--border-bright);
       background: var(--surface);
@@ -2609,7 +2857,7 @@
     .concept-card__step {
       margin: 0;
       font-family: var(--font-mono);
-      font-size: calc(clamp(11px, 1.2vw, 13px) + var(--font-bump));
+      font-size: calc(clamp(10.5px, 1.1vw, 12.5px) + var(--font-bump));
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
@@ -2618,11 +2866,11 @@
 
     .concept-card__title {
       margin: 0;
-      font-size: calc(clamp(17px, 1.9vw, 23px) + var(--font-bump));
-      line-height: 1.25;
+      font-size: calc(clamp(14.5px, 1.5vw, 18px) + var(--font-bump));
+      line-height: 1.28;
       font-weight: 700;
       color: var(--text);
-      min-height: calc(2.5em + var(--font-bump));
+      min-height: calc(2.4em + var(--font-bump));
       display: flex;
       align-items: flex-start;
       text-wrap: balance;
@@ -2630,37 +2878,41 @@
 
     .concept-card__desc {
       margin: 0;
-      font-size: calc(clamp(13px, 1.45vw, 16px) + var(--font-bump));
-      line-height: 1.5;
+      font-size: calc(clamp(12px, 1.25vw, 14.5px) + var(--font-bump));
+      line-height: 1.48;
       color: var(--text-subtitle);
       text-wrap: pretty;
       font-weight: 500;
     }
 
     .concept-card__list {
-      list-style: none;
-      padding: 0;
+      list-style: none !important;
+      padding: 0 !important;
       margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
     .concept-card__list li {
+      list-style: none !important;
       position: relative;
-      padding-left: 18px;
-      font-size: calc(clamp(13px, 1.45vw, 16px) + var(--font-bump));
+      padding-left: 16px;
+      font-size: calc(clamp(12px, 1.25vw, 14.5px) + var(--font-bump));
       line-height: 1.45;
+      color: var(--text-subtitle);
+    }
+    .concept-card__list li strong {
       color: var(--text);
     }
     .concept-card__list li::before {
-      content: '';
+      content: '–';
       position: absolute;
       left: 0;
-      top: 8px;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--card-accent, var(--accent));
+      top: 0;
+      color: var(--card-accent, var(--accent));
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 1.45;
     }
 
     .slide--review-questions {
@@ -2677,16 +2929,16 @@
       width: 100%;
     }
     .slide--review-questions .slide__heading {
-      max-width: min(100%, 30ch);
-      margin: 0;
-      font-size: calc(clamp(26px, 3.4vw, 44px) + var(--font-bump));
-      line-height: 1.15;
+      max-width: min(100%, 32ch);
+      margin: 0 0 clamp(6px, 1.2vh, 12px) 0;
+      font-size: calc(clamp(18px, 2.2vw, 28px) + var(--font-bump));
+      line-height: 1.22;
       text-wrap: balance;
     }
     .slide--review-questions .review-questions__lede {
       margin: 0;
       max-width: min(100%, 78ch);
-      font-size: calc(clamp(15px, 1.6vw, 19px) + var(--font-bump));
+      font-size: calc(clamp(13px, 1.4vw, 16px) + var(--font-bump));
       line-height: 1.5;
       color: var(--text-subtitle);
       text-wrap: pretty;
@@ -2698,30 +2950,18 @@
       width: 100%;
     }
     .slide--review-questions .review-questions__card {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      min-height: clamp(140px, 20vh, 220px);
-      padding: clamp(18px, 2.4vh, 24px);
-      border-radius: 14px;
+      min-height: auto;
+      padding: clamp(16px, 2.4vh, 26px) clamp(16px, 2vw, 24px);
+      border-radius: 16px;
       border: 1.5px solid var(--border-bright);
       background: var(--surface);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
       overflow: hidden;
-    }
-    .slide--review-questions .review-questions__card::before {
-      content: '';
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 4px;
-      background: var(--card-accent, var(--accent));
-      opacity: 0.95;
     }
     .slide--review-questions .review-questions__step {
       margin: 0;
       font-family: var(--font-mono);
-      font-size: calc(clamp(12px, 1.25vw, 14px) + var(--font-bump));
+      font-size: calc(clamp(10.5px, 1.1vw, 12.5px) + var(--font-bump));
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
@@ -2729,20 +2969,20 @@
     }
     .slide--review-questions .review-questions__question {
       margin: 0;
-      font-size: calc(clamp(17px, 1.9vw, 23px) + var(--font-bump));
-      line-height: 1.25;
+      font-size: calc(clamp(14.5px, 1.5vw, 18px) + var(--font-bump));
+      line-height: 1.28;
       font-weight: 700;
       color: var(--text);
-      min-height: calc(2.5em + var(--font-bump));
+      min-height: calc(2.4em + var(--font-bump));
       display: flex;
       align-items: flex-start;
       text-wrap: balance;
     }
     .slide--review-questions .review-questions__detail {
       margin: 0;
-      font-size: calc(clamp(14px, 1.5vw, 18px) + var(--font-bump));
-      line-height: 1.55;
-      color: var(--text-dim);
+      font-size: calc(clamp(12px, 1.25vw, 14.5px) + var(--font-bump));
+      line-height: 1.48;
+      color: var(--text-subtitle);
       text-wrap: pretty;
     }
 
@@ -3323,11 +3563,16 @@
   }
 
   .resource-list {
-    display: grid; gap: 12px; margin-top: 20px;
+    display: grid;
+    gap: clamp(8px, 1.3vh, 12px);
+    margin-top: clamp(10px, 1.6vh, 18px);
   }
 
   .resource-item {
-    display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px;
+    display: flex;
+    gap: clamp(10px, 1.2vw, 14px);
+    align-items: flex-start;
+    padding: clamp(8px, 1.2vh, 12px) clamp(10px, 1.4vw, 14px);
   }
 
   .resource-item__tag {
@@ -3746,7 +3991,7 @@
 
   <!-- Slide 5: Changer de paradigme -->
 <section class="slide slide--content slide--concept-cards" data-nav="Changer de paradigme" data-part="0">
-    <div class="slide__inner" style="grid-template-columns:1fr;">
+    <div class="slide__inner">
       <div>
         <p class="slide__label reveal">Changer de paradigme</p>
         <h2 class="slide__heading reveal">Trois principes pour une<br>architecture vivante</h2>
@@ -3773,104 +4018,88 @@
 
   <!-- Slide 6: C4 zoom -->
 <section class="slide slide--content slide--c4-zoom" data-nav="C4 zoom" data-part="0">
-    <div class="slide__inner" style="align-items:center; gap:clamp(14px, 2.2vw, 32px);">
-      <div style="min-width:0; flex:1 1 52%;">
+    <div class="slide__inner" style="grid-template-columns:minmax(0, 1fr) minmax(0, 1.12fr); align-items:center; gap:clamp(16px, 2.5vw, 36px);">
+      <div style="min-width:0;">
         <p class="slide__label reveal">Modélisation C4</p>
-        <h2 class="slide__heading reveal" style="font-size:calc(clamp(20px, 2.5vw, 34px) + var(--font-bump)); line-height:1.2; max-width:26ch;">C4 = un découpage simple de vos architectures</h2>
-        <ul class="slide__bullets" style="margin-top:clamp(8px, 1.5vh, 14px);">
-          <li class="reveal" style="font-size:calc(clamp(11px, 1.1vw, 14px) + var(--font-bump)); line-height:1.35; padding:2px 0 2px 14px; margin-bottom:4px;"><strong class="c4-level c4-level--c1">C1 — Contexte</strong> : avec quoi interagit ce système ?</li>
-          <li class="reveal" style="font-size:calc(clamp(11px, 1.1vw, 14px) + var(--font-bump)); line-height:1.35; padding:2px 0 2px 14px; margin-bottom:4px;"><strong class="c4-level c4-level--c2">C2 — Containers</strong> : comment le système fonctionne-t-il ?</li>
-          <li class="reveal" style="font-size:calc(clamp(11px, 1.1vw, 14px) + var(--font-bump)); line-height:1.35; padding:2px 0 2px 14px; margin-bottom:4px;"><strong class="c4-level c4-level--c3">C3 — Components</strong> : comment se compose un container ?</li>
-          <li class="reveal" style="font-size:calc(clamp(11px, 1.1vw, 14px) + var(--font-bump)); line-height:1.35; padding:2px 0 2px 14px; margin-bottom:4px;"><strong class="c4-level c4-level--c4">C4 — Code</strong> : quelles classes / quels modules implémentent les composants ?</li>
-          <li class="reveal" style="font-size:calc(clamp(11px, 1.1vw, 14px) + var(--font-bump)); line-height:1.35; padding:2px 0 2px 14px; margin-bottom:4px;"><strong>Optionnel — Dynamique / Déploiement</strong> : comment ça s'exécute, où ça tourne ?</li>
+        <h2 class="slide__heading reveal" style="font-size:calc(clamp(18px, 2.2vw, 28px) + var(--font-bump)); line-height:1.2; margin-bottom:clamp(8px, 1.4vh, 14px); max-width:28ch;">C4 = un découpage simple de vos architectures</h2>
+        <ul class="slide__bullets" style="margin-top:clamp(8px, 1.4vh, 14px);">
+          <li class="reveal" style="font-size:calc(clamp(11.5px, 1.15vw, 14.5px) + var(--font-bump)); line-height:1.38; padding:3px 0 3px 14px; margin-bottom:5px;"><strong class="c4-level c4-level--c1">C1 — Contexte</strong> : avec quoi interagit ce système ?</li>
+          <li class="reveal" style="font-size:calc(clamp(11.5px, 1.15vw, 14.5px) + var(--font-bump)); line-height:1.38; padding:3px 0 3px 14px; margin-bottom:5px;"><strong class="c4-level c4-level--c2">C2 — Containers</strong> : comment le système fonctionne-t-il ?</li>
+          <li class="reveal" style="font-size:calc(clamp(11.5px, 1.15vw, 14.5px) + var(--font-bump)); line-height:1.38; padding:3px 0 3px 14px; margin-bottom:5px;"><strong class="c4-level c4-level--c3">C3 — Components</strong> : comment se compose un container ?</li>
+          <li class="reveal" style="font-size:calc(clamp(11.5px, 1.15vw, 14.5px) + var(--font-bump)); line-height:1.38; padding:3px 0 3px 14px; margin-bottom:5px;"><strong class="c4-level c4-level--c4">C4 — Code</strong> : quelles classes / quels modules implémentent les composants ?</li>
+          <li class="reveal" style="font-size:calc(clamp(11.5px, 1.15vw, 14.5px) + var(--font-bump)); line-height:1.38; padding:3px 0 3px 14px; margin-bottom:5px;"><strong>Optionnel — Dynamique / Déploiement</strong> : comment ça s'exécute, où ça tourne ?</li>
         </ul>
       </div>
-      <div class="slide__aside reveal c4-zoom__viewport" style="flex:1 1 48%; min-width:0; position:relative; z-index:2; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:12px; mask-image:linear-gradient(to right, black 82%, transparent 100%), linear-gradient(to bottom, black 85%, transparent 100%); -webkit-mask-image:linear-gradient(to right, black 82%, transparent 100%), linear-gradient(to bottom, black 85%, transparent 100%); mask-composite:intersect; -webkit-mask-composite:source-in;">
-        <svg viewBox="0 0 350 310" width="100%" height="auto" style="max-height:clamp(220px, 50vh, 400px); overflow:visible;" aria-label="Imbrication C1 C2 C3 C4 et fantôme d'un second système">
-          <defs>
-            <linearGradient id="ghostFadeX" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#fff" stop-opacity="0.85"/>
-              <stop offset="60%" stop-color="#fff" stop-opacity="0.4"/>
-              <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-            </linearGradient>
-            <mask id="ghostMaskRight">
-              <rect x="0" y="0" width="260" height="260" fill="url(#ghostFadeX)"/>
-            </mask>
-          </defs>
-          
-          <rect x="8" y="8" width="244" height="244" rx="10" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="2" opacity="0.42"/>
-          <text x="18" y="27" font-family="var(--font-mono)" font-size="11" fill="var(--accent)">C1 - Système</text>
+      <div class="slide__aside reveal c4-zoom__viewport" style="min-width:0; position:relative; z-index:2; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:16px; padding:clamp(8px, 1.5vh, 16px);">
+        <svg viewBox="0 0 380 315" width="100%" height="auto" style="max-height:clamp(250px, 54vh, 420px); overflow:visible;" aria-label="Imbrication C1 C2 C3 C4 et contextualisation dans un paysage de systèmes">
+          <!-- Système principal C1 -->
+          <rect x="8" y="8" width="244" height="244" rx="10" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="2"/>
+          <text x="18" y="27" font-family="var(--font-mono)" font-size="11" font-weight="700" fill="var(--accent)">C1 - Système</text>
 
-          
-          <rect x="22" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.58"/>
-          <text x="30" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Front</text>
+          <!-- Containers C2 -->
+          <rect x="22" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8"/>
+          <text x="30" y="54" font-family="var(--font-mono)" font-size="9" font-weight="600" fill="var(--accent3)">C2 - Front</text>
 
-          
-          <rect x="30" y="64" width="88" height="76" rx="6" fill="var(--green-dim)" stroke="var(--green)" stroke-width="1.6" opacity="0.7"/>
-          <text x="36" y="78" font-family="var(--font-mono)" font-size="8" fill="var(--green)">C3 - UI</text>
-          <rect x="36" y="84" width="34" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
-          <text x="40" y="98" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - A</text>
-          <rect x="74" y="84" width="38" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
-          <text x="78" y="98" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - B</text>
+          <!-- Composants C3 & Code C4 (Front) -->
+          <rect x="30" y="64" width="88" height="76" rx="6" fill="var(--green-dim)" stroke="var(--green)" stroke-width="1.6"/>
+          <text x="36" y="78" font-family="var(--font-mono)" font-size="8" font-weight="600" fill="var(--green)">C3 - UI</text>
+          <rect x="36" y="84" width="34" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2"/>
+          <text x="40" y="98" font-family="var(--font-mono)" font-size="7" font-weight="600" fill="var(--accent2)">C4 - A</text>
+          <rect x="74" y="84" width="38" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2"/>
+          <text x="78" y="98" font-family="var(--font-mono)" font-size="7" font-weight="600" fill="var(--accent2)">C4 - B</text>
 
-          <rect x="30" y="148" width="88" height="76" rx="6" fill="var(--green-dim)" stroke="var(--green)" stroke-width="1.6" opacity="0.7"/>
-          <text x="36" y="162" font-family="var(--font-mono)" font-size="8" fill="var(--green)">C3 - Client API</text>
-          <rect x="36" y="168" width="34" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
-          <text x="40" y="182" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - C</text>
-          <rect x="74" y="168" width="38" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
-          <text x="78" y="182" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - D</text>
+          <rect x="30" y="148" width="88" height="76" rx="6" fill="var(--green-dim)" stroke="var(--green)" stroke-width="1.6"/>
+          <text x="36" y="162" font-family="var(--font-mono)" font-size="8" font-weight="600" fill="var(--green)">C3 - Client API</text>
+          <rect x="36" y="168" width="34" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2"/>
+          <text x="40" y="182" font-family="var(--font-mono)" font-size="7" font-weight="600" fill="var(--accent2)">C4 - C</text>
+          <rect x="74" y="168" width="38" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2"/>
+          <text x="78" y="182" font-family="var(--font-mono)" font-size="7" font-weight="600" fill="var(--accent2)">C4 - D</text>
 
-          
-          <rect x="134" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.58"/>
-          <text x="142" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Back</text>
+          <!-- Containers C2 (Back) -->
+          <rect x="134" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8"/>
+          <text x="142" y="54" font-family="var(--font-mono)" font-size="9" font-weight="600" fill="var(--accent3)">C2 - Back</text>
 
-          
-          <rect x="142" y="64" width="88" height="76" rx="6" fill="var(--green-dim)" stroke="var(--green)" stroke-width="1.6" opacity="0.7"/>
-          <text x="148" y="78" font-family="var(--font-mono)" font-size="8" fill="var(--green)">C3 - Controller</text>
-          <rect x="148" y="84" width="34" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
-          <text x="152" y="98" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - E</text>
-          <rect x="186" y="84" width="38" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
-          <text x="190" y="98" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - F</text>
+          <!-- Composants C3 & Code C4 (Back) -->
+          <rect x="142" y="64" width="88" height="76" rx="6" fill="var(--green-dim)" stroke="var(--green)" stroke-width="1.6"/>
+          <text x="148" y="78" font-family="var(--font-mono)" font-size="8" font-weight="600" fill="var(--green)">C3 - Controller</text>
+          <rect x="148" y="84" width="34" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2"/>
+          <text x="152" y="98" font-family="var(--font-mono)" font-size="7" font-weight="600" fill="var(--accent2)">C4 - E</text>
+          <rect x="186" y="84" width="38" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2"/>
+          <text x="190" y="98" font-family="var(--font-mono)" font-size="7" font-weight="600" fill="var(--accent2)">C4 - F</text>
 
-          <rect x="142" y="148" width="88" height="76" rx="6" fill="var(--green-dim)" stroke="var(--green)" stroke-width="1.6" opacity="0.7"/>
-          <text x="148" y="162" font-family="var(--font-mono)" font-size="8" fill="var(--green)">C3 - Domain</text>
-          <rect x="148" y="168" width="34" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
-          <text x="152" y="182" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - G</text>
-          <rect x="186" y="168" width="38" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2" opacity="0.85"/>
-          <text x="190" y="182" font-family="var(--font-mono)" font-size="7" fill="var(--accent2)">C4 - H</text>
+          <rect x="142" y="148" width="88" height="76" rx="6" fill="var(--green-dim)" stroke="var(--green)" stroke-width="1.6"/>
+          <text x="148" y="162" font-family="var(--font-mono)" font-size="8" font-weight="600" fill="var(--green)">C3 - Domain</text>
+          <rect x="148" y="168" width="34" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2"/>
+          <text x="152" y="182" font-family="var(--font-mono)" font-size="7" font-weight="600" fill="var(--accent2)">C4 - G</text>
+          <rect x="186" y="168" width="38" height="22" rx="4" fill="var(--accent2-dim)" stroke="var(--accent2)" stroke-width="1.2"/>
+          <text x="190" y="182" font-family="var(--font-mono)" font-size="7" font-weight="600" fill="var(--accent2)">C4 - H</text>
 
-          
-          <g transform="translate(260 0)" opacity="0.44">
-            <rect x="8" y="8" width="244" height="244" rx="10" fill="var(--accent-dim)" stroke="var(--accent3)" stroke-width="2" stroke-dasharray="7 7" opacity="0.52"/>
-            <text x="18" y="27" font-family="var(--font-mono)" font-size="11" fill="var(--accent3)">C1 - Autre système</text>
+          <!-- Systèmes voisins visibles (cartographie globale / Google Maps C4) -->
+          <g transform="translate(260 0)" opacity="0.75">
+            <rect x="8" y="8" width="220" height="244" rx="10" fill="var(--accent-dim)" stroke="var(--accent3)" stroke-width="1.8" stroke-dasharray="6 4"/>
+            <text x="18" y="27" font-family="var(--font-mono)" font-size="11" font-weight="600" fill="var(--accent3)">C1 - Autre système</text>
 
-            <rect x="22" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.62"/>
+            <rect x="22" y="38" width="94" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.5" opacity="0.7"/>
             <text x="30" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Front</text>
 
-            <rect x="134" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.62"/>
+            <rect x="124" y="38" width="94" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.5" opacity="0.7"/>
+            <text x="132" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Back</text>
+          </g>
+          
+          <g transform="translate(0 260)" opacity="0.75">
+            <rect x="8" y="8" width="244" height="180" rx="10" fill="var(--accent-dim)" stroke="var(--accent3)" stroke-width="1.8" stroke-dasharray="6 4"/>
+            <text x="18" y="27" font-family="var(--font-mono)" font-size="11" font-weight="600" fill="var(--accent3)">C1 - Autre système</text>
+
+            <rect x="22" y="38" width="104" height="130" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.5" opacity="0.7"/>
+            <text x="30" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Front</text>
+
+            <rect x="134" y="38" width="104" height="130" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.5" opacity="0.7"/>
             <text x="142" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Back</text>
           </g>
           
-          <g transform="translate(0 260)" opacity="0.44">
-            <rect x="8" y="8" width="244" height="244" rx="10" fill="var(--accent-dim)" stroke="var(--accent3)" stroke-width="2" stroke-dasharray="7 7" opacity="0.52"/>
-            <text x="18" y="27" font-family="var(--font-mono)" font-size="11" fill="var(--accent3)">C1 - Autre système</text>
-
-            <rect x="22" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.62"/>
-            <text x="30" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Front</text>
-
-            <rect x="134" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.62"/>
-            <text x="142" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Back</text>
-          </g>
-          
-          <g transform="translate(260 260)" opacity="0.44">
-            <rect x="8" y="8" width="244" height="244" rx="10" fill="var(--accent-dim)" stroke="var(--accent3)" stroke-width="2" stroke-dasharray="7 7" opacity="0.52"/>
-            <text x="18" y="27" font-family="var(--font-mono)" font-size="11" fill="var(--accent3)">C1 - Autre système</text>
-
-            <rect x="22" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.62"/>
-            <text x="30" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Front</text>
-
-            <rect x="134" y="38" width="104" height="196" rx="8" fill="var(--accent3-dim)" stroke="var(--accent3)" stroke-width="1.8" opacity="0.62"/>
-            <text x="142" y="54" font-family="var(--font-mono)" font-size="9" fill="var(--accent3)">C2 - Back</text>
+          <g transform="translate(260 260)" opacity="0.65">
+            <rect x="8" y="8" width="220" height="180" rx="10" fill="var(--accent-dim)" stroke="var(--accent3)" stroke-width="1.8" stroke-dasharray="6 4"/>
+            <text x="18" y="27" font-family="var(--font-mono)" font-size="11" font-weight="600" fill="var(--accent3)">C1 - Autre système</text>
           </g>
         </svg>
       </div>
@@ -3946,7 +4175,7 @@
   </section>
 
   <!-- Slide 11: ADR-001 -->
-<section class="slide slide--code slide--code-preview slide--adr-preview" data-nav="ADR-001">
+<section class="slide slide--code slide--code-preview slide--adr-preview" data-nav="ADR-001" data-split-mode="half" data-split="half">
     <h2 class="slide__heading reveal">ADR-001&nbsp;: digitaliser le stand caf&eacute;</h2>
     <div class="slide__inner">
       <div class="code-preview__pane code-preview__pane--code">
@@ -4009,7 +4238,7 @@ Créer un système de prise de commande numérique au comptoir avec :
   </section>
 
   <!-- Slide 12: C1 généré -->
-<section class="slide slide--content slide--c1-generated slide--code-preview" data-nav="C1 généré">
+<section class="slide slide--content slide--c1-generated slide--code-preview" data-nav="C1 généré" data-split-mode="half" data-split="half">
     <p class="slide__label reveal">V1 &middot; le diagramme</p>
     <h2 class="slide__heading reveal">La spec devient une vue navigable du système...</h2>
     <div class="slide__inner">
@@ -4056,11 +4285,11 @@ Créer un système de prise de commande numérique au comptoir avec :
 
   <!-- Slide 13: Briques C2 -->
 <section class="slide slide--content slide--concept-cards" data-nav="Briques C2">
-    <div class="slide__inner" style="grid-template-columns:1fr;">
+    <div class="slide__inner">
       <div>
         <p class="slide__label reveal">... qui pourrait être détaillée</p>
         <h2 class="slide__heading reveal">On zoome dans le syst&egrave;me<br>et on explicite les briques</h2>
-        <p class="slide__body reveal" style="margin-top:10px; margin-bottom:18px;">
+        <p class="slide__body reveal" style="margin-top:4px; margin-bottom:clamp(8px, 1.4vh, 14px);">
           Quels éléments permettent l'exp&eacute;rience Alefest Coffee&nbsp;?
         </p>
         <div class="concept-grid concept-grid--2">
@@ -4068,17 +4297,17 @@ Créer un système de prise de commande numérique au comptoir avec :
             <p class="concept-card__step">01 &middot; Frontends</p>
             <h3 class="concept-card__title">Applications &amp; Exp&eacute;rience</h3>
             <ul class="concept-card__list">
-              <li><strong>Counter App</strong> &middot; compatibilit&eacute; commande comptoir</li>
-              <li><strong>Barista Screen</strong> &middot; file de pr&eacute;paration temps r&eacute;el</li>
+              <li><strong>Counter App</strong> : compatibilit&eacute; commande comptoir</li>
+              <li><strong>Barista Screen</strong> : file de pr&eacute;paration temps r&eacute;el</li>
             </ul>
           </div>
           <div class="concept-card concept-card--orange reveal">
             <p class="concept-card__step">02 &middot; Services</p>
             <h3 class="concept-card__title">Traitements &amp; Asynchronisme</h3>
             <ul class="concept-card__list">
-              <li><strong>Order Service</strong> &middot; prise de commande et persistance</li>
-              <li><strong>Preparation Service</strong> &middot; orchestration baristas</li>
-              <li><strong>File RabbitMQ</strong> &middot; d&eacute;couplage &eacute;v&eacute;nementiel</li>
+              <li><strong>Order Service</strong> : prise de commande et persistance</li>
+              <li><strong>Preparation Service</strong> : orchestration baristas</li>
+              <li><strong>File RabbitMQ</strong> : d&eacute;couplage &eacute;v&eacute;nementiel</li>
             </ul>
           </div>
         </div>
@@ -4087,7 +4316,7 @@ Créer un système de prise de commande numérique au comptoir avec :
   </section>
 
   <!-- Slide 14: C1 généré -->
-<section class="slide slide--content slide--c1-generated slide--code-preview" data-nav="C1 généré">
+<section class="slide slide--content slide--c1-generated slide--code-preview" data-nav="C1 généré" data-split-mode="half" data-split="half">
     <p class="slide__label reveal">V1 &middot; le diagramme</p>
     <h2 class="slide__heading reveal"></h2>
     <div class="slide__inner">
@@ -4267,27 +4496,30 @@ Créer un système de prise de commande numérique au comptoir avec :
         <div class="code-preview__frame">
           <span class="slide__code-filename"> coffee-v2/system-views.c4  </span>
           <div class="slide__code-block reveal">
-            <pre><code><span class="kw">dynamic view</span> order_mobile_flow {
-  festivalier -&gt; festivalSystem.festivalApp <span class="str">'Commande un flat white'</span>
-  festivalSystem.festivalApp -&gt; festivalSystem.festivalService <span class="str">'POST /orders'</span>
-  festivalSystem.festivalService -&gt; alefestCoffee.orderService <span class="str">'POST /orders'</span>
-  alefestCoffee.orderService -&gt; alefestCoffee.database <span class="str">'INSERT order'</span>
-  alefestCoffee.orderService -&gt; alefestCoffee.eventBus <span class="str">'order.placed'</span>
-  festivalSystem.festivalService -&gt; festivalSystem.festivalApp <span class="str">'Confirme orderId'</span>
-  festivalSystem.festivalApp -&gt; festivalier <span class="str">'Commande confirm&eacute;e'</span>
+            <pre><code><span class="kw">dynamic view</span> <span class="hl">order_mobile_flow</span> {
+  <span class="cm">// 1. Commande mobile</span>
+  festivalier <span class="hl">-&gt;</span> festivalSystem.festivalApp <span class="str">'Commande un flat white'</span>
+  festivalSystem.festivalApp <span class="hl">-&gt;</span> festivalSystem.festivalService <span class="str">'POST /orders'</span>
+  festivalSystem.festivalService <span class="hl">-&gt;</span> alefestCoffee.orderService <span class="str">'POST /orders'</span>
+  alefestCoffee.orderService <span class="hl">-&gt;</span> alefestCoffee.database <span class="str">'INSERT order'</span>
+  alefestCoffee.orderService <span class="hl">-&gt;</span> alefestCoffee.eventBus <span class="str">'order.placed'</span>
+  festivalSystem.festivalService <span class="hl">-&gt;</span> festivalSystem.festivalApp <span class="str">'Confirme orderId'</span>
+  festivalSystem.festivalApp <span class="hl">-&gt;</span> festivalier <span class="str">'Commande confirm&eacute;e'</span>
 
-  alefestCoffee.eventBus -&gt; alefestCoffee.preparationService <span class="str">'order.placed'</span>
-  alefestCoffee.preparationService -&gt; alefestCoffee.baristaScreen <span class="str">'WebSocket push file'</span>
-  alefestCoffee.baristaScreen -&gt; barista <span class="str">'Affiche commande'</span>
-  barista -&gt; alefestCoffee.preparationService <span class="str">'PATCH preparing'</span>
-  alefestCoffee.preparationService -&gt; alefestCoffee.eventBus <span class="str">'order.preparing'</span>
+  <span class="cm">// 2. Pr&eacute;paration barista</span>
+  alefestCoffee.eventBus <span class="hl">-&gt;</span> alefestCoffee.preparationService <span class="str">'order.placed'</span>
+  alefestCoffee.preparationService <span class="hl">-&gt;</span> alefestCoffee.baristaScreen <span class="str">'WebSocket push file'</span>
+  alefestCoffee.baristaScreen <span class="hl">-&gt;</span> barista <span class="str">'Affiche commande'</span>
+  barista <span class="hl">-&gt;</span> alefestCoffee.preparationService <span class="str">'PATCH preparing'</span>
+  alefestCoffee.preparationService <span class="hl">-&gt;</span> alefestCoffee.eventBus <span class="str">'order.preparing'</span>
 
-  barista -&gt; alefestCoffee.preparationService <span class="str">'PATCH ready'</span>
-  alefestCoffee.preparationService -&gt; alefestCoffee.eventBus <span class="str">'order.ready'</span>
-  alefestCoffee.eventBus -&gt; alefestCoffee.notificationService <span class="str">'order.ready'</span>
-  alefestCoffee.notificationService -&gt; festivalSystem.festivalApp <span class="str">'Push : votre caf&eacute; est pr&ecirc;t'</span>
-  festivalSystem.festivalApp -&gt; festivalier <span class="str">'Notification re&ccedil;ue'</span>
-  festivalier -&gt; barista <span class="str">'R&eacute;cup&egrave;re sa boisson'</span>
+  <span class="cm">// 3. Notification &amp; retrait</span>
+  barista <span class="hl">-&gt;</span> alefestCoffee.preparationService <span class="str">'PATCH ready'</span>
+  alefestCoffee.preparationService <span class="hl">-&gt;</span> alefestCoffee.eventBus <span class="str">'order.ready'</span>
+  alefestCoffee.eventBus <span class="hl">-&gt;</span> alefestCoffee.notificationService <span class="str">'order.ready'</span>
+  alefestCoffee.notificationService <span class="hl">-&gt;</span> festivalSystem.festivalApp <span class="str">'Push : votre caf&eacute; est pr&ecirc;t'</span>
+  festivalSystem.festivalApp <span class="hl">-&gt;</span> festivalier <span class="str">'Notification re&ccedil;ue'</span>
+  festivalier <span class="hl">-&gt;</span> barista <span class="str">'R&eacute;cup&egrave;re sa boisson'</span>
 }</code></pre>
           </div>
         </div>
@@ -4426,11 +4658,11 @@ Créer un système de prise de commande numérique au comptoir avec :
 
   <!-- Slide 24: Questions de review -->
 <section class="slide slide--content slide--review-questions slide--concept-cards" data-nav="Questions de review">
-    <div class="slide__inner" style="grid-template-columns:1fr;">
+    <div class="slide__inner">
       <div>
         <p class="slide__label reveal">Ce qu'on veut voir en review</p>
         <h2 class="slide__heading reveal">En revue, la question devient simple&nbsp;:<br>qu'est-ce qui change dans l'architecture&nbsp;?</h2>
-        <div class="concept-grid concept-grid--3" style="margin-top:clamp(16px, 2.5vh, 28px);">
+        <div class="concept-grid concept-grid--3">
           <article class="concept-card concept-card--blue review-questions__card reveal">
             <p class="concept-card__step">01 &middot; Ce qui entre</p>
             <h3 class="concept-card__title">Quels nouveaux éléments apparaissent&nbsp;?</h3>
@@ -4701,7 +4933,7 @@ graph LR
   </section>
 
   <!-- Slide 32: Vue C2 + likeC4 -->
-<section class="slide slide--content slide--code-preview slide--diagram-flow slide--c2-unified" data-nav="Vue C2 + likeC4" data-view="mermaid">
+<section class="slide slide--content slide--code-preview slide--diagram-flow slide--c2-unified" data-nav="Vue C2 + likeC4" data-view="mermaid" data-split-mode="half" data-split="half">
     <h2 class="slide__heading reveal">Comparer l'outil LikeC4</h2>
     <div class="c2-unified__views">
       <div class="c2-unified__view c2-unified__view--mermaid">
@@ -4884,12 +5116,12 @@ flowchart TD
     </div>
   </section>
 
-  <!-- Slide 33: Ressources & QR -->
-<section class="slide slide--content" data-nav="Ressources & QR">
-    <div class="slide__inner">
+  <!-- Slide 33: Ressources -->
+<section class="slide slide--content" data-nav="Ressources">
+    <div class="slide__inner" style="gap:clamp(16px, 2.8vw, 40px); align-items:center;">
       <div>
         <p class="slide__label reveal" style="color:var(--accent4);">Ressources</p>
-        <h2 class="slide__heading reveal">Pour manipuler et approfondir</h2>
+        <h2 class="slide__heading reveal" style="white-space:nowrap; font-size:calc(clamp(18px, 2.3vw, 30px) + var(--font-bump)); margin-bottom:clamp(8px, 1.5vh, 16px);">Pour manipuler et approfondir</h2>
         <div class="resource-list">
           <div class="resource-item reveal">
             <div class="resource-item__tag">Docs</div>
@@ -4900,16 +5132,8 @@ flowchart TD
             <div class="resource-item__body"><a href="https://a-scolan.github.io/c4-hands-on-demo/" target="_blank" rel="noopener">a-scolan.github.io/c4-hands-on-demo</a><br>Repo d'exploration et de prise en main.</div>
           </div>
           <div class="resource-item reveal">
-            <div class="resource-item__tag">Template</div>
-            <div class="resource-item__body"><a href="https://github.com/a-scolan/c4-template" target="_blank" rel="noopener">github.com/a-scolan/c4-template</a><br>Base pr&ecirc;te &agrave; l'emploi pour d&eacute;marrer un projet C4, avec des skills (Like)C4 pour vos LLM.</div>
-          </div>
-          <div class="resource-item reveal">
             <div class="resource-item__tag">Article</div>
             <div class="resource-item__body"><a href="https://dev.to/onepoint/diagram-as-code-en-2025-le-repas-de-famille-des-outils-1gdp" target="_blank" rel="noopener">Diagram as Code en 2025 : Le repas de famille des outils</a><br>Article publi&eacute; sur dev.to (DEV Community).</div>
-          </div>
-          <div class="resource-item reveal">
-            <div class="resource-item__tag">Support</div>
-            <div class="resource-item__body"><a href="https://tinyurl.com/4r792z93" target="_blank" rel="noopener">Cette conf, en ligne ici : tinyurl.com/4r792z93</a></div>
           </div>
         </div>
       </div>
@@ -4928,23 +5152,34 @@ flowchart TD
 
   <!-- Slide 34: Merci -->
 <section class="slide slide--content slide--outro" data-nav="Merci">
-    <div class="slide__inner" style="grid-template-columns:1fr; justify-content:center; align-items:center;">
-      <div class="outro-card reveal">
-        <p class="slide__label" style="letter-spacing:2.5px; margin-bottom:8px;">Questions / Réponses</p>
-        <h2 class="slide__heading" style="font-weight:900; font-size:clamp(38px,6.5vw,72px); margin:0 0 12px; line-height:1.05;">Merci !</h2>
-        <p class="slide__subtitle" style="margin:0; font-size:clamp(16px,2vw,22px); text-transform:none; line-height:1.5; color:var(--text-subtitle);">
-          Ne dessinez plus vos architectures &mdash; codez-les, versionnez-les, publiez-les.
+    <div class="slide__inner">
+      <div class="outro-main">
+        <p class="slide__label reveal" style="letter-spacing:2.5px; margin-bottom:12px;">Questions / Réponses</p>
+        <h2 class="slide__heading reveal" style="font-weight:900; font-size:clamp(46px,7.5vw,86px); margin:0 0 16px; line-height:1.02;">Merci !</h2>
+        <p class="slide__subtitle reveal" style="margin:0 0 28px; font-size:clamp(18px,2.2vw,28px); font-weight:600; text-transform:none; line-height:1.35; color:var(--text);">
+          Ne dessinez plus vos architectures : codez-les
         </p>
-        <div style="margin-top:28px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+        <div class="reveal" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px;">
           <span class="badge badge--accent">Architecture</span>
           <span class="badge badge--blue">Diagram as code</span>
           <span class="badge badge--green">C4 Model</span>
           <span class="badge badge--orange">LikeC4</span>
         </div>
-        <div style="margin-top:28px;">
-          <p style="font-size:calc(clamp(15px, 1.8vw, 19px) + var(--font-bump)); color:var(--text-dim); margin:0;">
+        <div class="reveal">
+          <p style="font-size:calc(clamp(16px, 1.8vw, 21px) + var(--font-bump)); color:var(--text-dim); margin:0;">
             Alexis Scolan &mdash; <strong style="color:var(--accent);">Architecte technique</strong>
           </p>
+        </div>
+      </div>
+      <div class="outro-qr-pane reveal">
+        <div class="outro-qr-card">
+          <h3 class="outro-qr__title">Support de présentation</h3>
+          <div class="qr-spotlight">
+            <img src="assets/presentation-qr.png" alt="QR code vers le support de la présentation" loading="eager">
+          </div>
+          <a href="https://a-scolan.github.io/Conference-Diagram-as-Code/presentation-diagram-as-code.html" target="_blank" rel="noopener" class="outro-qr__url">
+            a-scolan.github.io/Conference-Diagram-as-Code
+          </a>
         </div>
       </div>
     </div>
@@ -5411,7 +5646,7 @@ flowchart TD
     var slide = btn.closest('.slide--code-preview');
     if (!slide) return;
     var mode = slide.getAttribute('data-split-mode') || 'half'; // 'half' ou 'two-thirds'
-    var current = slide.getAttribute('data-split') || 'third';
+    var current = slide.getAttribute('data-split') || (mode === 'two-thirds' ? 'two-thirds' : 'half');
     var next;
     if (mode === 'two-thirds') {
       next = current === 'two-thirds' ? 'third' : 'two-thirds';
@@ -5449,19 +5684,25 @@ flowchart TD
       slide.querySelectorAll('.slide__inner').forEach(function(inner) {
         if (inner.querySelector('.code-preview__split-toggle')) return;
         var mode = slide.getAttribute('data-split-mode') || 'half';
-        var current = slide.getAttribute('data-split') || (mode === 'two-thirds' ? 'two-thirds' : 'third');
+        var current = slide.getAttribute('data-split') || (mode === 'two-thirds' ? 'two-thirds' : 'half');
+        if (!slide.getAttribute('data-split')) {
+          slide.setAttribute('data-split', current);
+        }
         var initialTitle;
+        var initialAria;
         if (mode === 'two-thirds') {
           initialTitle = current === 'two-thirds' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 2/3 - 1/3';
+          initialAria = current === 'two-thirds' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 2/3 code, 1/3 schéma';
         } else {
           initialTitle = current === 'half' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 1/2 - 1/2';
+          initialAria = current === 'half' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 50/50';
         }
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'code-preview__split-toggle';
         btn.innerHTML = '&lt;&gt;';
         btn.setAttribute('title', initialTitle);
-        btn.setAttribute('aria-label', initialTitle);
+        btn.setAttribute('aria-label', initialAria);
         btn.addEventListener('click', function() {
           toggleCodePreviewSplit(btn);
         });
@@ -5613,12 +5854,54 @@ flowchart TD
     var sc=w.querySelector('.mermaid-scroll')||w;
     w.addEventListener('wheel',function(e){var freeWheel=String(w.dataset.wheelZoom||'').toLowerCase()==='true';if(!freeWheel&&!e.ctrlKey&&!e.metaKey)return;e.preventDefault();setDiagramZoom(w,getCurrentZoom(w)*(e.deltaY<0?1.1:0.9),true);},{passive:false});
     var activePointerId=null,sX,sY,sL,sT;
-    sc.addEventListener('pointerdown',function(e){if(e.pointerType==='touch'||e.button!==0||e.target.closest('.zoom-controls')||!w.classList.contains('can-pan'))return;e.preventDefault();activePointerId=e.pointerId;w.classList.add('is-panning');sX=e.clientX;sY=e.clientY;sL=sc.scrollLeft;sT=sc.scrollTop;if(sc.setPointerCapture)sc.setPointerCapture(e.pointerId);});
-    sc.addEventListener('pointermove',function(e){if(activePointerId!==e.pointerId||!w.classList.contains('is-panning'))return;sc.scrollLeft=sL-(e.clientX-sX);sc.scrollTop=sT-(e.clientY-sY);});
-    function stopPan(e){if(activePointerId===null)return;if(e&&typeof e.pointerId==='number'&&e.pointerId!==activePointerId)return;activePointerId=null;w.classList.remove('is-panning');}
+    sc.addEventListener('pointerdown',function(e){
+      if(e.target.closest('.zoom-controls')||!w.classList.contains('can-pan'))return;
+      if(e.pointerType==='mouse'&&e.button!==0)return;
+      activePointerId=e.pointerId;
+      w.classList.add('is-panning');
+      sX=e.clientX;sY=e.clientY;sL=sc.scrollLeft;sT=sc.scrollTop;
+      if(sc.setPointerCapture)try{sc.setPointerCapture(e.pointerId);}catch(err){}
+    });
+    sc.addEventListener('pointermove',function(e){
+      if(activePointerId!==e.pointerId||!w.classList.contains('is-panning'))return;
+      sc.scrollLeft=sL-(e.clientX-sX);
+      sc.scrollTop=sT-(e.clientY-sY);
+    });
+    function stopPan(e){
+      if(activePointerId===null)return;
+      if(e&&typeof e.pointerId==='number'&&e.pointerId!==activePointerId)return;
+      activePointerId=null;
+      w.classList.remove('is-panning');
+    }
     sc.addEventListener('pointerup',stopPan);
     sc.addEventListener('pointercancel',stopPan);
     sc.addEventListener('lostpointercapture',stopPan);
+
+    // Support tactile pinch-to-zoom sur les diagrammes Mermaid
+    var pinchDistStart = 0;
+    var pinchZoomStart = 1;
+    w.addEventListener('touchstart',function(e){
+      if(e.touches && e.touches.length === 2){
+        var dx = e.touches[0].clientX - e.touches[1].clientX;
+        var dy = e.touches[0].clientY - e.touches[1].clientY;
+        pinchDistStart = Math.hypot(dx, dy);
+        pinchZoomStart = getCurrentZoom(w);
+      }
+    },{passive:true});
+    w.addEventListener('touchmove',function(e){
+      if(e.touches && e.touches.length === 2 && pinchDistStart > 0){
+        var dx = e.touches[0].clientX - e.touches[1].clientX;
+        var dy = e.touches[0].clientY - e.touches[1].clientY;
+        var dist = Math.hypot(dx, dy);
+        var factor = dist / pinchDistStart;
+        setDiagramZoom(w, pinchZoomStart * factor, false);
+      }
+    },{passive:true});
+    w.addEventListener('touchend',function(e){
+      if(!e.touches || e.touches.length < 2){
+        pinchDistStart = 0;
+      }
+    },{passive:true});
   });
 
   // --- codespace-popup.js ---
@@ -5734,15 +6017,13 @@ flowchart TD
 
     var self = this;
     this.slides.forEach(function(slide, idx) {
-      // Décorations périphériques réparties uniquement sur couverture, intercalaires et fin
-      var isTarget = slide.classList.contains('slide--cover') ||
-                     slide.classList.contains('slide--title') ||
-                     slide.classList.contains('slide--divider') ||
-                     slide.classList.contains('slide--outro') ||
-                     slide.classList.contains('slide--bleed') ||
-                     idx === 0 ||
-                     idx === self.slides.length - 1;
-      if (!isTarget) return;
+      // Décorations périphériques réparties sur toutes les diapos où l'espace le permet (titres, dividers, citations, splits, concept-cards...)
+      // On exclut uniquement les diapos denses de code interactif et diagrammes pleine largeur pour éviter les collisions visuelles
+      var isDense = slide.classList.contains('slide--code-preview') ||
+                    slide.classList.contains('slide--diagram') ||
+                    slide.classList.contains('slide--c4-zoom') ||
+                    slide.getAttribute('data-nav') === 'Ressources & QR';
+      if (isDense) return;
       if (slide.querySelector('.blueprint-deco-frame')) return;
 
       var frame = document.createElement('div');
@@ -5843,9 +6124,41 @@ flowchart TD
       else if(e.key==='End'){e.preventDefault();self.goTo(self.total-1);}
       self.fadeHints();
     });
-    var tY;
-    this.deck.addEventListener('touchstart',function(e){tY=e.touches[0].clientY;},{passive:true});
-    this.deck.addEventListener('touchend',function(e){var dy=tY-e.changedTouches[0].clientY;if(Math.abs(dy)>50){dy>0?self.next():self.prev();}});
+    var tY, tX, isMultiTouch = false;
+    this.deck.addEventListener('touchstart',function(e){
+      if(e.touches && e.touches.length > 1){
+        isMultiTouch = true;
+        return;
+      }
+      isMultiTouch = false;
+      tY = e.touches[0].clientY;
+      tX = e.touches[0].clientX;
+    },{passive:true});
+    this.deck.addEventListener('touchend',function(e){
+      if(isMultiTouch){
+        isMultiTouch = false;
+        return;
+      }
+      // Si l'utilisateur est en train de zoomer dans la page (pinch-to-zoom), ne pas changer de diapositive
+      if(window.visualViewport && window.visualViewport.scale > 1.05){
+        return;
+      }
+      // Ne pas intercepter les swipes à l'intérieur des conteneurs interactifs, diagrammes, iframes ou contrôles
+      if(e.target && typeof e.target.closest === 'function'){
+        if(e.target.closest('.mermaid-wrap, .embed-wrap, iframe, .code-preview__pane, .zoom-controls, .embed-controls, button, a, select, input, textarea')){
+          return;
+        }
+      }
+      if(typeof tY !== 'number') return;
+      var dy = tY - e.changedTouches[0].clientY;
+      var dx = (typeof tX === 'number') ? Math.abs(tX - e.changedTouches[0].clientX) : 0;
+      // Valider un swipe résolument vertical
+      if(Math.abs(dy) > 50 && Math.abs(dy) > dx * 1.2){
+        dy > 0 ? self.next() : self.prev();
+      }
+      tY = null;
+      tX = null;
+    });
     this.deck.addEventListener('scroll',function(){
       clearTimeout(self.scrollTimer);
       self.scrollTimer=setTimeout(function(){self.snapToNearest();},140);

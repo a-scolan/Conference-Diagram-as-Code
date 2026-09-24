@@ -295,7 +295,7 @@
     var slide = btn.closest('.slide--code-preview');
     if (!slide) return;
     var mode = slide.getAttribute('data-split-mode') || 'half'; // 'half' ou 'two-thirds'
-    var current = slide.getAttribute('data-split') || 'third';
+    var current = slide.getAttribute('data-split') || (mode === 'two-thirds' ? 'two-thirds' : 'half');
     var next;
     if (mode === 'two-thirds') {
       next = current === 'two-thirds' ? 'third' : 'two-thirds';
@@ -333,19 +333,25 @@
       slide.querySelectorAll('.slide__inner').forEach(function(inner) {
         if (inner.querySelector('.code-preview__split-toggle')) return;
         var mode = slide.getAttribute('data-split-mode') || 'half';
-        var current = slide.getAttribute('data-split') || (mode === 'two-thirds' ? 'two-thirds' : 'third');
+        var current = slide.getAttribute('data-split') || (mode === 'two-thirds' ? 'two-thirds' : 'half');
+        if (!slide.getAttribute('data-split')) {
+          slide.setAttribute('data-split', current);
+        }
         var initialTitle;
+        var initialAria;
         if (mode === 'two-thirds') {
           initialTitle = current === 'two-thirds' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 2/3 - 1/3';
+          initialAria = current === 'two-thirds' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 2/3 code, 1/3 schéma';
         } else {
           initialTitle = current === 'half' ? 'Basculer vers 1/3 - 2/3' : 'Basculer vers 1/2 - 1/2';
+          initialAria = current === 'half' ? 'Basculer vers une vue 1/3 code, 2/3 schéma' : 'Basculer vers une vue 50/50';
         }
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'code-preview__split-toggle';
         btn.innerHTML = '&lt;&gt;';
         btn.setAttribute('title', initialTitle);
-        btn.setAttribute('aria-label', initialTitle);
+        btn.setAttribute('aria-label', initialAria);
         btn.addEventListener('click', function() {
           toggleCodePreviewSplit(btn);
         });

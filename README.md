@@ -13,11 +13,18 @@ Pour reconstruire les builds LikeC4 single-file utilisés par les iframes, puis 
 ```bash
 cd presentation
 npm install
-npm run build
-npm start
+npm run build        # Compile les bundles LikeC4 single-file
+npm run build:deck   # Assemble les slides modulaires HTML, scripts et styles
+npm start            # Démarre le serveur local Express
 ```
 
 Puis ouvrez `http://localhost:4000/presentation-diagram-as-code.html`.
+
+Pour développer et modifier les slides en direct avec rechargement automatique :
+
+```bash
+npm run dev:deck
+```
 
 Les vues **LikeC4** intégrées dans les slides se chargent désormais **à la demande** : le bouton *Rendu LikeC4* est visible avant chargement puis disparaît automatiquement une fois le schéma affiché, avec un délai de fallback plus tolérant pour éviter les faux échecs au démarrage.
 
@@ -93,17 +100,23 @@ ou avec `presentation/likec4/projects/coffee-adr001` pour explorer la modélisat
 ## Structure du projet
 
 ```text
-├── openspec/                          # Spécifications OpenSpec et propositions de refactoring
+├── openspec/                          # Spécifications OpenSpec et suivi des changements
 │   ├── specs/                         # Spécifications de référence (techniques & contenus)
-│   └── changes/                       # Changements de refactoring proposés
+│   └── changes/                       # Changements actifs et archives
 ├── presentation/                      # Application de présentation et modèles LikeC4
+│   ├── src/                           # Code source modulaire du diaporama
+│   │   ├── slides/                    # Templates unitaires HTML et slides.json
+│   │   ├── scripts/                   # Modules JS (engine, embeds, controls, runner)
+│   │   └── styles/                    # Styles CSS (tokens, deck, components, slides)
 │   ├── public/                        # Site web statique distribué
 │   │   ├── assets/                    # Bundles LikeC4 compilés (single-file) et médias
 │   │   └── presentation-diagram-as-code.html
 │   ├── likec4/
 │   │   └── projects/                  # Modèles LikeC4 sources (coffee-v1, coffee-v2, shared)
+│   ├── build-deck.js                  # Assemblage modulaire du deck HTML autonome
 │   ├── build-single-assets.js         # Compilation LikeC4 vers assets publics
-│   ├── package.json                   # Dépendances Node.js du serveur et build LikeC4
+│   ├── event.config.json              # Configuration centralisée de l'événement et du speaker
+│   ├── package.json                   # Dépendances Node.js et scripts de build/dev
 │   └── server.js                      # Serveur local Express anti-restrictions iframe
 ├── scripts/                           # Scripts d'exportation et publication minimale
 └── deroule-conference-slides.md       # Déroulé synchronisé avec les slides

@@ -13,30 +13,45 @@ async function generateQrCode() {
   }
 
   const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-  const feedbackUrl = config.feedback && config.feedback.url;
 
-  if (!feedbackUrl) {
-    console.log('Aucune URL de feedback spécifiée dans event.config.json.');
-    return;
+  // 1. QR Code du support de présentation
+  if (config.support && config.support.url) {
+    const supportQrRelPath = config.support.qrImage || './assets/presentation-qr.png';
+    const supportQrPath = path.resolve(presentationDir, 'public', supportQrRelPath.replace(/^\.\//, ''));
+    console.log(`\n▶ Génération du QR code support vers : ${supportQrPath}`);
+    console.log(`  URL cible : ${config.support.url}`);
+
+    fs.mkdirSync(path.dirname(supportQrPath), { recursive: true });
+    await QRCode.toFile(supportQrPath, config.support.url, {
+      color: {
+        dark: '#1a73e8', // Bleu d'ingénierie Google
+        light: '#ffffff'
+      },
+      width: 512,
+      margin: 2
+    });
+    console.log('  ✓ QR code support généré avec succès !');
   }
 
-  const targetPath = (config.feedback && config.feedback.qrImage)
-    ? path.resolve(presentationDir, config.feedback.qrImage)
-    : defaultQrPath;
+  // 2. QR Code de feedback (optionnel)
+  const feedbackUrl = config.feedback && config.feedback.url;
+  if (feedbackUrl) {
+    const feedbackQrRelPath = config.feedback.qrImage || './assets/feedback-qr.png';
+    const feedbackQrPath = path.resolve(presentationDir, 'public', feedbackQrRelPath.replace(/^\.\//, ''));
+    console.log(`\n▶ Génération du QR code feedback vers : ${feedbackQrPath}`);
+    console.log(`  URL cible : ${feedbackUrl}`);
 
-  console.log(`\n▶ Génération du QR code vers : ${targetPath}`);
-  console.log(`  URL cible : ${feedbackUrl}`);
-
-  await QRCode.toFile(targetPath, feedbackUrl, {
-    color: {
-      dark: '#1a73e8', // Bleu d'ingénierie Google
-      light: '#ffffff'
-    },
-    width: 512,
-    margin: 2
-  });
-
-  console.log('  ✓ QR code généré avec succès !');
+    fs.mkdirSync(path.dirname(feedbackQrPath), { recursive: true });
+    await QRCode.toFile(feedbackQrPath, feedbackUrl, {
+      color: {
+        dark: '#1a73e8',
+        light: '#ffffff'
+      },
+      width: 512,
+      margin: 2
+    });
+    console.log('  ✓ QR code feedback généré avec succès !');
+  }
 }
 
 if (require.main === module) {
