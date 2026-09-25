@@ -1,9 +1,4 @@
-# Spécification : Trame Narrative et Déroulé de Conférence (Conference Narrative)
-
-## Purpose
-Cette spécification définit l'architecture narrative, l'argumentaire technique, la progression pédagogique et les grandes étapes du discours pour la conférence « Ne dessinez plus vos architectures : codez-les ! », afin de permettre l'étude, la transmission ou l'évolution du contenu de la session.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Acte 0 — L'Accroche et le Constat de Faillite du Schéma Statique
 La conférence MUST débuter par une interpellation directe de l'auditoire exposant le coût caché de la dette documentaire des architectures logicielles, en posant immédiatement la distinction fondatrice entre la modélisation et la conception de système.
@@ -80,5 +75,7 @@ La clôture de la session MUST démontrer que le modèle as-code s'exporte en po
 - **THEN** Il illustre la navigation interactive par clic, les liens directs vers les fichiers de code et la capacité pour différents publics (développeurs, architectes, PO) d'explorer le même système à leur niveau d'intérêt.
 
 #### Scenario: Matrice de synthèse Avant / Après
+- **WHEN** La slide de synthèse finale est présentée
+- **THEN** Le discours structure la victoire en 3 piliers à fort contraste : source de vérité unique dans Git (vs wiki dispersé), revue collective en PR (vs réunions tardives subjectives), et portail compilé en continu par CI/CD (vs PNG figé obsolète).
 - **WHEN** La slide de synthèse finale est présentée
 - **THEN** Le discours structure la victoire en 3 piliers à fort contraste : source de vérité unique dans Git (vs wiki dispersé), revue collective en PR (vs réunions tardives subjectives), et portail compilé en continu par CI/CD (vs PNG figé obsolète).

@@ -5099,7 +5099,7 @@ Créer un système de prise de commande numérique au comptoir avec :
         <div class="code-preview__frame">
           <span class="slide__code-filename"> coffee-v1/system-model.c4</span>
           <div class="slide__code-block reveal">
-            <pre><code style="font-size:clamp(10.5px,1.05vw,13px); line-height:1.4;"><span class="kw">model</span> {
+            <pre><code><span class="kw">model</span> {
   festivalier = <span class="hl">Actor_Person</span> <span class="str">'Festivalier'</span> { <span class="cm">...</span> }
   barista = <span class="hl">Actor_Staff</span> <span class="str">'Barista'</span> { <span class="cm">...</span> }
 
@@ -5168,16 +5168,16 @@ Créer un système de prise de commande numérique au comptoir avec :
     </div>
   </section>
 
-  <!-- Slide 14: C1 généré -->
-<section class="slide slide--content slide--c1-generated slide--code-preview" data-nav="C1 généré" data-split-mode="half" data-split="half">
+  <!-- Slide 14: C2 généré -->
+<section class="slide slide--content slide--c1-generated slide--code-preview" data-nav="C2 généré" data-split-mode="half" data-split="half">
     <p class="slide__label reveal">V1 &middot; le diagramme</p>
-    <h2 class="slide__heading reveal"></h2>
+    <h2 class="slide__heading reveal">Le modèle s'enrichit par extension (C2)</h2>
     <div class="slide__inner">
       <div class="c1-generated__pane c1-generated__pane--code code-preview__pane code-preview__pane--code">
         <div class="code-preview__frame">
           <span class="slide__code-filename"> coffee-v1/system-model.c4</span>
           <div class="slide__code-block reveal">
-            <pre><code style="font-size:clamp(10.5px,1.05vw,13px); line-height:1.4;"><span class="kw">model</span> {
+            <pre><code><span class="kw">model</span> {
   <span class="hl">extend</span> alefestCoffee {
       counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span> { <span class="cm">...</span> }
       baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span> { <span class="cm">...</span> }
@@ -5599,10 +5599,10 @@ gitGraph
 <section class="slide slide--diagram slide--diagram-flow" data-nav="Pipeline CI/CD">
     <h2 class="slide__heading reveal">Pipeline&nbsp;: du texte brut au portail d'architecture</h2>
     <div class="mermaid-wrap reveal">
-      <div class="zoom-controls">
-        <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom in">+</button>
-        <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom out">&minus;</button>
-        <button type="button" data-zoom-action="reset" title="Reset">&#8634;</button>
+      <div class="zoom-controls" role="toolbar" aria-label="Commandes de zoom du pipeline CI/CD">
+        <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom avant" aria-label="Zoom avant">+</button>
+        <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom arrière" aria-label="Zoom arrière">&minus;</button>
+        <button type="button" data-zoom-action="reset" title="Réinitialiser le zoom" aria-label="Réinitialiser le zoom">&#8634;</button>
       </div>
       <div class="mermaid-scroll">
       <pre class="mermaid">
@@ -5869,7 +5869,7 @@ flowchart TD
             <div class="code-preview__frame">
               <span class="slide__code-filename">coffee-v2/system-model.c4</span>
               <div class="slide__code-block reveal">
-                  <pre><code style="font-size:clamp(10.5px,1.05vw,13px); line-height:1.4;"><span class="kw">model</span> {
+                  <pre><code><span class="kw">model</span> {
   festivalier = <span class="hl">Actor_Person</span> <span class="str">'Festivalier'</span> { <span class="cm">...</span> }
   barista = <span class="hl">Actor_Staff</span> <span class="str">'Barista'</span> { <span class="cm">...</span> }
 
