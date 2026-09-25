@@ -82,3 +82,5 @@ La clôture de la session MUST démontrer que le modèle as-code s'exporte en po
 #### Scenario: Matrice de synthèse Avant / Après
 - **WHEN** La slide de synthèse finale est présentée
 - **THEN** Le discours structure la victoire en 3 piliers à fort contraste : source de vérité unique dans Git (vs wiki dispersé), revue collective en PR (vs réunions tardives subjectives), et portail compilé en continu par CI/CD (vs PNG figé obsolète).
+- **WHEN** La slide de synthèse finale est présentée
+- **THEN** Le discours structure la victoire en 3 piliers à fort contraste : source de vérité unique dans Git (vs wiki dispersé), revue collective en PR (vs réunions tardives subjectives), et portail compilé en continu par CI/CD (vs PNG figé obsolète).

@@ -4791,7 +4791,7 @@
         <h2 class="slide__heading reveal" style="font-size:clamp(40px,6vw,72px); line-height:0.95; margin:0;">Alexis Scolan</h2>
         <p class="speaker-intro__role reveal">Architecte technique chez <strong style="color:var(--accent);">onepoint</strong></p>
 		<br>
-        <p class="speaker-intro__lead reveal">J'aide les &eacute;quipes &agrave; garder une <strong>architecture lisible et vivante</strong>, avec une <strong>approche concr&egrave;te et pragmatique</strong>, compr&eacute;hensible par tous les acteurs.</p>
+        <p class="speaker-intro__lead reveal">Aligner l'architecture et le d&eacute;veloppement sur le terrain&nbsp;: des mod&egrave;les versionn&eacute;s, relus en Pull Request et maintenus sans redessiner.</p>
         <br>
 		<div class="speaker-pill-list reveal">
 			<span class="speaker-pill">Diagram as Code</span>
@@ -4811,12 +4811,12 @@
         <ul class="slide__bullets" style="margin-top:16px;">
           <li class="reveal">Qui l'a vu devenir <strong>obsol&egrave;te six mois plus tard</strong>&nbsp;?</li>
           <li class="reveal">Qui sait encore <strong>o&ugrave; est la bonne version</strong>&nbsp;?</li>
-          <li class="reveal">Qui ose encore dire &laquo;&nbsp;ce PNG refl&egrave;te l'&eacute;tat de notre syst&egrave;me&nbsp;&raquo;&nbsp;?</li>
+          <li class="reveal">Qui ose encore dire &laquo;&nbsp;cette image refl&egrave;te l'&eacute;tat de notre syst&egrave;me&nbsp;&raquo;&nbsp;?</li>
         </ul>
       </div>
       <div class="slide__panel slide__panel--secondary">
         <p class="slide__label reveal">Le vrai co&ucirc;t cach&eacute;</p>
-        <h2 class="slide__heading reveal">Le PNG meurt en silence</h2>
+        <h2 class="slide__heading reveal">L'image export&eacute;e meurt en silence</h2>
         <ul class="slide__bullets" style="margin-top:16px;">
           <li class="reveal">Le code &eacute;volue, la carte reste <strong>fig&eacute;e</strong></li>
           <li class="reveal">La mise &agrave; jour devient un <strong>co&ucirc;t cach&eacute;</strong>, donc elle est abandonn&eacute;e</li>
@@ -5254,7 +5254,7 @@ Créer un système de prise de commande numérique au comptoir avec :
         <ul class="slide__bullets" style="margin-top:16px;">
           <li class="reveal">S'intégrer à <strong>l'app du festival</strong> + <strong>Service Festival</strong> pour commander &agrave; distance</li>
           <li class="reveal"><strong>Notification Service</strong> pour se libérer de l'attente au comptoir</li>
-          <li class="reveal"><strong>Profiter de la qualité de l'architecture v1</strong>, le socle &eacute;v&eacute;nementiel est enrichi</li>
+          <li class="reveal"><strong>Capitaliser sur la V1 :</strong> le socle &eacute;v&eacute;nementiel s'&eacute;tend aux notifications</li>
           <li class="reveal">Le caf&eacute; devient une exp&eacute;rience fluide, sans immobiliser le festivalier</li>
         </ul>
       </div>
@@ -5425,7 +5425,7 @@ Créer un système de prise de commande numérique au comptoir avec :
 
   <!-- Slide 21: Portail vivant — bénéfice -->
 <section class="slide slide--quote" data-nav="Portail vivant — bénéfice">
-    <div class="callout callout--green reveal">Le m&ecirc;me mod&egrave;le sert<br>&agrave; discuter avec le m&eacute;tier,<br>la maitrise d'oeuvre,<br>et les d&eacute;veloppeurs.</div>
+    <div class="callout callout--green reveal">Une seule source de v&eacute;rit&eacute;&nbsp;:<br>compr&eacute;hensible par le m&eacute;tier,<br>v&eacute;rifiable par les d&eacute;veloppeurs.</div>
   </section>
 
   <!-- Slide 22: Partie 3 -->
@@ -5581,7 +5581,7 @@ gitGraph
 
   <!-- Slide 26: Review — bénéfice -->
 <section class="slide slide--quote" data-nav="Review — bénéfice">
-    <div class="callout callout--blue reveal">Outiller la revue, c'est permettre d'aller droit au but.</div>
+    <div class="callout callout--blue reveal">En Pull Request, le diff visuel<br>montre l'impact architectural<br>avant la mise en production.</div>
   </section>
 
   <!-- Slide 27: Partie 4 -->
@@ -5638,78 +5638,9 @@ graph LR
     </div>
   </section>
 
-  <!-- Slide 30: Avant / Après -->
-<section class="slide slide--content slide--avant-apres" data-nav="Avant / Après">
-    <p class="slide__label reveal">Synthèse</p>
-    <h2 class="slide__heading reveal">Le paradoxe r&eacute;concili&eacute;&nbsp;: avant / apr&egrave;s</h2>
-    <div class="synthesis-comparison reveal">
-      <!-- Panneau Avant -->
-      <div class="synthesis-panel synthesis-panel--before">
-        <div class="synthesis-panel__header">
-          <span class="synthesis-badge synthesis-badge--before">Avant</span>
-          <h3 class="synthesis-panel__title">Le dessin artisanal</h3>
-        </div>
-        <ul class="synthesis-list">
-          <li class="synthesis-row">
-            <span class="synthesis-row__icon" aria-hidden="true">&times;</span>
-            <div class="synthesis-row__content">
-              <strong class="synthesis-row__lead">Source &eacute;parpill&eacute;e</strong>
-              <p class="synthesis-row__text">Visio, Confluence &middot; redessin manuel &agrave; chaque &eacute;volution</p>
-            </div>
-          </li>
-          <li class="synthesis-row">
-            <span class="synthesis-row__icon" aria-hidden="true">&times;</span>
-            <div class="synthesis-row__content">
-              <strong class="synthesis-row__lead">Validation tardive</strong>
-              <p class="synthesis-row__text">Sch&eacute;mas hors des PR &middot; dette documentaire subie</p>
-            </div>
-          </li>
-          <li class="synthesis-row">
-            <span class="synthesis-row__icon" aria-hidden="true">&times;</span>
-            <div class="synthesis-row__content">
-              <strong class="synthesis-row__lead">Livrables fig&eacute;s</strong>
-              <p class="synthesis-row__text">PNG morts &agrave; 6 mois &middot; imperm&eacute;ables &agrave; la CI/CD et &agrave; l'IA</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Panneau Après -->
-      <div class="synthesis-panel synthesis-panel--after">
-        <div class="synthesis-panel__header">
-          <span class="synthesis-badge synthesis-badge--after">Apr&egrave;s</span>
-          <h3 class="synthesis-panel__title">L'architecture As-Code</h3>
-        </div>
-        <ul class="synthesis-list">
-          <li class="synthesis-row">
-            <span class="synthesis-row__icon" aria-hidden="true">&#x2713;</span>
-            <div class="synthesis-row__content">
-              <strong class="synthesis-row__lead">Mod&egrave;le unique dans Git</strong>
-              <p class="synthesis-row__text">Code source <code>.c4</code> refactorable avec le code applicatif</p>
-            </div>
-          </li>
-          <li class="synthesis-row">
-            <span class="synthesis-row__icon" aria-hidden="true">&#x2713;</span>
-            <div class="synthesis-row__content">
-              <strong class="synthesis-row__lead">Review en Pull Request</strong>
-              <p class="synthesis-row__text">Diff visuel partag&eacute; &middot; relecture collective s&eacute;curis&eacute;e</p>
-            </div>
-          </li>
-          <li class="synthesis-row">
-            <span class="synthesis-row__icon" aria-hidden="true">&#x2713;</span>
-            <div class="synthesis-row__content">
-              <strong class="synthesis-row__lead">Portail vivant &amp; CI/CD</strong>
-              <p class="synthesis-row__text">Build automatique &middot; app web navigable et copilote IA</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Slide 31: Portail vivant -->
+  <!-- Slide 30: Portail vivant -->
 <section class="slide slide--content slide--portal-vivant" data-nav="Portail vivant">
-    <p class="slide__label reveal">Une architecture vivante et palpitante</p>
+    <p class="slide__label reveal">Documentation vivante &amp; navigable</p>
     <h2 class="slide__heading reveal">LikeC4 ne produit pas que des images, mais une app React intégrable</h2>
     <div class="slide__inner">
       <div>
@@ -5746,7 +5677,7 @@ graph LR
     </div>
   </section>
 
-  <!-- Slide 32: Vue C2 + likeC4 -->
+  <!-- Slide 31: Vue C2 + likeC4 -->
 <section class="slide slide--diagram slide--content slide--code-preview slide--diagram-flow slide--c2-unified" data-nav="Vue C2 + likeC4" data-view="mermaid" data-split-mode="half" data-split="half">
     <div class="c2-unified__header">
       <h2 class="slide__heading reveal">Comparer l'outil LikeC4</h2>
@@ -5927,6 +5858,75 @@ flowchart TD
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 32: Avant / Après -->
+<section class="slide slide--content slide--avant-apres" data-nav="Avant / Après">
+    <p class="slide__label reveal">Synthèse</p>
+    <h2 class="slide__heading reveal">Le paradoxe r&eacute;concili&eacute;&nbsp;: avant / apr&egrave;s</h2>
+    <div class="synthesis-comparison reveal">
+      <!-- Panneau Avant -->
+      <div class="synthesis-panel synthesis-panel--before">
+        <div class="synthesis-panel__header">
+          <span class="synthesis-badge synthesis-badge--before">Avant</span>
+          <h3 class="synthesis-panel__title">Le dessin artisanal</h3>
+        </div>
+        <ul class="synthesis-list">
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&times;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Source &eacute;parpill&eacute;e</strong>
+              <p class="synthesis-row__text">Visio, Confluence &middot; redessin manuel &agrave; chaque &eacute;volution</p>
+            </div>
+          </li>
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&times;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Validation tardive</strong>
+              <p class="synthesis-row__text">Sch&eacute;mas hors des PR &middot; dette documentaire subie</p>
+            </div>
+          </li>
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&times;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Livrables fig&eacute;s</strong>
+              <p class="synthesis-row__text">Images mortes &agrave; 6 mois &middot; imperm&eacute;ables &agrave; la CI/CD et &agrave; l'IA</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Panneau Après -->
+      <div class="synthesis-panel synthesis-panel--after">
+        <div class="synthesis-panel__header">
+          <span class="synthesis-badge synthesis-badge--after">Apr&egrave;s</span>
+          <h3 class="synthesis-panel__title">L'architecture As-Code</h3>
+        </div>
+        <ul class="synthesis-list">
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&#x2713;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Mod&egrave;le unique dans Git</strong>
+              <p class="synthesis-row__text">Code source <code>.c4</code> refactorable avec le code applicatif</p>
+            </div>
+          </li>
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&#x2713;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Review en Pull Request</strong>
+              <p class="synthesis-row__text">Diff visuel partag&eacute; &middot; relecture collective s&eacute;curis&eacute;e</p>
+            </div>
+          </li>
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&#x2713;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Portail vivant &amp; CI/CD</strong>
+              <p class="synthesis-row__text">Build automatique &middot; app web navigable et copilote IA</p>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </section>

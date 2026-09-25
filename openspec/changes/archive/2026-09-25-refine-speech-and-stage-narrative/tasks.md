@@ -17,4 +17,4 @@
 ## 4. Vérification & Validation OpenSpec
 
 - [x] 4.1 Exécuter la validation formelle OpenSpec sur le change (`openspec validate refine-speech-and-stage-narrative`).
-- [ ] 4.2 Effectuer une relecture à voix haute chronométrée du déroulé complet pour s'assurer du respect du timing de 45 minutes.
+- [x] 4.2 Effectuer une relecture à voix haute chronométrée du déroulé complet pour s'assurer du respect du timing de 45 minutes.

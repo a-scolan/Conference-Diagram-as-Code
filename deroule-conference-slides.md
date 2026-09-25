@@ -8,6 +8,22 @@ Ce document reflète la réalité exacte du deck HTML projeté lors de la sessio
 
 ## Acte 0 : L'Accroche et le Changement de Paradigme (Slides 00 à 07)
 
+### 0. Texte d'ouverture à lire (Verbatim d'entrée sur scène — 60 secondes)
+
+> « Bonjour à toutes et à tous.
+>
+> Regardez l'état de la documentation technique dans la plupart de nos organisations : le code progresse à chaque commit, les fonctionnalités sont livrées en continu, mais la cartographie de nos systèmes meurt en silence dans un wiki ou un dossier partagé.
+>
+> On a résolu la gestion du code avec Git, les revues d'équipe en Pull Request et l'automatisation en CI/CD. Mais dès qu'il s'agit d'architecture, on retombe dans le dessin artisanal : des boîtes et des flèches tracées à la main, déconnectées de la réalité du terrain et impossibles à maintenir dans le temps.
+>
+> L'objectif de ces 45 minutes : réconcilier l'architecture avec les pratiques modernes du génie logiciel. 
+> 
+> Un avertissement préalable : nous ne sommes pas ici pour débattre de la conception du système que vous allez voir. Nous sommes ici pour observer comment des choix d'architecture actés s'écrivent en code, se relisent visuellement en Pull Request et se compilent en documentation vivante.
+>
+> Ne dessinez plus vos architectures : codez-les ! »
+
+---
+
 > **Consignes orateur (Retours d'expérience) :**
 > - **Posture :** Pas de « je » complaisant. Poser la voix, regarder la salle, sourire.
 > - **Cadrage impératif (Règle d'or Nicolas) :** Préciser immédiatement qu'on ne vient pas débattre de *conception logicielle* (pourquoi tel microservice ou telle queue), mais de *modélisation* (comment faire vivre et partager des décisions déjà prises).
@@ -27,20 +43,20 @@ Ce document reflète la réalité exacte du deck HTML projeté lors de la sessio
 - **Fichier :** [presentation/src/slides/01-speaker.html](presentation/src/slides/01-speaker.html)
 - **Contenu projeté :**
   - Alexis Scolan — Architecte technique onepoint
-  - Parcours : intégration, SI complexes, alignement équipes tech & produit
-  - Règle du jeu : démo réelle, code versionné, pas de théorie creuse
+  - Message : *Aligner l'architecture et le développement sur le terrain : des modèles versionnés, relus en Pull Request et maintenus sans redessiner.*
+  - Badges : Diagram as Code, C4 model, Architecture agile
 - **Substance & Preuve :** Légitimité de terrain sans étalage personnel.
-- **Intention orale :** Moins de 30 secondes. Se positionner comme praticien : le sujet est né des frustrations rencontrées sur le terrain avec les équipes.
+- **Intention orale :** Moins de 20 secondes. Se positionner comme praticien : le sujet est né des frustrations vécues sur le terrain avec les équipes.
 - **Beat narratif :** Ancrage de posture : praticien parlant à des praticiens.
 
 ### Slide 02 — Le problème réel
 - **Fichier :** [presentation/src/slides/02-le-probleme-reel.html](presentation/src/slides/02-le-probleme-reel.html)
 - **Contenu projeté :**
   - Deux colonnes en contraste :
-    - *Point de situation :* « Qui a déjà fait un dessin pour expliquer un système ? », « Qui l'a vu devenir obsolète six mois plus tard ? », « Qui ose encore dire "ce PNG reflète l'état de notre système" ? »
-    - *Le vrai coût caché :* Le PNG meurt en silence, le code évolue, la dette documentaire s'installe.
+    - *Point de situation :* « Qui a déjà fait un dessin pour expliquer un système ? », « Qui l'a vu devenir obsolète six mois plus tard ? », « Qui ose encore dire "cette image reflète l'état de notre système" ? »
+    - *Le vrai coût caché :* L'image exportée meurt en silence, le code évolue, la dette documentaire s'installe.
 - **Substance & Preuve :** Diagnostic partagé du cycle d'abandon documentaire dans toutes les organisations.
-- **Intention orale :** Interpeller sur l'impact réel. Lever de main dans la salle. Remplacer le terme technique « PNG » par « l'image exportée » si l'audience est mixte. Clarifier : *« Attention : on ne critique pas la façon dont le système est conçu, mais la manière dont sa trace documentaire s'évapore. »*
+- **Intention orale :** Interpeller sur l'impact réel. Lever de main dans la salle. Remplacer le terme technique « PNG » par « l'image exportée » pour inclure l'ensemble des profils. Clarifier : *« Attention : on ne critique pas la façon dont le système est conçu, mais la manière dont sa trace documentaire s'évapore. »*
 - **Beat narratif :** Tension. L'auditoire admet l'échec universel du schéma statique.
 
 ### Slide 03 — Le problème réel — message
@@ -236,7 +252,7 @@ Ce document reflète la réalité exacte du deck HTML projeté lors de la sessio
 ### Slide 21 — Portail vivant — bénéfice
 - **Fichier :** [presentation/src/slides/21-portail-vivant-benefice.html](presentation/src/slides/21-portail-vivant-benefice.html)
 - **Contenu projeté :**
-  - Callout vert : *« Le même modèle sert à discuter avec le métier, la maîtrise d'œuvre, et les développeurs. »*
+  - Callout vert : *« Une seule source de vérité : compréhensible par le métier, vérifiable par les développeurs. »*
 - **Substance & Preuve :** Fin du cloisonnement documentaire : une seule source pour tous les niveaux d'abstraction.
 - **Intention orale :** Souligner le dialogue retrouvé entre PO, devs et architectes autour du même artefact.
 - **Beat narratif :** Conclusion de l'Acte 2.
@@ -288,9 +304,9 @@ Ce document reflète la réalité exacte du deck HTML projeté lors de la sessio
 ### Slide 26 — Review — bénéfice
 - **Fichier :** [presentation/src/slides/26-review-benefice.html](presentation/src/slides/26-review-benefice.html)
 - **Contenu projeté :**
-  - Callout bleu : *« Outiller la revue, c'est permettre d'aller droit au but. »*
+  - Callout bleu : *« En Pull Request, le diff visuel montre l'impact architectural avant la mise en production. »*
 - **Substance & Preuve :** Fin des réunions interminables de débat sur les couleurs de boîtes : la discussion porte sur les dépendances réelles.
-- **Intention orale :** Souligner le gain d'efficacité collective.
+- **Intention orale :** Souligner le gain d'efficacité collective : le diff en PR prévient les erreurs de dépendance avant le déploiement.
 - **Beat narratif :** Ancrage du bénéfice collaboratif.
 
 ---
@@ -330,18 +346,7 @@ Ce document reflète la réalité exacte du deck HTML projeté lors de la sessio
 - **Intention orale :** Engager l'atterrissage : qu'est-ce que vous pouvez faire dès lundi matin dans vos équipes ?
 - **Beat narratif :** Début de l'épilogue actif.
 
-### Slide 30 — Avant / Après
-- **Fichier :** [presentation/src/slides/30-avant-apres.html](presentation/src/slides/30-avant-apres.html)
-- **Contenu projeté :**
-  - Grille comparative en 3 piliers :
-    1. *Source de vérité & évolution :* Visio/Confluence redessinée à la main vs Modèle unique `.c4` dans Git refactorable.
-    2. *Revue & collaboration :* Validation tardive/informelle vs Diff visuel en PR et revue collective.
-    3. *Cycle de vie & industrialisation :* PNG figés morts à 6 mois vs Pipeline CI/CD, portail vivant et copilote IA.
-- **Substance & Preuve :** Récapitulatif à fort contraste des gains organisationnels.
-- **Intention orale :** Parcourir les trois lignes. Faire résonner le contraste avec le constat de la slide 02.
-- **Beat narratif :** Résolution complète du problème initial.
-
-### Slide 31 — Portail vivant
+### Slide 30 — Portail vivant
 - **Fichier :** [presentation/src/slides/31-portail-vivant.html](presentation/src/slides/31-portail-vivant.html)
 - **Contenu projeté :**
   - Arguments clés : application React intégrable, navigation au clic, liens bidirectionnels vers le code, intégration multi-modèles, multi-exports (D2, PlantUML, Mermaid, PNG).
@@ -350,7 +355,7 @@ Ce document reflète la réalité exacte du deck HTML projeté lors de la sessio
 - **Intention orale :** Insister sur l'indépendance d'export : vous n'êtes enfermés dans aucun outil propriétaire.
 - **Beat narratif :** Élargissement des perspectives outillage.
 
-### Slide 32 — Vue C2 + likeC4
+### Slide 31 — Vue C2 + likeC4
 - **Fichier :** [presentation/src/slides/32-vue-c2-likec4.html](presentation/src/slides/32-vue-c2-likec4.html)
 - **Contenu projeté :**
   - Header avec toggle : bouton `Vue LikeC4 ↗`.
@@ -358,6 +363,40 @@ Ce document reflète la réalité exacte du deck HTML projeté lors de la sessio
     - Vue Mermaid : code `coffee-v1/c2-containers.mmd` + diagramme Mermaid zoomable.
     - Vue LikeC4 : iframe interactive du modèle compilé permettant la manipulation en direct.
 - **Substance & Preuve :** Comparaison objective de syntaxe et de rendu : Mermaid pour les diagrammes express, LikeC4 pour l'architecture système globale.
+- **Intention orale :** Démontrer l'interaction en direct. Cliquer sur les éléments pour montrer la fluidité et les niveaux de zoom du modèle.
+- **Beat narratif :** Preuve finale par la manipulation interactive du cockpit vivant.
+
+### Slide 32 — Avant / Après
+- **Fichier :** [presentation/src/slides/30-avant-apres.html](presentation/src/slides/30-avant-apres.html)
+- **Contenu projeté :**
+  - Grille comparative en 3 piliers :
+    1. *Source de vérité & évolution :* Visio/Confluence redessinée à la main vs Modèle unique `.c4` dans Git refactorable.
+    2. *Revue & collaboration :* Validation tardive/informelle vs Diff visuel en PR et revue collective.
+    3. *Cycle de vie & industrialisation :* Schémas exportés morts à 6 mois vs Pipeline CI/CD, portail vivant et copilote IA.
+- **Substance & Preuve :** Récapitulatif à fort contraste des gains organisationnels.
+- **Intention orale :** Scander les trois victoires : *« Nous avons troqué un dessin mort contre un fichier Git. Nous avons remplacé une réunion de débat subjectif par un diff de Pull Request. Nous avons transformé un wiki abandonné en un portail compilé à chaque push. »*
+- **Beat narratif :** Résolution complète du problème initial et cristallisation de la conviction.
+
+### Slide 33 — Ressources
+- **Fichier :** [presentation/src/slides/33-ressources-qr.html](presentation/src/slides/33-ressources-qr.html)
+- **Contenu projeté :**
+  - Liens : documentation LikeC4 (`likec4.dev`), dépôt de démo interactive (`a-scolan.github.io/c4-hands-on-demo/`), article dev.to Onepoint.
+  - Perspectives futures : reprise d'infrastructures existantes, déduction de règles pare-feu, référentiels d'architecture d'entreprise.
+- **Substance & Preuve :** Boîte à outils immédiatement exploitable dès la sortie de la salle.
+- **Intention orale :** Donner des clés concrètes pour démarrer sans friction.
+- **Beat narratif :** Transmission et passage de relais à l'auditoire.
+
+### Slide 34 — Merci
+- **Fichier :** [presentation/src/slides/34-merci.html](presentation/src/slides/34-merci.html)
+- **Contenu projeté :**
+  - Titre : *Merci !*
+  - Message de conclusion : *Ne dessinez plus vos architectures : codez-les*
+  - Badges : Architecture, Diagram as code, C4 Model, LikeC4
+  - Signature : Alexis Scolan — Architecte technique
+  - QR Code menant directement à la présentation publique en ligne.
+- **Substance & Preuve :** Appel final aux questions / réponses et mise à disposition immédiate du support complet.
+- **Intention orale :** Remercier chaleureusement la salle et ouvrir la session d'échange.
+- **Beat narratif :** Fermeture de la conférence sur la punchline initiale.
 - **Intention orale :** Démontrer l'interaction en direct. Cliquer sur les éléments pour montrer la fluidité du modèle.
 - **Beat narratif :** Preuve finale par la manipulation interactive.
 

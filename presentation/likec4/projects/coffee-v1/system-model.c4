@@ -10,7 +10,7 @@ model {
     }
 
     description '''
-      Client du stand café.
+	Client du stand café.
       Passe commande au comptoir et attend sur place.
     '''
   }

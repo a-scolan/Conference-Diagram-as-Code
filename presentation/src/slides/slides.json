@@ -151,18 +151,18 @@
   },
   {
     "index": 30,
-    "filename": "30-avant-apres.html",
-    "title": "Avant / Après"
-  },
-  {
-    "index": 31,
     "filename": "31-portail-vivant.html",
     "title": "Portail vivant"
   },
   {
-    "index": 32,
+    "index": 31,
     "filename": "32-vue-c2-likec4.html",
     "title": "Vue C2 + likeC4"
+  },
+  {
+    "index": 32,
+    "filename": "30-avant-apres.html",
+    "title": "Avant / Après"
   },
   {
     "index": 33,
