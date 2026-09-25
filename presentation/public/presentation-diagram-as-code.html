@@ -16,6 +16,8 @@
 
 :root {
   --font-body: 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Poppins', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
   --font-bump: 4px;
 
@@ -494,12 +496,38 @@
    MOBILE LANDSCAPE COMPACT RULES (Écran paysage compact <= 560px)
    ========================================================================== */
 @media screen and (orientation: landscape) and (max-height: 560px) {
-  /* Masquage global des ascenseurs inesthétiques tout en préservant le défilement tactile */
-  * {
+  /* Masquage des ascenseurs sur les conteneurs plein écran mais conservation sur le code */
+  .deck,
+  .deck-dots,
+  .slide {
     scrollbar-width: none !important;
   }
-  *::-webkit-scrollbar {
+  .deck::-webkit-scrollbar,
+  .deck-dots::-webkit-scrollbar,
+  .slide::-webkit-scrollbar {
     display: none !important;
+  }
+
+  /* Ascenseurs fonctionnels et visibles sur les blocs de code */
+  .slide__code-block pre,
+  .workspace-tree__ascii-block pre,
+  .workspace-tree__tab-content pre {
+    scrollbar-width: thin !important;
+    scrollbar-color: var(--accent) transparent !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .slide__code-block pre::-webkit-scrollbar,
+  .workspace-tree__ascii-block pre::-webkit-scrollbar,
+  .workspace-tree__tab-content pre::-webkit-scrollbar {
+    display: block !important;
+    width: 4px !important;
+    height: 4px !important;
+  }
+  .slide__code-block pre::-webkit-scrollbar-thumb,
+  .workspace-tree__ascii-block pre::-webkit-scrollbar-thumb,
+  .workspace-tree__tab-content pre::-webkit-scrollbar-thumb {
+    background: var(--accent) !important;
+    border-radius: 4px !important;
   }
 
   /* Aucune superposition décorative sur mobile paysage */
@@ -510,6 +538,12 @@
 
   .deck-counter {
     display: none !important;
+  }
+
+  /* Désactiver les boutons de redimensionnement de colonnes en mobile (zoom au doigt) */
+  .code-preview__split-toggle {
+    display: none !important;
+    pointer-events: none !important;
   }
 
   .slide {
@@ -525,9 +559,9 @@
     padding-right: 2px;
   }
 
-  /* Éviter les ascenseurs disgracieux sur les sous-colonnes */
+  /* Éviter les ascenseurs disgracieux sur les sous-colonnes (hors meme/image) */
   .code-preview__pane,
-  .slide__aside {
+  .slide__aside:not(.slide__aside--meme) {
     overflow: visible !important;
   }
 
@@ -634,15 +668,36 @@
     padding: 10px 14px !important;
   }
 
-  /* Cas d'étude */
+  /* Cas d'étude (Slide 11) */
   .slide[data-nav="Cas d'étude"] .slide__inner {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) !important;
     align-items: center !important;
     gap: 14px !important;
   }
+  .slide[data-nav="Cas d'étude"] .slide__aside--meme {
+    overflow: hidden !important;
+    border-radius: 18px !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    height: fit-content !important;
+    min-height: 0 !important;
+    aspect-ratio: auto !important;
+    align-self: center !important;
+    justify-self: center !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22) !important;
+  }
   .slide[data-nav="Cas d'étude"] .slide__aside--meme img {
-    max-height: clamp(130px, 46vh, 190px) !important;
+    max-height: clamp(120px, 44vh, 180px) !important;
     width: auto !important;
+    max-width: 100% !important;
+    display: block !important;
+    object-fit: contain !important;
+    transform: none !important;
+    border-radius: inherit !important;
+  }
+  .slide[data-nav="Cas d'étude"] .slide__aside--meme::after {
+    border-radius: inherit !important;
+    inset: 0 !important;
   }
 
   /* C4 zoom */
@@ -663,6 +718,34 @@
   }
   .slide--c4-zoom svg {
     max-height: clamp(140px, 44vh, 200px) !important;
+  }
+
+  /* Portail vivant (Slide 32) */
+  .slide--portal-vivant .slide__inner {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: clamp(12px, 2vw, 22px) !important;
+  }
+  .slide--portal-vivant .slide__heading {
+    margin-bottom: 4px !important;
+  }
+  .slide--portal-vivant .slide__bullets li {
+    font-size: 9.5px !important;
+    padding: 0 0 0 10px !important;
+    margin-bottom: 3px !important;
+    line-height: 1.25 !important;
+  }
+  .slide--portal-vivant .slide__aside {
+    margin-top: 0 !important;
+    align-self: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .slide--portal-vivant .slide__aside svg {
+    max-height: clamp(120px, 44vh, 180px) !important;
+    width: auto !important;
   }
 
   /* Citations et callouts */
@@ -697,6 +780,61 @@
   .benefit-card__text {
     font-size: 10.5px !important;
     line-height: 1.3 !important;
+  }
+
+  /* Synthèse avant / après (Slide 31) */
+  .slide--avant-apres {
+    padding: clamp(10px, 2.2vh, 18px) clamp(16px, 3vw, 28px) !important;
+    justify-content: center !important;
+  }
+  .slide--avant-apres .slide__heading {
+    margin-bottom: clamp(4px, 1vh, 8px) !important;
+    font-size: clamp(16px, 4vh, 22px) !important;
+  }
+  .synthesis-comparison {
+    max-width: 100% !important;
+    gap: clamp(12px, 2.2vw, 22px) !important;
+    margin-top: clamp(4px, 1vh, 10px) !important;
+  }
+  .synthesis-panel {
+    padding: clamp(10px, 2.2vh, 16px) clamp(14px, 2vw, 20px) !important;
+    gap: clamp(8px, 1.6vh, 14px) !important;
+    border-radius: 14px !important;
+  }
+  .synthesis-panel__header {
+    gap: 10px !important;
+    padding-bottom: clamp(6px, 1.2vh, 10px) !important;
+  }
+  .synthesis-panel__title {
+    font-size: clamp(14px, 3.4vh, 17px) !important;
+    line-height: 1.25 !important;
+  }
+  .synthesis-badge {
+    font-size: 11px !important;
+    padding: 2.5px 8px !important;
+  }
+  .synthesis-list {
+    gap: clamp(8px, 1.8vh, 14px) !important;
+  }
+  .synthesis-row {
+    gap: 10px !important;
+  }
+  .synthesis-row__icon {
+    width: clamp(20px, 4vh, 24px) !important;
+    height: clamp(20px, 4vh, 24px) !important;
+    font-size: clamp(12px, 2.4vh, 14px) !important;
+    margin-top: 1px !important;
+  }
+  .synthesis-row__content {
+    gap: 2px !important;
+  }
+  .synthesis-row__lead {
+    font-size: clamp(13px, 2.8vh, 15px) !important;
+    line-height: 1.25 !important;
+  }
+  .synthesis-row__text {
+    font-size: clamp(11.5px, 2.4vh, 13px) !important;
+    line-height: 1.35 !important;
   }
 
   /* Pull request */
@@ -751,12 +889,28 @@
   }
 
   /* Code preview & LikeC4 */
+  .slide--code-preview .slide__code-block {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: clamp(130px, 44vh, 200px) !important;
+    padding: 10px 8px 6px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .slide--code-preview .slide__code-block pre {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+  }
   .slide--code-preview .slide__code-block code {
-    font-size: 10.5px !important;
-    line-height: 1.3 !important;
+    font-size: 10px !important;
+    line-height: 1.35 !important;
   }
   .slide--code-preview .embed-wrap {
-    height: clamp(130px, 40vh, 200px) !important;
+    height: clamp(130px, 44vh, 200px) !important;
   }
 
   /* Forcer l'affichage 2 colonnes et la présence de aside en mode paysage mobile */
@@ -844,18 +998,30 @@
     line-height: 1.35 !important;
   }
 
-  /* Boutons de bascule de split et contrôles tactiles */
+  /* Boutons de bascule de split désactivés en mode tactile/mobile (zoom au doigt) */
   .code-preview__split-toggle {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 12px !important;
-    touch-action: manipulation;
+    display: none !important;
+    pointer-events: none !important;
   }
-  .c2-unified__toggle,
+  .c2-unified__header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-bottom: 4px !important;
+  }
+  .c2-unified__header .slide__heading {
+    font-size: clamp(14px, 3.2vh, 18px) !important;
+    margin: 0 !important;
+  }
+  .slide--c2-unified .c2-unified__toggle,
   .live-coding__toggle {
-    min-height: 32px !important;
-    padding: 4px 10px !important;
-    font-size: 11px !important;
+    min-height: 28px !important;
+    padding: 3px 10px !important;
+    font-size: 10px !important;
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center !important;
     touch-action: manipulation;
   }
 
@@ -914,6 +1080,72 @@
   .deck-nav {
     transform: scale(0.80);
     transform-origin: bottom center;
+  }
+
+  /* Slide 35 (Merci / Outro) */
+  .slide--outro {
+    padding: clamp(6px, 1.5vh, 12px) clamp(16px, 3vw, 28px) !important;
+  }
+  .slide--outro .slide__inner {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr) !important;
+    gap: 14px !important;
+    align-items: center !important;
+    max-height: 94vh !important;
+  }
+  .slide--outro .slide__label {
+    margin-bottom: 2px !important;
+    font-size: 9px !important;
+  }
+  .slide--outro .slide__heading {
+    font-size: clamp(22px, 6.5vh, 32px) !important;
+    margin-bottom: 3px !important;
+    line-height: 1 !important;
+  }
+  .slide--outro .slide__subtitle {
+    font-size: clamp(10.5px, 2.5vh, 13px) !important;
+    margin-bottom: 6px !important;
+    line-height: 1.2 !important;
+  }
+  .slide--outro .outro-tags {
+    gap: 4px !important;
+    margin-bottom: 6px !important;
+  }
+  .slide--outro .outro-tags .badge {
+    font-size: 8.5px !important;
+    padding: 1.5px 6px !important;
+  }
+  .slide--outro .outro-speaker p {
+    font-size: 10.5px !important;
+  }
+  .slide--outro .outro-qr-pane {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  .slide--outro .outro-qr-card {
+    padding: 6px 10px !important;
+    border-radius: 14px !important;
+    max-width: 200px !important;
+    width: 100% !important;
+  }
+  .slide--outro .outro-qr__title {
+    font-size: 9.5px !important;
+    margin: 0 0 4px 0 !important;
+  }
+  .slide--outro .outro-qr-card .qr-spotlight {
+    width: clamp(65px, 20vh, 85px) !important;
+    padding: 3px !important;
+  }
+  .slide--outro .outro-qr__url {
+    font-size: 8px !important;
+    padding: 2px 6px !important;
+    margin-top: 4px !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    display: block !important;
+    text-align: center !important;
   }
 
   /* Désactivation du pointeur laser sur mobile tactile */
@@ -1168,6 +1400,7 @@
   .slide__heading {
     font-size: calc(clamp(28px, 5vw, 48px) + var(--font-bump));
     font-weight: 700; letter-spacing: -0.5px; line-height: 1.15; text-wrap: balance;
+    margin-bottom: clamp(8px, 1.6vh, 16px);
   }
 
   .slide__body {
@@ -1186,7 +1419,7 @@
     font-family: var(--font-mono);
     font-size: calc(clamp(12px, 1.3vw, 14px) + var(--font-bump)); font-weight: 600;
     text-transform: uppercase; letter-spacing: 1.5px;
-    color: var(--accent); margin-bottom: 12px;
+    color: var(--accent); margin-bottom: 8px;
   }
 
   .slide__accent-line {
@@ -1469,8 +1702,8 @@
     grid-column: 1 / -1;
   }
   .slide--content.slide--portal-vivant .slide__inner {
-    grid-template-columns: minmax(0, 1.22fr) minmax(260px, 0.78fr);
-    align-items: start;
+    grid-template-columns: minmax(0, 1.22fr) minmax(240px, 0.78fr);
+    align-items: center;
     gap: clamp(16px, 2.6vw, 34px);
   }
   .slide--content.slide--portal-vivant .slide__heading {
@@ -1484,9 +1717,11 @@
     line-height: 1.42;
   }
   .slide--content.slide--portal-vivant .slide__aside {
-    margin-top: clamp(20px, 3vh, 32px);
+    margin-top: 0;
     justify-content: center;
-    align-self: start;
+    align-self: center;
+    display: flex;
+    align-items: center;
   }
   .slide--content.slide--portal-vivant .slide__aside svg {
     width: min(100%, 480px);
@@ -2313,15 +2548,15 @@
 
   /* ============ SLIDE TYPE: OUTRO (Slide 35) ============ */
   .slide--outro {
-    padding: clamp(28px, 5vh, 64px) clamp(28px, 5vw, 80px);
+    padding: clamp(24px, 4vh, 60px) clamp(24px, 4vw, 72px);
   }
   .slide--outro .slide__inner {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(460px, 1fr);
-    gap: clamp(36px, 5vw, 76px);
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr);
+    gap: clamp(24px, 3.5vw, 60px);
     align-items: center;
     width: 100%;
-    max-width: min(100%, 1500px);
+    max-width: min(100%, 1400px);
     margin: 0 auto;
   }
   .slide--outro .outro-main {
@@ -2329,6 +2564,31 @@
     flex-direction: column;
     justify-content: center;
     min-width: 0;
+  }
+  .slide--outro .slide__heading {
+    font-weight: 900;
+    font-size: calc(clamp(36px, 5.5vw, 72px) + var(--font-bump));
+    margin: 0 0 clamp(8px, 1.4vh, 16px);
+    line-height: 1.05;
+  }
+  .slide--outro .slide__subtitle {
+    margin: 0 0 clamp(12px, 2vh, 22px);
+    font-size: calc(clamp(15px, 1.7vw, 24px) + var(--font-bump));
+    font-weight: 600;
+    text-transform: none;
+    line-height: 1.35;
+    color: var(--text);
+  }
+  .slide--outro .outro-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: clamp(14px, 2.2vh, 24px);
+  }
+  .slide--outro .outro-speaker p {
+    font-size: calc(clamp(13px, 1.4vw, 18px) + var(--font-bump));
+    color: var(--text-dim);
+    margin: 0;
   }
   .slide--outro .outro-qr-pane {
     display: flex;
@@ -2341,9 +2601,9 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    width: min(100%, 560px);
-    padding: clamp(28px, 4vh, 42px) clamp(32px, 3.5vw, 52px);
-    border-radius: 24px;
+    width: min(100%, 420px);
+    padding: clamp(18px, 2.8vh, 32px) clamp(16px, 2.2vw, 32px);
+    border-radius: 20px;
     border: 1.5px solid var(--border-bright);
     background: color-mix(in srgb, var(--surface) 88%, transparent 12%);
     backdrop-filter: blur(14px);
@@ -2364,23 +2624,29 @@
   }
   .outro-qr__title {
     font-family: var(--font-heading);
-    font-size: calc(clamp(18px, 1.8vw, 23px) + var(--font-bump));
+    font-size: calc(clamp(15px, 1.5vw, 20px) + var(--font-bump));
     font-weight: 700;
     color: var(--text);
-    margin: 0 0 20px 0;
+    margin: 0 0 clamp(8px, 1.4vh, 16px) 0;
     white-space: nowrap;
     text-align: center;
   }
   .outro-qr-card .qr-spotlight {
-    width: clamp(210px, 20vw, 290px);
+    width: clamp(130px, 14vw, 210px);
     aspect-ratio: 1 / 1;
     margin: 0 auto;
-    padding: 12px;
+    padding: 8px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   }
+  .outro-qr-card .qr-spotlight img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+  }
   .outro-qr__url {
-    margin-top: 20px;
-    font-size: calc(clamp(11.5px, 1.05vw, 13.5px) + var(--font-bump));
+    margin-top: clamp(10px, 1.5vh, 16px);
+    font-size: calc(clamp(9.5px, 0.85vw, 12px) + var(--font-bump));
     color: var(--accent);
     font-family: var(--font-mono);
     font-weight: 600;
@@ -2388,10 +2654,14 @@
     line-height: 1.35;
     white-space: nowrap;
     display: inline-block;
-    padding: 6px 14px;
+    padding: 4px 10px;
     background: color-mix(in srgb, var(--accent) 8%, transparent 92%);
     border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent 76%);
     border-radius: 8px;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
     transition: all 0.15s ease;
   }
   .outro-qr__url:hover {
@@ -2402,21 +2672,12 @@
     .slide--outro .slide__inner {
       grid-template-columns: 1fr;
       text-align: center;
-      gap: 24px;
+      gap: 20px;
     }
     .slide--outro .outro-main {
       align-items: center;
     }
   }
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent3), var(--accent), var(--accent2));
-  }
-  .outro-card .slide__heading {
     color: var(--text) !important;
   }
   .outro-card .slide__subtitle {
@@ -2691,10 +2952,8 @@
     }
     @media (max-width: 900px), (max-height: 560px) {
       .code-preview__split-toggle {
-        width: 24px;
-        height: 24px;
-        font-size: 10px;
-        border-radius: 6px;
+        display: none !important;
+        pointer-events: none !important;
       }
     }
     .slide--code-preview .code-preview__pane {
@@ -2730,13 +2989,18 @@
       margin: var(--code-preview-chip-line) 0 0;
       padding: clamp(16px, 2vh, 22px) clamp(10px, 1.2vw, 16px) clamp(10px, 1.2vh, 16px);
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
     }
     .slide--code-preview .slide__code-block pre {
+      flex: 1 1 auto;
       height: 100%;
+      min-height: 0;
       overflow: auto;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
     }
     .slide--code-preview .slide__code-block code {
       display: block;
@@ -2796,8 +3060,8 @@
       margin-bottom: clamp(12px, 2vh, 24px);
     }
     .slide--adr-preview .slide__code-block code {
-      font-size: 20px;
-      line-height: 1.5;
+      font-size: calc(clamp(11px, 1.05vw, 13.5px) + var(--font-bump));
+      line-height: 1.48;
     }
     .slide--adr-preview .slide__code-block {
       margin-top: calc(var(--code-preview-chip-line) + 6px);
@@ -3152,15 +3416,16 @@
       line-height: 1.22;
       margin-top: 0;
       margin-bottom: clamp(6px, 1.2vh, 12px);
-      max-width: 32ch;
+      max-width: 44ch;
+      text-wrap: balance;
     }
 
     .concept-grid {
       display: grid;
-      gap: clamp(14px, 1.8vw, 24px);
+      gap: clamp(12px, 1.6vw, 22px);
       width: 100%;
       align-items: stretch;
-      margin-top: clamp(14px, 2.2vh, 24px);
+      margin-top: clamp(10px, 1.6vh, 18px);
     }
     .concept-grid--2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3373,22 +3638,24 @@
     /* ============ SLIDE TUNING: C2 unified toggle (Mermaid <-> likeC4) ============ */
     .slide--c2-unified {
       position: relative;
-      padding-top: clamp(48px, 6.5vh, 78px);
-      padding-bottom: clamp(18px, 2.8vh, 30px);
     }
-    .slide--c2-unified > .slide__heading {
-      margin-bottom: clamp(10px, 1.5vh, 18px);
+    .c2-unified__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-bottom: clamp(8px, 1.4vh, 16px);
+      position: relative;
+      z-index: 30;
+      gap: 12px;
+    }
+    .c2-unified__header .slide__heading {
+      margin: 0;
       max-width: none;
       text-wrap: balance;
     }
-    .slide--c2-unified .slide__aside {
-      position: relative;
-    }
     .slide--c2-unified .c2-unified__toggle {
-      position: absolute;
-      top: -34px;
-      right: 0;
-      z-index: 40;
+      position: static;
       border: 1.5px solid var(--border-bright);
       background: var(--surface);
       color: var(--accent);
@@ -3404,6 +3671,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      flex-shrink: 0;
     }
     .slide--c2-unified .c2-unified__toggle:hover {
       border-color: var(--accent);
@@ -3413,11 +3681,13 @@
       box-shadow: 0 4px 14px rgba(26, 115, 232, 0.28);
     }
     @media (max-width: 900px), (max-height: 560px) {
+      .c2-unified__header {
+        margin-bottom: 4px;
+      }
       .slide--c2-unified .c2-unified__toggle {
-        top: -28px;
-        right: 0;
         padding: 3px 10px;
         font-size: 10px;
+        min-height: 28px;
       }
     }
     .slide--c2-unified .c2-unified__views {
@@ -4072,6 +4342,195 @@
     }
   }
 
+  /* ============ SYNTHÈSE AVANT / APRÈS (Face-à-face épuré en 2 panneaux) ============ */
+  .slide--avant-apres {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .slide--avant-apres .slide__heading {
+    text-align: center;
+    margin-bottom: 0;
+  }
+
+  .synthesis-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(16px, 2.4vw, 32px);
+    margin-top: clamp(14px, 2.4vh, 28px);
+    flex: 0 1 auto;
+    width: 100%;
+    max-width: min(100%, 1020px);
+    align-items: stretch;
+  }
+
+  @media (orientation: portrait) and (max-width: 768px) {
+    .synthesis-comparison {
+      grid-template-columns: 1fr;
+      overflow-y: auto;
+      gap: 14px;
+    }
+    .synthesis-panel {
+      height: auto;
+      min-height: auto;
+    }
+  }
+
+  .synthesis-panel {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1.5px solid var(--border-bright);
+    border-radius: 18px;
+    padding: clamp(18px, 2.6vh, 28px) clamp(18px, 2.2vw, 28px);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 2vh, 22px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .synthesis-panel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  }
+
+  .synthesis-panel--before {
+    border-color: color-mix(in srgb, var(--red) 30%, var(--border-bright));
+  }
+
+  .synthesis-panel--before::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--red);
+  }
+
+  .synthesis-panel--after {
+    border-color: color-mix(in srgb, var(--green) 40%, var(--border-bright));
+  }
+
+  .synthesis-panel--after::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--green);
+  }
+
+  .synthesis-panel__header {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.2vw, 14px);
+    flex: 0 0 auto;
+    padding-bottom: clamp(10px, 1.4vh, 14px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .synthesis-panel__title {
+    font-size: calc(clamp(15px, 1.6vw, 20px) + var(--font-bump));
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .synthesis-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: 999px;
+    flex-shrink: 0;
+  }
+
+  .synthesis-badge--before {
+    background: color-mix(in srgb, var(--red) 12%, var(--surface));
+    color: var(--red);
+    border: 1px solid color-mix(in srgb, var(--red) 30%, transparent);
+  }
+
+  .synthesis-badge--after {
+    background: color-mix(in srgb, var(--green) 14%, var(--surface));
+    color: var(--green);
+    border: 1px solid color-mix(in srgb, var(--green) 35%, transparent);
+  }
+
+  .synthesis-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(12px, 1.8vh, 18px);
+  }
+
+  .synthesis-row {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(10px, 1.2vw, 14px);
+  }
+
+  .synthesis-row__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .synthesis-panel--before .synthesis-row__icon {
+    background: color-mix(in srgb, var(--red) 12%, var(--surface2));
+    color: var(--red);
+    border: 1px solid color-mix(in srgb, var(--red) 25%, transparent);
+  }
+
+  .synthesis-panel--after .synthesis-row__icon {
+    background: color-mix(in srgb, var(--green) 14%, var(--surface2));
+    color: var(--green);
+    border: 1px solid color-mix(in srgb, var(--green) 30%, transparent);
+  }
+
+  .synthesis-row__content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .synthesis-row__lead {
+    font-size: calc(clamp(13px, 1.25vw, 16px) + var(--font-bump));
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.25;
+  }
+
+  .synthesis-row__text {
+    font-size: calc(clamp(11.5px, 1.05vw, 13.5px) + var(--font-bump));
+    line-height: 1.35;
+    color: var(--text-subtitle);
+    margin: 0;
+  }
+
+  .synthesis-panel--after .synthesis-row__text {
+    color: var(--text);
+  }
+
   .benefit-card {
     position: relative;
     overflow: hidden;
@@ -4387,7 +4846,7 @@
     <div class="slide__inner">
       <div>
         <p class="slide__label reveal">Changer de paradigme</p>
-        <h2 class="slide__heading reveal">Trois principes pour une<br>architecture vivante</h2>
+        <h2 class="slide__heading reveal">Trois principes pour une architecture vivante</h2>
         <div class="concept-grid concept-grid--3">
           <div class="concept-card concept-card--blue reveal">
             <p class="concept-card__step">01 &middot; Vérité</p>
@@ -4414,7 +4873,7 @@
     <div class="slide__inner" style="grid-template-columns:minmax(0, 1fr) minmax(0, 1.12fr); align-items:center; gap:clamp(16px, 2.5vw, 36px);">
       <div style="min-width:0;">
         <p class="slide__label reveal">Modélisation C4</p>
-        <h2 class="slide__heading reveal" style="font-size:calc(clamp(18px, 2.2vw, 28px) + var(--font-bump)); line-height:1.2; margin-bottom:clamp(8px, 1.4vh, 14px); max-width:28ch;">C4 = un découpage simple de vos architectures</h2>
+        <h2 class="slide__heading reveal" style="font-size:calc(clamp(18px, 2.2vw, 28px) + var(--font-bump)); line-height:1.2; margin-bottom:clamp(8px, 1.4vh, 14px); text-wrap:balance;">C4 = un découpage simple de vos architectures</h2>
         <ul class="slide__bullets" style="margin-top:clamp(8px, 1.4vh, 14px);">
           <li class="reveal"><strong class="c4-level c4-level--c1">C1 — Contexte</strong> : avec quoi interagit ce système ?</li>
           <li class="reveal"><strong class="c4-level c4-level--c2">C2 — Containers</strong> : comment le système fonctionne-t-il ?</li>
@@ -4517,18 +4976,19 @@
 
   <!-- Slide 9: Fil rouge -->
 <section class="slide slide--content slide--fil-rouge" data-nav="Fil rouge" data-part="0">
-    <div class="reveal" style="width:100%; margin-bottom:clamp(18px, 2.8vh, 28px);">
-      <p class="slide__label">Fil rouge</p>
+    <div class="reveal" style="width:100%; margin-bottom:clamp(12px, 2vh, 20px);">
+      <p class="slide__label" style="margin-bottom:6px;">Fil rouge</p>
       <h2 class="slide__heading" style="margin:0;">Le cas d'&eacute;tude</h2>
     </div>
     <div class="slide__inner" style="grid-template-columns:minmax(0, 1fr) minmax(0, 2fr); align-items:stretch;">
       <div class="slide__aside reveal" style="align-items:stretch; min-height:100%;">
-        <div class="speaker-card" style="width:100%; height:100%;">
-          <h3 class="speaker-card__name" style="font-size:clamp(28px,4vw,38px);">AleFest Coffee ☕</h3>
-          <p class="speaker-card__meta">Un stand caf&eacute; en difficulté dans un contexte festif</p>
-		  <br>
-          <p class="speaker-card__meta">Objectif : un service plus rapide que la musique</p>
-          <div style="margin-top:16px;">
+        <div class="speaker-card" style="width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <h3 class="speaker-card__name" style="font-size:clamp(22px, 2.4vw, 30px); margin:0 0 10px 0;">AleFest Coffee ☕</h3>
+            <p class="speaker-card__meta" style="margin:0 0 8px 0;">Un stand caf&eacute; en difficulté dans un contexte festif</p>
+            <p class="speaker-card__meta" style="margin:0;">Objectif : un service plus rapide que la musique</p>
+          </div>
+          <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:6px;">
             <span class="badge badge--accent">Commandes manuelles</span>
             <span class="badge badge--green">Files d'attente</span>
             <span class="badge badge--blue">Insatisfaction</span>
@@ -4539,7 +4999,7 @@
         <article class="speaker-panel speaker-panel--alt" style="max-width:100%; width:100%; height:100%;">
           <p class="speaker-panel__eyebrow">Raconté en quelques étapes</p>
           <ul class="speaker-roadmap">
-            <li><span class="speaker-roadmap__step">01</span><span>d'un <strong>besoin clair</strong> à un modèle probant, avec l'aide de l'<strong></strong>IA</strong></span></li>
+            <li><span class="speaker-roadmap__step">01</span><span>d'un <strong>besoin clair</strong> à un modèle probant, avec l'aide de l'<strong>IA</strong></span></li>
             <li><span class="speaker-roadmap__step">02</span><span>d'un système vague, à des <strong>mécanismes limpides</strong></span></li>
             <li><span class="speaker-roadmap__step">03</span><span>d'un premier jet à un <strong>système mature</strong></span></li>
 			<li><span class="speaker-roadmap__step">04</span><span>d'un système statique à une histoire marquante de <strong>l'usage de système</strong></span></li>
@@ -4555,7 +5015,7 @@
     <div class="slide__inner" style="grid-template-columns:minmax(0, 1.18fr) minmax(260px, 0.72fr);">
       <div>
         <p class="slide__label reveal">Cas d'&eacute;tude</p>
-        <h2 class="slide__heading reveal">AleFest Coffee&nbsp;:<br>vendre vite, servir mieux</h2>
+        <h2 class="slide__heading reveal">AleFest Coffee&nbsp;: vendre vite, servir mieux</h2>
         <ul class="slide__bullets">
           <li class="reveal">Un stand caf&eacute; en festival&nbsp;: pics de commandes <strong>entre deux concerts</strong></li>
           <li class="reveal">Première version : le festivalier commande au comptoir et <strong>attend sur place</strong></li>
@@ -4681,7 +5141,7 @@ Créer un système de prise de commande numérique au comptoir avec :
     <div class="slide__inner">
       <div>
         <p class="slide__label reveal">... qui pourrait être détaillée</p>
-        <h2 class="slide__heading reveal">On zoome dans le syst&egrave;me<br>et on explicite les briques</h2>
+        <h2 class="slide__heading reveal">On zoome dans le syst&egrave;me et on explicite les briques</h2>
         <p class="slide__body reveal" style="margin-top:4px; margin-bottom:clamp(8px, 1.4vh, 14px);">
           Quels éléments permettent l'exp&eacute;rience Alefest Coffee&nbsp;?
         </p>
@@ -5179,110 +5639,70 @@ graph LR
   </section>
 
   <!-- Slide 30: Avant / Après -->
-<section class="slide slide--content" data-nav="Avant / Après">
+<section class="slide slide--content slide--avant-apres" data-nav="Avant / Après">
     <p class="slide__label reveal">Synthèse</p>
     <h2 class="slide__heading reveal">Le paradoxe r&eacute;concili&eacute;&nbsp;: avant / apr&egrave;s</h2>
-    <div class="benefit-cards-grid reveal">
-      <div class="benefit-card concept-card--blue">
-        <div class="benefit-card__header">
-          <h3 class="benefit-card__title">Source de v&eacute;rit&eacute;</h3>
-          <span class="benefit-card__badge">01</span>
+    <div class="synthesis-comparison reveal">
+      <!-- Panneau Avant -->
+      <div class="synthesis-panel synthesis-panel--before">
+        <div class="synthesis-panel__header">
+          <span class="synthesis-badge synthesis-badge--before">Avant</span>
+          <h3 class="synthesis-panel__title">Le dessin artisanal</h3>
         </div>
-        <div class="benefit-card__body">
-          <div class="benefit-card__section benefit-card__section--before">
-            <span class="benefit-card__label benefit-card__label--before">Avant &middot; Dessin</span>
-            <p class="benefit-card__text">Éparpillée dans Visio, Confluence et le souvenir du dernier atelier.</p>
-          </div>
-          <div class="benefit-card__section benefit-card__section--after">
-            <span class="benefit-card__label benefit-card__label--after">Après &middot; As-Code</span>
-            <p class="benefit-card__text benefit-card__text--after">Le mod&egrave;le unique <code>.c4</code> versionné dans Git.</p>
-          </div>
-        </div>
+        <ul class="synthesis-list">
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&times;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Source &eacute;parpill&eacute;e</strong>
+              <p class="synthesis-row__text">Visio, Confluence &middot; redessin manuel &agrave; chaque &eacute;volution</p>
+            </div>
+          </li>
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&times;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Validation tardive</strong>
+              <p class="synthesis-row__text">Sch&eacute;mas hors des PR &middot; dette documentaire subie</p>
+            </div>
+          </li>
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&times;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Livrables fig&eacute;s</strong>
+              <p class="synthesis-row__text">PNG morts &agrave; 6 mois &middot; imperm&eacute;ables &agrave; la CI/CD et &agrave; l'IA</p>
+            </div>
+          </li>
+        </ul>
       </div>
 
-      <div class="benefit-card concept-card--orange">
-        <div class="benefit-card__header">
-          <h3 class="benefit-card__title">Mise &agrave; jour</h3>
-          <span class="benefit-card__badge">02</span>
+      <!-- Panneau Après -->
+      <div class="synthesis-panel synthesis-panel--after">
+        <div class="synthesis-panel__header">
+          <span class="synthesis-badge synthesis-badge--after">Apr&egrave;s</span>
+          <h3 class="synthesis-panel__title">L'architecture As-Code</h3>
         </div>
-        <div class="benefit-card__body">
-          <div class="benefit-card__section benefit-card__section--before">
-            <span class="benefit-card__label benefit-card__label--before">Avant &middot; Dessin</span>
-            <p class="benefit-card__text">Nouveau fichier, redessiner à la main dès que le code bouge.</p>
-          </div>
-          <div class="benefit-card__section benefit-card__section--after">
-            <span class="benefit-card__label benefit-card__label--after">Après &middot; As-Code</span>
-            <p class="benefit-card__text benefit-card__text--after">Refactoriser le code du modèle et capitaliser sur l'existant.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="benefit-card concept-card--green">
-        <div class="benefit-card__header">
-          <h3 class="benefit-card__title">Validation en équipe</h3>
-          <span class="benefit-card__badge">03</span>
-        </div>
-        <div class="benefit-card__body">
-          <div class="benefit-card__section benefit-card__section--before">
-            <span class="benefit-card__label benefit-card__label--before">Avant &middot; Dessin</span>
-            <p class="benefit-card__text">Ambiguité sémantique, validation tardive ou informelle.</p>
-          </div>
-          <div class="benefit-card__section benefit-card__section--after">
-            <span class="benefit-card__label benefit-card__label--after">Après &middot; As-Code</span>
-            <p class="benefit-card__text benefit-card__text--after">Vue générée, diff visuel en Pull Request et review partagée.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="benefit-card concept-card--purple">
-        <div class="benefit-card__header">
-          <h3 class="benefit-card__title">Industrialisation &amp; CI/CD</h3>
-          <span class="benefit-card__badge">04</span>
-        </div>
-        <div class="benefit-card__body">
-          <div class="benefit-card__section benefit-card__section--before">
-            <span class="benefit-card__label benefit-card__label--before">Avant &middot; Dessin</span>
-            <p class="benefit-card__text">Exports manuels oubliés, obsolescence garantie à 6 mois.</p>
-          </div>
-          <div class="benefit-card__section benefit-card__section--after">
-            <span class="benefit-card__label benefit-card__label--after">Après &middot; As-Code</span>
-            <p class="benefit-card__text benefit-card__text--after">Build automatique, validation syntaxique et publication en portail.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="benefit-card concept-card--teal">
-        <div class="benefit-card__header">
-          <h3 class="benefit-card__title">Cycle de vie &amp; Git</h3>
-          <span class="benefit-card__badge">05</span>
-        </div>
-        <div class="benefit-card__body">
-          <div class="benefit-card__section benefit-card__section--before">
-            <span class="benefit-card__label benefit-card__label--before">Avant &middot; Dessin</span>
-            <p class="benefit-card__text">Schéma déconnecté de la livraison logicielle.</p>
-          </div>
-          <div class="benefit-card__section benefit-card__section--after">
-            <span class="benefit-card__label benefit-card__label--after">Après &middot; As-Code</span>
-            <p class="benefit-card__text benefit-card__text--after">L'architecture avance au même rythme que les branches et releases.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="benefit-card concept-card--cyan">
-        <div class="benefit-card__header">
-          <h3 class="benefit-card__title">Appui de l'IA</h3>
-          <span class="benefit-card__badge">06</span>
-        </div>
-        <div class="benefit-card__body">
-          <div class="benefit-card__section benefit-card__section--before">
-            <span class="benefit-card__label benefit-card__label--before">Avant &middot; Dessin</span>
-            <p class="benefit-card__text">Difficile d'automatiser un dessin vectoriel propriétaire.</p>
-          </div>
-          <div class="benefit-card__section benefit-card__section--after">
-            <span class="benefit-card__label benefit-card__label--after">Après &middot; As-Code</span>
-            <p class="benefit-card__text benefit-card__text--after">Amorçage ultra-rapide par le LLM, validation rigoureuse par l'humain.</p>
-          </div>
-        </div>
+        <ul class="synthesis-list">
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&#x2713;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Mod&egrave;le unique dans Git</strong>
+              <p class="synthesis-row__text">Code source <code>.c4</code> refactorable avec le code applicatif</p>
+            </div>
+          </li>
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&#x2713;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Review en Pull Request</strong>
+              <p class="synthesis-row__text">Diff visuel partag&eacute; &middot; relecture collective s&eacute;curis&eacute;e</p>
+            </div>
+          </li>
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&#x2713;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Portail vivant &amp; CI/CD</strong>
+              <p class="synthesis-row__text">Build automatique &middot; app web navigable et copilote IA</p>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
@@ -5328,7 +5748,10 @@ graph LR
 
   <!-- Slide 32: Vue C2 + likeC4 -->
 <section class="slide slide--diagram slide--content slide--code-preview slide--diagram-flow slide--c2-unified" data-nav="Vue C2 + likeC4" data-view="mermaid" data-split-mode="half" data-split="half">
-    <h2 class="slide__heading reveal">Comparer l'outil LikeC4</h2>
+    <div class="c2-unified__header">
+      <h2 class="slide__heading reveal">Comparer l'outil LikeC4</h2>
+      <button class="c2-unified__toggle" type="button" onclick="toggleC2UnifiedView(this)" aria-pressed="false" aria-label="Afficher l'aperçu LikeC4">Vue LikeC4 ↗</button>
+    </div>
     <div class="c2-unified__views">
       <div class="c2-unified__view c2-unified__view--mermaid">
         <div class="slide__inner">
@@ -5383,7 +5806,6 @@ graph LR
             </div>
           </div>
           <div class="slide__aside reveal c2-mermaid__pane c2-mermaid__pane--diagram code-preview__pane code-preview__pane--embed">
-              <button class="c2-unified__toggle" type="button" onclick="toggleC2UnifiedView(this)" aria-pressed="false" aria-label="Afficher l'aperçu LikeC4">Vue LikeC4 ↗</button>
               <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="1.5" data-initial-zoom="1.0" data-zoom-min="0.2" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
               <div class="zoom-controls" role="toolbar" aria-label="Commandes de zoom du diagramme C2 Mermaid">
                 <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom avant" aria-label="Zoom avant">+</button>
@@ -5485,7 +5907,6 @@ flowchart TD
             </div>
           </div>
           <div class="slide__aside reveal c2-likec4__pane c2-likec4__pane--embed code-preview__pane code-preview__pane--embed">
-            <button class="c2-unified__toggle" type="button" onclick="toggleC2UnifiedView(this)" aria-pressed="true" aria-label="Afficher le diagramme Mermaid">Vue Mermaid ↗</button>
             <div class="code-preview__frame">
               <span class="slide__code-filename">Vue C2</span>
               <div class="embed-wrap reveal" id="coffee-v2-c2-embed-likec4" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000" data-likec4-fit-on-load="true" data-likec4-zoomout-steps="1">
@@ -5548,19 +5969,19 @@ flowchart TD
 <section class="slide slide--content slide--outro" data-nav="Merci">
     <div class="slide__inner">
       <div class="outro-main">
-        <p class="slide__label reveal" style="letter-spacing:2.5px; margin-bottom:12px;">Questions / Réponses</p>
-        <h2 class="slide__heading reveal" style="font-weight:900; font-size:clamp(46px,7.5vw,86px); margin:0 0 16px; line-height:1.02;">Merci !</h2>
-        <p class="slide__subtitle reveal" style="margin:0 0 28px; font-size:clamp(18px,2.2vw,28px); font-weight:600; text-transform:none; line-height:1.35; color:var(--text);">
+        <p class="slide__label reveal">Questions / Réponses</p>
+        <h2 class="slide__heading reveal">Merci !</h2>
+        <p class="slide__subtitle reveal">
           Ne dessinez plus vos architectures : codez-les
         </p>
-        <div class="reveal" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px;">
+        <div class="reveal outro-tags">
           <span class="badge badge--accent">Architecture</span>
           <span class="badge badge--blue">Diagram as code</span>
           <span class="badge badge--green">C4 Model</span>
           <span class="badge badge--orange">LikeC4</span>
         </div>
-        <div class="reveal">
-          <p style="font-size:calc(clamp(16px, 1.8vw, 21px) + var(--font-bump)); color:var(--text-dim); margin:0;">
+        <div class="reveal outro-speaker">
+          <p>
             Alexis Scolan &mdash; <strong style="color:var(--accent);">Architecte technique</strong>
           </p>
         </div>
@@ -5785,8 +6206,8 @@ flowchart TD
       button.setAttribute('title', 'Réessayer le rendu LikeC4');
       button.setAttribute('aria-label', 'Réessayer le rendu LikeC4');
     } else {
-      button.setAttribute('title', 'Charger le rendu LikeC4');
-      button.setAttribute('aria-label', 'Charger le rendu LikeC4');
+      button.setAttribute('title', 'Rendu');
+      button.setAttribute('aria-label', 'Rendu');
     }
   }
   function updateEmbedLoaderState(wrap, isLoading) {
@@ -5796,7 +6217,7 @@ flowchart TD
     var hint = loader.querySelector('.embed-loader__hint');
     if (button) {
       button.disabled = !!isLoading;
-      button.textContent = isLoading ? 'Chargement LikeC4…' : 'Charger le rendu LikeC4';
+      button.textContent = isLoading ? 'Chargement LikeC4…' : 'Rendu';
     }
     if (hint) {
       hint.textContent = isLoading
@@ -5811,7 +6232,7 @@ flowchart TD
     button.className = 'embed-likec4-cta';
     button.innerHTML = [
       '<span class="embed-likec4-cta__status" aria-hidden="true"></span>',
-      '<span class="embed-likec4-cta__label">Rendu LikeC4</span>'
+      '<span class="embed-likec4-cta__label">Rendu</span>'
     ].join('');
     button.addEventListener('click', function() {
       startEmbedLoad(wrap, { forceReload: wrap.classList.contains('is-loaded') || wrap.classList.contains('is-fallback') });
@@ -5825,7 +6246,7 @@ flowchart TD
     loader.className = 'embed-loader';
     loader.setAttribute('aria-live', 'polite');
     loader.innerHTML = [
-      '<button type="button" class="embed-loader__button">Charger le rendu LikeC4</button>'
+      '<button type="button" class="embed-loader__button">Rendu</button>'
     ].join('');
     loader.querySelector('.embed-loader__button').addEventListener('click', function() {
       startEmbedLoad(wrap);
@@ -5982,6 +6403,8 @@ flowchart TD
     slide.setAttribute('data-view', next);
     slide.querySelectorAll('.c2-unified__toggle').forEach(function(b) {
       b.setAttribute('aria-pressed', String(nextIsLikeC4));
+      b.textContent = nextIsLikeC4 ? 'Vue Mermaid ↗' : 'Vue LikeC4 ↗';
+      b.setAttribute('aria-label', nextIsLikeC4 ? 'Afficher le diagramme Mermaid' : 'Afficher l\'aperçu LikeC4');
     });
 
     window.requestAnimationFrame(function() {

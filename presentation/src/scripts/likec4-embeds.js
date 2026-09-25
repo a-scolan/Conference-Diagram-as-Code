@@ -40,8 +40,8 @@
       button.setAttribute('title', 'Réessayer le rendu LikeC4');
       button.setAttribute('aria-label', 'Réessayer le rendu LikeC4');
     } else {
-      button.setAttribute('title', 'Charger le rendu LikeC4');
-      button.setAttribute('aria-label', 'Charger le rendu LikeC4');
+      button.setAttribute('title', 'Rendu');
+      button.setAttribute('aria-label', 'Rendu');
     }
   }
   function updateEmbedLoaderState(wrap, isLoading) {
@@ -51,7 +51,7 @@
     var hint = loader.querySelector('.embed-loader__hint');
     if (button) {
       button.disabled = !!isLoading;
-      button.textContent = isLoading ? 'Chargement LikeC4…' : 'Charger le rendu LikeC4';
+      button.textContent = isLoading ? 'Chargement LikeC4…' : 'Rendu';
     }
     if (hint) {
       hint.textContent = isLoading
@@ -66,7 +66,7 @@
     button.className = 'embed-likec4-cta';
     button.innerHTML = [
       '<span class="embed-likec4-cta__status" aria-hidden="true"></span>',
-      '<span class="embed-likec4-cta__label">Rendu LikeC4</span>'
+      '<span class="embed-likec4-cta__label">Rendu</span>'
     ].join('');
     button.addEventListener('click', function() {
       startEmbedLoad(wrap, { forceReload: wrap.classList.contains('is-loaded') || wrap.classList.contains('is-fallback') });
@@ -80,7 +80,7 @@
     loader.className = 'embed-loader';
     loader.setAttribute('aria-live', 'polite');
     loader.innerHTML = [
-      '<button type="button" class="embed-loader__button">Charger le rendu LikeC4</button>'
+      '<button type="button" class="embed-loader__button">Rendu</button>'
     ].join('');
     loader.querySelector('.embed-loader__button').addEventListener('click', function() {
       startEmbedLoad(wrap);
@@ -237,6 +237,8 @@
     slide.setAttribute('data-view', next);
     slide.querySelectorAll('.c2-unified__toggle').forEach(function(b) {
       b.setAttribute('aria-pressed', String(nextIsLikeC4));
+      b.textContent = nextIsLikeC4 ? 'Vue Mermaid ↗' : 'Vue LikeC4 ↗';
+      b.setAttribute('aria-label', nextIsLikeC4 ? 'Afficher le diagramme Mermaid' : 'Afficher l\'aperçu LikeC4');
     });
 
     window.requestAnimationFrame(function() {

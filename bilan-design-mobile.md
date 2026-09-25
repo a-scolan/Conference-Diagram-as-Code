@@ -119,3 +119,35 @@
    - Boutons de zoom, toggles split et icônes externes : minimum $32 \times 32\text{ px}$ (idéalement $36 \times 36\text{ px}$) avec marge d'espacement de $4\text{ px}$.
 4. **Badges d'en-tête de code stabilisés :**
    - Remplacer le `top: -10px` absolu par une barre de titre intégrée dans `.code-preview__frame` (`border-bottom: 1px solid var(--border)`).
+
+---
+
+## 5. Résolutions du retour d'audit de compatibilité mobile & desktop (Septembre 2026)
+
+1. **Espacements sur-titre, titre et cartes (Slide 6 - `05-changer-de-paradigme.html`) :**
+   - Suppression du `<br>` artificiel dans le titre pour un écoulement fluide et naturel.
+   - Harmonisation du rythme vertical (`.slide__label` margin-bottom: 8px, `.slide__heading` margin-bottom: clamp(6px, 1.2vh, 12px), `concept-grid` margin-top: clamp(10px, 1.6vh, 18px)).
+2. **Harmonisation bloc « AleFest Coffee » (`09-fil-rouge.html` & `10-cas-d-etude.html`) :**
+   - Épuration des balises `<br>` parasites et refonte en flexbox harmonieuse avec espacements cohérents.
+   - Suppression du `<br>` dans le titre de `10-cas-d-etude.html`.
+3. **Uniformisation des polices :**
+   - Définition explicite de `--font-heading` et `--font-sans` calquées sur `Poppins` (`--font-body`), éliminant les polices par défaut du système.
+   - Consolidation du système binaire : `Poppins` pour la prose/titres, `JetBrains Mono` pour le code, les labels, métriques et tags.
+4. **Filtre grisant de l'image (Slide 11 - `10-cas-d-etude.html`) :**
+   - `.slide__aside--meme` contraint en `overflow: hidden !important` et dimensionné strictement aux dimensions de l'image pour empêcher tout débordement du calque `::after`.
+5. **Désactivation des boutons d'ajustement de colonnes sur mobile :**
+   - `.code-preview__split-toggle` masqué en mode tactile/mobile (`display: none !important`), laissant place au zoom natif au doigt.
+6. **Harmonisation du libellé d'action LikeC4 :**
+   - « Charger le rendu LikeC4 » remplacé universellement par « Rendu ».
+7. **Titre de la slide 14 (`13-briques-c2.html`) :**
+   - Suppression du retour à la ligne inutile `<br>` dans l'en-tête.
+8. **Centrage de la slide 32 (`31-portail-vivant.html`) :**
+   - Réalignement vertical et horizontal au centre (`align-items: center !important`), suppression du décalage descendant du SVG.
+9. **Lisibilité des blocs de code et restauration des ascenseurs :**
+   - Remplacement de `justify-content: center` par `justify-content: flex-start` sur les conteneurs `pre` pour éliminer le bug de troncature des premières lignes de code au défilement.
+   - Rétablissement d'ascenseurs minces, discrets et visibles (`scrollbar-width: thin; scrollbar-color: var(--accent) transparent;`) sur les conteneurs de code.
+10. **Bouton LikeC4 (Slide 33 - `32-vue-c2-likec4.html`) :**
+    - Intégration du bouton de bascule directement dans `.c2-unified__header` aux côtés du titre de la slide pour garantir une visibilité permanente sans risque de rognage par le scroll.
+11. **Débordement et taille de lien sur la slide 35 (`34-merci.html`) :**
+    - Remplacement des styles inline rigides par des classes CSS fluides.
+    - Échelle compacte dédiée pour écran mobile paysage et bridage de l'URL (`max-width: 100%`, `text-overflow: ellipsis`, taille de police réduite).

@@ -306,12 +306,38 @@
    MOBILE LANDSCAPE COMPACT RULES (Écran paysage compact <= 560px)
    ========================================================================== */
 @media screen and (orientation: landscape) and (max-height: 560px) {
-  /* Masquage global des ascenseurs inesthétiques tout en préservant le défilement tactile */
-  * {
+  /* Masquage des ascenseurs sur les conteneurs plein écran mais conservation sur le code */
+  .deck,
+  .deck-dots,
+  .slide {
     scrollbar-width: none !important;
   }
-  *::-webkit-scrollbar {
+  .deck::-webkit-scrollbar,
+  .deck-dots::-webkit-scrollbar,
+  .slide::-webkit-scrollbar {
     display: none !important;
+  }
+
+  /* Ascenseurs fonctionnels et visibles sur les blocs de code */
+  .slide__code-block pre,
+  .workspace-tree__ascii-block pre,
+  .workspace-tree__tab-content pre {
+    scrollbar-width: thin !important;
+    scrollbar-color: var(--accent) transparent !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .slide__code-block pre::-webkit-scrollbar,
+  .workspace-tree__ascii-block pre::-webkit-scrollbar,
+  .workspace-tree__tab-content pre::-webkit-scrollbar {
+    display: block !important;
+    width: 4px !important;
+    height: 4px !important;
+  }
+  .slide__code-block pre::-webkit-scrollbar-thumb,
+  .workspace-tree__ascii-block pre::-webkit-scrollbar-thumb,
+  .workspace-tree__tab-content pre::-webkit-scrollbar-thumb {
+    background: var(--accent) !important;
+    border-radius: 4px !important;
   }
 
   /* Aucune superposition décorative sur mobile paysage */
@@ -322,6 +348,12 @@
 
   .deck-counter {
     display: none !important;
+  }
+
+  /* Désactiver les boutons de redimensionnement de colonnes en mobile (zoom au doigt) */
+  .code-preview__split-toggle {
+    display: none !important;
+    pointer-events: none !important;
   }
 
   .slide {
@@ -337,9 +369,9 @@
     padding-right: 2px;
   }
 
-  /* Éviter les ascenseurs disgracieux sur les sous-colonnes */
+  /* Éviter les ascenseurs disgracieux sur les sous-colonnes (hors meme/image) */
   .code-preview__pane,
-  .slide__aside {
+  .slide__aside:not(.slide__aside--meme) {
     overflow: visible !important;
   }
 
@@ -446,15 +478,36 @@
     padding: 10px 14px !important;
   }
 
-  /* Cas d'étude */
+  /* Cas d'étude (Slide 11) */
   .slide[data-nav="Cas d'étude"] .slide__inner {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) !important;
     align-items: center !important;
     gap: 14px !important;
   }
+  .slide[data-nav="Cas d'étude"] .slide__aside--meme {
+    overflow: hidden !important;
+    border-radius: 18px !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    height: fit-content !important;
+    min-height: 0 !important;
+    aspect-ratio: auto !important;
+    align-self: center !important;
+    justify-self: center !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22) !important;
+  }
   .slide[data-nav="Cas d'étude"] .slide__aside--meme img {
-    max-height: clamp(130px, 46vh, 190px) !important;
+    max-height: clamp(120px, 44vh, 180px) !important;
     width: auto !important;
+    max-width: 100% !important;
+    display: block !important;
+    object-fit: contain !important;
+    transform: none !important;
+    border-radius: inherit !important;
+  }
+  .slide[data-nav="Cas d'étude"] .slide__aside--meme::after {
+    border-radius: inherit !important;
+    inset: 0 !important;
   }
 
   /* C4 zoom */
@@ -475,6 +528,34 @@
   }
   .slide--c4-zoom svg {
     max-height: clamp(140px, 44vh, 200px) !important;
+  }
+
+  /* Portail vivant (Slide 32) */
+  .slide--portal-vivant .slide__inner {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: clamp(12px, 2vw, 22px) !important;
+  }
+  .slide--portal-vivant .slide__heading {
+    margin-bottom: 4px !important;
+  }
+  .slide--portal-vivant .slide__bullets li {
+    font-size: 9.5px !important;
+    padding: 0 0 0 10px !important;
+    margin-bottom: 3px !important;
+    line-height: 1.25 !important;
+  }
+  .slide--portal-vivant .slide__aside {
+    margin-top: 0 !important;
+    align-self: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .slide--portal-vivant .slide__aside svg {
+    max-height: clamp(120px, 44vh, 180px) !important;
+    width: auto !important;
   }
 
   /* Citations et callouts */
@@ -509,6 +590,61 @@
   .benefit-card__text {
     font-size: 10.5px !important;
     line-height: 1.3 !important;
+  }
+
+  /* Synthèse avant / après (Slide 31) */
+  .slide--avant-apres {
+    padding: clamp(10px, 2.2vh, 18px) clamp(16px, 3vw, 28px) !important;
+    justify-content: center !important;
+  }
+  .slide--avant-apres .slide__heading {
+    margin-bottom: clamp(4px, 1vh, 8px) !important;
+    font-size: clamp(16px, 4vh, 22px) !important;
+  }
+  .synthesis-comparison {
+    max-width: 100% !important;
+    gap: clamp(12px, 2.2vw, 22px) !important;
+    margin-top: clamp(4px, 1vh, 10px) !important;
+  }
+  .synthesis-panel {
+    padding: clamp(10px, 2.2vh, 16px) clamp(14px, 2vw, 20px) !important;
+    gap: clamp(8px, 1.6vh, 14px) !important;
+    border-radius: 14px !important;
+  }
+  .synthesis-panel__header {
+    gap: 10px !important;
+    padding-bottom: clamp(6px, 1.2vh, 10px) !important;
+  }
+  .synthesis-panel__title {
+    font-size: clamp(14px, 3.4vh, 17px) !important;
+    line-height: 1.25 !important;
+  }
+  .synthesis-badge {
+    font-size: 11px !important;
+    padding: 2.5px 8px !important;
+  }
+  .synthesis-list {
+    gap: clamp(8px, 1.8vh, 14px) !important;
+  }
+  .synthesis-row {
+    gap: 10px !important;
+  }
+  .synthesis-row__icon {
+    width: clamp(20px, 4vh, 24px) !important;
+    height: clamp(20px, 4vh, 24px) !important;
+    font-size: clamp(12px, 2.4vh, 14px) !important;
+    margin-top: 1px !important;
+  }
+  .synthesis-row__content {
+    gap: 2px !important;
+  }
+  .synthesis-row__lead {
+    font-size: clamp(13px, 2.8vh, 15px) !important;
+    line-height: 1.25 !important;
+  }
+  .synthesis-row__text {
+    font-size: clamp(11.5px, 2.4vh, 13px) !important;
+    line-height: 1.35 !important;
   }
 
   /* Pull request */
@@ -563,12 +699,28 @@
   }
 
   /* Code preview & LikeC4 */
+  .slide--code-preview .slide__code-block {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: clamp(130px, 44vh, 200px) !important;
+    padding: 10px 8px 6px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .slide--code-preview .slide__code-block pre {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+  }
   .slide--code-preview .slide__code-block code {
-    font-size: 10.5px !important;
-    line-height: 1.3 !important;
+    font-size: 10px !important;
+    line-height: 1.35 !important;
   }
   .slide--code-preview .embed-wrap {
-    height: clamp(130px, 40vh, 200px) !important;
+    height: clamp(130px, 44vh, 200px) !important;
   }
 
   /* Forcer l'affichage 2 colonnes et la présence de aside en mode paysage mobile */
@@ -656,18 +808,30 @@
     line-height: 1.35 !important;
   }
 
-  /* Boutons de bascule de split et contrôles tactiles */
+  /* Boutons de bascule de split désactivés en mode tactile/mobile (zoom au doigt) */
   .code-preview__split-toggle {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 12px !important;
-    touch-action: manipulation;
+    display: none !important;
+    pointer-events: none !important;
   }
-  .c2-unified__toggle,
+  .c2-unified__header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-bottom: 4px !important;
+  }
+  .c2-unified__header .slide__heading {
+    font-size: clamp(14px, 3.2vh, 18px) !important;
+    margin: 0 !important;
+  }
+  .slide--c2-unified .c2-unified__toggle,
   .live-coding__toggle {
-    min-height: 32px !important;
-    padding: 4px 10px !important;
-    font-size: 11px !important;
+    min-height: 28px !important;
+    padding: 3px 10px !important;
+    font-size: 10px !important;
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center !important;
     touch-action: manipulation;
   }
 
@@ -726,6 +890,72 @@
   .deck-nav {
     transform: scale(0.80);
     transform-origin: bottom center;
+  }
+
+  /* Slide 35 (Merci / Outro) */
+  .slide--outro {
+    padding: clamp(6px, 1.5vh, 12px) clamp(16px, 3vw, 28px) !important;
+  }
+  .slide--outro .slide__inner {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr) !important;
+    gap: 14px !important;
+    align-items: center !important;
+    max-height: 94vh !important;
+  }
+  .slide--outro .slide__label {
+    margin-bottom: 2px !important;
+    font-size: 9px !important;
+  }
+  .slide--outro .slide__heading {
+    font-size: clamp(22px, 6.5vh, 32px) !important;
+    margin-bottom: 3px !important;
+    line-height: 1 !important;
+  }
+  .slide--outro .slide__subtitle {
+    font-size: clamp(10.5px, 2.5vh, 13px) !important;
+    margin-bottom: 6px !important;
+    line-height: 1.2 !important;
+  }
+  .slide--outro .outro-tags {
+    gap: 4px !important;
+    margin-bottom: 6px !important;
+  }
+  .slide--outro .outro-tags .badge {
+    font-size: 8.5px !important;
+    padding: 1.5px 6px !important;
+  }
+  .slide--outro .outro-speaker p {
+    font-size: 10.5px !important;
+  }
+  .slide--outro .outro-qr-pane {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  .slide--outro .outro-qr-card {
+    padding: 6px 10px !important;
+    border-radius: 14px !important;
+    max-width: 200px !important;
+    width: 100% !important;
+  }
+  .slide--outro .outro-qr__title {
+    font-size: 9.5px !important;
+    margin: 0 0 4px 0 !important;
+  }
+  .slide--outro .outro-qr-card .qr-spotlight {
+    width: clamp(65px, 20vh, 85px) !important;
+    padding: 3px !important;
+  }
+  .slide--outro .outro-qr__url {
+    font-size: 8px !important;
+    padding: 2px 6px !important;
+    margin-top: 4px !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    display: block !important;
+    text-align: center !important;
   }
 
   /* Désactivation du pointeur laser sur mobile tactile */

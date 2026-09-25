@@ -1,5 +1,7 @@
 # Diagram as Code : Déroulé détaillé - Live Coding (45 min)
 
+> **Référence officielle des slides :** Pour l'enchaînement fidèle diapositive par diapositive des 35 slides du deck HTML, consulter [deroule-conference-slides.md](deroule-conference-slides.md).
+
 ## 🎯 Objectif global
 
 Montrer comment passer d'une décision architecturale (ADR textuelle) à une **cartographie vivante et navigable** via **LikeC4**, démontrant que le Diagram-as-Code réconcilie la modélisation avec l'implémentation.

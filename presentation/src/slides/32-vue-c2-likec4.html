@@ -1,5 +1,8 @@
 <section class="slide slide--diagram slide--content slide--code-preview slide--diagram-flow slide--c2-unified" data-nav="Vue C2 + likeC4" data-view="mermaid" data-split-mode="half" data-split="half">
-    <h2 class="slide__heading reveal">Comparer l'outil LikeC4</h2>
+    <div class="c2-unified__header">
+      <h2 class="slide__heading reveal">Comparer l'outil LikeC4</h2>
+      <button class="c2-unified__toggle" type="button" onclick="toggleC2UnifiedView(this)" aria-pressed="false" aria-label="Afficher l'aperçu LikeC4">Vue LikeC4 ↗</button>
+    </div>
     <div class="c2-unified__views">
       <div class="c2-unified__view c2-unified__view--mermaid">
         <div class="slide__inner">
@@ -54,7 +57,6 @@
             </div>
           </div>
           <div class="slide__aside reveal c2-mermaid__pane c2-mermaid__pane--diagram code-preview__pane code-preview__pane--embed">
-              <button class="c2-unified__toggle" type="button" onclick="toggleC2UnifiedView(this)" aria-pressed="false" aria-label="Afficher l'aperçu LikeC4">Vue LikeC4 ↗</button>
               <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="1.5" data-initial-zoom="1.0" data-zoom-min="0.2" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
               <div class="zoom-controls" role="toolbar" aria-label="Commandes de zoom du diagramme C2 Mermaid">
                 <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom avant" aria-label="Zoom avant">+</button>
@@ -156,7 +158,6 @@ flowchart TD
             </div>
           </div>
           <div class="slide__aside reveal c2-likec4__pane c2-likec4__pane--embed code-preview__pane code-preview__pane--embed">
-            <button class="c2-unified__toggle" type="button" onclick="toggleC2UnifiedView(this)" aria-pressed="true" aria-label="Afficher le diagramme Mermaid">Vue Mermaid ↗</button>
             <div class="code-preview__frame">
               <span class="slide__code-filename">Vue C2</span>
               <div class="embed-wrap reveal" id="coffee-v2-c2-embed-likec4" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000" data-likec4-fit-on-load="true" data-likec4-zoomout-steps="1">

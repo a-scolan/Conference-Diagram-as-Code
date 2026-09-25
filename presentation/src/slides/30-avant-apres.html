@@ -1,107 +1,67 @@
-<section class="slide slide--content" data-nav="Avant / Après">
+<section class="slide slide--content slide--avant-apres" data-nav="Avant / Après">
     <p class="slide__label reveal">Synthèse</p>
     <h2 class="slide__heading reveal">Le paradoxe r&eacute;concili&eacute;&nbsp;: avant / apr&egrave;s</h2>
-    <div class="benefit-cards-grid reveal">
-      <div class="benefit-card concept-card--blue">
-        <div class="benefit-card__header">
-          <h3 class="benefit-card__title">Source de v&eacute;rit&eacute;</h3>
-          <span class="benefit-card__badge">01</span>
+    <div class="synthesis-comparison reveal">
+      <!-- Panneau Avant -->
+      <div class="synthesis-panel synthesis-panel--before">
+        <div class="synthesis-panel__header">
+          <span class="synthesis-badge synthesis-badge--before">Avant</span>
+          <h3 class="synthesis-panel__title">Le dessin artisanal</h3>
         </div>
-        <div class="benefit-card__body">
-          <div class="benefit-card__section benefit-card__section--before">
-            <span class="benefit-card__label benefit-card__label--before">Avant &middot; Dessin</span>
-            <p class="benefit-card__text">Éparpillée dans Visio, Confluence et le souvenir du dernier atelier.</p>
-          </div>
-          <div class="benefit-card__section benefit-card__section--after">
-            <span class="benefit-card__label benefit-card__label--after">Après &middot; As-Code</span>
-            <p class="benefit-card__text benefit-card__text--after">Le mod&egrave;le unique <code>.c4</code> versionné dans Git.</p>
-          </div>
-        </div>
+        <ul class="synthesis-list">
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&times;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Source &eacute;parpill&eacute;e</strong>
+              <p class="synthesis-row__text">Visio, Confluence &middot; redessin manuel &agrave; chaque &eacute;volution</p>
+            </div>
+          </li>
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&times;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Validation tardive</strong>
+              <p class="synthesis-row__text">Sch&eacute;mas hors des PR &middot; dette documentaire subie</p>
+            </div>
+          </li>
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&times;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Livrables fig&eacute;s</strong>
+              <p class="synthesis-row__text">PNG morts &agrave; 6 mois &middot; imperm&eacute;ables &agrave; la CI/CD et &agrave; l'IA</p>
+            </div>
+          </li>
+        </ul>
       </div>
 
-      <div class="benefit-card concept-card--orange">
-        <div class="benefit-card__header">
-          <h3 class="benefit-card__title">Mise &agrave; jour</h3>
-          <span class="benefit-card__badge">02</span>
+      <!-- Panneau Après -->
+      <div class="synthesis-panel synthesis-panel--after">
+        <div class="synthesis-panel__header">
+          <span class="synthesis-badge synthesis-badge--after">Apr&egrave;s</span>
+          <h3 class="synthesis-panel__title">L'architecture As-Code</h3>
         </div>
-        <div class="benefit-card__body">
-          <div class="benefit-card__section benefit-card__section--before">
-            <span class="benefit-card__label benefit-card__label--before">Avant &middot; Dessin</span>
-            <p class="benefit-card__text">Nouveau fichier, redessiner à la main dès que le code bouge.</p>
-          </div>
-          <div class="benefit-card__section benefit-card__section--after">
-            <span class="benefit-card__label benefit-card__label--after">Après &middot; As-Code</span>
-            <p class="benefit-card__text benefit-card__text--after">Refactoriser le code du modèle et capitaliser sur l'existant.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="benefit-card concept-card--green">
-        <div class="benefit-card__header">
-          <h3 class="benefit-card__title">Validation en équipe</h3>
-          <span class="benefit-card__badge">03</span>
-        </div>
-        <div class="benefit-card__body">
-          <div class="benefit-card__section benefit-card__section--before">
-            <span class="benefit-card__label benefit-card__label--before">Avant &middot; Dessin</span>
-            <p class="benefit-card__text">Ambiguité sémantique, validation tardive ou informelle.</p>
-          </div>
-          <div class="benefit-card__section benefit-card__section--after">
-            <span class="benefit-card__label benefit-card__label--after">Après &middot; As-Code</span>
-            <p class="benefit-card__text benefit-card__text--after">Vue générée, diff visuel en Pull Request et review partagée.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="benefit-card concept-card--purple">
-        <div class="benefit-card__header">
-          <h3 class="benefit-card__title">Industrialisation &amp; CI/CD</h3>
-          <span class="benefit-card__badge">04</span>
-        </div>
-        <div class="benefit-card__body">
-          <div class="benefit-card__section benefit-card__section--before">
-            <span class="benefit-card__label benefit-card__label--before">Avant &middot; Dessin</span>
-            <p class="benefit-card__text">Exports manuels oubliés, obsolescence garantie à 6 mois.</p>
-          </div>
-          <div class="benefit-card__section benefit-card__section--after">
-            <span class="benefit-card__label benefit-card__label--after">Après &middot; As-Code</span>
-            <p class="benefit-card__text benefit-card__text--after">Build automatique, validation syntaxique et publication en portail.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="benefit-card concept-card--teal">
-        <div class="benefit-card__header">
-          <h3 class="benefit-card__title">Cycle de vie &amp; Git</h3>
-          <span class="benefit-card__badge">05</span>
-        </div>
-        <div class="benefit-card__body">
-          <div class="benefit-card__section benefit-card__section--before">
-            <span class="benefit-card__label benefit-card__label--before">Avant &middot; Dessin</span>
-            <p class="benefit-card__text">Schéma déconnecté de la livraison logicielle.</p>
-          </div>
-          <div class="benefit-card__section benefit-card__section--after">
-            <span class="benefit-card__label benefit-card__label--after">Après &middot; As-Code</span>
-            <p class="benefit-card__text benefit-card__text--after">L'architecture avance au même rythme que les branches et releases.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="benefit-card concept-card--cyan">
-        <div class="benefit-card__header">
-          <h3 class="benefit-card__title">Appui de l'IA</h3>
-          <span class="benefit-card__badge">06</span>
-        </div>
-        <div class="benefit-card__body">
-          <div class="benefit-card__section benefit-card__section--before">
-            <span class="benefit-card__label benefit-card__label--before">Avant &middot; Dessin</span>
-            <p class="benefit-card__text">Difficile d'automatiser un dessin vectoriel propriétaire.</p>
-          </div>
-          <div class="benefit-card__section benefit-card__section--after">
-            <span class="benefit-card__label benefit-card__label--after">Après &middot; As-Code</span>
-            <p class="benefit-card__text benefit-card__text--after">Amorçage ultra-rapide par le LLM, validation rigoureuse par l'humain.</p>
-          </div>
-        </div>
+        <ul class="synthesis-list">
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&#x2713;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Mod&egrave;le unique dans Git</strong>
+              <p class="synthesis-row__text">Code source <code>.c4</code> refactorable avec le code applicatif</p>
+            </div>
+          </li>
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&#x2713;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Review en Pull Request</strong>
+              <p class="synthesis-row__text">Diff visuel partag&eacute; &middot; relecture collective s&eacute;curis&eacute;e</p>
+            </div>
+          </li>
+          <li class="synthesis-row">
+            <span class="synthesis-row__icon" aria-hidden="true">&#x2713;</span>
+            <div class="synthesis-row__content">
+              <strong class="synthesis-row__lead">Portail vivant &amp; CI/CD</strong>
+              <p class="synthesis-row__text">Build automatique &middot; app web navigable et copilote IA</p>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
