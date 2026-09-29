@@ -311,6 +311,98 @@
   }
   window.toggleLiveCodingView = toggleLiveCodingView;
 
+  function _doScrollCodeStep(containerOrSlide, step, smooth) {
+    if (!containerOrSlide) return;
+    if (smooth === undefined) smooth = true;
+    var slide = containerOrSlide.closest ? (containerOrSlide.closest('.slide') || containerOrSlide) : containerOrSlide;
+    var isBeginning = (step === 'all' || step === '1' || step === 'launcher');
+
+    if (isBeginning) {
+      var pres = slide.querySelectorAll('.slide__code-block pre, .live-coding__code-block pre, pre');
+      pres.forEach(function(p) {
+        if (p.scrollTop > 0) {
+          p.scrollTo({ top: 0, left: p.scrollLeft, behavior: smooth ? 'smooth' : 'instant' });
+        }
+      });
+      return;
+    }
+
+    var allTargets = Array.prototype.slice.call(
+      slide.querySelectorAll('.slide__code-block [data-step="' + step + '"], .live-coding__code-block [data-step="' + step + '"], pre [data-step="' + step + '"]')
+    );
+    if (!allTargets.length) {
+      allTargets = Array.prototype.slice.call(slide.querySelectorAll('[data-step="' + step + '"]'));
+    }
+    if (!allTargets.length) return;
+
+    var visibleTargets = allTargets.filter(function(el) {
+      var parentTab = el.closest('.code-preview__tab-content, .workspace-tree__tab-content');
+      if (parentTab) {
+        if (parentTab.style.display === 'none' || (parentTab.classList.contains('code-preview__tab-content') && !parentTab.classList.contains('is-active') && !parentTab.style.display)) {
+          return false;
+        }
+      }
+      return el.offsetParent !== null || (el.getBoundingClientRect && el.getBoundingClientRect().height > 0);
+    });
+
+    var targets = visibleTargets.length > 0 ? visibleTargets : allTargets;
+    if (!targets.length) return;
+
+    var firstEl = targets[0];
+    var lastEl = targets[targets.length - 1];
+
+    var container = firstEl.closest('pre');
+    if (!container || container.scrollHeight <= container.clientHeight + 4) {
+      var cur = firstEl.parentElement;
+      while (cur && cur !== slide && cur !== document.body) {
+        if (cur.scrollHeight > cur.clientHeight + 4) {
+          var ov = window.getComputedStyle(cur).overflowY;
+          if (ov === 'auto' || ov === 'scroll') {
+            container = cur;
+            break;
+          }
+        }
+        cur = cur.parentElement;
+      }
+    }
+
+    if (!container || container.scrollHeight <= container.clientHeight + 4) return;
+
+    var containerRect = container.getBoundingClientRect();
+    var firstRect = firstEl.getBoundingClientRect();
+    var lastRect = lastEl.getBoundingClientRect();
+
+    var targetTop = container.scrollTop + (firstRect.top - containerRect.top);
+    var targetBottom = container.scrollTop + (lastRect.bottom - containerRect.top);
+    var targetHeight = targetBottom - targetTop;
+    var maxScroll = container.scrollHeight - container.clientHeight;
+
+    var desiredTop;
+    if (targetHeight < container.clientHeight * 0.7) {
+      desiredTop = targetTop - (container.clientHeight - targetHeight) / 2;
+    } else {
+      desiredTop = targetTop - 30;
+    }
+    desiredTop = Math.max(0, Math.min(desiredTop, maxScroll));
+
+    var isComfortablyVisible = (
+      firstRect.top >= containerRect.top + 24 &&
+      lastRect.bottom <= containerRect.bottom - 24
+    );
+
+    if (!isComfortablyVisible || Math.abs(container.scrollTop - desiredTop) > 20) {
+      container.scrollTo({ top: desiredTop, left: container.scrollLeft, behavior: smooth ? 'smooth' : 'instant' });
+    }
+  }
+
+  function scrollCodeStepIntoView(containerOrSlide, step, smooth) {
+    if (!containerOrSlide) return;
+    setTimeout(function() {
+      _doScrollCodeStep(containerOrSlide, step, smooth);
+    }, 35);
+  }
+  window.scrollCodeStepIntoView = scrollCodeStepIntoView;
+
   function setLiveCodingStep(target, step) {
     var slide = target.closest ? target.closest('.slide--live-coding') : target;
     if (!slide) return;
@@ -323,6 +415,7 @@
     if (codeBlock) {
       codeBlock.setAttribute('data-active-step', step);
     }
+    scrollCodeStepIntoView(slide, step);
   }
   window.setLiveCodingStep = setLiveCodingStep;
 
@@ -338,6 +431,7 @@
     if (codeBlock) {
       codeBlock.setAttribute('data-active-step', step);
     }
+    scrollCodeStepIntoView(frame, step);
   }
   window.setCodePreviewStep = setCodePreviewStep;
 
@@ -462,6 +556,7 @@
     slide.querySelectorAll('.slide__code-block').forEach(function(cb) {
       cb.setAttribute('data-active-step', targetStep);
     });
+    scrollCodeStepIntoView(slide, targetStep);
   }
   window.switchWorkspaceTreeTab = switchWorkspaceTreeTab;
 
@@ -497,6 +592,8 @@
           if (!hasCurStep) {
             var firstStep = stepsInTab[0].getAttribute('data-step');
             window.deckEngine.setSlideStep(slide, firstStep);
+          } else {
+            scrollCodeStepIntoView(slide, curStep);
           }
         }
       }

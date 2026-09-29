@@ -35,7 +35,7 @@ Les slides **Mermaid** interactives utilisent désormais un cadrage plus large, 
 ### Raccourcis et fonctionnalités orateur en séance
 
 - **Touche P** : Ouvre instantanément la **vue présentateur double écran** (`presenter-view.html`) sur moniteur secondaire, synchronisée en temps réel via `BroadcastChannel` (chronomètre de session, 5 jalons d'Actes, slide active, slide suivante, notes d'orateur mot à mot avec mise en valeur des *Silences Sacrés* et zoom typographique de pupitre `A-` / `A+`).
-- **Touches Flèches / Espace / Télécommande** : Déroulent les **étapes de code progressives** sur les diapositives techniques (Slide 11 C1, Slide 13 C2, Slide 16 Live coding, Slide 18 Séquence) sans nécessiter de clic à la souris, avant de basculer sur la slide suivante.
+- **Touches Flèches / Espace / Télécommande** : Déroulent les **étapes de code progressives** sur les diapositives techniques (Slide 11 C1, Slide 13 C2, Slide 16 Live coding, Slide 18 Séquence) sans nécessiter de clic à la souris avec défilement automatique des ascenseurs de code vers les lignes révélées, avant de basculer sur la slide suivante.
 - **Touche C** : Bascule le **mode confort & fort contraste** fond de salle (`data-readability="high-contrast"`, `--font-bump: 6.5px`) pour les vidéoprojecteurs délavés.
 - **Touche T** : Alterne le thème visuel (*Google Blueprint Light* / *Slate Architect*).
 - **Touche . (point) ou B** : Occulte l'écran public (mode écran noir) pour concentrer l'attention sur l'orateur.
