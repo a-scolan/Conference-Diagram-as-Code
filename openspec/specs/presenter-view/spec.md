@@ -61,11 +61,11 @@ La console présentateur DOIT (SHALL) présenter une checklist interactive de pr
 
 #### Scenario: Affichage automatique sur la première diapositive
 - **WHEN** La console présentateur est sur la diapositive d'ouverture (Slide 1 / Titre)
-- **THEN** Un panneau "Checklist Avant-Scène" s'affiche automatiquement en tête de la colonne de notes avec les 4 points de contrôle matériels et techniques cruciaux (Navigateur plein écran F11, VS Code zoomé light, onglets de secours PR & LikeC4, alimentation secteur / batterie & bouteille d'eau ; le chronomètre étant nativement présent dans la vue speaker, aucun smartphone n'est requis ; le cadrage orateur est concentré dans les concepts clés de la diapositive).
+- **THEN** Un panneau "Checklist Avant-Scène" s'affiche automatiquement en tête de la colonne de notes avec les 5 points de contrôle matériels et techniques cruciaux (Navigateur plein écran F11, VS Code zoomé light, onglets de secours PR & LikeC4, pas d'interruptions [Teams/Outlook & veille écran/PC], alimentation secteur / batterie & bouteille d'eau ; le chronomètre étant nativement présent dans la vue speaker, aucun smartphone n'est requis ; le cadrage orateur est concentré dans les concepts clés de la diapositive).
 
 #### Scenario: Interaction et persistance de la checklist
 - **WHEN** L'orateur coche ou décoche des éléments de la checklist
-- **THEN** L'état est instantanément sauvegardé dans `localStorage`, le compteur d'avancement se met à jour (badge vert `4/4 ✅ Prêt !`), et un bouton de réinitialisation permet de remettre la liste à zéro pour une nouvelle répétition ou session.
+- **THEN** L'état est instantanément sauvegardé dans `localStorage`, le compteur d'avancement se met à jour (badge vert `5/5 ✅ Prêt !`), et un bouton de réinitialisation permet de remettre la liste à zéro pour une nouvelle répétition ou session.
 
 #### Scenario: Repli progressif des éléments cochés
 - **WHEN** L'orateur coche des points de contrôle au fil de sa préparation

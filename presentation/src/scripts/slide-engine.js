@@ -23,7 +23,7 @@
     this.scrollTimer=null;
     if(initIdx>0){
       var targetTop=this.getSlideTop(initIdx);
-      this.deck.scrollTop=targetTop;
+      this.deck.scrollTo({top:targetTop,behavior:'instant'});
     }
     this.injectCrystals();
     this.injectCardHatchStrips();
@@ -31,7 +31,7 @@
     this.buildSectionMap();this.buildChrome();this.bindEvents();this.observe();this.update();
     if(initIdx>0){
       var self=this;
-      setTimeout(function(){ self.goTo(initIdx,'auto'); }, 50);
+      setTimeout(function(){ self.goTo(initIdx,'instant'); }, 50);
     }
     this.broadcastDeckReloaded();
   }
@@ -267,6 +267,24 @@
       clearTimeout(self.scrollTimer);
       self.scrollTimer=setTimeout(function(){self.snapToNearest();},140);
     },{passive:true});
+
+    /* Recalage précis en cas de redimensionnement de fenêtre, rotation ou barre d'URL mobile */
+    var resizeTimer = null;
+    var handleResize = function(){
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function(){
+        if(self.deck && self.slides[self.current]){
+          var targetTop = self.getSlideTop(self.current);
+          self.deck.scrollTo({ top: targetTop, behavior: 'instant' });
+          self.update();
+        }
+      }, 50);
+    };
+    window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('orientationchange', handleResize, { passive: true });
+    if(window.visualViewport){
+      window.visualViewport.addEventListener('resize', handleResize, { passive: true });
+    }
   };
   SlideEngine.prototype.observe=function(){
     var self=this;

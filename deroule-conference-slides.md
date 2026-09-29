@@ -55,6 +55,7 @@ Ce document reflète la réalité exacte du deck HTML projeté lors de la sessio
     - Navigateur public : Plein écran réel (F11), résolution 16:9 sans rognage, blackout (.) testé
     - VS Code (Live coding) : Thème clair (LIGHT), police zoomée (+2/+3), arborescence gauche masquée
     - Onglets de secours : PR GitHub #1 et portail LikeC4 local (localhost:3000) ouverts en arrière-plan
+    - Pas d'interruptions : Fermer Teams, Outlook, autres fenêtres..., désactiver la veille écran et PC
     - Matériel & Confort : Ordinateur branché sur secteur (ou batterie pleine), bouteille d'eau ouverte sur le pupitre
 - **Action scénique :** Debout au centre, regard direct balayant toute la salle, voix posée, aucun mot d'hésitation.
 

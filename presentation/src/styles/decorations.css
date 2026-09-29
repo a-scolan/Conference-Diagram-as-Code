@@ -894,7 +894,6 @@
 
   /* ADR-001 formaté en paysage mobile */
   .slide--adr-preview .slide__heading {
-    text-align: center !important;
     font-size: clamp(14px, 3.2vh, 18px) !important;
     margin-top: 0 !important;
     margin-bottom: 4px !important;
@@ -986,15 +985,34 @@
     height: 100% !important;
   }
   .slide--briques-c2 .slide__heading {
-    font-size: clamp(15px, 3.4vh, 20px) !important;
+    font-size: clamp(14px, 3vh, 18px) !important;
     margin-bottom: 2px !important;
   }
   .slide--briques-c2 .concept-grid--2 {
-    margin-top: 6px !important;
+    margin-top: 4px !important;
     gap: 8px !important;
   }
   .slide--briques-c2 .concept-card {
-    padding: 6px 10px !important;
+    padding: 5px 8px !important;
+    gap: 2px !important;
+  }
+  .slide--briques-c2 .concept-card__title {
+    font-size: 10.5px !important;
+    margin-bottom: 1px !important;
+  }
+  .slide--briques-c2 .concept-card__desc {
+    font-size: 9px !important;
+    line-height: 1.2 !important;
+    margin-bottom: 2px !important;
+  }
+  .slide--briques-c2 .concept-card__list {
+    margin: 2px 0 0 !important;
+    padding-left: 10px !important;
+  }
+  .slide--briques-c2 .concept-card__list li {
+    font-size: 8.5px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 1px !important;
   }
 
   /* Forcer l'affichage 2 colonnes et la présence de aside en mode paysage mobile */
@@ -1049,6 +1067,49 @@
     font-size: 9px !important;
     line-height: 1.25 !important;
     margin-bottom: 2px !important;
+  }
+
+  /* Slide 13 (Grammaire du modèle) : calibration ultra-dense pour formats mobiles réduits */
+  .slide--grammaire-modele .slide__inner {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    height: 100% !important;
+  }
+  .slide--grammaire-modele .slide__heading {
+    font-size: clamp(14px, 3.2vh, 18px) !important;
+    margin-bottom: 2px !important;
+  }
+  .slide--grammaire-modele .slide__body {
+    font-size: clamp(9.5px, 2vh, 11px) !important;
+    line-height: 1.25 !important;
+    margin: 2px 0 4px 0 !important;
+  }
+  .slide--grammaire-modele .concept-grid--3 {
+    margin-top: 4px !important;
+    gap: 6px !important;
+  }
+  .slide--grammaire-modele .concept-card {
+    padding: 5px 8px !important;
+    gap: 2px !important;
+  }
+  .slide--grammaire-modele .concept-card__title {
+    font-size: 10.5px !important;
+    margin-bottom: 1px !important;
+  }
+  .slide--grammaire-modele .concept-card__desc {
+    font-size: 9px !important;
+    line-height: 1.2 !important;
+    margin-bottom: 2px !important;
+  }
+  .slide--grammaire-modele .concept-card__list {
+    margin: 2px 0 0 !important;
+    padding-left: 10px !important;
+  }
+  .slide--grammaire-modele .concept-card__list li {
+    font-size: 8.5px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 1.5px !important;
   }
 
   /* Slide 24: Specs & arborescence avec tabs : même hauteur à gauche et à droite */
