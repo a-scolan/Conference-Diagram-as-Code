@@ -1,0 +1,1356 @@
+/* ==========================================================================
+   BLUEPRINT DECORATIONS & VISUAL TEXTURES
+   Rappels d'ingénierie et papier millimétré d'architecture vivante.
+   ========================================================================== */
+
+/* Fond en papier millimétré technique pour le deck et les diapositives */
+.deck,
+.slide {
+  background-color: var(--bg);
+  background-image: var(--blueprint-grid);
+  background-size: var(--blueprint-grid-size);
+}
+
+/* Mires techniques de coin (+) sur les cadres et conteneurs principaux */
+.code-preview__frame,
+.mermaid-wrap,
+.benefit-cards-grid {
+  position: relative;
+}
+
+/* Mires techniques de coin (+) ciblées uniquement sur les grands cadres de code et diagrammes */
+.code-preview__frame,
+.mermaid-wrap {
+  position: relative;
+}
+
+.code-preview__frame::before,
+.code-preview__frame::after,
+.mermaid-wrap::before,
+.mermaid-wrap::after {
+  content: "+";
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.65;
+  pointer-events: none;
+  z-index: 10;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.code-preview__frame::before,
+.mermaid-wrap::before {
+  top: -8px;
+  left: -8px;
+}
+
+.code-preview__frame::after,
+.mermaid-wrap::after {
+  bottom: -8px;
+  right: -8px;
+}
+
+/* Mires blueprint discrètes uniquement aux 2 angles extrêmes des slides de titre et intercalaires */
+.slide--cover::before,
+.slide--cover::after,
+.slide--divider::before,
+.slide--divider::after {
+  content: "+";
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 1;
+  user-select: none;
+}
+
+.slide--cover::before,
+.slide--divider::before {
+  top: 18px;
+  left: 22px;
+}
+
+.slide--cover::after,
+.slide--divider::after {
+  bottom: 18px;
+  right: 22px;
+}
+
+/* Aucune mire intrusive sur les slides de contenu et spécifiquement la slide 7 et slide 31 */
+.slide--content::before,
+.slide--content::after,
+.slide--c4-zoom::before,
+.slide--c4-zoom::after,
+.benefit-card::before,
+.benefit-card::after,
+.comparison-card::before,
+.comparison-card::after,
+.benefit-cards-grid::before,
+.benefit-cards-grid::after {
+  display: none !important;
+}
+
+/* ==========================================================================
+   BLUEPRINT PERIPHERAL DECORATIONS (Mires réparties aux 4 angles)
+   ========================================================================== */
+.blueprint-deco-frame,
+.slide > .blueprint-deco-frame,
+.slide--title > .blueprint-deco-frame,
+.slide--divider > .blueprint-deco-frame {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  overflow: hidden !important;
+}
+
+.blueprint-deco {
+  position: absolute !important;
+  pointer-events: none !important;
+  overflow: visible;
+  transition: opacity 0.3s ease;
+}
+
+[data-theme="slate-architect"] .blueprint-deco,
+[data-theme="dark"] .blueprint-deco {
+  filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.15));
+}
+
+.blueprint-deco--tl {
+  top: clamp(16px, 2.8vh, 32px);
+  left: clamp(20px, 2.8vw, 36px);
+  opacity: 0.50;
+}
+
+.blueprint-deco--tr {
+  top: clamp(16px, 2.8vh, 32px);
+  right: clamp(72px, 6vw, 92px); /* Évite la capsule du compteur */
+  opacity: 0.55;
+}
+
+.blueprint-deco--bl {
+  bottom: clamp(18px, 3vh, 34px);
+  left: clamp(20px, 2.8vw, 36px);
+  opacity: 0.70;
+}
+
+.blueprint-deco--br {
+  bottom: clamp(18px, 3vh, 34px);
+  right: clamp(24px, 3.2vw, 40px);
+  opacity: 0.65;
+}
+
+@media (max-width: 960px), (max-height: 560px) {
+  .blueprint-deco-frame,
+  .card-hatch-strip-wrap {
+    display: none !important;
+  }
+}
+
+/* Désactivation des hachures sur la slide 31 (fiches Avant / Après) et la slide 17 (V1 vs V2) */
+.benefit-card .card-hatch-strip-wrap,
+.slide[data-nav="Avant / Après"] .card-hatch-strip-wrap,
+.slide[data-nav="V1 vs V2"] .card-hatch-strip-wrap {
+  display: none !important;
+}
+
+/* Désactivation des mires blueprint sur les slides denses (17, 31, 32) */
+.slide[data-nav="V1 vs V2"] > .blueprint-deco-frame,
+.slide[data-nav="Avant / Après"] > .blueprint-deco-frame,
+.slide[data-nav="Portail vivant"] > .blueprint-deco-frame,
+.slide--portal-vivant > .blueprint-deco-frame {
+  display: none !important;
+}
+
+/* ==========================================================================
+   CARD CALIBRATION STRIPS (Hachures SVG bicolores identiques aux titres)
+   ========================================================================== */
+.card-hatch-strip-wrap {
+  position: absolute;
+  bottom: -3px;
+  right: 16px;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+  line-height: 0;
+}
+
+.concept-card .card-hatch-strip-wrap {
+  color: var(--card-accent, var(--accent));
+  bottom: -3px;
+  right: 18px;
+}
+
+.benefit-card .card-hatch-strip-wrap {
+  color: var(--card-accent, var(--accent));
+  bottom: -3px;
+  right: 18px;
+}
+
+.review-questions__card .card-hatch-strip-wrap {
+  bottom: -3px;
+  right: 18px;
+}
+
+.slide--split .slide__panel--primary .card-hatch-strip-wrap {
+  color: var(--accent2);
+  bottom: -3px;
+  right: 20px;
+}
+
+.slide--split .slide__panel--secondary .card-hatch-strip-wrap {
+  color: var(--green);
+  bottom: -3px;
+  right: 20px;
+}
+
+.card-hatch-strip {
+  display: block;
+  overflow: visible;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.concept-card:hover .card-hatch-strip,
+.benefit-card:hover .card-hatch-strip,
+.review-questions__card:hover .card-hatch-strip {
+  transform: scale(1.08);
+}
+
+/* ==========================================================================
+   MOBILE ORIENTATION LOCK OVERLAY (Blocage obligatoire en mode portrait)
+   ========================================================================== */
+.orientation-lock-overlay {
+  display: none;
+}
+
+@media screen and (orientation: portrait) and (max-width: 899px) {
+  .orientation-lock-overlay {
+    display: flex !important;
+    position: fixed;
+    inset: 0;
+    z-index: 2147483646;
+    background-color: var(--bg);
+    color: var(--text);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    text-align: center;
+    user-select: none;
+  }
+
+  .orientation-lock-card {
+    background: var(--surface);
+    border: 2px solid var(--border-bright);
+    border-radius: 16px;
+    padding: 36px 28px;
+    max-width: 360px;
+    width: 100%;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .orientation-lock-icon {
+    width: 64px;
+    height: 64px;
+    color: var(--accent);
+    animation: rotatePhone 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .orientation-lock-title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text);
+    margin: 0;
+  }
+
+  .orientation-lock-desc {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-dim);
+    margin: 0;
+  }
+
+  @keyframes rotatePhone {
+    0%, 15% {
+      transform: rotate(0deg);
+    }
+    45%, 75% {
+      transform: rotate(90deg);
+    }
+    90%, 100% {
+      transform: rotate(0deg);
+    }
+  }
+}
+
+/* ==========================================================================
+   MOBILE LANDSCAPE COMPACT RULES (Écran paysage compact <= 560px)
+   ========================================================================== */
+@media screen and (orientation: landscape) and (max-height: 560px) {
+  /* Masquage des ascenseurs sur les conteneurs plein écran mais conservation sur le code */
+  .deck,
+  .deck-dots,
+  .slide {
+    scrollbar-width: none !important;
+  }
+  .deck::-webkit-scrollbar,
+  .deck-dots::-webkit-scrollbar,
+  .slide::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Ascenseurs fonctionnels et visibles sur les blocs de code */
+  .slide__code-block pre,
+  .workspace-tree__ascii-block pre,
+  .workspace-tree__tab-content pre {
+    scrollbar-width: thin !important;
+    scrollbar-color: var(--accent) transparent !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .slide__code-block pre::-webkit-scrollbar,
+  .workspace-tree__ascii-block pre::-webkit-scrollbar,
+  .workspace-tree__tab-content pre::-webkit-scrollbar {
+    display: block !important;
+    width: 4px !important;
+    height: 4px !important;
+  }
+  .slide__code-block pre::-webkit-scrollbar-thumb,
+  .workspace-tree__ascii-block pre::-webkit-scrollbar-thumb,
+  .workspace-tree__tab-content pre::-webkit-scrollbar-thumb {
+    background: var(--accent) !important;
+    border-radius: 4px !important;
+  }
+
+  /* Aucune superposition décorative sur mobile paysage */
+  .blueprint-deco-frame,
+  .card-hatch-strip-wrap,
+  .code-preview__frame::before,
+  .code-preview__frame::after,
+  .mermaid-wrap::before,
+  .mermaid-wrap::after {
+    display: none !important;
+  }
+
+  .deck-counter {
+    display: none !important;
+  }
+
+  /* Désactiver le décalage vertical des révélations en mobile paysage pour éviter tout dépassement de hauteur */
+  .slide .reveal {
+    transform: none !important;
+    transition: opacity 0.3s ease !important;
+  }
+
+  /* Désactiver les boutons de redimensionnement de colonnes en mobile (zoom au doigt) */
+  .code-preview__split-toggle {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  .slide {
+    padding: clamp(6px, 1.5vh, 12px) clamp(16px, 3vw, 28px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Centrage parfait des slides de titre, de transition, de citation (ex: slide 26) et d'impact */
+  .slide--title,
+  .slide--cover,
+  .slide--divider,
+  .slide--quote,
+  .slide[data-nav*="message"],
+  .slide[data-nav*="promesse"],
+  .slide[data-nav*="image mentale"] {
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .slide > .slide__label,
+  .slide > .slide__heading,
+  .slide > .slide__body,
+  .slide > .slide__subtitle,
+  .c2-unified__header {
+    flex: 0 0 auto !important;
+  }
+
+  /* Adapter l'espace de contenu à la hauteur utile de l'écran, avec ascenseur visible si débordement */
+  .slide__inner,
+  .slide__panels {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    padding-right: 0 !important;
+  }
+
+  /* Ascenseurs fonctionnels et visibles sur mobile */
+  .slide__inner,
+  .slide__panels,
+  .slide__panel,
+  .slide__code-block pre,
+  .workspace-tree__ascii-block pre,
+  .workspace-tree__tab-content pre,
+  .adr-doc,
+  .takeaway-row {
+    scrollbar-width: thin !important;
+    scrollbar-color: var(--accent) transparent !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .slide__inner::-webkit-scrollbar,
+  .slide__panels::-webkit-scrollbar,
+  .slide__panel::-webkit-scrollbar,
+  .adr-doc::-webkit-scrollbar,
+  .takeaway-row::-webkit-scrollbar {
+    display: block !important;
+    width: 3px !important;
+    height: 3px !important;
+  }
+  .slide__inner::-webkit-scrollbar-thumb,
+  .slide__panels::-webkit-scrollbar-thumb,
+  .slide__panel::-webkit-scrollbar-thumb,
+  .adr-doc::-webkit-scrollbar-thumb,
+  .takeaway-row::-webkit-scrollbar-thumb {
+    background: var(--accent) !important;
+    border-radius: 3px !important;
+  }
+
+  /* Les slides en split restent sur 2 colonnes en paysage mobile pour s'adapter à la hauteur */
+  .slide--split .slide__panels {
+    grid-template-columns: 1fr 1fr !important;
+    gap: clamp(8px, 1.8vw, 14px) !important;
+    align-items: stretch !important;
+  }
+  .slide--split .slide__panel {
+    padding: clamp(8px, 1.5vh, 12px) clamp(10px, 1.8vw, 16px) !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+  }
+
+  /* Slide dessin pleine page : adapter l'image à la hauteur d'écran */
+  .slide--full-drawing img {
+    max-height: clamp(140px, 60vh, 220px) !important;
+    width: auto !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+  }
+
+  /* Éviter les ascenseurs disgracieux sur les sous-colonnes (hors meme/image) */
+  .code-preview__pane,
+  .slide__aside:not(.slide__aside--meme) {
+    overflow: visible !important;
+  }
+
+  .slide__code-filename {
+    font-size: clamp(7.5px, 2vw, 9.5px) !important;
+    padding: 2px 7px !important;
+    top: var(--code-preview-chip-line) !important;
+    transform: translateY(-50%) !important;
+    white-space: nowrap !important;
+    max-width: calc(100% - 24px) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .code-preview__frame > .slide__code-filename {
+    font-size: clamp(7.5px, 2.2cqw, 9.5px) !important;
+    padding: 2px 7px !important;
+    top: var(--code-preview-chip-line) !important;
+    transform: translateY(-50%) !important;
+    white-space: nowrap !important;
+    max-width: calc(100% - 20px) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .slide__display {
+    font-size: clamp(28px, 8vh, 48px) !important;
+    line-height: 1 !important;
+  }
+
+  .slide__heading {
+    font-size: clamp(18px, 4vh, 26px) !important;
+    margin-bottom: 6px !important;
+    line-height: 1.15 !important;
+  }
+
+  .slide__label {
+    font-size: 10px !important;
+    margin-bottom: 4px !important;
+    letter-spacing: 1px !important;
+  }
+
+  .slide__subtitle {
+    font-size: 11px !important;
+    margin-top: 4px !important;
+  }
+
+  .slide__bullets li {
+    font-size: clamp(12px, 2.8vh, 15px) !important;
+    padding: 0 0 0 18px !important;
+    margin-bottom: 6px !important;
+    line-height: 1.4 !important;
+  }
+
+  .slide__bullets li::before {
+    top: 0.7em !important;
+    top: 0.5lh !important;
+    transform: translateY(-50%) !important;
+    width: 4px !important;
+    height: 4px !important;
+  }
+
+  /* Speaker */
+  .slide--speaker .slide__heading {
+    font-size: clamp(24px, 5vh, 34px) !important;
+    line-height: 1 !important;
+    margin-bottom: 4px !important;
+  }
+  .slide--speaker .speaker-intro__role {
+    font-size: clamp(12px, 2.5vh, 15px) !important;
+    margin-bottom: 6px !important;
+  }
+  .slide--speaker .speaker-intro__lead {
+    font-size: clamp(11px, 2.2vh, 13.5px) !important;
+    line-height: 1.35 !important;
+    max-width: 90% !important;
+  }
+  .slide--speaker br {
+    display: none !important;
+  }
+  .slide--speaker .speaker-pill-list {
+    margin-top: 8px !important;
+    gap: 6px !important;
+  }
+  .slide--speaker .speaker-pill {
+    font-size: 10px !important;
+    padding: 3px 8px !important;
+  }
+
+  /* Fil rouge */
+  .slide--fil-rouge .slide__inner {
+    gap: 8px !important;
+  }
+  .slide--fil-rouge .speaker-card {
+    padding: 6px 12px !important;
+  }
+  .slide--fil-rouge .speaker-card__name {
+    font-size: 14px !important;
+  }
+  .slide--fil-rouge .speaker-card__meta {
+    font-size: 10px !important;
+    margin-bottom: 2px !important;
+  }
+  .slide--fil-rouge .speaker-roadmap {
+    gap: 4px !important;
+    margin-top: 4px !important;
+  }
+  .slide--fil-rouge .speaker-roadmap li {
+    font-size: 9.5px !important;
+    padding: 2.5px 8px !important;
+    margin-bottom: 0 !important;
+    gap: 8px !important;
+  }
+  .slide--fil-rouge .speaker-roadmap__step {
+    min-width: 22px !important;
+    height: 22px !important;
+    font-size: 9px !important;
+  }
+  .slide--fil-rouge .speaker-panel {
+    padding: 8px 12px !important;
+  }
+
+  /* Cas d'étude (Slide 11) */
+  .slide[data-nav="Cas d'étude"] .slide__inner {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) !important;
+    align-items: center !important;
+    gap: 14px !important;
+  }
+  .slide[data-nav="Cas d'étude"] .slide__aside--meme {
+    overflow: hidden !important;
+    border-radius: 18px !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    height: fit-content !important;
+    min-height: 0 !important;
+    aspect-ratio: auto !important;
+    align-self: center !important;
+    justify-self: center !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22) !important;
+  }
+  .slide[data-nav="Cas d'étude"] .slide__aside--meme img {
+    max-height: clamp(120px, 44vh, 180px) !important;
+    width: auto !important;
+    max-width: 100% !important;
+    display: block !important;
+    object-fit: contain !important;
+    transform: none !important;
+    border-radius: inherit !important;
+  }
+  .slide[data-nav="Cas d'étude"] .slide__aside--meme::after {
+    border-radius: inherit !important;
+    inset: 0 !important;
+  }
+
+  /* C4 zoom */
+  .slide--c4-zoom .slide__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) !important;
+    gap: 10px !important;
+    align-items: center !important;
+  }
+  .slide--c4-zoom .slide__heading {
+    font-size: clamp(13px, 2.6vh, 17px) !important;
+    margin-bottom: 3px !important;
+  }
+  .slide--c4-zoom .c4-levels-list {
+    gap: 3px !important;
+    margin-top: 4px !important;
+  }
+  .slide--c4-zoom .c4-level-item {
+    padding: 2.5px 7px !important;
+    gap: 6px !important;
+    border-radius: 7px !important;
+  }
+  .slide--c4-zoom .c4-level-item .c4-level {
+    font-size: 8px !important;
+    padding: 1.5px 5px !important;
+  }
+  .slide--c4-zoom .c4-level-text {
+    font-size: 8.5px !important;
+    line-height: 1.2 !important;
+  }
+  .slide--c4-zoom .c4-zoom__viewport {
+    padding: 6px !important;
+  }
+  .slide--c4-zoom svg {
+    max-height: clamp(140px, 44vh, 200px) !important;
+  }
+
+  /* Portail vivant (Slide 32) */
+  .slide--portal-vivant .slide__inner {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: clamp(12px, 2vw, 22px) !important;
+  }
+  .slide--portal-vivant .slide__heading {
+    margin-bottom: 4px !important;
+  }
+  .slide--portal-vivant .slide__bullets li {
+    font-size: 9.5px !important;
+    padding: 0 0 0 10px !important;
+    margin-bottom: 3px !important;
+    line-height: 1.25 !important;
+  }
+  .slide--portal-vivant .slide__aside {
+    margin-top: 0 !important;
+    align-self: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .slide--portal-vivant .slide__aside svg {
+    max-height: clamp(120px, 44vh, 180px) !important;
+    width: auto !important;
+  }
+
+  /* Citations et callouts */
+  .slide--quote {
+    padding: 16px 24px !important;
+  }
+  .slide--quote .callout {
+    padding: clamp(14px, 2.5vh, 24px) clamp(16px, 2.5vw, 28px) !important;
+    font-size: clamp(16px, 3.8vh, 22px) !important;
+    line-height: 1.35 !important;
+    max-width: 90% !important;
+  }
+
+  /* Fiches avant / après */
+  .benefit-cards-grid {
+    gap: 6px !important;
+    margin-top: 6px !important;
+  }
+  .benefit-card {
+    padding: 6px 10px !important;
+    gap: 4px !important;
+  }
+  .benefit-card__title {
+    font-size: 12px !important;
+  }
+  .benefit-card__section {
+    padding: 4px 8px !important;
+  }
+  .benefit-card__label {
+    font-size: 9.5px !important;
+  }
+  .benefit-card__text {
+    font-size: 10.5px !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Synthèse avant / après (Slide 31) */
+  .slide--avant-apres {
+    padding: clamp(10px, 2.2vh, 18px) clamp(16px, 3vw, 28px) !important;
+    justify-content: center !important;
+  }
+  .slide--avant-apres .slide__heading {
+    margin-bottom: clamp(4px, 1vh, 8px) !important;
+    font-size: clamp(16px, 4vh, 22px) !important;
+  }
+  .synthesis-comparison {
+    max-width: 100% !important;
+    gap: clamp(12px, 2.2vw, 22px) !important;
+    margin-top: clamp(4px, 1vh, 10px) !important;
+  }
+  .synthesis-panel {
+    padding: clamp(10px, 2.2vh, 16px) clamp(14px, 2vw, 20px) !important;
+    gap: clamp(8px, 1.6vh, 14px) !important;
+    border-radius: 14px !important;
+  }
+  .synthesis-panel__header {
+    gap: 10px !important;
+    padding-bottom: clamp(6px, 1.2vh, 10px) !important;
+  }
+  .synthesis-panel__title {
+    font-size: clamp(14px, 3.4vh, 17px) !important;
+    line-height: 1.25 !important;
+  }
+  .synthesis-badge {
+    font-size: 11px !important;
+    padding: 2.5px 8px !important;
+  }
+  .synthesis-list {
+    gap: clamp(8px, 1.8vh, 14px) !important;
+  }
+  .synthesis-row {
+    gap: 10px !important;
+  }
+  .synthesis-row__icon {
+    width: clamp(20px, 4vh, 24px) !important;
+    height: clamp(20px, 4vh, 24px) !important;
+    font-size: clamp(12px, 2.4vh, 14px) !important;
+    margin-top: 1px !important;
+  }
+  .synthesis-row__content {
+    gap: 2px !important;
+  }
+  .synthesis-row__lead {
+    font-size: clamp(13px, 2.8vh, 15px) !important;
+    line-height: 1.25 !important;
+  }
+  .synthesis-row__text {
+    font-size: clamp(11.5px, 2.4vh, 13px) !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Pull request */
+  .slide--pr-review {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+  .slide--pr-review .slide__body {
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+    margin-bottom: 4px !important;
+  }
+  .slide--pr-review .mermaid-wrap {
+    height: clamp(120px, 30vh, 160px) !important;
+    padding: 6px !important;
+    margin-top: 2px !important;
+  }
+  .slide--pr-review .pr-review__status {
+    margin-top: 0 !important;
+  }
+  .slide--pr-review .pr-review__badge {
+    padding: 4px 10px !important;
+    font-size: 10.5px !important;
+  }
+  .slide--pr-review .pr-review__cta {
+    margin-top: 4px !important;
+  }
+  .slide--pr-review .launcher__btn {
+    padding: 4px 12px !important;
+    font-size: 11px !important;
+    min-height: 32px !important;
+  }
+
+  /* Diagrammes Mermaid génériques */
+  .slide--diagram .mermaid-wrap {
+    height: clamp(150px, 46vh, 220px) !important;
+    touch-action: pan-x pan-y pinch-zoom !important;
+  }
+  .slide--diagram .mermaid-scroll {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Questions de review */
+  .slide--review-questions .review-questions__card {
+    min-height: auto !important;
+    padding: 10px 14px !important;
+    gap: 6px !important;
+  }
+  .slide--review-questions .review-questions__question {
+    font-size: 13px !important;
+  }
+
+  /* Code preview & LikeC4 : colonnes de code et rendu adjacent STRICTEMENT de même hauteur */
+  .slide--code-preview .slide__inner {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr) !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+  }
+  .slide--code-preview .slide__aside {
+    display: flex !important;
+  }
+
+  .slide--code-preview .code-preview__pane {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+  }
+
+  .slide--code-preview .code-preview__frame {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    position: relative !important;
+  }
+
+  .slide--code-preview .slide__code-block,
+  .slide--code-preview .embed-wrap,
+  .slide--code-preview .mermaid-wrap,
+  .slide--adr-preview .adr-doc {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    margin-top: var(--code-preview-chip-line) !important;
+    margin-bottom: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .slide--code-preview .slide__code-block {
+    padding: 10px 8px 6px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  .slide--code-preview .slide__code-block pre {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    margin: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+  }
+
+  .slide--code-preview .slide__code-block code {
+    font-size: 10px !important;
+    line-height: 1.35 !important;
+  }
+
+  .slide--code-preview .embed-wrap iframe,
+  .slide--code-preview .embed-wrap .embed-fallback {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    border: none !important;
+  }
+
+  /* ADR-001 formaté en paysage mobile */
+  .slide--adr-preview .slide__heading {
+    text-align: center !important;
+    font-size: clamp(14px, 3.2vh, 18px) !important;
+    margin-top: 0 !important;
+    margin-bottom: 4px !important;
+  }
+  .slide--adr-preview .adr-doc {
+    overflow-y: auto !important;
+    padding: 6px 10px 4px !important;
+    gap: 4px !important;
+  }
+  .slide--adr-preview .adr-doc__badge {
+    font-size: 8px !important;
+    padding: 1px 6px !important;
+  }
+  .slide--adr-preview .adr-doc__title {
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+  }
+  .slide--adr-preview .adr-doc__heading {
+    font-size: 9px !important;
+  }
+  .slide--adr-preview .adr-doc__intro {
+    font-size: 8.5px !important;
+  }
+  .slide--adr-preview .adr-doc__list li {
+    font-size: 8.5px !important;
+    line-height: 1.25 !important;
+    padding-left: 10px !important;
+  }
+  .slide--adr-preview .adr-doc__note {
+    padding: 4px 8px !important;
+    margin-top: 2px !important;
+    border-radius: 6px !important;
+  }
+  .slide--adr-preview .adr-doc__note-badge {
+    font-size: 7.5px !important;
+    padding: 1px 4px !important;
+  }
+  .slide--adr-preview .adr-doc__note-title {
+    font-size: 9px !important;
+  }
+  .slide--adr-preview .adr-doc__note-text {
+    font-size: 8px !important;
+    line-height: 1.25 !important;
+  }
+
+  /* Slide 33 (Vue C2 Mermaid / LikeC4) : le rendu Mermaid a la même hauteur que le code */
+  .slide--c2-unified .c2-mermaid__pane--diagram .mermaid-wrap {
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    margin-top: var(--code-preview-chip-line) !important;
+  }
+  .slide--c2-unified .c2-mermaid__pane--diagram .mermaid-scroll {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    overflow: auto !important;
+  }
+
+  /* Slide 17 : Live coding sur 2 colonnes en mobile paysage */
+  .slide--live-coding .slide__inner {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr) !important;
+    gap: 10px !important;
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+  .slide--live-coding .slide__aside {
+    margin-top: 0 !important;
+    display: flex !important;
+  }
+  .slide--live-coding .code-preview__pane {
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+  .slide--live-coding .slide__code-block {
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+  .slide--live-coding .embed-wrap {
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+
+  /* Briques C2 : centrage et distribution verticale harmonieuse */
+  .slide--briques-c2 .slide__inner {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    height: 100% !important;
+  }
+  .slide--briques-c2 .slide__heading {
+    font-size: clamp(15px, 3.4vh, 20px) !important;
+    margin-bottom: 2px !important;
+  }
+  .slide--briques-c2 .concept-grid--2 {
+    margin-top: 6px !important;
+    gap: 8px !important;
+  }
+  .slide--briques-c2 .concept-card {
+    padding: 6px 10px !important;
+  }
+
+  /* Forcer l'affichage 2 colonnes et la présence de aside en mode paysage mobile */
+  .slide--content .slide__aside {
+    display: flex !important;
+  }
+  .slide--content .slide__inner {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) !important;
+    gap: clamp(10px, 2vw, 20px) !important;
+  }
+  .slide--content .slide__inner > :only-child {
+    grid-column: 1 / -1 !important;
+  }
+
+  /* Grilles de concepts en mode paysage mobile : préserver les colonnes côte-à-côte */
+  .concept-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+    overflow-y: visible !important;
+  }
+  .concept-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+    overflow-y: visible !important;
+  }
+  .concept-card {
+    min-height: auto !important;
+    padding: 6px 10px !important;
+    gap: 3px !important;
+    border-radius: 12px !important;
+  }
+  .concept-card__step {
+    font-size: 8.5px !important;
+    margin-bottom: 1px !important;
+  }
+  .concept-card__title {
+    font-size: 11px !important;
+    margin-bottom: 2px !important;
+    line-height: 1.2 !important;
+  }
+  .concept-card__desc {
+    font-size: 9.5px !important;
+    line-height: 1.25 !important;
+  }
+  .concept-card__list {
+    margin: 3px 0 0 !important;
+    padding-left: 12px !important;
+  }
+  .concept-card__list li {
+    font-size: 9px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 2px !important;
+  }
+
+  /* Slide 24: Specs & arborescence avec tabs : même hauteur à gauche et à droite */
+  .slide--workspace-tree .slide__inner {
+    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr) !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+  .slide--workspace-tree .workspace-tree__aside,
+  .slide--workspace-tree .workspace-tree__pane {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+  }
+  .slide--workspace-tree .workspace-tree__ascii-frame,
+  .slide--workspace-tree .workspace-tree__tab-frame {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    margin-top: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .slide--workspace-tree .workspace-tree__ascii-frame .slide__code-block {
+    margin-top: var(--code-preview-chip-line) !important;
+    height: calc(100% - var(--code-preview-chip-line)) !important;
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+  }
+  .slide--workspace-tree .workspace-tree__tab-frame {
+    margin-top: var(--code-preview-chip-line) !important;
+    height: calc(100% - var(--code-preview-chip-line)) !important;
+  }
+  .slide--workspace-tree .workspace-tree__tab-bar {
+    padding: 3px 6px 0 !important;
+    gap: 3px !important;
+  }
+  .slide--workspace-tree .workspace-tree__tab-btn {
+    font-size: 9px !important;
+    padding: 3px 8px !important;
+  }
+  .slide--workspace-tree .workspace-tree__tab-content,
+  .slide--workspace-tree .workspace-tree__ascii-block {
+    padding: 6px 8px !important;
+  }
+  .slide--workspace-tree .workspace-tree__tab-content {
+    display: none !important;
+  }
+  .slide--workspace-tree .workspace-tree__tab-content.is-active {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    height: 100% !important;
+  }
+  .slide--workspace-tree .slide__code-block code {
+    font-size: 8.5px !important;
+    line-height: 1.35 !important;
+  }
+  .slide--workspace-tree .workspace-tree__ascii-frame .slide__code-block code {
+    font-size: 8px !important;
+    line-height: 1.4 !important;
+  }
+  .slide--workspace-tree .workspace-tree__shared-tag {
+    font-size: 7px !important;
+    padding: 0 4px !important;
+    margin-left: 2px !important;
+    line-height: 1.1 !important;
+    vertical-align: baseline !important;
+    display: inline-block !important;
+  }
+  .slide--workspace-tree .workspace-tree__file-highlight {
+    padding: 1px 4px !important;
+    gap: 3px !important;
+    font-size: 8px !important;
+  }
+  .slide--workspace-tree .file-status-dot {
+    width: 4px !important;
+    height: 4px !important;
+  }
+  .slide--workspace-tree .file-status-badge {
+    font-size: 6.5px !important;
+    padding: 0 3px !important;
+  }
+  .slide--workspace-tree .workspace-tree__note {
+    margin-top: 4px !important;
+    padding: 3px 5px !important;
+    gap: 4px !important;
+  }
+  .slide--workspace-tree .workspace-tree__note-text {
+    font-size: 7.5px !important;
+    line-height: 1.25 !important;
+  }
+
+  /* Slide 35 (Takeaway / Ressources) */
+  .slide--takeaway .takeaway-timeline {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+    margin-top: 6px !important;
+  }
+  .slide--takeaway .takeaway-row {
+    padding: 6px 8px !important;
+    border-radius: 10px !important;
+    gap: 2px !important;
+  }
+  .slide--takeaway .takeaway-row__badge {
+    gap: 4px !important;
+    margin-bottom: 2px !important;
+  }
+  .slide--takeaway .takeaway-row__step {
+    font-size: 8.5px !important;
+  }
+  .slide--takeaway .takeaway-row__tag {
+    font-size: 7.5px !important;
+    letter-spacing: 0.04em !important;
+  }
+  .slide--takeaway .takeaway-row__title {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    margin: 0 0 2px 0 !important;
+  }
+  .slide--takeaway .takeaway-row__desc {
+    font-size: 8px !important;
+    line-height: 1.25 !important;
+    margin: 0 0 4px 0 !important;
+  }
+  .slide--takeaway .takeaway-row__meta {
+    padding-top: 3px !important;
+    margin-top: auto !important;
+  }
+  .slide--takeaway .takeaway-row__meta .badge {
+    font-size: 7px !important;
+    padding: 1px 5px !important;
+  }
+  .slide--takeaway .takeaway-row__domain {
+    font-size: 7.5px !important;
+  }
+  .slide--takeaway .takeaway-footer {
+    margin-top: 6px !important;
+  }
+  .slide--takeaway .takeaway-footer__text {
+    font-size: 9px !important;
+  }
+
+  /* Boutons de bascule de split désactivés en mode tactile/mobile (zoom au doigt) */
+  .code-preview__split-toggle {
+    display: none !important;
+    pointer-events: none !important;
+  }
+  .c2-unified__header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-bottom: 4px !important;
+  }
+  .c2-unified__header .slide__heading {
+    font-size: clamp(14px, 3.2vh, 18px) !important;
+    margin: 0 !important;
+  }
+  .slide--c2-unified .c2-unified__toggle,
+  .live-coding__toggle {
+    min-height: 28px !important;
+    padding: 3px 10px !important;
+    font-size: 10px !important;
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    touch-action: manipulation;
+  }
+
+  /* Ressources et liste */
+  .resource-item {
+    padding: 4px 6px !important;
+    gap: 6px !important;
+  }
+  .resource-item__tag {
+    min-width: 52px !important;
+    font-size: 9.5px !important;
+    letter-spacing: 0.8px !important;
+  }
+  .resource-item__body {
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+  }
+  .resource-item__body a {
+    font-size: 11.5px !important;
+    margin-bottom: 2px !important;
+  }
+  .slide[data-nav*="Ressources"] .slide__aside h3 {
+    font-size: 13px !important;
+    margin-bottom: 4px !important;
+  }
+  .slide[data-nav*="Ressources"] .slide__bullets li {
+    font-size: 9.5px !important;
+    padding: 0 0 0 10px !important;
+    margin-bottom: 3px !important;
+    line-height: 1.25 !important;
+  }
+
+  /* Commandes de zoom et contrôles tactiles */
+  .zoom-controls {
+    padding: 2px !important;
+    gap: 3px !important;
+  }
+  .zoom-controls button {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 16px !important;
+    touch-action: manipulation;
+  }
+  .embed-wrap .embed-controls button {
+    width: 32px !important;
+    height: 32px !important;
+    touch-action: manipulation;
+  }
+  .mermaid-wrap {
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+  .mermaid-wrap.is-panning {
+    touch-action: none;
+  }
+
+  .deck-nav {
+    transform: scale(0.80);
+    transform-origin: bottom center;
+  }
+
+  /* Slide 35 (Merci / Outro) */
+  .slide--outro {
+    padding: clamp(6px, 1.5vh, 12px) clamp(16px, 3vw, 28px) !important;
+  }
+  .slide--outro .slide__inner {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr) !important;
+    gap: 14px !important;
+    align-items: center !important;
+    max-height: 94vh !important;
+  }
+  .slide--outro .slide__label {
+    margin-bottom: 2px !important;
+    font-size: 9px !important;
+  }
+  .slide--outro .slide__heading {
+    font-size: clamp(22px, 6.5vh, 32px) !important;
+    margin-bottom: 3px !important;
+    line-height: 1 !important;
+  }
+  .slide--outro .slide__subtitle {
+    font-size: clamp(10.5px, 2.5vh, 13px) !important;
+    margin-bottom: 6px !important;
+    line-height: 1.2 !important;
+  }
+  .slide--outro .outro-tags {
+    gap: 4px !important;
+    margin-bottom: 6px !important;
+  }
+  .slide--outro .outro-tags .badge {
+    font-size: 8.5px !important;
+    padding: 1.5px 6px !important;
+  }
+  .slide--outro .outro-speaker p {
+    font-size: 10.5px !important;
+  }
+  .slide--outro .outro-qr-pane {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  .slide--outro .outro-qr-card {
+    padding: 6px 10px !important;
+    border-radius: 14px !important;
+    max-width: 200px !important;
+    width: 100% !important;
+  }
+  .slide--outro .outro-qr__title {
+    font-size: 9.5px !important;
+    margin: 0 0 4px 0 !important;
+  }
+  .slide--outro .outro-qr-card .qr-spotlight {
+    width: clamp(65px, 20vh, 85px) !important;
+    padding: 3px !important;
+  }
+  .slide--outro .outro-qr__url {
+    font-size: 8px !important;
+    padding: 2px 6px !important;
+    margin-top: 4px !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    display: block !important;
+    text-align: center !important;
+  }
+
+  /* Désactivation du pointeur laser sur mobile tactile */
+  .laser-pointer {
+    display: none !important;
+  }
+}

@@ -1,0 +1,79 @@
+/* ==========================================================================
+   THEME: Google Blueprint Light (Default)
+   Clarté Google, surfaces lumineuses, contraste maximal pour vidéoprojecteur
+   et subtile trame technique d'ingénierie logicielle / architecture vivante.
+   ========================================================================== */
+
+:root,
+[data-theme="google-blueprint-light"],
+[data-theme="light"] {
+  /* Surfaces & Fonds (Clair, net, papier millimétré d'architecte) */
+  --bg: #fafbfd;
+  --surface: #ffffff;
+  --surface2: #f1f5f9;
+  --surface-elevated: #ffffff;
+
+  /* Papier millimétré subtil et technique (double quadrillage 20px / 100px) */
+  --blueprint-grid:
+    linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(to right, rgba(26, 115, 232, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26, 115, 232, 0.07) 1px, transparent 1px);
+  --blueprint-grid-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
+
+  /* Bordures nettes et contrastées (parfaites pour vidéoprojecteur) */
+  --border: #cbd5e1;
+  --border-bright: #94a3b8;
+  --border-focus: #1a73e8;
+
+  /* Encres & Typographie (Contraste maximal > 12:1 sur fond blanc) */
+  --text: #0f172a;           /* Charbon profond */
+  --text-dim: #334155;       /* Ardoise sombre */
+  --text-subtitle: #475569;  /* Ardoise moyenne */
+  --part0-neutral-gray: #475569;
+
+  /* Accents dynamiques & ludiques (Esprit Google / Ingénierie) */
+  --accent: #1a73e8;         /* Bleu Google principal */
+  --accent-dim: rgba(26, 115, 232, 0.10);
+  --accent2: #ea580c;        /* Orange chaud */
+  --accent2-dim: rgba(234, 88, 12, 0.10);
+  --accent3: #0284c7;        /* Bleu cyan / LikeC4 */
+  --accent3-dim: rgba(2, 132, 199, 0.10);
+  --accent4: #db2777;        /* Framboise / Rose vif */
+  --accent4-dim: rgba(219, 39, 119, 0.10);
+  --green: #16a34a;          /* Vert validation / RabbitMQ */
+  --green-dim: rgba(22, 163, 74, 0.12);
+  --red: #dc2626;            /* Rouge contrainte / alerte */
+  --red-dim: rgba(220, 38, 38, 0.10);
+  --blue: #1a73e8;
+  --blue-dim: rgba(26, 115, 232, 0.08);
+
+  /* Pointeur Laser virtuel (Teinte blueprint / cyan technique en harmonie avec le thème) */
+  --laser-core: #1a73e8;
+  --laser-hot: #0284c7;
+  --laser-ring: rgba(2, 132, 199, 0.55);
+  --laser-glow: rgba(26, 115, 232, 0.22);
+  --laser-glow-soft: rgba(2, 132, 199, 0.10);
+
+  /* Diagrammes & Modèles (Contraste renforcé pour schémas) */
+  --diagram-gold: #b45309;
+  --diagram-gold-dim: #fef3c7;
+  --diagram-blue: #0284c7;
+  --diagram-blue-dim: #e0f2fe;
+  --diagram-green: #15803d;
+  --diagram-green-dim: #dcfce7;
+
+  /* Blocs de code (Mode clair élégant, fond blanc/gris très doux, bordure nette) */
+  --code-bg: #f8fafc;
+  --code-text: #0f172a;
+  --code-border: #cbd5e1;
+
+  /* Éléments de citations et panneaux split */
+  --quote-mark: #0284c7;
+  --split-secondary: #f8fafc;
+  --split-secondary-elevated: #ffffff;
+  --split-secondary-muted: #334155;
+  --hover-accent-soft: rgba(26, 115, 232, 0.06);
+  --hover-frame: rgba(26, 115, 232, 0.30);
+  --hover-frame-soft: rgba(26, 115, 232, 0.03);
+}

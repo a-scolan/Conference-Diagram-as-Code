@@ -1,0 +1,76 @@
+<section class="slide slide--diagram slide--pr-review" data-nav="La pull request" data-active-step="1">
+    <p class="slide__label reveal">Revue d'architecture</p>
+    <h2 class="slide__heading reveal">La pull request</h2>
+    <p class="slide__body reveal">En Pull Request, le diff visuel permet de v&eacute;rifier l'impact sur le syst&egrave;me avant de fusionner.</p>
+    <div class="slide__inner">
+      <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="2.5" data-initial-zoom="1.0" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
+        <div class="zoom-controls" role="toolbar" aria-label="Commandes de zoom du diagramme git">
+          <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom avant" aria-label="Zoom avant">+</button>
+          <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom arri&egrave;re" aria-label="Zoom arri&egrave;re">&minus;</button>
+          <button type="button" data-zoom-action="reset" title="R&eacute;initialiser le zoom" aria-label="R&eacute;initialiser le zoom">&#8634;</button>
+        </div>
+        <div class="mermaid-scroll" role="img" aria-label="Diagramme git de la pull request montrant la branche alefest_coffee_v2 issue de main, les fix sur main, et le point de revue se rabattant vers main.">
+          <pre class="mermaid">
+gitGraph
+   commit id: "v1"
+   branch alefest_coffee_v2
+   checkout alefest_coffee_v2
+   commit id: "v2" tag: "Pull request"
+   checkout main
+   commit id: "fix #1"
+   commit id: "fix #2"
+          </pre>
+        </div>
+      </div>
+
+	  <div class="pr-review__status reveal">
+		<span class="pr-review__badge"><code>feat/alefest_coffee_v2</code> → <code>main</code></span>
+	  </div>
+      <div class="pr-review__cta reveal" style="display:flex; justify-content:center; align-items:center;">
+        <button type="button" class="launcher__btn" onclick="openPrModalOrTab(this)" aria-expanded="false" aria-label="Ouvrir la Pull Request et voir le diff de code">
+          <span>Ouvrir la PR</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 7H17V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="pr-backup-modal" style="display:none;" aria-hidden="true">
+        <div class="pr-backup-modal__backdrop" onclick="togglePrBackupModal(this)"></div>
+        <div class="pr-backup-modal__card" role="dialog" aria-modal="true" aria-label="Revue de Pull Request">
+          <div class="pr-backup-modal__header">
+            <div class="pr-backup-modal__title-group">
+              <span class="badge badge--green" style="font-size:11px;">PR #1</span>
+              <strong class="pr-backup-modal__title">Revue d'architecture · feat/alefest_coffee_v2</strong>
+            </div>
+            <div class="pr-backup-modal__nav">
+              <button type="button" class="pr-backup-modal__nav-btn is-active" onclick="jumpPrDiff('diff-9031cdbb9779e2eb895e031359654e67f1bdfcda75eb412800c6ea3b5529fe1e', this)" title="Diff LikeC4 (code source)">
+                <span>Code C4</span>
+              </button>
+              <button type="button" class="pr-backup-modal__nav-btn" onclick="jumpPrDiff('diff-94c54a1f3101c4266eb3ddad9e0c922c14015c322845a26e93952f348c76d6c0', this)" title="Diff visuel C1/C2 (index.png avec slider)">
+                <span>Diff visuel (slider)</span>
+              </button>
+              <button type="button" class="pr-backup-modal__nav-btn" onclick="jumpPrDiff('diff-6ff0d5622bf70b40380de2f0b618cf936684ac92a57c438113507632c4e59acc', this)" title="Diff conteneurs (onion skin)">
+                <span>Conteneurs</span>
+              </button>
+            </div>
+            <div class="pr-backup-modal__actions">
+              <a href="./pr-page2.html#diff-9031cdbb9779e2eb895e031359654e67f1bdfcda75eb412800c6ea3b5529fe1e" target="_blank" rel="noopener noreferrer" class="pr-backup-modal__tab-btn" title="Ouvrir dans un nouvel onglet">
+                <span>Nouvel onglet</span>
+                <svg viewBox="0 0 24 24" fill="none" width="13" height="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+              <button type="button" class="live-coding__toggle" onclick="togglePrBackupModal(this)" aria-label="Fermer la fenêtre">&times;</button>
+            </div>
+          </div>
+          <div class="pr-backup-modal__body">
+            <iframe id="pr-backup-iframe" src="./pr-page2.html#diff-9031cdbb9779e2eb895e031359654e67f1bdfcda75eb412800c6ea3b5529fe1e" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

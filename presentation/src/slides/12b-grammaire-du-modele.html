@@ -1,0 +1,45 @@
+<section class="slide slide--content slide--concept-cards slide--grammaire-modele" data-nav="Grammaire du modèle">
+    <div class="slide__inner" style="max-width:min(100%, 1380px);">
+      <div style="width:100%;">
+        <p class="slide__label reveal" style="color:var(--accent);">Socle commun &middot; sp&eacute;cifications</p>
+        <h2 class="slide__heading reveal">D&eacute;finir la grammaire de vos syst&egrave;mes</h2>
+        <p class="slide__body reveal" style="margin-top:2px; margin-bottom:clamp(10px, 1.8vh, 18px); color:var(--text-dim); max-width:85ch;">
+          <strong>LikeC4 ne vous impose pas un vocabulaire rigide&nbsp;:</strong> vous d&eacute;finissez la grammaire des syst&egrave;mes de votre entreprise une fois pour toutes.
+        </p>
+        <div class="concept-grid concept-grid--3" style="margin-top:clamp(8px, 1.8vh, 18px);">
+          <div class="concept-card concept-card--blue reveal">
+            <p class="concept-card__step">01 &middot; Acteurs</p>
+            <h3 class="concept-card__title">R&ocirc;les &amp; Personas</h3>
+            <p class="concept-card__desc">Qualifier qui interagit avec le syst&egrave;me.</p>
+            <ul class="concept-card__list">
+              <li><code>Actor_Person</code>&nbsp;: utilisateur final, festivalier, client</li>
+              <li><code>Actor_Staff</code>&nbsp;: barista, &eacute;quipe d'exploitation interne</li>
+              <li>Forme et ic&ocirc;nes d&eacute;di&eacute;es pour les humains</li>
+            </ul>
+          </div>
+          <div class="concept-card concept-card--orange reveal">
+            <p class="concept-card__step">02 &middot; Typologie d'&eacute;l&eacute;ments</p>
+            <h3 class="concept-card__title">Syst&egrave;mes, Conteneurs &amp; Librairies</h3>
+            <p class="concept-card__desc">La nature et granularit&eacute; de chaque brique du mod&egrave;le.</p>
+            <ul class="concept-card__list">
+              <li><code>System_New</code> / <code>System_External</code>&nbsp;: fronti&egrave;res de domaines</li>
+              <li><code>Container_Spa</code> / <code>Container_Api</code>&nbsp;: applications &amp; services</li>
+              <li><code>Component</code> / <code>Library</code>&nbsp;: briques internes, modules, SDKs</li>
+              <li><code>Container_Database</code> / <code>Queue</code>&nbsp;: stockage &amp; bus</li>
+            </ul>
+          </div>
+          <div class="concept-card concept-card--green reveal">
+            <p class="concept-card__step">03 &middot; S&eacute;mantique des relations</p>
+            <h3 class="concept-card__title">Flux &amp; Technologies</h3>
+            <p class="concept-card__desc">Z&eacute;ro fl&egrave;che anonyme, protocoles et modes d'&eacute;change explicites.</p>
+            <ul class="concept-card__list">
+              <li><code>-[calls]-&gt;</code> &plus; <code>technology 'HTTPS'</code>&nbsp;: appel synchrone bloquant</li>
+              <li><code>-[async]-&gt;</code> &plus; <code>technology 'AMQP'</code>&nbsp;: &eacute;v&eacute;nements d&eacute;coupl&eacute;s</li>
+              <li><code>-[writes]-&gt;</code> &plus; <code>technology 'SQL'</code>&nbsp;: persistance transactionnelle</li>
+              <li><code>-[uses]-&gt;</code>&nbsp;: interaction humaine / exp&eacute;rience utilisateur</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

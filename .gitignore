@@ -1,16 +1,13 @@
 # Node
 node_modules/
 
-# LikeC4 build outputs
-.likec4/
-dist/
-
 # OS files
 .DS_Store
 Thumbs.db
 
 # IDE
 .idea/
+.claude/
 *.swp
 *.swo
 

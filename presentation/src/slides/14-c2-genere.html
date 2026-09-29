@@ -1,0 +1,72 @@
+<section class="slide slide--content slide--c2-generated slide--code-preview" data-nav="C2 généré" data-split-mode="half" data-split="half">
+    <p class="slide__label reveal">V1 &middot; le diagramme</p>
+    <h2 class="slide__heading reveal">Le modèle s'enrichit par extension (C2)</h2>
+    <div class="slide__inner">
+      <div class="c1-generated__pane c1-generated__pane--code code-preview__pane code-preview__pane--code">
+        <div class="code-preview__frame has-tabs reveal">
+          <div class="code-preview__tab-bar" role="tablist" aria-label="Fichiers C2">
+            <button type="button" class="code-preview__tab-btn is-active" role="tab" aria-selected="true" data-tab-target="model" onclick="switchSlideCodeTab(this, 'model')">system-model.c4</button>
+            <button type="button" class="code-preview__tab-btn" role="tab" aria-selected="false" data-tab-target="views" onclick="switchSlideCodeTab(this, 'views')">system-views.c4</button>
+          </div>
+          <div class="slide__code-block code-preview__tab-content" data-tab-id="model" data-active-step="1">
+            <pre><code><span class="kw">model</span> {
+  <span class="hl">extend</span> alefestCoffee {
+<span data-step="1">    <span class="cm">// 1. Conteneurs internes du stand</span>
+    counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span>
+    baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span>
+    orderService = <span class="hl">Container_Api</span> <span class="str">'Service Commandes'</span>
+    preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span>
+    eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span>
+    database = <span class="hl">Container_Database</span> <span class="str">'PostgreSQL'</span></span>
+
+<span data-step="3">    <span class="cm">// 2. Flux synchrones, asynchrones &amp; donn&eacute;es</span>
+    counterApp -[<span class="hl">calls</span>]-&gt; orderService <span class="str">'POST /orders'</span>
+    baristaScreen -[<span class="hl">calls</span>]-&gt; preparationService <span class="str">'WebSocket'</span>
+    orderService -[<span class="hl">async</span>]-&gt; eventBus <span class="str">'Publie order.placed'</span>
+    eventBus -[<span class="hl">async</span>]-&gt; preparationService <span class="str">'Livre order.placed'</span>
+    orderService -[<span class="hl">writes</span>]-&gt; database <span class="str">'Commande'</span>
+    preparationService -[<span class="hl">writes</span>]-&gt; database <span class="str">'Statut'</span></span>
+  }
+}</code></pre>
+          </div>
+          <div class="slide__code-block code-preview__tab-content" data-tab-id="views" style="display:none;" data-active-step="1">
+            <pre><code><span class="kw">views</span> {
+  <span class="kw">view</span> <span class="hl">c2_containers</span> <span class="kw">of</span> alefestCoffee {
+    <span class="kw">title</span> <span class="str">'Coffee V1 - Containers'</span>
+
+<span data-step="2">    <span class="cm">// S&eacute;lecteur Wildcard : tous les conteneurs d'alefestCoffee</span>
+    <span class="hl">include</span> alefestCoffee.*</span>
+
+<span data-step="4">    <span class="cm">// S&eacute;lecteurs de relations : flux entrants &amp; sortants</span>
+    <span class="hl">include</span> -&gt; alefestCoffee
+    <span class="hl">include</span> alefestCoffee -&gt;
+
+    <span class="cm">// S&eacute;lecteur pr&eacute;cis : flux direct vers le comptoir</span>
+    <span class="hl">include</span> festivalier -&gt; alefestCoffee.counterApp</span>
+  }
+}</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="slide__aside reveal c1-generated__pane c1-generated__pane--embed code-preview__pane code-preview__pane--embed">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename">Vue C2</span>
+          <div class="embed-wrap reveal" id="coffee-v1-c2-embed" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000">
+            <div class="embed-controls">
+              <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
+              <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
+            </div>
+            <iframe
+              title="LikeC4 coffee-v1 C2"
+              loading="lazy"
+              data-src="assets/coffee-v1-single/index.html#/view/c2_containers/"
+            ></iframe>
+            <div class="embed-fallback" aria-live="polite">
+              <span>Impossible de charger l'aper&ccedil;u ici.</span>
+              <a href="assets/coffee-v1-single/index.html#/view/c2_containers/" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v1 (vue C2)</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

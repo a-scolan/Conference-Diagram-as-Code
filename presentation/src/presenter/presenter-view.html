@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="google-blueprint-light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presenter View &middot; Diagram as Code</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ==========================================================================
+     THEME TOKENS: Dark / Slate Architect (Default)
+     ========================================================================== */
+  :root,
+  [data-theme="slate-architect"],
+  [data-theme="dark"] {
+    --pv-bg: #0b0f19;
+    --pv-surface: #131b2e;
+    --pv-surface-elevated: #1a243d;
+    --pv-surface-alt: #0f172a;
+    --pv-border: #233152;
+    --pv-border-bright: #38bdf8;
+    --pv-text: #f1f5f9;
+    --pv-text-bright: #ffffff;
+    --pv-text-dim: #94a3b8;
+    --pv-text-muted: #64748b;
+    --pv-accent: #38bdf8;
+    --pv-accent-hover: #7dd3fc;
+    --pv-accent-contrast: #0b0f19;
+    --pv-green: #22c55e;
+    --pv-amber: #f59e0b;
+    --pv-red: #ef4444;
+    --pv-pause-bg: color-mix(in srgb, var(--pv-amber) 8%, var(--pv-surface) 92%);
+    --pv-pause-highlight: #fde68a;
+    --pv-checklist-card-bg: color-mix(in srgb, var(--pv-green) 5%, var(--pv-surface) 95%);
+    --pv-checklist-item-hover: color-mix(in srgb, var(--pv-green) 10%, var(--pv-surface-alt) 90%);
+    --pv-checklist-item-checked: rgba(16, 185, 129, 0.08);
+    --pv-checklist-completed-bg: rgba(34, 197, 94, 0.05);
+    --pv-checklist-completed-item: rgba(15, 23, 42, 0.5);
+    --pv-btn-hover-bg: rgba(255, 255, 255, 0.08);
+    --pv-btn-hover-text: #ffffff;
+    --pv-status-bg: rgba(34, 197, 94, 0.15);
+    --pv-status-border: rgba(34, 197, 94, 0.35);
+  }
+
+  /* ==========================================================================
+     THEME TOKENS: Light / Google Blueprint Light
+     ========================================================================== */
+  [data-theme="google-blueprint-light"],
+  [data-theme="light"] {
+    --pv-bg: #f1f5f9;
+    --pv-surface: #ffffff;
+    --pv-surface-elevated: #f8fafc;
+    --pv-surface-alt: #f1f5f9;
+    --pv-border: #cbd5e1;
+    --pv-border-bright: #1a73e8;
+    --pv-text: #0f172a;
+    --pv-text-bright: #0f172a;
+    --pv-text-dim: #334155;
+    --pv-text-muted: #64748b;
+    --pv-accent: #1a73e8;
+    --pv-accent-hover: #1557b0;
+    --pv-accent-contrast: #ffffff;
+    --pv-green: #16a34a;
+    --pv-amber: #d97706;
+    --pv-red: #dc2626;
+    --pv-pause-bg: color-mix(in srgb, var(--pv-amber) 8%, #ffffff 92%);
+    --pv-pause-highlight: #b45309;
+    --pv-checklist-card-bg: color-mix(in srgb, var(--pv-green) 6%, #ffffff 94%);
+    --pv-checklist-item-hover: color-mix(in srgb, var(--pv-green) 8%, #ffffff 92%);
+    --pv-checklist-item-checked: rgba(22, 163, 74, 0.08);
+    --pv-checklist-completed-bg: rgba(22, 163, 74, 0.06);
+    --pv-checklist-completed-item: #f8fafc;
+    --pv-btn-hover-bg: rgba(15, 23, 42, 0.06);
+    --pv-btn-hover-text: #0f172a;
+    --pv-status-bg: rgba(22, 163, 74, 0.12);
+    --pv-status-border: rgba(22, 163, 74, 0.35);
+  }
+
+  :root {
+    --pv-font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    --pv-font-mono: 'JetBrains Mono', monospace;
+    --notes-font-size: 21px;
+    --notes-line-height: 1.62;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--pv-bg);
+    color: var(--pv-text);
+    font-family: var(--pv-font-sans);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* --- HEADER & TIMING BAR --- */
+  .pv-header {
+    height: 56px;
+    background: var(--pv-surface);
+    border-bottom: 1px solid var(--pv-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    flex-shrink: 0;
+    gap: 12px;
+  }
+  .pv-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pv-brand__logo {
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    color: var(--pv-accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pv-status-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--pv-status-bg);
+    color: var(--pv-green);
+    border: 1px solid var(--pv-status-border);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .pv-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+  }
+  .pv-status-badge.is-disconnected {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--pv-red);
+    border-color: rgba(239, 68, 68, 0.35);
+  }
+
+  .pv-timer-cluster {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--pv-surface-alt);
+    padding: 4px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--pv-border);
+  }
+  .pv-clock {
+    font-family: var(--pv-font-mono);
+    font-size: 14px;
+    color: var(--pv-text-dim);
+  }
+  .pv-stopwatch {
+    font-family: var(--pv-font-mono);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--pv-text-bright);
+    cursor: pointer;
+    min-width: 70px;
+    text-align: center;
+  }
+  .pv-stopwatch.is-paused {
+    color: var(--pv-amber);
+    animation: pv-blink 1.2s infinite;
+  }
+  @keyframes pv-blink { 50% { opacity: 0.4; } }
+  .pv-milestones-track {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-family: var(--pv-font-mono);
+    color: var(--pv-text-muted);
+  }
+  .pv-milestone-pill {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--pv-surface);
+    border: 1px solid var(--pv-border);
+  }
+  .pv-milestone-pill.is-current {
+    background: color-mix(in srgb, var(--pv-accent) 20%, transparent);
+    border-color: var(--pv-accent);
+    color: var(--pv-accent);
+    font-weight: 700;
+  }
+
+  .pv-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pv-btn {
+    appearance: none;
+    background: var(--pv-surface-elevated);
+    border: 1px solid var(--pv-border);
+    color: var(--pv-text);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+    transition: all 0.15s ease;
+  }
+  .pv-btn:hover {
+    border-color: var(--pv-accent);
+    background: var(--pv-btn-hover-bg);
+    color: var(--pv-btn-hover-text);
+  }
+  .pv-btn--primary {
+    background: var(--pv-accent);
+    color: var(--pv-accent-contrast);
+    border-color: var(--pv-accent);
+  }
+  .pv-btn--primary:hover {
+    background: var(--pv-accent-hover);
+    color: var(--pv-accent-contrast);
+    border-color: var(--pv-accent-hover);
+  }
+  .pv-btn--blackout.is-active {
+    background: var(--pv-red);
+    border-color: var(--pv-red);
+    color: #fff;
+  }
+  .pv-font-controls {
+    display: flex;
+    align-items: center;
+    background: var(--pv-surface-elevated);
+    border: 1px solid var(--pv-border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .pv-font-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--pv-text-dim);
+    padding: 5px 10px;
+    font-size: 12px;
+    font-family: var(--pv-font-mono);
+    cursor: pointer;
+  }
+  .pv-font-btn:hover {
+    background: var(--pv-btn-hover-bg);
+    color: var(--pv-btn-hover-text);
+  }
+
+  /* --- MAIN CONTENT GRID --- */
+  .pv-main {
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: minmax(420px, 1fr) minmax(460px, 1.15fr);
+    overflow: hidden;
+    gap: 1px;
+    background: var(--pv-border);
+  }
+
+  /* --- LEFT COLUMN : CURRENT & NEXT PREVIEW --- */
+  .pv-col-previews {
+    background: var(--pv-bg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 12px;
+    gap: 12px;
+  }
+  .pv-preview-card {
+    background: var(--pv-surface);
+    border: 1px solid var(--pv-border);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .pv-preview-card--current {
+    flex: 1 1 65%;
+    min-height: 240px;
+  }
+  .pv-preview-card--next {
+    flex: 0 0 35%;
+    min-height: 140px;
+    opacity: 0.92;
+  }
+  .pv-preview-header {
+    height: 32px;
+    background: var(--pv-surface-elevated);
+    border-bottom: 1px solid var(--pv-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    font-size: 12px;
+    font-family: var(--pv-font-mono);
+  }
+  .pv-preview-body {
+    flex: 1 1 auto;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pv-preview-scaler {
+    width: 1280px;
+    height: 720px;
+    transform-origin: center center;
+    flex-shrink: 0;
+  }
+  .pv-preview-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    pointer-events: none;
+  }
+  .pv-blackout-indicator {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    color: var(--pv-red);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    z-index: 10;
+  }
+  .pv-blackout-indicator.is-visible {
+    display: flex;
+  }
+
+  /* --- RIGHT COLUMN : NOTES & CUES --- */
+  .pv-col-notes {
+    background: var(--pv-surface-alt);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .pv-notes-header {
+    padding: 14px 20px 10px;
+    border-bottom: 1px solid var(--pv-border);
+    background: var(--pv-surface);
+    flex-shrink: 0;
+  }
+  .pv-notes-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .pv-slide-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--pv-text-bright);
+    line-height: 1.25;
+  }
+
+  .pv-notes-scroll {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Bouton Checklist dans le header */
+  .pv-btn--checklist {
+    border-color: rgba(16, 185, 129, 0.4);
+    color: var(--pv-green);
+  }
+  .pv-btn--checklist:hover,
+  .pv-btn--checklist.is-active {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: var(--pv-green);
+    color: var(--pv-green);
+  }
+  .pv-checklist-badge-pill {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--pv-green);
+    font-size: 10px;
+    font-family: var(--pv-font-mono);
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+  .pv-checklist-badge-pill.is-complete {
+    background: var(--pv-green);
+    color: #ffffff;
+  }
+
+  /* Carte Checklist Avant-Scène */
+  .pv-checklist-card {
+    background: var(--pv-checklist-card-bg);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-left: 4px solid var(--pv-green);
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+  }
+  .pv-checklist-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .pv-checklist-card__label {
+    font-size: 11px;
+    font-family: var(--pv-font-mono);
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--pv-green);
+    letter-spacing: 0.8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pv-checklist-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pv-checklist-status {
+    font-size: 11px;
+    font-family: var(--pv-font-mono);
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--pv-green);
+    font-weight: 700;
+    transition: all 0.2s ease;
+  }
+  .pv-checklist-status.is-complete {
+    background: var(--pv-green);
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+  }
+  .pv-checklist-reset-btn {
+    appearance: none;
+    background: transparent;
+    border: 1px solid var(--pv-border);
+    color: var(--pv-text-muted);
+    font-size: 11px;
+    font-family: var(--pv-font-mono);
+    border-radius: 4px;
+    padding: 2px 7px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .pv-checklist-reset-btn:hover {
+    color: var(--pv-text);
+    border-color: var(--pv-text-muted);
+    background: var(--pv-surface-alt);
+  }
+  .pv-checklist-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+  }
+  .pv-checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--pv-surface-alt);
+    border: 1px solid var(--pv-border);
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .pv-checklist-item:hover {
+    background: var(--pv-checklist-item-hover);
+    border-color: rgba(16, 185, 129, 0.45);
+  }
+  .pv-checklist-item.is-checked {
+    background: var(--pv-checklist-item-checked);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+  .pv-checklist-checkbox {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    border: 2px solid var(--pv-border);
+    border-radius: 4px;
+    background: var(--pv-surface);
+    display: grid;
+    place-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+  }
+  .pv-checklist-item:hover .pv-checklist-checkbox {
+    border-color: var(--pv-green);
+  }
+  .pv-checklist-item.is-checked .pv-checklist-checkbox {
+    background: var(--pv-green);
+    border-color: var(--pv-green);
+  }
+  .pv-checklist-checkbox::after {
+    content: "";
+    width: 9px;
+    height: 5px;
+    border-left: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    transform: rotate(-45deg) translate(1px, -1px);
+    opacity: 0;
+    transition: opacity 0.1s ease;
+  }
+  .pv-checklist-item.is-checked .pv-checklist-checkbox::after {
+    opacity: 1;
+  }
+  .pv-checklist-text {
+    font-size: calc(var(--notes-font-size) * 0.76);
+    line-height: 1.35;
+    color: var(--pv-text);
+  }
+  .pv-checklist-text strong {
+    color: var(--pv-text-bright);
+    font-weight: 700;
+  }
+  .pv-checklist-item.is-checked .pv-checklist-text {
+    color: var(--pv-text-muted);
+  }
+  .pv-checklist-item.is-checked .pv-checklist-text strong {
+    color: var(--pv-text-dim);
+    text-decoration: line-through;
+    text-decoration-color: var(--pv-green);
+  }
+  .pv-checklist-card.is-all-checked {
+    padding: 10px 14px;
+    background: var(--pv-checklist-card-bg);
+  }
+  .pv-checklist-list:empty {
+    display: none;
+  }
+
+  /* Groupe repliable "Terminé" */
+  .pv-checklist-completed-group {
+    border-radius: 6px;
+    border: 1px dashed rgba(34, 197, 94, 0.35);
+    background: var(--pv-checklist-completed-bg);
+    overflow: hidden;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .pv-checklist-completed-group[open] {
+    border-style: solid;
+    border-color: rgba(34, 197, 94, 0.45);
+    background: var(--pv-checklist-completed-bg);
+  }
+  .pv-checklist-completed-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-family: var(--pv-font-mono);
+    color: var(--pv-green);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    outline: none;
+    transition: background 0.15s ease;
+  }
+  .pv-checklist-completed-summary::-webkit-details-marker {
+    display: none;
+  }
+  .pv-checklist-completed-summary:hover {
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .pv-checklist-completed-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+  }
+  .pv-checklist-completed-label svg {
+    flex-shrink: 0;
+  }
+  .pv-checklist-completed-toggle {
+    font-size: 10px;
+    color: var(--pv-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .pv-checklist-completed-summary:hover .pv-checklist-completed-toggle {
+    color: var(--pv-text);
+  }
+  .pv-checklist-completed-toggle-icon {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  .pv-checklist-completed-group[open] .pv-checklist-completed-toggle-icon {
+    transform: rotate(180deg);
+  }
+  .pv-checklist-list--completed {
+    padding: 0 8px 8px 8px;
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .pv-checklist-list--completed .pv-checklist-item {
+    padding: 6px 8px;
+    background: var(--pv-checklist-completed-item);
+    border-color: rgba(34, 197, 94, 0.2);
+    opacity: 0.85;
+  }
+  .pv-checklist-list--completed .pv-checklist-item:hover {
+    opacity: 1;
+    background: var(--pv-checklist-item-hover);
+    border-color: rgba(34, 197, 94, 0.35);
+  }
+
+  /* Cartes de didascalies scéniques */
+  .pv-action-card {
+    background: var(--pv-surface);
+    border-left: 4px solid var(--pv-accent);
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .pv-action-card__label {
+    font-size: 11px;
+    font-family: var(--pv-font-mono);
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--pv-accent);
+    letter-spacing: 0.8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pv-action-text {
+    font-family: var(--pv-font-sans);
+    font-size: var(--notes-font-size);
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--pv-text-bright);
+    user-select: text;
+  }
+  .pv-action-text strong {
+    color: var(--pv-accent);
+    font-weight: 700;
+  }
+  .pv-action-card--pause {
+    border-left-color: var(--pv-amber);
+    background: var(--pv-pause-bg);
+  }
+  .pv-action-card--pause .pv-action-card__label {
+    color: var(--pv-amber);
+  }
+  .pv-action-card--pause .pv-action-text strong {
+    color: var(--pv-pause-highlight);
+  }
+
+  /* Mots-clés / Fil conducteur (mis en avant en grand format) */
+  .pv-keywords-card {
+    background: var(--pv-surface);
+    border: 1px solid var(--pv-border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    flex-shrink: 0;
+  }
+  .pv-keywords-card__label {
+    font-size: 11px;
+    font-family: var(--pv-font-mono);
+    text-transform: uppercase;
+    color: var(--pv-accent);
+    margin-bottom: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pv-keywords-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .pv-keywords-item {
+    font-size: var(--notes-font-size);
+    line-height: 1.42;
+    color: var(--pv-text-bright);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-weight: 600;
+  }
+  .pv-keywords-item::before {
+    content: "▸";
+    color: var(--pv-accent);
+    font-size: 1.15em;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  /* Accordéon de secours pour le texte complet rédigé */
+  .pv-verbatim-details {
+    background: var(--pv-surface-alt);
+    border: 1px dashed var(--pv-border);
+    border-radius: 6px;
+    padding: 8px 14px;
+    margin-top: 4px;
+    transition: all 0.2s ease;
+  }
+  .pv-verbatim-details summary {
+    font-size: 12px;
+    font-family: var(--pv-font-mono);
+    color: var(--pv-text-muted);
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pv-verbatim-details summary:hover {
+    color: var(--pv-text-dim);
+  }
+  .pv-verbatim-details[open] {
+    padding: 14px 16px;
+    background: var(--pv-surface);
+    border-style: solid;
+  }
+  .pv-verbatim-text {
+    margin-top: 10px;
+    font-size: calc(var(--notes-font-size) * 0.85);
+    line-height: 1.5;
+    color: var(--pv-text-dim);
+    user-select: text;
+  }
+
+  /* --- BOTTOM THUMBNAILS DRAWER --- */
+  .pv-timeline {
+    height: 64px;
+    background: var(--pv-surface);
+    border-top: 1px solid var(--pv-border);
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    padding: 6px 12px;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .pv-thumb {
+    appearance: none;
+    border: 1px solid var(--pv-border);
+    background: var(--pv-surface-alt);
+    border-radius: 4px;
+    padding: 4px 10px;
+    color: var(--pv-text-dim);
+    font-family: var(--pv-font-mono);
+    font-size: 11px;
+    white-space: nowrap;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+  }
+  .pv-thumb:hover {
+    border-color: var(--pv-accent);
+    color: var(--pv-text-bright);
+    background: var(--pv-btn-hover-bg);
+  }
+  .pv-thumb.is-current {
+    background: var(--pv-accent);
+    color: var(--pv-accent-contrast);
+    border-color: var(--pv-accent);
+    font-weight: 700;
+  }
+
+  /* Keyboard shortcut hint overlay */
+  .pv-shortcuts {
+    font-size: 11px;
+    color: var(--pv-text-muted);
+    font-family: var(--pv-font-mono);
+  }
+
+  @media (max-width: 900px) {
+    .pv-main {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr 1.2fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- EN-TÊTE : CHRONO, RYTHME ET CONTRÔLES -->
+<header class="pv-header">
+  <div class="pv-brand">
+    <span class="pv-brand__logo">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Presenter View
+    </span>
+    <div class="pv-status-badge" id="pv-status">
+      <span class="pv-status-dot"></span>
+      <span id="pv-status-text">Synchronis&eacute;</span>
+    </div>
+  </div>
+
+  <!-- CHRONOMÈTRE ET JALONS DE RYTHME (5 ACTES) -->
+  <div class="pv-timer-cluster">
+    <div class="pv-clock" id="pv-clock">00:00:00</div>
+    <div class="pv-stopwatch" id="pv-stopwatch" title="Cliquer pour démarrer/pause">00:00</div>
+    <div class="pv-milestones-track">
+      <span class="pv-milestone-pill" data-act="0" title="Acte 0 : Intro (0-7m)">A0: 7m</span>
+      <span class="pv-milestone-pill" data-act="1" title="Acte 1 : V1 (7-18m)">A1: 18m</span>
+      <span class="pv-milestone-pill" data-act="2" title="Acte 2 : V2 Diff (18-28m)">A2: 28m</span>
+      <span class="pv-milestone-pill" data-act="3" title="Acte 3 : PR (28-36m)">A3: 36m</span>
+      <span class="pv-milestone-pill" data-act="4" title="Acte 4 & 5 : Clôture (36-45m)">A4: 45m</span>
+    </div>
+  </div>
+
+  <!-- CONTRÔLES PRÉSENTATEUR -->
+  <div class="pv-actions">
+    <div class="pv-font-controls" title="Ajuster la taille du texte de lecture pupitre">
+      <button type="button" class="pv-font-btn" id="pv-font-dec" aria-label="Diminuer texte">A-</button>
+      <button type="button" class="pv-font-btn" id="pv-font-inc" aria-label="Agrandir texte">A+</button>
+    </div>
+    <button type="button" class="pv-btn" id="pv-btn-theme" title="Basculer le thème Light / Dark (Touche T)" aria-label="Basculer le thème">
+      <span id="pv-theme-icon">☀️</span>
+      <span id="pv-theme-label">Clair</span>
+    </button>
+    <button type="button" class="pv-btn pv-btn--checklist" id="pv-btn-checklist" title="Afficher/masquer la checklist avant-scène">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Checklist <span class="pv-checklist-badge-pill" id="pv-checklist-pill">0/4</span>
+    </button>
+    <button type="button" class="pv-btn pv-btn--blackout" id="pv-btn-blackout" title="Occulter l'écran public (Touche .)">Écran noir</button>
+    <button type="button" class="pv-btn" id="pv-btn-reset-timer" title="Réinitialiser chrono">Reset</button>
+    <button type="button" class="pv-btn" id="pv-btn-prev" aria-label="Slide précédente">&larr; Pr&eacute;c</button>
+    <button type="button" class="pv-btn pv-btn--primary" id="pv-btn-next" aria-label="Slide suivante">Suiv &rarr;</button>
+  </div>
+</header>
+
+<!-- CORPS DE LA CONSOLE PRÉSENTATEUR -->
+<main class="pv-main">
+  <!-- COLONNE GAUCHE : APERÇUS SLIDE COURANTE & SUIVANTE -->
+  <section class="pv-col-previews">
+    <!-- Diapositive courante (public) -->
+    <div class="pv-preview-card pv-preview-card--current">
+      <div class="pv-preview-header">
+        <span style="color:var(--pv-accent); font-weight:700;" id="pv-cur-badge">Slide 1 / 35</span>
+        <span style="color:var(--pv-text-muted);" id="pv-cur-title">Titre</span>
+      </div>
+      <div class="pv-preview-body">
+        <div class="pv-preview-scaler">
+          <iframe class="pv-preview-iframe" id="pv-iframe-current" src="./presentation-diagram-as-code.html#slide-1"></iframe>
+        </div>
+        <div class="pv-blackout-indicator" id="pv-blackout-indicator">&block; &Eacute;CRAN PUBLIC MASQU&Eacute;</div>
+      </div>
+    </div>
+
+    <!-- Diapositive suivante -->
+    <div class="pv-preview-card pv-preview-card--next">
+      <div class="pv-preview-header">
+        <span style="color:var(--pv-text-dim);">PROCHAINE SLIDE</span>
+        <span style="color:var(--pv-text-muted);" id="pv-next-title">Speaker</span>
+      </div>
+      <div class="pv-preview-body">
+        <div class="pv-preview-scaler">
+          <iframe class="pv-preview-iframe" id="pv-iframe-next" src="./presentation-diagram-as-code.html#slide-2"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLONNE DROITE : NOTES D'ORATEUR & DIDASCALIES SCÉNIQUES -->
+  <section class="pv-col-notes">
+    <div class="pv-notes-header">
+      <div class="pv-notes-meta">
+        <span class="pv-btn" style="font-size:11px; padding:2px 8px; background:var(--pv-surface-alt);" id="pv-duration-badge">⏱ 45 s</span>
+        <span class="pv-btn" style="font-size:11px; padding:2px 8px; background:rgba(56, 189, 248, 0.15); color:var(--pv-accent); border-color:transparent;" id="pv-beat-badge">Accroche</span>
+      </div>
+      <h2 class="pv-slide-title" id="pv-notes-title">Ne dessinez plus vos architectures : codez-les !</h2>
+    </div>
+
+    <div class="pv-notes-scroll" id="pv-notes-content">
+      <!-- Checklist avant-scène (active sur slide 1 / titre ou ouverte via bouton) -->
+      <div class="pv-checklist-card" id="pv-checklist-box">
+        <div class="pv-checklist-card__header">
+          <div class="pv-checklist-card__label">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <span>Checklist Avant-Sc&egrave;ne &middot; D&eacute;part</span>
+          </div>
+          <div class="pv-checklist-card__actions">
+            <span class="pv-checklist-status" id="pv-checklist-status">0/4 pr&ecirc;t</span>
+            <button type="button" class="pv-checklist-reset-btn" id="pv-checklist-reset" title="R&eacute;initialiser toutes les cases">Reset</button>
+          </div>
+        </div>
+        <ul class="pv-checklist-list" id="pv-checklist-list">
+        </ul>
+
+        <!-- Éléments repliés une fois cochés pour libérer l'espace pour la suite des indications -->
+        <details class="pv-checklist-completed-group" id="pv-checklist-completed-group" style="display: none;">
+          <summary class="pv-checklist-completed-summary">
+            <span class="pv-checklist-completed-label">
+              <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              <span id="pv-checklist-completed-count-text">Termin&eacute; (0)</span>
+            </span>
+            <span class="pv-checklist-completed-toggle">
+              <span id="pv-checklist-completed-toggle-hint">Afficher</span>
+              <svg class="pv-checklist-completed-toggle-icon" viewBox="0 0 20 20" width="13" height="13" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            </span>
+          </summary>
+          <ul class="pv-checklist-list pv-checklist-list--completed" id="pv-checklist-completed-list">
+          </ul>
+        </details>
+      </div>
+
+      <!-- Didascalie scénique -->
+      <div class="pv-action-card" id="pv-action-box">
+        <div class="pv-action-card__label">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Didascalie &middot; Action sc&eacute;nique
+        </div>
+        <div class="pv-action-text" id="pv-action-text">Debout au centre, regard direct balayant toute la salle...</div>
+      </div>
+
+      <!-- Mots-clés / Fil conducteur (mis en avant) -->
+      <div class="pv-keywords-card" id="pv-keywords-box">
+        <div class="pv-keywords-card__label">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Mots-cl&eacute;s &middot; Fil conducteur
+        </div>
+        <ul class="pv-keywords-list" id="pv-keywords-list">
+        </ul>
+      </div>
+
+      <!-- Verbatim oral repliable (Secours trou de mémoire) -->
+      <details class="pv-verbatim-details" id="pv-verbatim-details">
+        <summary>Texte oral r&eacute;dig&eacute; complet (secours)</summary>
+        <p class="pv-verbatim-text" id="pv-verbatim-text"></p>
+      </details>
+    </div>
+  </section>
+</main>
+
+<!-- BANDEAU INFÉRIEUR : TIMELINE DES SLIDES -->
+<footer class="pv-timeline" id="pv-timeline">
+  <!-- Rempli dynamiquement -->
+</footer>
+
+<!-- SCRIPT DONNÉES INTÉGRÉES (EMBEDDED DATA) -->
+<script id="embedded-presenter-data" type="application/json">
+[]
+</script>
+
+<!-- MOTEUR DE CONTRÔLE DE LA VUE PRÉSENTATEUR -->
+<script>
+(function initPresenterView() {
+  var state = {
+    current: 0,
+    currentStep: '1',
+    total: 35,
+    isBlackout: false,
+    checklistManualOpen: false,
+    theme: 'google-blueprint-light',
+    fontSize: parseInt(localStorage.getItem('dac_pv_font') || '21', 10),
+    startTime: null,
+    timerRunning: false,
+    timerOffset: 0,
+    notes: [],
+    remoteConnected: false
+  };
+
+  // 1. Charger les données de notes (intégrées ou fetch frais immédiat)
+  try {
+    var raw = document.getElementById('embedded-presenter-data').textContent;
+    if (raw && raw.trim() !== '[]') {
+      state.notes = JSON.parse(raw);
+      state.total = state.notes.length;
+    }
+  } catch(e) {}
+
+  // Toujours récupérer en tâche de fond le fichier JSON le plus frais avec cache-busting
+  fetch('assets/presenter-data.json?t=' + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (Array.isArray(data) && data.length > 0) {
+        state.notes = data;
+        state.total = data.length;
+        renderTimeline();
+        updateView();
+      }
+    }).catch(function() {});
+
+  // 2. Gestion des Iframes (Chargement unique sans rechargement de src)
+  var iframeCur = document.getElementById('pv-iframe-current');
+  var iframeNxt = document.getElementById('pv-iframe-next');
+  var iframeCurReady = false;
+  var iframeNxtReady = false;
+  var lastCurSentIdx = -1;
+  var lastCurSentStep = null;
+  var lastNxtSentIdx = -1;
+
+  function setIframeSlide(iframe, slideIndex, step) {
+    if (!iframe || !iframe.contentWindow) return;
+    try {
+      iframe.contentWindow.postMessage({
+        type: 'GOTO_SLIDE',
+        index: slideIndex,
+        step: step
+      }, '*');
+    } catch(e) {}
+  }
+
+  function resizePreviewScalers() {
+    document.querySelectorAll('.pv-preview-body').forEach(function(body) {
+      var scaler = body.querySelector('.pv-preview-scaler');
+      if (!scaler) return;
+      var w = body.clientWidth;
+      var h = body.clientHeight;
+      if (w > 0 && h > 0) {
+        var scale = Math.min(w / 1280, h / 720) * 0.96;
+        scaler.style.transform = 'scale(' + scale + ')';
+      }
+    });
+  }
+  window.addEventListener('resize', resizePreviewScalers);
+
+  window.addEventListener('message', function(ev) {
+    var data = ev.data;
+    if (!data) return;
+    if (data.type === 'IFRAME_DECK_READY') {
+      if (ev.source === (iframeCur && iframeCur.contentWindow)) {
+        iframeCurReady = true;
+        setIframeSlide(iframeCur, state.current, state.currentStep);
+        if (iframeCur && iframeCur.contentWindow) {
+          iframeCur.contentWindow.postMessage({ type: 'SET_THEME', theme: state.theme }, '*');
+        }
+      } else if (ev.source === (iframeNxt && iframeNxt.contentWindow)) {
+        iframeNxtReady = true;
+        var nxt = Math.min(state.current + 1, state.total - 1);
+        setIframeSlide(iframeNxt, nxt, '1');
+        if (iframeNxt && iframeNxt.contentWindow) {
+          iframeNxt.contentWindow.postMessage({ type: 'SET_THEME', theme: state.theme }, '*');
+        }
+      }
+      resizePreviewScalers();
+    }
+  });
+
+  if (iframeCur) {
+    iframeCur.addEventListener('load', function() {
+      iframeCurReady = true;
+      setIframeSlide(iframeCur, state.current, state.currentStep);
+      if (iframeCur.contentWindow) {
+        iframeCur.contentWindow.postMessage({ type: 'SET_THEME', theme: state.theme }, '*');
+      }
+      resizePreviewScalers();
+    });
+  }
+  if (iframeNxt) {
+    iframeNxt.addEventListener('load', function() {
+      iframeNxtReady = true;
+      var nxt = Math.min(state.current + 1, state.total - 1);
+      setIframeSlide(iframeNxt, nxt, '1');
+      if (iframeNxt.contentWindow) {
+        iframeNxt.contentWindow.postMessage({ type: 'SET_THEME', theme: state.theme }, '*');
+      }
+      resizePreviewScalers();
+    });
+  }
+
+  function refreshIframes() {
+    var t = Date.now();
+    var cur = state.current;
+    var nxt = Math.min(cur + 1, state.total - 1);
+    iframeCurReady = false;
+    iframeNxtReady = false;
+    lastCurSentIdx = -1;
+    lastCurSentStep = null;
+    lastNxtSentIdx = -1;
+    if (iframeCur) {
+      iframeCur.src = './presentation-diagram-as-code.html?t=' + t + '#slide-' + (cur + 1);
+    }
+    if (iframeNxt) {
+      iframeNxt.src = './presentation-diagram-as-code.html?t=' + (t + 1) + '#slide-' + (nxt + 1);
+    }
+  }
+
+  // 3. Synchronisation BroadcastChannel & localStorage
+  var channel = null;
+  var statusBadge = document.getElementById('pv-status');
+  var statusText = document.getElementById('pv-status-text');
+
+  function setConnected(connected) {
+    state.remoteConnected = !!connected;
+    if (statusBadge) statusBadge.classList.toggle('is-disconnected', !connected);
+    if (statusText) statusText.textContent = connected ? 'Synchronis\u00e9' : 'Autonome';
+  }
+
+  function flashSyncIndicator() {
+    if (statusBadge) {
+      statusBadge.style.transition = 'box-shadow 0.2s ease';
+      statusBadge.style.boxShadow = '0 0 14px var(--pv-green)';
+      setTimeout(function() {
+        statusBadge.style.boxShadow = '';
+      }, 900);
+    }
+  }
+
+  var lastReloadTimestamp = 0;
+  function reloadAllPresenterData(targetIndex, targetStep) {
+    fetch('assets/presenter-data.json?t=' + Date.now())
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (Array.isArray(data) && data.length > 0) {
+          state.notes = data;
+          state.total = data.length;
+        }
+        if (typeof targetIndex === 'number' && targetIndex >= 0) {
+          state.current = Math.min(targetIndex, state.total - 1);
+        }
+        if (targetStep) {
+          state.currentStep = targetStep;
+        }
+        renderTimeline();
+        refreshIframes();
+        updateView();
+        flashSyncIndicator();
+      })
+      .catch(function(err) {
+        console.warn('Erreur lors du rechargement des données speaker:', err);
+        if (typeof targetIndex === 'number' && targetIndex >= 0) {
+          state.current = Math.min(targetIndex, state.total - 1);
+        }
+        refreshIframes();
+        updateView();
+        flashSyncIndicator();
+      });
+  }
+
+  // --- GESTION DYNAMIQUE DU THÈME ---
+  function normalizeThemeName(themeName) {
+    if (!themeName) return 'google-blueprint-light';
+    if (themeName === 'light' || themeName === 'google-blueprint-light') return 'google-blueprint-light';
+    if (themeName === 'dark' || themeName === 'slate-architect') return 'slate-architect';
+    return themeName;
+  }
+
+  function applyPresenterTheme(themeName, emit) {
+    var normalized = normalizeThemeName(themeName);
+    if (state.theme === normalized && document.documentElement.getAttribute('data-theme') === normalized) {
+      return; // Déjà appliqué
+    }
+    state.theme = normalized;
+    document.documentElement.setAttribute('data-theme', normalized);
+
+    var isDark = normalized === 'slate-architect';
+    var iconEl = document.getElementById('pv-theme-icon');
+    var labelEl = document.getElementById('pv-theme-label');
+    if (iconEl) iconEl.textContent = isDark ? '🌙' : '☀️';
+    if (labelEl) labelEl.textContent = isDark ? 'Sombre' : 'Clair';
+
+    // Propager immédiatement aux iframes de prévisualisation
+    [iframeCur, iframeNxt].forEach(function(iframe) {
+      if (iframe && iframe.contentWindow) {
+        try {
+          iframe.contentWindow.postMessage({ type: 'SET_THEME', theme: normalized }, '*');
+          iframe.contentWindow.postMessage({ type: 'deck-theme-change', theme: normalized }, '*');
+        } catch(e) {}
+      }
+    });
+
+    if (emit) {
+      try {
+        localStorage.setItem('dac_deck_theme', JSON.stringify({ theme: normalized, timestamp: Date.now() }));
+        localStorage.setItem('deck-theme', normalized);
+      } catch(e) {}
+      if (channel) {
+        try {
+          channel.postMessage({ type: 'THEME_CHANGED', theme: normalized, timestamp: Date.now() });
+        } catch(e) {}
+      }
+    }
+  }
+
+  function togglePresenterTheme() {
+    var nextTheme = (state.theme === 'google-blueprint-light') ? 'slate-architect' : 'google-blueprint-light';
+    applyPresenterTheme(nextTheme, true);
+  }
+
+  // Initialisation du thème depuis URL ou localStorage
+  (function initThemeFromStorage() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var urlTheme = urlParams.get('theme');
+    if (urlTheme) {
+      applyPresenterTheme(urlTheme, false);
+      return;
+    }
+    try {
+      var saved = localStorage.getItem('deck-theme');
+      if (saved) {
+        applyPresenterTheme(saved, false);
+        return;
+      }
+      var savedDac = localStorage.getItem('dac_deck_theme');
+      if (savedDac) {
+        var parsed = JSON.parse(savedDac);
+        if (parsed && parsed.theme) {
+          applyPresenterTheme(parsed.theme, false);
+          return;
+        }
+      }
+    } catch(e) {}
+    applyPresenterTheme('google-blueprint-light', false);
+  })();
+
+  function handleDeckReloaded(data) {
+    var ts = (data && data.timestamp) ? data.timestamp : Date.now();
+    if (ts - lastReloadTimestamp < 400) return; // Éviter double rechargement immédiat
+    lastReloadTimestamp = ts;
+    setConnected(true);
+    if (data && data.theme) {
+      applyPresenterTheme(data.theme, false);
+    }
+    var targetIdx = (data && typeof data.index === 'number') ? data.index : state.current;
+    var targetStep = (data && data.step) ? data.step : state.currentStep;
+    reloadAllPresenterData(targetIdx, targetStep);
+  }
+
+  if (typeof window.BroadcastChannel === 'function') {
+    try {
+      channel = new BroadcastChannel('dac-presenter-channel');
+      channel.onmessage = function(ev) {
+        var data = ev.data;
+        if (!data) return;
+        if (data.type === 'DECK_RELOADED') {
+          handleDeckReloaded(data);
+        } else if (data.type === 'SLIDE_CHANGED' && typeof data.index === 'number') {
+          setConnected(true);
+          if (data.theme && normalizeThemeName(data.theme) !== state.theme) {
+            applyPresenterTheme(data.theme, false);
+          }
+          if (typeof data.total === 'number' && data.total > 0 && state.total !== data.total) {
+            state.total = data.total;
+            renderTimeline();
+          }
+          state.currentStep = data.step || '1';
+          syncToSlide(data.index, state.currentStep, false);
+        } else if (data.type === 'THEME_CHANGED' && data.theme) {
+          if (normalizeThemeName(data.theme) !== state.theme) {
+            applyPresenterTheme(data.theme, false);
+          }
+        } else if (data.type === 'BLACKOUT_CHANGED') {
+          setBlackoutState(!!data.isBlackout, false);
+        }
+      };
+    } catch(e) {}
+  }
+
+  // Écouter storage pour synchronisation inter-onglets et repli BroadcastChannel
+  window.addEventListener('storage', function(ev) {
+    if (ev.key === 'dac_deck_reloaded' && ev.newValue) {
+      try {
+        var rel = JSON.parse(ev.newValue);
+        handleDeckReloaded(rel);
+      } catch(e) {}
+    } else if (ev.key === 'dac_current_slide' && ev.newValue) {
+      try {
+        var parsed = JSON.parse(ev.newValue);
+        if (typeof parsed.index === 'number') {
+          setConnected(true);
+          if (parsed.theme && normalizeThemeName(parsed.theme) !== state.theme) {
+            applyPresenterTheme(parsed.theme, false);
+          }
+          if (typeof parsed.total === 'number' && parsed.total > 0 && state.total !== parsed.total) {
+            state.total = parsed.total;
+            renderTimeline();
+          }
+          state.currentStep = parsed.step || '1';
+          syncToSlide(parsed.index, state.currentStep, false);
+        }
+      } catch(e) {}
+    } else if (ev.key === 'dac_deck_theme' && ev.newValue) {
+      try {
+        var th = JSON.parse(ev.newValue);
+        if (th && th.theme && normalizeThemeName(th.theme) !== state.theme) {
+          applyPresenterTheme(th.theme, false);
+        }
+      } catch(e) {}
+    } else if (ev.key === 'deck-theme' && ev.newValue) {
+      if (normalizeThemeName(ev.newValue) !== state.theme) {
+        applyPresenterTheme(ev.newValue, false);
+      }
+    } else if (ev.key === 'dac_blackout' && ev.newValue) {
+      try {
+        var b = JSON.parse(ev.newValue);
+        setBlackoutState(!!b.isBlackout, false);
+      } catch(e) {}
+    }
+  });
+
+  // 4. Commandes de navigation (sans double-émission)
+  function sendNavAction(action) {
+    if (channel) {
+      try {
+        channel.postMessage({ type: action === 'next' ? 'NAV_NEXT' : 'NAV_PREV' });
+        return;
+      } catch(e) {}
+    }
+    try {
+      localStorage.setItem('dac_nav_action', JSON.stringify({ action: action, timestamp: Date.now() }));
+    } catch(e) {}
+  }
+
+  function sendGoto(index, step) {
+    if (channel) {
+      try {
+        channel.postMessage({ type: 'GOTO_SLIDE', index: index, step: step });
+        return;
+      } catch(e) {}
+    }
+    try {
+      localStorage.setItem('dac_goto_slide', JSON.stringify({ index: index, step: step, timestamp: Date.now() }));
+    } catch(e) {}
+  }
+
+  function syncToSlide(index, step, emit) {
+    if (index < 0 || index >= state.total) return;
+    state.current = index;
+    state.currentStep = step || '1';
+    if (emit) sendGoto(index, step);
+    if (!state.timerRunning && index > 0 && !state.startTime) {
+      startTimer();
+    }
+    updateView();
+  }
+
+  function next() {
+    sendNavAction('next');
+    if (!state.remoteConnected) {
+      syncToSlide(state.current + 1, '1', false);
+    }
+  }
+
+  function prev() {
+    sendNavAction('prev');
+    if (!state.remoteConnected) {
+      syncToSlide(state.current - 1, '1', false);
+    }
+  }
+
+  function setBlackoutState(isBlack, emit) {
+    state.isBlackout = isBlack;
+    var btn = document.getElementById('pv-btn-blackout');
+    var ind = document.getElementById('pv-blackout-indicator');
+    if (btn) btn.classList.toggle('is-active', isBlack);
+    if (ind) ind.classList.toggle('is-visible', isBlack);
+    if (emit) {
+      if (channel) {
+        try { channel.postMessage({ type: 'TOGGLE_BLACKOUT', force: isBlack }); } catch(e) {}
+      }
+      try {
+        localStorage.setItem('dac_blackout', JSON.stringify({ isBlackout: isBlack, timestamp: Date.now() }));
+      } catch(e) {}
+    }
+  }
+
+  function toggleBlackout() {
+    setBlackoutState(!state.isBlackout, true);
+  }
+
+  // 4b. Checklist avant-scène (persistance et rendu)
+  var defaultChecklist = [
+    "Navigateur public : Plein écran réel (F11), résolution 16:9 sans rognage, blackout (.) testé",
+    "VS Code (Live coding) : Thème clair (LIGHT), police zoomée (+2/+3), arborescence gauche masquée",
+    "Onglets de secours : PR GitHub #1 et portail LikeC4 local (localhost:3000) ouverts en arrière-plan",
+    "Matériel & Confort : Ordinateur branché sur secteur (ou batterie pleine), bouteille d'eau ouverte sur le pupitre"
+  ];
+
+  function getSavedChecklistState() {
+    try {
+      var raw = localStorage.getItem('dac_pv_checklist');
+      return raw ? JSON.parse(raw) : {};
+    } catch(e) {
+      return {};
+    }
+  }
+
+  function saveChecklistState(st) {
+    try {
+      localStorage.setItem('dac_pv_checklist', JSON.stringify(st));
+    } catch(e) {}
+  }
+
+  function renderChecklist(items, forceCollapse) {
+    var checklistList = document.getElementById('pv-checklist-list');
+    var checklistStatus = document.getElementById('pv-checklist-status');
+    var checklistPill = document.getElementById('pv-checklist-pill');
+    var completedGroup = document.getElementById('pv-checklist-completed-group');
+    var completedList = document.getElementById('pv-checklist-completed-list');
+    var completedText = document.getElementById('pv-checklist-completed-count-text');
+    var completedToggleHint = document.getElementById('pv-checklist-completed-toggle-hint');
+    var checklistBox = document.getElementById('pv-checklist-box');
+    if (!checklistList) return;
+
+    var list = (items && items.length > 0) ? items : defaultChecklist;
+    var savedState = getSavedChecklistState();
+    checklistList.innerHTML = '';
+    if (completedList) completedList.innerHTML = '';
+
+    var total = list.length;
+    var checkedCount = 0;
+
+    list.forEach(function(itemText, idx) {
+      var isChecked = !!savedState[idx];
+      if (isChecked) checkedCount++;
+
+      var li = document.createElement('li');
+      li.className = 'pv-checklist-item' + (isChecked ? ' is-checked' : '');
+
+      var cb = document.createElement('div');
+      cb.className = 'pv-checklist-checkbox';
+
+      var textSpan = document.createElement('div');
+      textSpan.className = 'pv-checklist-text';
+
+      var colonIdx = itemText.indexOf(':');
+      if (colonIdx > 0) {
+        var head = itemText.substring(0, colonIdx).trim();
+        var tail = itemText.substring(colonIdx + 1).trim();
+        textSpan.innerHTML = '<strong>' + head + ' :</strong> ' + tail;
+      } else {
+        textSpan.textContent = itemText;
+      }
+
+      li.appendChild(cb);
+      li.appendChild(textSpan);
+
+      li.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var currentSt = getSavedChecklistState();
+        var willBeChecked = !currentSt[idx];
+        currentSt[idx] = willBeChecked;
+        saveChecklistState(currentSt);
+        renderChecklist(list, willBeChecked ? true : false);
+      });
+
+      if (isChecked) {
+        if (completedList) completedList.appendChild(li);
+      } else {
+        checklistList.appendChild(li);
+      }
+    });
+
+    if (completedGroup) {
+      if (checkedCount > 0) {
+        completedGroup.style.display = 'block';
+        if (completedText) {
+          if (checkedCount === total) {
+            completedText.textContent = 'Termin\u00e9s (' + total + '/' + total + ') \u2705';
+          } else if (checkedCount === 1) {
+            completedText.textContent = 'Termin\u00e9 (1)';
+          } else {
+            completedText.textContent = 'Termin\u00e9s (' + checkedCount + ')';
+          }
+        }
+        if (forceCollapse) {
+          completedGroup.removeAttribute('open');
+        }
+        if (completedToggleHint) {
+          completedToggleHint.textContent = completedGroup.hasAttribute('open') ? 'Masquer' : 'Afficher';
+        }
+      } else {
+        completedGroup.style.display = 'none';
+        completedGroup.removeAttribute('open');
+        if (completedToggleHint) {
+          completedToggleHint.textContent = 'Afficher';
+        }
+      }
+    }
+
+    if (checklistBox) {
+      checklistBox.classList.toggle('is-all-checked', checkedCount === total && total > 0);
+    }
+
+    var statusText = checkedCount + '/' + total + (checkedCount === total && total > 0 ? ' \u2705 Pr\u00eat !' : ' pr\u00eat');
+    if (checklistStatus) {
+      checklistStatus.textContent = statusText;
+      checklistStatus.classList.toggle('is-complete', checkedCount === total && total > 0);
+    }
+    if (checklistPill) {
+      checklistPill.textContent = checkedCount + '/' + total;
+      checklistPill.classList.toggle('is-complete', checkedCount === total && total > 0);
+    }
+  }
+
+  // 5. Mise à jour de la vue sans recharger les iframes
+  function updateView() {
+    var cur = state.current;
+    var nxt = Math.min(cur + 1, state.total - 1);
+    var note = (state.notes && state.notes[cur]) ? state.notes[cur] : null;
+    var nextNote = (state.notes && state.notes[nxt]) ? state.notes[nxt] : null;
+
+    // Badges header
+    document.getElementById('pv-cur-badge').textContent = 'Slide ' + (cur + 1) + ' / ' + state.total;
+    document.getElementById('pv-cur-title').textContent = note ? note.title : ('Slide ' + (cur + 1));
+    document.getElementById('pv-next-title').textContent = (nxt === cur) ? '(Fin de conf)' : (nextNote ? nextNote.title : ('Slide ' + (nxt + 1)));
+
+    // Pilotage direct des Iframes sans rechargement de src (uniquement si changement)
+    if (iframeCurReady && (cur !== lastCurSentIdx || state.currentStep !== lastCurSentStep)) {
+      lastCurSentIdx = cur;
+      lastCurSentStep = state.currentStep;
+      setIframeSlide(iframeCur, cur, state.currentStep);
+    }
+    if (iframeNxtReady && nxt !== lastNxtSentIdx) {
+      lastNxtSentIdx = nxt;
+      setIframeSlide(iframeNxt, nxt, '1');
+    }
+
+    // Gestion Checklist avant-scène (affichée par défaut sur slide 1 ou manuellement)
+    var checklistBox = document.getElementById('pv-checklist-box');
+    var checklistBtn = document.getElementById('pv-btn-checklist');
+    var currentChecklist = (note && note.checklist && note.checklist.length > 0)
+      ? note.checklist
+      : (cur === 0 ? defaultChecklist : null);
+
+    var isChecklistVisible = (cur === 0) || state.checklistManualOpen;
+    if (checklistBox) {
+      checklistBox.style.display = isChecklistVisible ? 'flex' : 'none';
+      if (isChecklistVisible) {
+        renderChecklist(currentChecklist || defaultChecklist);
+      }
+    }
+    if (checklistBtn) {
+      checklistBtn.classList.toggle('is-active', state.checklistManualOpen);
+    }
+
+    // Contenu notes
+    if (note) {
+      document.getElementById('pv-duration-badge').textContent = '⏱ ' + (note.duration || '30 s');
+      document.getElementById('pv-beat-badge').textContent = note.beat || 'Transition';
+      document.getElementById('pv-notes-title').textContent = note.title;
+
+      // Action scénique / Silence
+      var actionBox = document.getElementById('pv-action-box');
+      var actionTextEl = document.getElementById('pv-action-text');
+      var actionStr = note.action || '';
+      var isPause = /pause|silence|temps d'arrêt/i.test(actionStr);
+      actionBox.className = 'pv-action-card' + (isPause ? ' pv-action-card--pause' : '');
+      var formattedAction = actionStr.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      actionTextEl.innerHTML = formattedAction || '<em>Aucune consigne particulière.</em>';
+
+      // Mots-clés / Fil conducteur (mis en valeur)
+      var kwList = document.getElementById('pv-keywords-list');
+      if (kwList) {
+        kwList.innerHTML = '';
+        var items = (note.keywords && note.keywords.length > 0)
+          ? note.keywords
+          : (note.substance ? [note.substance] : []);
+        items.forEach(function(k) {
+          var li = document.createElement('li');
+          li.className = 'pv-keywords-item';
+          li.textContent = k;
+          kwList.appendChild(li);
+        });
+      }
+
+      // Verbatim (replié par défaut)
+      var details = document.getElementById('pv-verbatim-details');
+      if (details) details.removeAttribute('open');
+      document.getElementById('pv-verbatim-text').innerHTML = note.verbatim || '<em>Pas de verbatim spécifique.</em>';
+    }
+
+    // Timeline dots
+    var thumbs = document.querySelectorAll('.pv-thumb');
+    thumbs.forEach(function(t, i) {
+      t.classList.toggle('is-current', i === cur);
+      if (i === cur) t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    });
+
+    // Hash sync
+    if (history.replaceState) history.replaceState(null, '', '#slide-' + (cur + 1));
+  }
+
+  function renderTimeline() {
+    var container = document.getElementById('pv-timeline');
+    if (!container) return;
+    container.innerHTML = '';
+    state.notes.forEach(function(item, idx) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'pv-thumb' + (idx === state.current ? ' is-current' : '');
+      btn.innerHTML = '<strong>' + (idx + 1) + '</strong> ' + item.title;
+      btn.addEventListener('click', function() {
+        syncToSlide(idx, '1', true);
+      });
+      container.appendChild(btn);
+    });
+  }
+
+  // 6. Horloge et Chronomètre
+  function updateClock() {
+    var now = new Date();
+    var h = String(now.getHours()).padStart(2, '0');
+    var m = String(now.getMinutes()).padStart(2, '0');
+    var s = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('pv-clock').textContent = h + ':' + m + ':' + s;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  function startTimer() {
+    state.startTime = Date.now() - state.timerOffset;
+    state.timerRunning = true;
+    var el = document.getElementById('pv-stopwatch');
+    if (el) el.classList.remove('is-paused');
+  }
+
+  function pauseTimer() {
+    if (!state.timerRunning) return;
+    state.timerRunning = false;
+    state.timerOffset = Date.now() - state.startTime;
+    var el = document.getElementById('pv-stopwatch');
+    if (el) el.classList.add('is-paused');
+  }
+
+  function resetTimer() {
+    state.startTime = null;
+    state.timerOffset = 0;
+    state.timerRunning = false;
+    var el = document.getElementById('pv-stopwatch');
+    if (el) {
+      el.textContent = '00:00';
+      el.classList.remove('is-paused');
+    }
+  }
+
+  function updateStopwatch() {
+    if (!state.timerRunning || !state.startTime) return;
+    var elapsedMs = Date.now() - state.startTime;
+    var totalSec = Math.floor(elapsedMs / 1000);
+    var mins = Math.floor(totalSec / 60);
+    var secs = totalSec % 60;
+    document.getElementById('pv-stopwatch').textContent =
+      String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+
+    // Mettre à jour les jalons d'Actes
+    var pills = document.querySelectorAll('.pv-milestone-pill');
+    pills.forEach(function(p) {
+      var act = parseInt(p.getAttribute('data-act'), 10);
+      var limits = [7, 18, 28, 36, 45];
+      var isCurrent = (act === 0 && mins < limits[0]) ||
+                      (act > 0 && mins >= limits[act - 1] && mins < limits[act]);
+      p.classList.toggle('is-current', isCurrent);
+    });
+  }
+  setInterval(updateStopwatch, 1000);
+
+  // 7. Ajustement de taille de police (pupitre)
+  function applyFontSize(size) {
+    state.fontSize = Math.max(16, Math.min(34, size));
+    document.documentElement.style.setProperty('--notes-font-size', state.fontSize + 'px');
+    try { localStorage.setItem('dac_pv_font', String(state.fontSize)); } catch(e) {}
+  }
+  applyFontSize(state.fontSize);
+
+  // 8. Événements boutons et clavier
+  document.getElementById('pv-btn-next').addEventListener('click', next);
+  document.getElementById('pv-btn-prev').addEventListener('click', prev);
+  document.getElementById('pv-btn-blackout').addEventListener('click', toggleBlackout);
+  var themeBtn = document.getElementById('pv-btn-theme');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', togglePresenterTheme);
+  }
+  var checklistBtn = document.getElementById('pv-btn-checklist');
+  if (checklistBtn) {
+    checklistBtn.addEventListener('click', function() {
+      state.checklistManualOpen = !state.checklistManualOpen;
+      updateView();
+    });
+  }
+  var checklistResetBtn = document.getElementById('pv-checklist-reset');
+  if (checklistResetBtn) {
+    checklistResetBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      saveChecklistState({});
+      var curNote = (state.notes && state.notes[state.current]) ? state.notes[state.current] : null;
+      var curList = (curNote && curNote.checklist && curNote.checklist.length > 0)
+        ? curNote.checklist
+        : defaultChecklist;
+      renderChecklist(curList, true);
+    });
+  }
+  var completedGroupEl = document.getElementById('pv-checklist-completed-group');
+  if (completedGroupEl) {
+    completedGroupEl.addEventListener('toggle', function() {
+      var hint = document.getElementById('pv-checklist-completed-toggle-hint');
+      if (hint) {
+        hint.textContent = completedGroupEl.open ? 'Masquer' : 'Afficher';
+      }
+    });
+  }
+  document.getElementById('pv-stopwatch').addEventListener('click', function() {
+    state.timerRunning ? pauseTimer() : startTimer();
+  });
+  document.getElementById('pv-btn-reset-timer').addEventListener('click', resetTimer);
+  document.getElementById('pv-font-inc').addEventListener('click', function() { applyFontSize(state.fontSize + 2); });
+  document.getElementById('pv-font-dec').addEventListener('click', function() { applyFontSize(state.fontSize - 2); });
+
+  window.addEventListener('keydown', function(e) {
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault(); next();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault(); prev();
+    } else if (e.key === '.' || e.key === 'b' || e.key === 'B') {
+      e.preventDefault(); toggleBlackout();
+    } else if (e.key === '+' || e.key === '=') {
+      e.preventDefault(); applyFontSize(state.fontSize + 2);
+    } else if (e.key === '-' || e.key === '_') {
+      e.preventDefault(); applyFontSize(state.fontSize - 2);
+    } else if (e.key === 't' || e.key === 'T') {
+      e.preventDefault(); togglePresenterTheme();
+    } else if (e.key === 'r' || e.key === 'R') {
+      e.preventDefault(); resetTimer();
+    }
+  });
+
+  // Init from URL hash
+  var hash = window.location.hash;
+  if (hash && hash.match(/^#slide-\d+$/)) {
+    var initIdx = parseInt(hash.replace('#slide-', ''), 10) - 1;
+    if (initIdx >= 0) state.current = initIdx;
+  }
+
+  // Demander synchronisation initiale
+  renderTimeline();
+  updateView();
+  setTimeout(resizePreviewScalers, 100);
+
+  if (channel) {
+    try { channel.postMessage({ type: 'REQUEST_SYNC' }); } catch(e) {}
+  }
+})();
+</script>
+</body>
+</html>

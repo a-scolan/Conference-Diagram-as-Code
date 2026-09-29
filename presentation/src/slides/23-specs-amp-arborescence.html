@@ -1,0 +1,73 @@
+<section class="slide slide--content slide--code-preview slide--diagram-flow slide--workspace-tree" data-nav="Specs &amp; arborescence" data-active-step="1">
+    <p class="slide__label reveal">Collaborer</p>
+    <h2 class="slide__heading reveal">Organiser le projet&nbsp;: s&eacute;parer le socle commun des mod&egrave;les m&eacute;tiers</h2>
+    <div class="slide__inner">
+      <div class="slide__aside code-preview__pane workspace-tree__aside">
+        <div class="code-preview__frame workspace-tree__ascii-frame reveal">
+          <span class="slide__code-filename">Arborescence de projet</span>
+          <div class="slide__code-block workspace-tree__ascii-block" aria-label="Arborescence ASCII du dossier projects avec alefest-coffee-stand et shared.">
+            <pre><code><span class="kw">projects/</span>
+├─ <span class="hl">alefest-coffee-stand/</span>
+│  ├─ likec4.config.ts
+│  ├─ <span class="workspace-tree__file-highlight is-active" data-tab-target="model" onclick="switchWorkspaceTreeTab(this, 'model')" title="Fichier ouvert à droite (onglet actif)"><span class="file-status-dot"></span>system-model.c4 <span class="file-status-badge">actif</span></span>
+│  └─ system-views.c4
+└─ <span class="hl">shared/</span> <span class="workspace-tree__shared-tag">socle partag&eacute;</span>
+   ├─ images/
+   ├─ SPEC_CHEATSHEET.md
+   ├─ spec-code.c4
+   ├─ spec-components.c4
+   ├─ <span class="workspace-tree__file-highlight" data-tab-target="spec" onclick="switchWorkspaceTreeTab(this, 'spec')" title="Fichier ouvert à droite (cliquer pour afficher)"><span class="file-status-dot"></span>spec-containers.c4 <span class="file-status-badge">ouvert</span></span>
+   ├─ spec-context.c4
+   ├─ spec-deployment.c4
+   └─ spec-global.c4</code></pre>
+            <div class="workspace-tree__note">
+              <span class="workspace-tree__note-icon">//</span>
+              <span class="workspace-tree__note-text">La d&eacute;coupe en fichiers et sous-projets est optionnelle, mais elle installe de saines pratiques de maintenance et de r&eacute;utilisation logicielle.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-preview__pane workspace-tree__pane">
+        <div class="code-preview__frame workspace-tree__tab-frame reveal">
+          <div class="workspace-tree__tab-bar" role="tablist" aria-label="Fichiers de modélisation">
+            <button type="button" class="workspace-tree__tab-btn is-active" role="tab" aria-selected="true" data-tab-target="model" onclick="switchWorkspaceTreeTab(this, 'model')">system-model.c4</button>
+            <button type="button" class="workspace-tree__tab-btn" role="tab" aria-selected="false" data-tab-target="spec" onclick="switchWorkspaceTreeTab(this, 'spec')">spec-containers.c4</button>
+          </div>
+
+          <div class="slide__code-block workspace-tree__tab-content" data-tab-id="model" data-active-step="1">
+            <pre><code><span data-step="1"><span class="kw">model</span> {
+  alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
+    counterApp = <span class="hl">Container_Spa</span> <span class="str">'Application Comptoir'</span>
+    baristaScreen = <span class="hl">Container_Spa</span> <span class="str">'&Eacute;cran Barista'</span>
+    orderService = <span class="hl">Container_Api</span> <span class="str">'Service de Commandes'</span>
+    preparationService = <span class="hl">Container_Api</span> <span class="str">'Service Pr&eacute;paration'</span>
+    notificationService = <span class="hl">Container_Api</span> <span class="str">'Service Notification'</span>
+    eventBus = <span class="hl">Container_Queue</span> <span class="str">'RabbitMQ'</span>
+    database = <span class="hl">Container_Database</span> <span class="str">'PostgreSQL'</span>
+  }
+}</span></code></pre>
+          </div>
+
+          <div class="slide__code-block workspace-tree__tab-content" data-tab-id="spec" style="display:none;" data-active-step="1">
+            <pre><code><span data-step="2"><span class="kw">specification</span> {
+  <span class="kw">tag</span> <span class="hl">Container</span>
+  <span class="kw">tag</span> <span class="hl">MobileApp</span>
+  <span class="kw">tag</span> <span class="hl">Database</span>
+
+  <span class="kw">element</span> <span class="hl">Container_MobileApp</span> {
+    #Container #MobileApp
+    notation <span class="str">&quot;Mobile application&quot;</span>
+    <span class="kw">style</span> { shape mobile; icon @/custom/smartphone.svg }
+  }
+
+  <span class="kw">element</span> <span class="hl">Container_Database</span> {
+    #Container #Database
+    <span class="kw">style</span> { color storage; shape storage; icon @/lucide-static/database.svg }
+  }
+}</span></code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

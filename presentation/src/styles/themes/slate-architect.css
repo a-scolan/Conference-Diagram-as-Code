@@ -1,0 +1,77 @@
+/* ==========================================================================
+   THEME: Slate Architect (Dark Mode)
+   Surfaces ardoise foncé, contraste précis, grille technique sombre.
+   ========================================================================== */
+
+[data-theme="slate-architect"],
+[data-theme="dark"] {
+  /* Surfaces & Fonds */
+  --bg: #090d16;
+  --surface: #0f172a;
+  --surface2: #1e293b;
+  --surface-elevated: #334155;
+
+  /* Papier millimétré sombre blueprint (double quadrillage 20px / 100px) */
+  --blueprint-grid:
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to right, rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+  --blueprint-grid-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
+
+  /* Bordures */
+  --border: rgba(255, 255, 255, 0.12);
+  --border-bright: rgba(255, 255, 255, 0.35);
+  --border-focus: #38bdf8;
+
+  /* Encres & Typographie */
+  --text: #f8fafc;
+  --text-dim: #cbd5e1;
+  --text-subtitle: #94a3b8;
+  --part0-neutral-gray: #94a3b8;
+
+  /* Accents */
+  --accent: #38bdf8;
+  --accent-dim: rgba(56, 189, 248, 0.15);
+  --accent2: #fb923c;
+  --accent2-dim: rgba(251, 146, 60, 0.15);
+  --accent3: #818cf8;
+  --accent3-dim: rgba(129, 140, 248, 0.15);
+  --accent4: #f43f5e;
+  --accent4-dim: rgba(244, 63, 94, 0.16);
+  --green: #34d399;
+  --green-dim: rgba(52, 211, 153, 0.15);
+  --red: #f87171;
+  --red-dim: rgba(248, 113, 113, 0.15);
+  --blue: #38bdf8;
+  --blue-dim: rgba(56, 189, 248, 0.15);
+
+  /* Pointeur Laser virtuel (Cyan céleste lumineux) */
+  --laser-core: #ffffff;
+  --laser-hot: #38bdf8;
+  --laser-ring: rgba(56, 189, 248, 0.60);
+  --laser-glow: rgba(56, 189, 248, 0.28);
+  --laser-glow-soft: rgba(56, 189, 248, 0.12);
+
+  /* Diagrammes */
+  --diagram-gold: #fde047;
+  --diagram-gold-dim: rgba(253, 224, 71, 0.18);
+  --diagram-blue: #38bdf8;
+  --diagram-blue-dim: rgba(56, 189, 248, 0.18);
+  --diagram-green: #34d399;
+  --diagram-green-dim: rgba(52, 211, 153, 0.18);
+
+  /* Blocs de code */
+  --code-bg: #030712;
+  --code-text: #f9fafb;
+  --code-border: #1f2937;
+
+  /* Éléments de citations et panneaux split */
+  --quote-mark: #38bdf8;
+  --split-secondary: #0f172a;
+  --split-secondary-elevated: #1e293b;
+  --split-secondary-muted: #cbd5e1;
+  --hover-accent-soft: rgba(56, 189, 248, 0.08);
+  --hover-frame: rgba(56, 189, 248, 0.30);
+  --hover-frame-soft: rgba(56, 189, 248, 0.03);
+}

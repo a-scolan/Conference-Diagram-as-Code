@@ -1,0 +1,43 @@
+/* ==========================================================================
+   SHARED DESIGN TOKENS & TYPOGRAPHY
+   ========================================================================== */
+
+:root {
+  --font-body: 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  --font-bump: 4px;
+
+  /* Assets graphiques réutilisables */
+  --quote-bg: url("./assets/quote.png");
+}
+
+/* ==========================================================================
+   HIGH CONTRAST & COMFORT READABILITY MODE (Fond de salle)
+   ========================================================================== */
+[data-readability="high-contrast"] {
+  --font-bump: 6.5px;
+  --text: #000000;
+  --text-dim: #0f172a;
+  --text-subtitle: #1e293b;
+  --code-text: #020617;
+  --border: #334155;
+  --border-bright: #0284c7;
+}
+
+[data-readability="high-contrast"] .line-add {
+  color: #044e29 !important;
+  background: rgba(16, 185, 129, 0.32) !important;
+  font-weight: 700 !important;
+}
+
+[data-readability="high-contrast"] .line-mod {
+  color: #78350f !important;
+  background: rgba(245, 158, 11, 0.32) !important;
+  font-weight: 700 !important;
+}
+
+[data-readability="high-contrast"] pre code {
+  font-weight: 600;
+}

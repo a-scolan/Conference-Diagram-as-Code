@@ -1,0 +1,345 @@
+/**
+ * Coffee V2 — Le Café Mobile
+ * Commande mobile via le système festival, fallback comptoir,
+ * notifications push et orchestration event-driven.
+ */
+
+model {
+  festivalier = Actor_Person 'Festivalier' {
+    style {
+      icon @/lucide-static/circle-user-round.svg
+    }
+
+    description '''
+      Utilise application mobile du festival pour commander à distance
+      ou passe exceptionnellement au comptoir.
+    '''
+  }
+
+  barista = Actor_Staff 'Barista' {
+    style {
+      icon @/lucide-static/badge.svg
+    }
+
+    description '''
+      Prépare les boissons et fait évoluer les statuts de commande.
+    '''
+  }
+
+  festivalSystem = System_External 'Système Festival' {
+    style {
+      icon @/lucide-static/calendar.svg
+    }
+
+    description '''
+      Écosystème digital du festival (hors périmètre AleFest Café).
+      Fournit application mobile et backend partenaire.
+    '''
+
+    festivalApp = Container_MobileApp 'Application Festival' {
+      technology 'React Native, Expo'
+      style {
+        icon @/lucide-static/smartphone.svg
+      }
+
+      description '''
+        Application mobile officielle utilisée par les festivaliers.
+      '''
+    }
+
+    festivalService = Container_Api 'Service Festival' {
+      technology 'Node.js, Express'
+      style {
+        icon @/lucide-static/server.svg
+      }
+
+      description '''
+        Backend partenaire qui expose les APIs festival.
+      '''
+    }
+
+    festivalApp -[calls]-> festivalService 'API mobile festival' {
+      technology 'HTTPS'
+    }
+  }
+
+  alefestCoffee = System_New 'AleFest Café' {
+    style {
+      icon @/lucide-static/coffee.svg
+    }
+
+    description '''
+      Système du stand café.
+      V2 : ouverture vers le système festival, notifications dédiées.
+    '''
+
+    counterApp = Container_Spa 'Application Comptoir' {
+      technology 'React, TypeScript, Vite'
+      style {
+        icon @/lucide-static/app-window.svg
+      }
+
+      description '''
+        Parcours comptoir conservé comme fallback.
+      '''
+    }
+
+    baristaScreen = Container_Spa 'Écran Barista' {
+      technology 'React, TypeScript, WebSocket'
+      style {
+        icon @/lucide-static/monitor.svg
+      }
+
+      description '''
+        File de préparation en temps réel pour les baristas.
+      '''
+    }
+
+    orderService = Container_Api 'Service de Commandes' {
+      technology 'Node.js, Express, RabbitMQ client'
+      style {
+        icon @/lucide-static/square-terminal.svg
+      }
+
+      description '''
+        Reçoit les commandes festival/comptoir, persiste et publie order.placed.
+      '''
+    }
+
+    preparationService = Container_Api 'Service Préparation' {
+      technology 'Node.js, Express, WebSocket, RabbitMQ client'
+      style {
+        icon @/lucide-static/workflow.svg
+      }
+
+      description '''
+        Consomme order.placed, pilote la file barista et publie les changements de statut.
+      '''
+    }
+
+    notificationService = Container_Api 'Service Notification' {
+      technology 'Node.js, Firebase Admin SDK, RabbitMQ client'
+      style {
+        icon @/lucide-static/bell-ring.svg
+      }
+
+      description '''
+        Consomme les événements de statut et envoie les notifications push.
+      '''
+    }
+
+    eventBus = Container_Queue 'RabbitMQ' {
+      technology 'RabbitMQ 3.12'
+      style {
+        icon @/lucide-static/rabbit.svg
+      }
+
+      description '''
+        Bus d'événements entre services du stand café.
+      '''
+    }
+
+    database = Container_Database 'PostgreSQL' {
+      technology 'PostgreSQL 16'
+      style {
+        icon tech:postgresql
+      }
+
+      description '''
+        Persistance des commandes, statuts et données techniques utiles aux notifications.
+      '''
+    }
+
+    counterApp -[calls]-> orderService 'POST /orders - commande comptoir' {
+      technology 'HTTPS'
+    }
+    counterApp -[calls]-> orderService 'GET /orders/:id - statut' {
+      technology 'HTTPS'
+    }
+
+    baristaScreen -[calls]-> preparationService 'WebSocket - file en temps réel' {
+      technology 'WebSocket'
+    }
+    baristaScreen -[calls]-> preparationService 'PATCH /queue/:id - mise à jour statut' {
+      technology 'HTTPS'
+    }
+
+    orderService -[async]-> eventBus 'Publie order.placed' {
+      technology 'AMQP'
+    }
+    eventBus -[async]-> preparationService 'Livre order.placed' {
+      technology 'AMQP'
+    }
+    preparationService -[async]-> eventBus 'Publie order.preparing / order.ready' {
+      technology 'AMQP'
+    }
+    eventBus -[async]-> notificationService 'Livre order.preparing / order.ready' {
+      technology 'AMQP'
+    }
+
+    orderService -[reads]-> database 'Lire commandes/menu' {
+      technology 'PostgreSQL'
+    }
+    orderService -[writes]-> database 'Créer et mettre à jour commande' {
+      technology 'PostgreSQL'
+    }
+
+    preparationService -[reads]-> database 'Lire file en cours' {
+      technology 'PostgreSQL'
+    }
+    preparationService -[writes]-> database 'Mettre à jour statut' {
+      technology 'PostgreSQL'
+    }
+
+    notificationService -[uses]-> festivalSystem.festivalApp 'Envoie push notification' {
+      technology 'Firebase Cloud Messaging'
+    }
+  }
+
+  festivalier -[uses]-> festivalSystem.festivalApp 'Commande mobile et suivi'
+  festivalier -[uses]-> alefestCoffee.counterApp 'Commande au comptoir (fallback)'
+  barista -[uses]-> alefestCoffee.baristaScreen 'Prépare et remet la boisson'
+
+  festivalSystem.festivalService -[uses]-> alefestCoffee.orderService 'Intégration des commandes partenaire' {
+    technology 'HTTPS'
+  }
+}
+/**
+ * Composants C3 pour la gestion de la fiabilité et de la résilience du flux de commandes :
+ * - Order Service : Transactional Outbox Pattern (résout la double écriture)
+ * - PostgreSQL : Tables orders et outbox_events dans la même transaction ACID
+ * - RabbitMQ : Exchange direct, Quorum Queue (réplication Raft) et Dead Letter Queue (DLQ)
+ * - Preparation Service : Consommation avec Manual ACK, Idempotency Guard et distribution barista
+ */
+
+model {
+  extend alefestCoffee.orderService {
+    orderController = Component 'Order Controller' {
+      technology 'Express Router'
+      description '''
+        Point d'entrée REST (POST /orders). Valide le payload et délègue au gestionnaire de commande.
+      '''
+    }
+
+    outboxWriter = Component 'Outbox Writer' {
+      technology 'TypeORM / Knex'
+      description '''
+        Écrit la commande et l'événement dans une seule transaction ACID PostgreSQL pour éliminer la double écriture.
+      '''
+    }
+
+    outboxRelay = Component 'Outbox Relay Worker' {
+      technology 'Node.js Background Worker'
+      description '''
+        Dépile les événements outbox non publiés et les transmet à RabbitMQ avec Publisher Confirms.
+      '''
+    }
+
+    orderController -[calls]-> outboxWriter 'Transmet la commande validée'
+    outboxWriter -[writes]-> alefestCoffee.database.ordersTable 'INSERT transactionnel (commande)'
+    outboxWriter -[writes]-> alefestCoffee.database.outboxEventsTable 'INSERT transactionnel (événement)'
+    outboxRelay -[reads]-> alefestCoffee.database.outboxEventsTable 'SELECT unpublished events'
+    outboxRelay -[writes]-> alefestCoffee.database.outboxEventsTable 'UPDATE status = published'
+    outboxRelay -[async]-> alefestCoffee.eventBus.ordersExchange 'Publie order.placed (avec Confirms)'
+  }
+
+  extend alefestCoffee.database {
+    ordersTable = Component 'Table orders' {
+      technology 'PostgreSQL Table'
+      description '''
+        Stockage des commandes clients, montants et états de préparation.
+      '''
+    }
+
+    outboxEventsTable = Component 'Table outbox_events' {
+      technology 'PostgreSQL Table'
+      description '''
+        Tampon transactionnel d'événements garantissant le zero message loss si RabbitMQ est indisponible.
+      '''
+    }
+  }
+
+  extend alefestCoffee.eventBus {
+    ordersExchange = Component 'Exchange orders.direct' {
+      technology 'AMQP Direct Exchange'
+      description '''
+        Exchange principal routant les messages vers les files applicatives.
+      '''
+    }
+
+    ordersPlacedQueue = Component 'Queue orders.placed' {
+      technology 'RabbitMQ Quorum Queue'
+      description '''
+        File hautement disponible basée sur Raft avec persistance disque et réplication quorum.
+      '''
+    }
+
+    statusQueue = Component 'Queue orders.status' {
+      technology 'RabbitMQ Quorum Queue'
+      description '''
+        File d'événements de statuts (preparing, ready) pour les notifications.
+      '''
+    }
+
+    dlxExchange = Component 'Exchange orders.dlx' {
+      technology 'Dead Letter Exchange'
+      description '''
+        Exchange de secours recevant les messages rejetés ou ayant dépassé les quotas de retries.
+      '''
+    }
+
+    deadLetterQueue = Component 'Queue orders.dlq' {
+      technology 'Dead Letter Queue'
+      description '''
+        File d'isolation pour inspection et rejeu manuel des messages corrompus (poison pills).
+      '''
+    }
+
+    ordersExchange -[async]-> ordersPlacedQueue 'Route vers binding order.placed'
+    ordersExchange -[async]-> statusQueue 'Route vers binding order.*'
+    ordersPlacedQueue -[async]-> dlxExchange 'NACK / TTL retry dépassé'
+    dlxExchange -[async]-> deadLetterQueue 'Archive pour diagnostic'
+  }
+
+  extend alefestCoffee.preparationService {
+    amqpConsumer = Component 'AMQP Consumer' {
+      technology 'amqplib'
+      description '''
+        Souscrit à orders.placed avec prefetch limité et manual ACK après prise en charge.
+      '''
+    }
+
+    idempotencyGuard = Component 'Idempotency Guard' {
+      technology 'In-memory / Redis Cache'
+      description '''
+        Vérifie l'ID du message pour éviter tout doublon en cas de reconnexion ou rejeu réseau.
+      '''
+    }
+
+    baristaQueueManager = Component 'Barista Queue Manager' {
+      technology 'Domain Service'
+      description '''
+        Gère l'ordonnancement FIFO de la file de tasses et la transition des statuts barista.
+      '''
+    }
+
+    wsBroadcaster = Component 'WebSocket Broadcaster' {
+      technology 'WebSocket / ws'
+      description '''
+        Pousse en temps réel la liste mise à jour des commandes vers les écrans barista.
+      '''
+    }
+
+    amqpConsumer -[calls]-> idempotencyGuard 'Vérifie unicité (messageId)'
+    idempotencyGuard -[calls]-> baristaQueueManager 'Transmet nouvelle commande'
+    baristaQueueManager -[calls]-> wsBroadcaster 'Notifie mise à jour de file'
+    baristaQueueManager -[async]-> alefestCoffee.eventBus.ordersExchange 'Publie order.preparing / order.ready'
+  }
+
+  // Relations inter-conteneurs au niveau composant
+  alefestCoffee.counterApp -[calls]-> alefestCoffee.orderService.orderController 'POST /orders'
+  festivalSystem.festivalService -[calls]-> alefestCoffee.orderService.orderController 'POST /orders'
+  alefestCoffee.eventBus.ordersPlacedQueue -[async]-> alefestCoffee.preparationService.amqpConsumer 'Livre message (attente ACK)'
+  alefestCoffee.eventBus.statusQueue -[async]-> alefestCoffee.notificationService 'Livre order.preparing / order.ready'
+  alefestCoffee.preparationService.wsBroadcaster -[calls]-> alefestCoffee.baristaScreen 'Push WebSocket file temps réel'
+}

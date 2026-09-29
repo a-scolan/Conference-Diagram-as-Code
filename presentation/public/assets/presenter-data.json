@@ -1,0 +1,546 @@
+[
+  {
+    "index": 0,
+    "title": "Titre",
+    "duration": "45 s",
+    "action": "Debout au centre, regard direct balayant toute la salle, voix posée, aucun mot d'hésitation.",
+    "checklist": [
+      "Navigateur public : Plein écran réel (F11), résolution 16:9 sans rognage, blackout (.) testé",
+      "VS Code (Live coding) : Thème clair (LIGHT), police zoomée (+2/+3), arborescence gauche masquée",
+      "Onglets de secours : PR GitHub #1 et portail LikeC4 local (localhost:3000) ouverts en arrière-plan",
+      "Matériel & Confort : Ordinateur branché sur secteur (ou batterie pleine), bouteille d'eau ouverte sur le pupitre"
+    ],
+    "keywords": [
+      "Code = versionné, testé, déployé",
+      "Architecture = dessin artisanal mort dans un wiki",
+      "Objectif : réconcilier l'architecture avec le génie logiciel",
+      "Ne dessinez plus vos architectures : codez-les !"
+    ],
+    "beat": "Accroche. Déclare la thèse : le schéma artisanal est une impasse.",
+    "substance": "Pose la promesse centrale en rupture directe avec le dessin conventionnel.",
+    "verbatim": "« Bonjour à tous. Regardez comment nous fabriquons du logiciel aujourd'hui : chaque ligne de code est versionnée dans Git, chaque modification est passée au crible d'une Pull Request, testée automatiquement et déployée en continu. Mais dès qu'il s'agit d'expliquer comment tout cela tient ensemble... nous retombons dans l'artisanat. Nous ouvrons un outil de dessin, nous traçons des rectangles et des flèches à la main, nous exportons une image, et nous la collons dans un wiki où elle commence immédiatement à mourir. L'objectif de ces 45 minutes : réconcilier l'architecture avec le génie logiciel. Ne dessinez plus vos architectures : codez-les ! »"
+  },
+  {
+    "index": 1,
+    "title": "Speaker",
+    "duration": "15 s",
+    "action": "Sourire franc, posture ouverte, transition rapide sans s'attarder (15 secondes chrono).",
+    "checklist": [],
+    "keywords": [
+      "Alexis Scolan · Architecte technique onepoint",
+      "Sujet né des frictions et frustrations du terrain",
+      "Aligner architecture et dev sans redessiner"
+    ],
+    "beat": "Ancrage de posture : praticien parlant à des praticiens.",
+    "substance": "Légitimité de terrain sans étalage personnel.",
+    "verbatim": "« Je m'appelle Alexis Scolan, architecte technique chez onepoint. Au quotidien, j'accompagne des équipes de développement et des DSI. Ce dont nous allons parler aujourd'hui ne sort pas d'un manuel théorique : c'est une méthode de terrain née de la frustration de voir des schémas d'architecture devenir faux dès le lendemain de leur publication. »"
+  },
+  {
+    "index": 2,
+    "title": "Le problème réel",
+    "duration": "45 s",
+    "action": "**Micro-engagement public (le double filtre).** Lever la main soi-même pour inciter la salle.",
+    "checklist": [],
+    "keywords": [
+      "Double filtre : Qui a fait un schéma ? / Qui est à jour à 6 mois ?",
+      "Le code avance, la carte reste figée",
+      "L'image exportée meurt en silence"
+    ],
+    "beat": "Tension. L'auditoire admet l'échec universel du schéma statique.",
+    "substance": "Diagnostic partagé du cycle d'abandon documentaire dans toutes les organisations.",
+    "verbatim": "« Faisons un sondage rapide. Levez la main si vous avez déjà passé du temps à concevoir un beau schéma d'architecture pour votre équipe. *(Attendre que les mains se lèvent)* Très bien. Maintenant, gardez la main levée UNIQUEMENT si ce schéma est encore parfaitement à jour en production six mois plus tard. *(Observer la quasi-totalité des mains retomber avec un sourire complice)* Regardez autour de vous : tout le monde baisse la main. Le code progresse à chaque sprint, mais la carte reste figée. Et le vrai drame, ce n'est pas qu'elle soit obsolète : c'est qu'elle meurt en silence sans que personne ne s'en rende compte. »"
+  },
+  {
+    "index": 3,
+    "title": "Le problème réel — message",
+    "duration": "15 s",
+    "action": "Regard calme vers la salle, enchaînement direct vers la slide 04 sans temps mort pour garder le rythme.",
+    "checklist": [],
+    "keywords": [
+      "Transition vive sans temps mort",
+      "Faire vivre les connaissances dans le temps",
+      "L'adversaire : l'entropie dans la durée"
+    ],
+    "beat": "Pivot. L'adversaire n'est pas le dessin en soi, c'est l'entropie dans la durée.",
+    "substance": "Déplacement de l'enjeu. Le sujet n'est pas esthétique, il est temporel et collaboratif.",
+    "verbatim": "« Le problème n'a jamais été d'expliquer le système le premier jour... Le vrai problème, c'est de faire vivre cette connaissance dans le temps. Regardez pourquoi : »"
+  },
+  {
+    "index": 4,
+    "title": "Le problème réel — dessin",
+    "duration": "30 s",
+    "action": "Pointer l'image du bras sans se détourner du public.",
+    "checklist": [],
+    "keywords": [
+      "Le dessin Draw.io est propre et soigné",
+      "Ajouter un service = déplacer 40 boîtes et 35 flèches à la main",
+      "Mise en page vs ingénierie logicielle"
+    ],
+    "beat": "Confrontation. Démonstration par l'absurde de la limite de l'outil graphique.",
+    "substance": "Preuve visuelle. Même avec un dessin soigné, un fichier binaire ou un SVG plat n'a aucune sémantique exécutable.",
+    "verbatim": "« Regardez ce schéma. Il est propre, bien aligné, fait avec soin. Le problème ne vient pas de l'outil graphique, ni du talent de celui qui l'a dessiné. Le piège se referme le jour où vous ajoutez un service : pour insérer une seule boîte au milieu, vous devez déplacer à la main 40 composants et réaligner 35 flèches. À cet instant précis, vous ne faites plus de l'architecture : vous faites de la mise en page. Et comme personne n'a le temps de faire de la mise en page, on abandonne. »"
+  },
+  {
+    "index": 5,
+    "title": "Changer de paradigme",
+    "duration": "60 s",
+    "action": "Égrener les trois points sur les doigts, posture stable, ancrage au sol.",
+    "checklist": [],
+    "keywords": [
+      "1. Source de vérité unique (chaque brique définie une fois, réutilisée à l'infini en restant à jour)",
+      "2. Perspectives multiples (détailler le système, filtrer les composants selon le besoin)",
+      "3. Cycle de vie logiciel (Git, PR, validation, CI/CD)"
+    ],
+    "beat": "Résolution conceptuelle. Pose la base des actes suivants.",
+    "substance": "Cadre théorique fondateur du Diagram as Code.",
+    "verbatim": "« Pour casser cette fatalité, nous devons appliquer à l'architecture les mêmes règles qu'au logiciel. Premièrement : une source de vérité unique. Fini les boîtes redessinées dans dix documents. On déclare chaque brique une seule fois dans un modèle typé, et elle est réutilisée à l'infini en restant à jour. Deuxièmement : des perspectives multiples. Depuis ce modèle unique, on peut détailler le système à n'importe quelle échelle et filtrer ses composants selon le besoin exact de nos interlocuteurs. Troisièmement : un cycle de vie logiciel. L'architecture vit dans Git, se révise en Pull Request et se compile en continu. »"
+  },
+  {
+    "index": 6,
+    "title": "C4 zoom",
+    "duration": "60 s",
+    "action": "Suivre visuellement l'animation SVG de zoom progressif.",
+    "checklist": [],
+    "keywords": [
+      "Fin des schémas fourre-tout (bouton, service, cluster mélangés)",
+      "C1 Contexte · C2 Conteneurs · C3 Composants · C4 Code",
+      "Focus de la conférence : C1, C2 et flux dynamiques"
+    ],
+    "beat": "Ancrage terminologique (*grounding* de C1 et C2).",
+    "substance": "Définition opérationnelle de la norme C4 (Simon Brown) appliquée au modèle.",
+    "verbatim": "« Pour structurer ce modèle sans se noyer, Simon Brown a créé le standard C4. C'est la fin des schémas où l'on mélange sur la même feuille un bouton React, un microservice Java et un cluster Kubernetes. C1, c'est le Contexte : avec qui notre système interagit-il ? C2, les Conteneurs : quelles sont les applications, les API et les bases qui le composent ? C3, les Composants internes, et C4 le Code. Aujourd'hui, nous allons nous focaliser sur le C1, le C2 et les parcours dynamiques, qui couvrent 90 % des arbitrages techniques en équipe. »"
+  },
+  {
+    "index": 7,
+    "title": "C4 zoom — image mentale",
+    "duration": "15 s",
+    "action": "**Temps d'arrêt (3s).** Poser la voix sur l'analogie et marquer une pause.",
+    "checklist": [],
+    "keywords": [
+      "Pause (3s)",
+      "Métaphore Google Maps : un seul territoire, plusieurs niveaux de détail",
+      "On ne redessine pas chaque niveau, on zoome dans un modèle unique"
+    ],
+    "beat": "Image mentale définitive. Fin de l'Acte 0.",
+    "substance": "Analogie universelle qui clarifie immédiatement la non-redondance du modèle.",
+    "verbatim": "« Gardez cette image en tête : C4, c'est exactement Google Maps. Sur Maps, vous ne redessinez pas la carte de France quand vous zoomez sur une rue de Nantes. Le territoire est unique, ce sont vos niveaux de détail qui changent. On ne dessine pas chaque niveau : on zoome dans un modèle unique. »  \r\n  > *(Silence de 3 secondes).*"
+  },
+  {
+    "index": 8,
+    "title": "Partie 1 (Intertitre)",
+    "duration": "10 s",
+    "action": "Enchaîner avec énergie pour lancer l'histoire, corps tourné vers la salle.",
+    "checklist": [],
+    "keywords": [
+      "Partie 1 : Du besoin métier au modèle",
+      "Quitter la théorie pour le terrain",
+      "Cas d'étude AleFest Coffee"
+    ],
+    "beat": "Lancement du cas concret.",
+    "substance": "Transition vers l'étude de cas pratique.",
+    "verbatim": "« Première partie : quittons la théorie. Allons sur le terrain avec un cas d'étude concret. »"
+  },
+  {
+    "index": 9,
+    "title": "Cas d'étude",
+    "duration": "40 s",
+    "action": "**Incarnation sensorielle.** Mettre en scène l'atmosphère du festival avec les mains, faire ressentir le stress du stand.",
+    "checklist": [],
+    "keywords": [
+      "Festival : entracte de 15 minutes, 300 personnes d'un coup",
+      "100% manuel : tickets papier, cash, 20 min d'attente",
+      "Festivaliers frustrés (ratent le show), baristas sous l'eau",
+      "Objectif : digitaliser le stand pour fluidifier le service"
+    ],
+    "beat": "Enjeu métier tangible.",
+    "substance": "Tension métier concrète : perte de chiffre d'affaires et insatisfaction festivaliers.",
+    "verbatim": "« Bienvenue à AleFest, grand festival de musique. Au milieu du site : notre stand, AleFest Coffee. Le décor : 15 minutes d'entracte entre deux têtes d'affiche. 300 festivaliers se ruent en même temps sur le stand pour avoir leur dose de caféine. Le système actuel est 100 % manuel : commande au comptoir, tickets volants, paiement cash. Résultat : 20 minutes d'attente, des festivaliers frustrés qui ratent le début du concert, et des baristas sous l'eau qui gèrent les priorités en criant par-dessus le bruit de la foule. Objectif du festival : digitaliser le stand pour accélérer le service. »"
+  },
+  {
+    "index": 10,
+    "title": "ADR-001",
+    "duration": "60 s",
+    "action": "Pointer le volet texte à gauche, puis l'animation replay à droite.",
+    "checklist": [],
+    "keywords": [
+      "Pas de page blanche graphique : rédaction d'un ADR",
+      "Décision : borne comptoir, écran barista, RabbitMQ, PostgreSQL",
+      "Accélérateur IA optionnel : texte clair → premier squelette de code en secondes"
+    ],
+    "beat": "Étape fondatrice : le texte brut devient le déclencheur du modèle.",
+    "substance": "Démontre qu'on ne part pas d'un schéma vide, mais d'une décision textuelle structurée, transformable par outillage / IA optionnel.",
+    "verbatim": "« Comment commence notre travail d'architecte ? Pas en ouvrant un éditeur graphique pour jeter des boîtes au hasard, mais en écrivant un ADR : un Architecture Decision Record. En trois paragraphes Markdown, nous posons le contexte, la décision technique — une tablette comptoir, un écran barista, deux services découplés par un bus RabbitMQ et PostgreSQL — et les conséquences. Et regardez à droite : le modèle LikeC4 s'écrit très bien à la main, mais parce que cette décision est rédigée en langage clair et structuré, un assistant de code IA peut en extraire le premier squelette en quelques secondes. L'IA reste un accélérateur optionnel : elle supprime la friction de démarrage, mais c'est nous qui validons chaque ligne. »"
+  },
+  {
+    "index": 11,
+    "title": "C1 généré",
+    "duration": "50 s",
+    "action": "Basculer entre l'onglet `system-model.c4` et l'onglet `system-views.c4` pour montrer la séparation entre déclaration des entités et projection de la vue, puis pointer le schéma interactif à droite.",
+    "checklist": [],
+    "keywords": [
+      "Deux onglets : modèle (entités) vs vue (projection / include)",
+      "Zéro coordonnées X/Y, zéro layout manuel",
+      "Vue C1 navigable générée par le compilateur"
+    ],
+    "beat": "Première victoire technique tangible.",
+    "substance": "Première preuve d'exécution : la séparation modèle / vue produit un schéma de contexte interactif et navigable.",
+    "verbatim": "« Regardez à gauche : nous avons séparé le modèle de sa vue. Dans le premier onglet, le modèle déclare nos entités — deux acteurs et notre système AleFest Coffee. Dans le second onglet, la vue C1 spécifie simplement les éléments qu'elle souhaite projeter grâce au mot-clé include. À droite, le schéma se compile en direct. Remarquez bien : nous n'avons spécifié aucune coordonnée X/Y, aucune couleur de boîte, aucune position de flèche. Le compilateur LikeC4 calcule la disposition sémantique tout seul. Les frontières du système sont posées. »"
+  },
+  {
+    "index": 12,
+    "title": "Grammaire du modèle",
+    "duration": "45 s",
+    "action": "Balayer les trois colonnes d'un geste englobant, insister sur le couplage entre intention de relation et technologie sous-jacente.",
+    "checklist": [],
+    "keywords": [
+      "Message clé : grammaire d'entreprise définie une fois pour toutes",
+      "Éléments : systèmes, conteneurs, composants, librairies",
+      "Relations : nature du flux (calls, async, writes) + technologie (HTTPS, AMQP, SQL)",
+      "Zéro flèche anonyme, zéro boîte générique"
+    ],
+    "beat": "Clarté conceptuelle : ancrage de la grammaire partagée avant d'entrer dans les conteneurs V1.",
+    "substance": "Démontre comment LikeC4 standardise le vocabulaire d'architecture à l'échelle de l'organisation.",
+    "verbatim": "« Vous avez sans doute remarqué ces types : Actor_Person, Container_Spa, Container_Api, ou les flèches calls et async. Ces mots-clés ne sont pas imposés par LikeC4. C'est nous qui les avons déclarés dans nos spécifications. Retenez ce principe fondamental : LikeC4 ne vous impose pas un vocabulaire rigide. Vous définissez la grammaire des systèmes de votre entreprise une fois pour toutes. Du système macro jusqu'à la librairie logicielle, et de la nature d'un appel jusqu'à sa technologie sous-jacente — comme HTTPS ou AMQP. Vos équipes n'ont plus à réinventer la charte graphique, les formes ou les icônes : elles instancient simplement ces types dans leurs projets métiers. »"
+  },
+  {
+    "index": 13,
+    "title": "Briques C2",
+    "duration": "30 s",
+    "action": "Balayer les deux colonnes (front à gauche, services à droite), expliquer l'arbitrage RabbitMQ.",
+    "checklist": [],
+    "keywords": [
+      "Zoom intérieur : ouvrir la boîte AleFest Coffee",
+      "Fronts : tablette comptoir + écran barista temps réel",
+      "Services : Order + Preparation, PostgreSQL",
+      "RabbitMQ : découplage asynchrone pour absorber les pics"
+    ],
+    "beat": "Grounding des composants internes V1.",
+    "substance": "Explicitation des sous-systèmes techniques de la V1 avant de projeter le diagramme C2.",
+    "verbatim": "« Maintenant, zoomons : ouvrons la boîte noire AleFest Coffee pour concevoir notre niveau C2. Côté utilisateurs : une application tablette au comptoir et un écran temps réel pour les baristas. Côté traitement : un service de commandes, un service de préparation, et surtout, un bus RabbitMQ pour découpler les deux. Pourquoi RabbitMQ ? Parce qu'en plein pic de charge, la prise de commande ne doit jamais ralentir si la machine à café prend du retard. »"
+  },
+  {
+    "index": 14,
+    "title": "C2 généré",
+    "duration": "55 s",
+    "action": "**Rupture de posture :** quart de tour vers l'écran. Avancer pas à pas au clavier pour faire observer les allers-retours entre le modèle (déclaration) et la vue (sélecteurs directionnels et wildcards), puis pointer le diagramme réorganisé à droite.",
+    "checklist": [],
+    "keywords": [
+      "Allers-retours model ↔ view : déclarer puis projeter",
+      "Wildcard : include alefestCoffee.* (projette tous les conteneurs d'un coup)",
+      "Flux qualifiés : calls HTTP, async RabbitMQ, writes SQL",
+      "Sélecteurs de voisinage : include -> alefestCoffee et alefestCoffee ->"
+    ],
+    "beat": "Clôture de l'architecture V1 avec maîtrise du modèle et des sélecteurs de vues.",
+    "substance": "Démonstration de la synergie entre déclaration sémantique (modèle) et sélecteurs expressifs (wildcard, voisinage relationnel dans les vues).",
+    "verbatim": "« Regardez comment nous construisons ce niveau C2 grâce à une continuité parfaite entre modèle et vue. D'abord, dans system-model.c4, nous étendons le système existant — extend alefestCoffee — pour déclarer nos applications et services. Ensuite, regardez la bascule vers system-views.c4 : comment projeter d'un coup tous ces conteneurs sans les réécrire un par un ? Grâce au sélecteur wildcard include alefestCoffee.*. Puis, retour dans le modèle : nous câblons les flux synchrones HTTP, la file asynchrone RabbitMQ et la persistance PostgreSQL. Et dans la vue, observez ces sélecteurs de relations plus puissants : include -> alefestCoffee et alefestCoffee ->. Ces deux lignes suffisent pour faire apparaître automatiquement le festivalier et le barista dès qu'un flux les relie au stand, sans jamais forcer un placement manuel. Le graphe sémantique C2 à droite est complet, typé et interactif. »"
+  },
+  {
+    "index": 15,
+    "title": "Partie 2 (Intertitre)",
+    "duration": "10 s",
+    "action": "Haussement de ton léger, marquer une relance dynamique.",
+    "checklist": [],
+    "keywords": [
+      "Partie 2 : Évoluer & éprouver",
+      "Le système vivant évolue : nouvelle demande métier",
+      "Passage à la commande mobile V2"
+    ],
+    "beat": "Relance de la dynamique narrative.",
+    "substance": "Transition vers l'évolution majeure du système (le passage à la commande mobile V2).",
+    "verbatim": "« Partie 2 : notre V1 tourne au festival. Mais un système vivant n'attend pas : le métier revient avec une nouvelle exigence. »"
+  },
+  {
+    "index": 16,
+    "title": "V1 vs V2",
+    "duration": "40 s",
+    "action": "Incarner le contraste entre l'attente subie et la liberté du festivalier.",
+    "checklist": [],
+    "keywords": [
+      "V1 : saisie comptoir, mais festivalier toujours captif devant le stand",
+      "V2 : commande mobile depuis la fosse pendant le concert",
+      "Notification push : venir au stand uniquement quand c'est prêt",
+      "Intégration partenaire externe (App Festival)"
+    ],
+    "beat": "Problématique de l'évolution architectural.",
+    "substance": "Énonciation de l'impact architectural : passage d'un système fermé à une intégration externe événementielle.",
+    "verbatim": "« Le retour du terrain est sans appel : la saisie numérique au comptoir est rapide, mais les festivaliers continuent de faire la queue devant le stand pour attendre leur boisson. Le métier nous demande la V2 : intégrer la commande de café directement dans l'application officielle du festival. Le festivalier commande depuis la fosse pendant un concert, continue d'écouter la musique, et ne vient au comptoir que lorsqu'il reçoit une notification : \"Votre flat white est prêt au stand B\". Architectoniquement, ce n'est plus un système en vase clos : nous devons nous brancher à un système tiers et ajouter un service de notifications push. »"
+  },
+  {
+    "index": 17,
+    "title": "Évolution du modèle",
+    "duration": "75 s — rythme calme et posé",
+    "action": "Ralentir le débit de voix. Avancer au clavier pour révéler les ajouts dans le modèle, puis basculer automatiquement sur la vue pour montrer l'inclusion du partenaire.",
+    "checklist": [],
+    "keywords": [
+      "Split 2/3 code large avec badge 'diff'",
+      "1. Modèle : Système partenaire + Notification Service + flux",
+      "2. Vues : inclusion de festivalSystem.* et mise en valeur du bus",
+      "Le graphe C2 s'adapte automatiquement sans souris"
+    ],
+    "beat": "Climax démonstratif de l'Acte 2. Le diff d'architecture en direct.",
+    "substance": "Moment fort de démonstration : le passage V1 → V2 se lit comme un simple `git diff` de modèle et de vue projetée.",
+    "verbatim": "« Regardez ce diff. En vert : exactement ce que nous ajoutons. D'abord dans system-model.c4 : nous déclarons le système externe du festival avec son application mobile, nous ajoutons un notificationService branché sur notre bus RabbitMQ existant sans toucher au reste, puis nous tirons les nouvelles flèches de commande mobile et de push notification. Ensuite, basculons sur system-views.c4 : nous ajoutons simplement le système partenaire dans notre sélecteur include festivalSystem, festivalSystem.*. Regardez à droite : le diagramme C2 a intégré le système partenaire et réorganisé le graphe instantanément. En quelques lignes de code partagées entre modèle et vue, l'architecture a absorbé l'intégration sans qu'on ait déplacé un seul rectangle à la souris. »"
+  },
+  {
+    "index": 18,
+    "title": "Cas d'étude — promesse",
+    "duration": "10 s",
+    "action": "**Temps d'arrêt (2-3s).** Poser la question, regarder la salle et laisser infuser l'interrogation.",
+    "checklist": [],
+    "keywords": [
+      "Pause (2-3s)",
+      "Le diagramme statique montre les tuyaux",
+      "Prouve-t-il au PO que le parcours fonctionne réellement ?"
+    ],
+    "beat": "Ancrage conceptuel avant la vue dynamique.",
+    "substance": "Principe d'architecture vivante : la technique doit incarner le parcours utilisateur.",
+    "verbatim": "« Une cartographie de boîtes montre les connexions techniques. Mais est-ce qu'elle prouve au Product Owner que le parcours utilisateur fonctionne réellement de bout en bout ? »  \r\n  > *(Silence de 2 secondes).*"
+  },
+  {
+    "index": 19,
+    "title": "Séquence mobile",
+    "duration": "60 s",
+    "action": "Pointer les trois blocs de commentaires dans le code (1. Commande, 2. Préparation, 3. Notification), insister sur la synchronisation garantie.",
+    "checklist": [],
+    "keywords": [
+      "dynamic view : scénario sur les composants réels du modèle",
+      "1. Commande mobile → 2. Préparation barista → 3. Push & retrait",
+      "Synchronisation stricte : zéro divergence possible avec les IDs réels"
+    ],
+    "beat": "Preuve du dynamisme comportemental sur source unique.",
+    "substance": "LikeC4 sait générer des vues comportementales séquentielles directement sur le modèle statique, sans recréer un diagramme de séquence jetable.",
+    "verbatim": "« Habituellement, pour valider un scénario, on ouvre un autre outil et on dessine un diagramme de séquence UML qui sera oublié dans deux semaines. Regardez ce que permet LikeC4 : une dynamic view. Dans le même modèle, nous décrivons la chronologie : étape 1, commande depuis l'app festival ; étape 2, préparation par le barista ; étape 3, notification push et retrait au stand. Et observez le diagramme à droite : LikeC4 numérote les flux directement sur les composants réels de notre architecture. Comme ces étapes s'appuient sur les identifiants stricts de nos conteneurs réels, si un service est renommé ou supprimé, la séquence reste synchronisée ou la CI lève une erreur. Votre diagramme de séquence ne peut plus mentir. »"
+  },
+  {
+    "index": 20,
+    "title": "Impact UX & As-Code",
+    "duration": "40 s",
+    "action": "Mettre en valeur la colonne de droite (la valeur d'ingénierie logicielle), ton posé et valorisant.",
+    "checklist": [],
+    "keywords": [
+      "Festivalier : attente subie transformée en expérience libre",
+      "As-Code : validation précoce du rôle du bus et des notifications",
+      "Arbitrage commun entre Product Owner et développeurs"
+    ],
+    "beat": "Validation conjointe du bénéfice métier et du gain de modélisation logicielle.",
+    "substance": "Démontre la valeur concrète de l'approche As-Code : la vue dynamique n'est pas qu'un joli schéma, elle a servi d'outil d'ingénierie précoce pour valider les flux et révéler les briques indispensables avant le moindre commit applicatif.",
+    "verbatim": "« Quel est le bénéfice réel de cette vue dynamique ? Côté festivalier, le gain est évident : il ne fait plus la queue. Mais côté architecture, le gain est colossal : en écrivant ce flux dynamique, nous avons immédiatement identifié que sans bus d'événements pour relier la préparation aux notifications, notre API bloquait. Nous avons validé la solidité du scénario avant même que les développeurs n'écrivent le moindre contrôleur d'API. L'architecture redevient un outil d'ingénierie précoce, pas un dessin post-mortem. »"
+  },
+  {
+    "index": 21,
+    "title": "Portail vivant — bénéfice",
+    "duration": "35 s",
+    "action": "Montrer alternativement le volet gauche (produit) et le volet droit (ingénierie) avec les mains, ton énergique et rassembleur.",
+    "checklist": [],
+    "keywords": [
+      "Un même modèle pour deux publics",
+      "PO : parcours lisible, diagramme unique sans éparpillement, fin de l'effet boîte noire",
+      "Devs : flux explicites et besoins d'ouverture, validation d'intégrité en CI, co-évolution Git",
+      "Éprouver, arbitrer et partager en équipe"
+    ],
+    "beat": "Conclusion de l'Acte 2.",
+    "substance": "Fin du cloisonnement documentaire : une seule source pour tous les niveaux d'abstraction.",
+    "verbatim": "« Ce modèle unique répond à deux attentes : pour le Product Owner, c'est un parcours utilisateur limpide et un diagramme unique portant toutes les vues sans documents éparpillés ; pour les développeurs et architectes, ce sont des flux et protocoles explicites pour anticiper les ouvertures réseau, une validation d'intégrité en CI et une co-évolution dans Git au même rythme que le code applicatif. Les diagrammes interactifs permettent ainsi d'éprouver et d'arbitrer le fonctionnement prévu du système, et de le partager en équipe. »"
+  },
+  {
+    "index": 22,
+    "title": "Partie 3 (Intertitre)",
+    "duration": "10 s",
+    "action": "Ouvrir les bras vers la salle, poser le problème de l'échelle humaine et de l'équipe.",
+    "checklist": [],
+    "keywords": [
+      "Partie 3 : Collaborer",
+      "Passage à l'échelle : 20 devs, 3 architectes",
+      "Quand le modèle évolue, la review devient visuelle"
+    ],
+    "beat": "Transition vers l'ingénierie collaborative.",
+    "substance": "Déplacement du sujet vers le travail d'équipe et la gouvernance.",
+    "verbatim": "« Partie 3 : jusqu'ici, j'étais seul sur mon poste de travail. Mais comment fait-on quand nous sommes 20 développeurs, 3 architectes et plusieurs équipes qui modifient le système en parallèle ? »"
+  },
+  {
+    "index": 23,
+    "title": "Specs & arborescence",
+    "duration": "50 s",
+    "action": "Avancer au clavier pour faire basculer l'onglet vers `spec-containers.c4` et observer la synchronisation instantanée du badge actif dans l'arborescence à gauche.",
+    "checklist": [],
+    "keywords": [
+      "Rigueur logicielle : séparation socle / modèles métiers",
+      "Étape 1 model : l'équipe projet instancie les briques",
+      "Étape 2 spec : shared/ définit le vocabulaire d'entreprise",
+      "1 modif dans shared/ → tout le SI se recompile"
+    ],
+    "beat": "Rigueur d'ingénierie et passage à l'échelle.",
+    "substance": "Révèle comment modulariser et factoriser un référentiel d'architecture comme une bibliothèque logicielle.",
+    "verbatim": "« On applique au modèle d'architecture la même rigueur qu'à une base de code partagée. Regardez d'abord l'onglet system-model.c4 : l'équipe projet écrit uniquement sa logique métier en instanciant des conteneurs. Maintenant, avançons d'un pas vers l'onglet spec-containers.c4 : dans ce dossier shared/, nous isolons les spécifications transverses de l'entreprise — ce qu'est une base de données sécurisée, une application mobile, la charte graphique et les icônes. Dans le projet, on ne redéfinit rien. Si demain la direction de la sécurité impose un nouveau standard ou que la charte visuelle change, on modifie une ligne dans le socle partagé, et l'ensemble des diagrammes du système d'information se recompilent automatiquement. »"
+  },
+  {
+    "index": 24,
+    "title": "Questions de review",
+    "duration": "45 s",
+    "action": "Rythmer les 3 questions en regardant différentes sections de la salle. Faire sourire la salle sur l'impasse des schémas graphiques.",
+    "checklist": [],
+    "keywords": [
+      "Fin du 'Binary files differ' des fichiers Visio/Draw.io",
+      "1. Ce qui entre (nouveaux composants/partenaires)",
+      "2. Ce qui bouge (dépendances réseau, protocoles)",
+      "3. Ce qui devient sensible (couplages, boucles asynchrones)"
+    ],
+    "beat": "Problématisation du processus de review.",
+    "substance": "Formalisation de la grille d'analyse d'une revue d'architecture.",
+    "verbatim": "« Comment se déroule une revue d'architecture traditionnelle ? Qui parmi vous a déjà essayé de faire relire un diff d'architecture sur un fichier `.drawio`, un `.vsdx` ou une image PNG dans une Pull Request ? *(Sourire, attendre la réaction du public)* Git vous répond gentiment : \"Binary files differ\". C'est impossible à relire. Résultat : on finit en réunion de deux heures où l'on débat pendant 45 minutes pour savoir si la boîte doit être bleue ou grise. Quand l'architecture est du code, la revue se concentre sur trois questions factuelles : 1. Ce qui entre : quels nouveaux composants s'invitent dans notre périmètre ? 2. Ce qui bouge : qui parle à qui après le changement ? 3. Ce qui devient sensible : est-ce qu'on crée un point de contention ou une boucle asynchrone ? »"
+  },
+  {
+    "index": 25,
+    "title": "La pull request",
+    "duration": "60 s",
+    "action": "Présenter d'abord la branche sur le GitGraph (Étape 1). Appuyer sur la touche suivante pour ouvrir la PR sur le diff de code C4 (Étape 2), commenter la concision des modifications. Appuyer à nouveau pour basculer sur le diff visuel et faire glisser le slider devant la salle (Étape 3).",
+    "checklist": [],
+    "keywords": [
+      "Étape 1 : GitGraph (branche feat/alefest_coffee_v2)",
+      "Étape 2 : Ouverture PR sur le Diff de code LikeC4",
+      "Étape 3 : Bascule sur le Diff visuel interactif avec slider",
+      "Relecture transverse : dev, archi, sécurité avant merge sur main"
+    ],
+    "beat": "Intégration de l'architecture dans le flux naturel des développeurs.",
+    "substance": "Preuve tangible que l'architecture vit au cœur de GitHub/GitLab. La PR devient le lieu officiel de validation.",
+    "verbatim": "« Et où pose-t-on ces questions ? Là où les développeurs travaillent déjà : dans la Pull Request. Regardez ce GitGraph : la branche feat/alefest_coffee_v2 porte les modifications du modèle. Avançons d'un cran : la Pull Request s'ouvre. Nous inspectons d'abord le code source LikeC4 : les développeurs retrouvent la syntaxe familière d'un git diff textuel. Avançons encore d'un cran : le bot d'automatisation LikeC4 a posté le diff visuel avant/après. L'architecte commente la ligne de dépendance, le tech lead valide les contrats d'API, et l'équipe sécurité inspecte les flux sortants avant de donner son feu vert pour fusionner sur main. »"
+  },
+  {
+    "index": 26,
+    "title": "Partie 4 (Intertitre)",
+    "duration": "10 s",
+    "action": "Transition résolue vers l'automatisation.",
+    "checklist": [],
+    "keywords": [
+      "Partie 4 : L'industrialisation",
+      "Une documentation manuelle est une documentation morte",
+      "Automatiser toute la chaîne de production à chaque push"
+    ],
+    "beat": "Passage au mode chaîne de production.",
+    "substance": "Annonce de la chaîne d'automatisation.",
+    "verbatim": "« Partie 4 : une documentation que l'on doit régénérer à la main est une documentation condamnée à mourir. Voyons comment rendre cette chaîne totalement autonome. »"
+  },
+  {
+    "index": 27,
+    "title": "Le cycle de développement élargi à l'architecture",
+    "duration": "60 s",
+    "action": "Pointer les flux en parallèle sur la gauche, insister sur le pilier CI/CD et sur le fait que la présentation elle-même dogfoode ce pipeline.",
+    "checklist": [],
+    "keywords": [
+      "Cycle de développement élargi : l'architecture comme citoyen de premier rang du cycle logiciel",
+      "Même repo, même branche, même Pull Request pour devs et architectes",
+      "CI unifiée : likec4 check (intégrité) + tests unitaires",
+      "CD unifiée : likec4 build -o dist/ + déploiement applicatif",
+      "Preuve par l'exemple : la présentation utilise ce build CI"
+    ],
+    "beat": "L'architecture réconciliée avec le quotidien des équipes logicielles.",
+    "substance": "Démontre la convergence des pratiques de dev et d'architecture au sein de la même chaîne d'outillage (Git, PR, CI/CD).",
+    "verbatim": "« La clé de voûte de cette démarche, c'est l'intégration complète au cycle de développement : le cycle logiciel élargi. L'architecture n'est plus un exercice isolé sur un wiki ; elle devient un citoyen de premier rang du projet logiciel. Sur une même branche de feature, le modèle .c4 et l'ADR évoluent aux côtés du code applicatif. Dans la Pull Request, développeurs et architectes relisent ensemble l'implémentation et le diff visuel généré automatiquement. Dans la CI, LikeC4 valide l'intégrité avec likec4 check et compile le bundle web avec likec4 build en même temps que vos tests unitaires et votre build. Et la meilleure preuve : tous les diagrammes interactifs que vous manipulez dans ce site de présentation sont directement issus d'un build LikeC4 généré en CI. Ce que vous voyez sur cet écran, c'est exactement ce que votre CI publie. »"
+  },
+  {
+    "index": 28,
+    "title": "Partie 5 (Intertitre)",
+    "duration": "10 s",
+    "action": "Sourire, marquer le début de la conclusion active.",
+    "checklist": [],
+    "keywords": [
+      "Partie 5 : Et alors ?",
+      "Prise de hauteur : que retenir de cette démarche ?",
+      "Comment démarrer concrètement dès lundi ?"
+    ],
+    "beat": "Début de l'épilogue actif.",
+    "substance": "Transition vers la prise de recul et les livrables à emporter.",
+    "verbatim": "« Cinquième et dernière partie : prenons de la hauteur. Qu'avons-nous concrètement entre les mains, et comment démarrez-vous dès lundi ? »"
+  },
+  {
+    "index": 29,
+    "title": "Mermaid vs LikeC4",
+    "duration": "60 s",
+    "action": "Présenter d'abord la vue Mermaid (Étape 1). Appuyer sur la touche suivante pour basculer automatiquement sur la vue LikeC4 (Étape 2), démontrer la supériorité du graphe sémantique typé et manipuler le cockpit en direct devant l'audience.",
+    "checklist": [],
+    "keywords": [
+      "Étape 1 : Mermaid = croquis visuel ponctuel (aucun modèle sous-jacent)",
+      "Étape 2 : LikeC4 = graphe sémantique typé, 1 modif met à jour 20 vues",
+      "Livrable : une vraie app React autonome et navigable (cockpit vivant)",
+      "Multi-exports natifs : Mermaid, D2, PlantUML, PNG (zéro enfermement)"
+    ],
+    "beat": "Éclairage comparatif et ancrage du choix d'ingénierie.",
+    "substance": "Comparaison objective et argumentée : démontre la supériorité du graphe sémantique typé et révèle le cockpit vivant React comme livrable logiciel d'entreprise.",
+    "verbatim": "« Une question revient systématiquement : \"Pourquoi ne pas simplement écrire du Mermaid dans nos fichiers Markdown ?\" Mermaid est un excellent outil pour faire un schéma d'appoint dans une issue ou un README. Mais Mermaid n'a aucun modèle sémantique sous-jacent : c'est une description visuelle pure. Si vous renommez un service, vous devez rouvrir vos 15 fichiers Mermaid pour corriger la chaîne de caractères à la main. Avançons d'un cran : basculons sur LikeC4. Ici, vous avez un graphe orienté et typé : une modification met à jour l'ensemble des vues sans risque d'incohérence. Et surtout, le livrable final n'est pas une image statique : c'est une application React complète, autonome et explorable au clic par toute votre équipe, avec liens vers le code et exports natifs en D2, PlantUML, Mermaid ou PNG. Vous n'êtes enfermés dans aucun format propriétaire. »"
+  },
+  {
+    "index": 30,
+    "title": "Choisir LikeC4",
+    "duration": "50 s",
+    "action": "Insister sur la souveraineté des données et l'outillage IA moderne (MCP).",
+    "checklist": [],
+    "keywords": [
+      "1. 100% Open source (MIT/Apache), souveraineté, modèles dans Git",
+      "2. Écosystème actif (packs cloud, extension VS Code)",
+      "3. Outillage IA moderne : serveurs MCP pour Copilot"
+    ],
+    "beat": "Consolidation du choix technologique.",
+    "substance": "Répond directement à la question « Pourquoi choisir cet outil précis plutôt qu'un outil propriétaire ? ».",
+    "verbatim": "« Pourquoi faire ce choix aujourd'hui ? D'abord, pour la souveraineté totale : LikeC4 est 100 % open source, sous licences permissives MIT et Apache. Aucun abonnement cloud, aucune fuite de vos topologies de production sur des serveurs externes. Vos modèles restent dans vos dépôts Git. Ensuite, pour sa compatibilité avec les outils d'aujourd'hui : LikeC4 propose des serveurs MCP pour connecter vos assistants IA. Un agent Copilot peut lire votre modèle, vous suggérer un refactoring ou vérifier la conformité d'une PR en interrogeant directement le compilateur LikeC4. »"
+  },
+  {
+    "index": 31,
+    "title": "Généraliser la pratique",
+    "duration": "50 s",
+    "action": "Désamorcer l'objection du \"grand soir\" avec un ton pragmatique et rassurant.",
+    "checklist": [],
+    "keywords": [
+      "Pas de grand soir : pattern Strangler Fig sur le legacy",
+      "Déploiement : cartographier zones (DMZ, App, Data) et VM",
+      "Calcul automatique des matrices de flux réseau et pare-feu"
+    ],
+    "beat": "Élargissement stratégique et vision à l'échelle.",
+    "substance": "Démontre la scalabilité de la méthode pour des organisations complexes et du legacy.",
+    "verbatim": "« J'entends déjà la question légitime : \"Alexis, ton stand café est neuf et propre. Mais comment fait-on quand on a 15 ans d'historique et un SI tentaculaire ?\" Ne faites pas de grand soir. Appliquez le pattern Strangler Fig : ne modélisez pas tout votre existant. Modélisez uniquement les nouveaux périmètres et les frontières des services que vous transformez. De plus, LikeC4 supporte la modélisation des zones de déploiement (DMZ, App, Data) et des machines physiques : vous pouvez aller jusqu'à dériver automatiquement vos matrices de flux réseau et règles pare-feu depuis votre modèle. »"
+  },
+  {
+    "index": 32,
+    "title": "Avant / Après",
+    "duration": "45 s",
+    "action": "Marquer le contraste en insistant sur chaque ligne, voix posée et convaincue.",
+    "checklist": [],
+    "keywords": [
+      "Source : dessin artisanal éparpillé → Modèle unique .c4 dans Git",
+      "Revue : validation tardive/informelle → Diff visuel en Pull Request",
+      "Cycle : image morte à 6 mois → Portail vivant compilé en CI/CD"
+    ],
+    "beat": "Résolution complète du problème initial et cristallisation de la conviction.",
+    "substance": "Récapitulatif à fort contraste des gains organisationnels : ce qui change concrètement au quotidien.",
+    "verbatim": "« Récapitulons ce que nous avons changé : Avant : des schémas éparpillés dans des outils de dessin, qu'il faut redessiner à chaque changement. Aujourd'hui : un modèle unique dans Git, refactorable avec le code applicatif. Avant : des revues d'architecture tardives ou informelles. Aujourd'hui : un diff visuel partagé et relu en Pull Request avant chaque mise en production. Avant : des images mortes au bout de six mois. Aujourd'hui : un portail vivant, compilé et testé automatiquement par la CI/CD. »"
+  },
+  {
+    "index": 33,
+    "title": "Ressources",
+    "duration": "40 s",
+    "action": "Présenter les trois étapes comme un plan d'action prêt à l'emploi.",
+    "checklist": [],
+    "keywords": [
+      "1. S'inspirer : article Dev.to (Le repas de famille des outils)",
+      "2. Manipuler : repo c4-hands-on-demo prêt à forker",
+      "3. Approfondir : documentation officielle likec4.dev"
+    ],
+    "beat": "Transmission et mise en mouvement.",
+    "substance": "Plan d'action concret en 3 temps, immédiatement actionnable dès la sortie de salle.",
+    "verbatim": "« Pour démarrer dès lundi avec votre équipe, voici votre feuille de route en trois étapes : 1. S'inspirer : retrouvez mon article complet sur Dev.to, qui compare l'ensemble des solutions de Diagram as Code et détaille les retours d'expérience. 2. Manipuler : le dépôt GitHub c4-hands-on-demo contient tout ce que vous avez vu aujourd'hui — le modèle AleFest Coffee V1 et V2, les scripts et le pipeline. Vous le clonez, et vous testez en local en 5 minutes. 3. Approfondir : rendez-vous sur likec4.dev pour installer l'extension VS Code avec la prévisualisation en direct. »"
+  },
+  {
+    "index": 34,
+    "title": "Merci",
+    "duration": "30 s",
+    "action": "Regarder l'ensemble de la salle, voix chaleureuse et affirmée, pointer le QR Code.",
+    "checklist": [],
+    "keywords": [
+      "Punchline finale : Ne dessinez plus vos architectures : codez-les !",
+      "Support complet via QR Code",
+      "Place aux questions / réponses"
+    ],
+    "beat": "Fermeture de la conférence sur la punchline initiale.",
+    "substance": "Appel final aux questions / réponses et mise à disposition immédiate du support complet.",
+    "verbatim": "« Retenez une seule chose : la meilleure documentation d'architecture, c'est celle qui évolue au même rythme que vos systèmes. Ne dessinez plus vos architectures : codez-les ! Vous retrouverez l'ensemble de cette présentation et des liens en scannant ce QR code. Merci à tous pour votre attention, et je réponds avec grand plaisir à vos questions ! »"
+  }
+]

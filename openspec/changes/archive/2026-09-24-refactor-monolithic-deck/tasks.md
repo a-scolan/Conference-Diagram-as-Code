@@ -1,0 +1,21 @@
+## Tasks
+
+- [x] 1. Préparation de l'arborescence modulaire et extraction des assets
+  - [x] 1.1 Créer la structure de dossiers `presentation/src/styles/`, `presentation/src/scripts/`, `presentation/src/slides/`
+  - [x] 1.2 Extraire les images binaires encodées en base64 vers des fichiers autonomes dans `presentation/public/assets/`
+- [x] 2. Découpage des feuilles de style CSS
+  - [x] 2.1 Isoler les tokens de thème et variables CSS dans `src/styles/tokens.css`
+  - [x] 2.2 Extraire les styles structurels du moteur de diaporama dans `src/styles/deck.css`
+  - [x] 2.3 Découper les styles de composants (zoom, embeds, laser, navigation) dans `src/styles/components.css`
+- [x] 3. Modularisation du code JavaScript
+  - [x] 3.1 Créer `src/scripts/engine.js` pour encapsuler la classe `SlideEngine` et la navigation
+  - [x] 3.2 Isoler la logique Mermaid (initialisation, auto-fit, zoom, pan) dans `src/scripts/mermaid-controller.js`
+  - [x] 3.3 Isoler la gestion des embeds LikeC4 et leur auto-tuning dans `src/scripts/likec4-controller.js`
+  - [x] 3.4 Encapsuler le pointeur laser et les cristaux SVG dans `src/scripts/ux-effects.js`
+- [x] 4. Découpage du balisage des diapositives
+  - [x] 4.1 Extraire chaque slide dans un fichier HTML unitaire sous `src/slides/`
+  - [x] 4.2 Créer le manifeste `slides.json` définissant l'ordre de succession des diapositives
+- [x] 5. Implémentation du pipeline d'assemblage
+  - [x] 5.1 Écrire le script d'assemblage `presentation/build-deck.js`
+  - [x] 5.2 Mettre à jour `package.json` avec les scripts `build:deck` et `dev:deck`
+  - [x] 5.3 Valider la conformité du fichier HTML produit avec la version initiale

@@ -1,0 +1,83 @@
+<section class="slide slide--code slide--code-preview slide--adr-preview" data-nav="ADR-001" data-split-mode="half" data-split="half">
+    <h2 class="slide__heading reveal">ADR-001&nbsp;: digitaliser le stand caf&eacute;</h2>
+    <div class="slide__inner">
+      <div class="code-preview__pane code-preview__pane--code">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename">ADR-001 Digital coffee.md</span>
+          <div class="slide__code-block adr-doc reveal">
+            <div class="adr-doc__header">
+              <span class="adr-doc__badge">ADR-001 &middot; Accept&eacute;</span>
+              <h3 class="adr-doc__title">Le stand caf&eacute; num&eacute;rique</h3>
+            </div>
+
+            <div class="adr-doc__section">
+              <h4 class="adr-doc__heading">Contexte</h4>
+              <p class="adr-doc__intro">Le stand caf&eacute; d'AleFest souffre de 3 probl&egrave;mes majeurs&nbsp;:</p>
+              <ul class="adr-doc__list">
+                <li><strong>File d'attente satur&eacute;e</strong>&nbsp;: 15 min d'attente, les festivaliers ratent des concerts</li>
+                <li><strong>Z&eacute;ro visibilit&eacute;</strong> sur le temps et l'&eacute;tat d'avancement des commandes</li>
+                <li><strong>Baristas d&eacute;bord&eacute;s</strong> sans priorisation ni suivi des commandes</li>
+              </ul>
+            </div>
+
+            <div class="adr-doc__section">
+              <h4 class="adr-doc__heading">D&eacute;cision</h4>
+              <p class="adr-doc__intro">Cr&eacute;er un syst&egrave;me de commande num&eacute;rique au comptoir avec&nbsp;:</p>
+              <ul class="adr-doc__list">
+                <li><strong>Borne / tablette</strong> pour saisir les commandes (staff ou festivalier)</li>
+                <li><strong>&Eacute;cran barista</strong> affichant la file de pr&eacute;paration en temps r&eacute;el</li>
+                <li><strong>Services d&eacute;coupl&eacute;s</strong>&nbsp;: Service Commandes + Service Pr&eacute;paration</li>
+                <li><strong>File de messages</strong> RabbitMQ pour faire communiquer les backends</li>
+                <li><strong>Base de donn&eacute;es</strong> PostgreSQL pour la persistance des &eacute;tats et transactions</li>
+              </ul>
+            </div>
+
+            <div class="adr-doc__section">
+              <h4 class="adr-doc__heading">Contraintes &amp; Cons&eacute;quences</h4>
+              <ul class="adr-doc__list">
+                <li>Validation barista en un tap (&laquo;&nbsp;commande pr&ecirc;te&nbsp;&raquo;)</li>
+                <li>Le festivalier attend au comptoir jusqu'&agrave; remise de sa boisson (V1)</li>
+                <li>Pose une base simple et saine pour l'&eacute;volution mobile ult&eacute;rieure (V2)</li>
+              </ul>
+            </div>
+
+            <aside class="adr-doc__note" role="note" aria-label="Annotation : Accélérateur IA">
+              <div class="adr-doc__note-header">
+                <span class="adr-doc__note-badge">
+                  <span class="adr-doc__note-icon" aria-hidden="true">💡</span>
+                  Annotation
+                </span>
+                <strong class="adr-doc__note-title">Acc&eacute;l&eacute;rateur IA (optionnel)</strong>
+              </div>
+              <p class="adr-doc__note-text">
+                R&eacute;diger du LikeC4 &agrave; la main est tr&egrave;s rapide. Mais avec une d&eacute;cision formelle et structur&eacute;e, un assistant IA peut g&eacute;n&eacute;rer le premier squelette de mod&egrave;le sans faute de syntaxe en quelques secondes.
+              </p>
+            </aside>
+          </div>
+        </div>
+      </div>
+      <div class="slide__aside reveal code-preview__pane code-preview__pane--embed">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename">Copilot replay</span>
+          <div class="embed-wrap reveal" id="adr-001-c1-embed">
+            <div class="embed-controls">
+              <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
+              <button onclick="openEmbedExternal(this)" title="Ouvrir dans un nouvel onglet">↗</button>
+            </div>
+            <iframe
+              title="Copilot replay"
+              loading="lazy"
+              data-src="assets/replay_ADR.html"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms allow-modals allow-downloads"
+              allow="clipboard-read; clipboard-write"
+            ></iframe>
+            <div class="embed-fallback" aria-live="polite">
+              <p style="font-size:18px;">Impossible de charger l'aper&ccedil;u ici.</p>
+              <p style="font-size:14px; max-width:560px;">Le replay est disponible localement dans <code>presentation/public/assets/replay_ADR.html</code>.</p>
+              <a href="assets/replay_ADR.html" target="_blank" rel="noopener noreferrer">Ouvrir le Copilot replay</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

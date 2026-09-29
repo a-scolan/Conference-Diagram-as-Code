@@ -1,0 +1,60 @@
+<section class="slide slide--content slide--c1-generated slide--code-preview" data-nav="C1 généré" data-split-mode="half" data-split="half">
+    <p class="slide__label reveal">V1 &middot; le diagramme</p>
+    <h2 class="slide__heading reveal">Vue C1&nbsp;: les fronti&egrave;res du syst&egrave;me en quelques lignes</h2>
+    <div class="slide__inner">
+      <div class="c1-generated__pane c1-generated__pane--code code-preview__pane code-preview__pane--code">
+        <div class="code-preview__frame has-tabs reveal">
+          <div class="code-preview__tab-bar" role="tablist" aria-label="Fichiers C1">
+            <button type="button" class="code-preview__tab-btn is-active" role="tab" aria-selected="true" data-tab-target="model" onclick="switchSlideCodeTab(this, 'model')">system-model.c4</button>
+            <button type="button" class="code-preview__tab-btn" role="tab" aria-selected="false" data-tab-target="views" onclick="switchSlideCodeTab(this, 'views')">system-views.c4</button>
+          </div>
+          <div class="slide__code-block code-preview__tab-content" data-tab-id="model" data-active-step="1">
+            <pre><code><span class="kw">model</span> {
+<span data-step="1">  festivalier = <span class="hl">Actor_Person</span> <span class="str">'Festivalier'</span> { <span class="cm">...</span> }
+  barista = <span class="hl">Actor_Staff</span> <span class="str">'Barista'</span> { <span class="cm">...</span> }</span>
+
+<span data-step="2">  alefestCoffee = <span class="hl">System_New</span> <span class="str">'AleFest Caf&eacute;'</span> {
+    <span class="cm">// D&eacute;claration du syst&egrave;me et de ses m&eacute;tadonn&eacute;es</span>
+  }</span>
+
+<span data-step="3">  festivalier -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Passe sa commande au comptoir'</span>
+  barista -[<span class="hl">uses</span>]-&gt; alefestCoffee <span class="str">'Pr&eacute;pare et suit les commandes'</span></span>
+}</code></pre>
+          </div>
+          <div class="slide__code-block code-preview__tab-content" data-tab-id="views" style="display:none;" data-active-step="1">
+            <pre><code><span class="kw">views</span> {
+<span data-step="4">  <span class="kw">view</span> <span class="hl">c1_context</span> <span class="kw">of</span> alefestCoffee {
+    <span class="kw">title</span> <span class="str">'Coffee V1 - Contexte'</span>
+
+    <span class="cm">// La vue projette et filtre les &eacute;l&eacute;ments du mod&egrave;le</span>
+    <span class="hl">include</span>
+      alefestCoffee,
+      festivalier,
+      barista
+  }</span>
+}</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="slide__aside reveal c1-generated__pane c1-generated__pane--embed code-preview__pane code-preview__pane--embed">
+        <div class="code-preview__frame">
+          <span class="slide__code-filename">Vue C1</span>
+          <div class="embed-wrap reveal" id="coffee-v1-c1-embed" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000">
+            <div class="embed-controls">
+              <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
+              <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
+            </div>
+            <iframe
+              title="LikeC4 coffee-v1 C1"
+              loading="lazy"
+              data-src="assets/coffee-v1-single/index.html#/view/c1_context/"
+            ></iframe>
+            <div class="embed-fallback" aria-live="polite">
+              <span>Impossible de charger l'aper&ccedil;u ici.</span>
+              <a href="assets/coffee-v1-single/index.html#/view/c1_context/" target="_blank" rel="noopener noreferrer">Ouvrir coffee-v1 (vue C1)</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
