@@ -1874,17 +1874,18 @@
     font-family: var(--font-mono);
     font-weight: 600;
     text-decoration: none;
-    line-height: 1.35;
-    white-space: nowrap;
+    line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
     display: inline-block;
-    padding: 4px 10px;
+    padding: 6px 12px;
     background: color-mix(in srgb, var(--accent) 8%, transparent 92%);
     border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent 76%);
     border-radius: 8px;
     max-width: 100%;
     box-sizing: border-box;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    text-align: center;
     transition: all 0.15s ease;
   }
   .outro-qr__url:hover {
@@ -6380,14 +6381,15 @@
   }
   .slide--outro .outro-qr__url {
     font-size: 8px !important;
-    padding: 2px 6px !important;
+    padding: 3px 6px !important;
     margin-top: 4px !important;
     max-width: 100% !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
     display: block !important;
     text-align: center !important;
+    line-height: 1.3 !important;
   }
 
   /* Désactivation du pointeur laser sur mobile tactile */
@@ -7942,9 +7944,7 @@ flowchart TD
           <div class="qr-spotlight">
             <img src="assets/presentation-qr.png" alt="QR code vers le support de la présentation" loading="eager">
           </div>
-          <a href="https://a-scolan.github.io/Conference-Diagram-as-Code/presentation-diagram-as-code.html" target="_blank" rel="noopener" class="outro-qr__url">
-            a-scolan.github.io/Conference-Diagram-as-Code
-          </a>
+          <a href="https://a-scolan.github.io/Conference-Diagram-as-Code/presentation-diagram-as-code.html" target="_blank" rel="noopener" class="outro-qr__url">a-scolan.github.io/<wbr>Conference-Diagram-as-Code</a>
         </div>
       </div>
     </div>
