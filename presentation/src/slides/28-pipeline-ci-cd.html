@@ -1,37 +1,37 @@
-<section class="slide slide--diagram slide--diagram-flow" data-nav="Cycle de développement élargi">
+<section class="slide slide--diagram slide--diagram-flow slide--diagram-sdlc" data-nav="Cycle de développement élargi">
     <p class="slide__label reveal" style="color:var(--green);">Industrialisation &amp; Gouvernance</p>
     <h2 class="slide__heading reveal">Le cycle de d&eacute;veloppement &eacute;largi &agrave; l'architecture</h2>
-    <p class="slide__body reveal" style="margin-bottom: clamp(6px, 1.2vh, 14px); max-width: 960px;">Faire de l'architecture un citoyen de premier rang&nbsp;: co-&eacute;volution du code et du mod&egrave;le dans le m&ecirc;me cycle de vie logiciel.</p>
+    <p class="slide__body reveal" style="margin-bottom: clamp(6px, 1.2vh, 14px); max-width: 960px;">Faire de l'architecture un citoyen de premier rang&nbsp;: co-&eacute;volution du code et du mod&egrave;le dans le m&ecirc;me cycle de vie logiciel (SDLC).</p>
     
-    <div class="mermaid-wrap reveal">
+    <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="2.5" data-initial-zoom="1.0" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
       <div class="zoom-controls" role="toolbar" aria-label="Commandes de zoom du pipeline CI/CD">
         <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom avant" aria-label="Zoom avant">+</button>
         <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom arrière" aria-label="Zoom arrière">&minus;</button>
         <button type="button" data-zoom-action="reset" title="Réinitialiser le zoom" aria-label="Réinitialiser le zoom">&#8634;</button>
       </div>
-      <div class="mermaid-scroll">
+      <div class="mermaid-scroll" role="img" aria-label="Pipeline de CI/CD et cycle de vie logiciel intégrant l'architecture as code">
       <pre class="mermaid">
 flowchart LR
   subgraph DEV["1. Évolution (branche Git)"]
     direction TB
-    Archi["📐 Architecture as Code<br/><code>model.c4</code> + <code>ADR.md</code>"]
-    Code["💻 Code applicatif<br/><code>src/**</code> + tests"]
+    Archi["📐 Architecture as Code<br/><b>model.c4 + ADR.md</b>"]
+    Code["💻 Code applicatif<br/><b>src/** + tests</b>"]
   end
 
   subgraph PR["2. Revue conjointe"]
-    PRBox["🔀 Pull Request unifiée<br/>Diff de code + Bot Visual Diff"]
+    PRBox["🔀 PR Unifiée<br/>Diff code + Visual Diff"]
   end
 
-  subgraph CI["3. Intégration Continue (CI)"]
+  subgraph CI["3. Intégration Continue"]
     direction TB
-    ValArchi["✅ CI Architecture<br/>Validation LikeC4 CLI et intégrité"]
-    TestCode["🧪 CI Applicative<br/>Lint, tests unitaires et build"]
+    ValArchi["✅ CI Architecture<br/>LikeC4 CLI & intégrité"]
+    TestCode["🧪 CI Applicative<br/>Lint, tests & build"]
   end
 
-  subgraph CD["4. Livraison Continue (CD)"]
+  subgraph CD["4. Livraison Continue"]
     direction TB
     DeployDoc["🗺️ CD Documentation<br/>Portail vivant compilé"]
-    DeployApp["🚀 CD Logicielle<br/>Services et conteneurs en prod"]
+    DeployApp["🚀 CD Logicielle<br/>Services & conteneurs prod"]
   end
 
   SYNC("🎯 Zéro dérive documentaire<br/>Miroir de la production")
@@ -48,10 +48,10 @@ flowchart LR
   DeployDoc --> SYNC
   DeployApp --> SYNC
 
-  classDef gold fill:#fef3c7,stroke:#b45309,stroke-width:2px;
-  classDef blue fill:#e0f2fe,stroke:#0284c7,stroke-width:2px;
-  classDef green fill:#dcfce7,stroke:#16a34a,stroke-width:2px;
-  classDef purple fill:#f3e8ff,stroke:#9333ea,stroke-width:2px;
+  classDef gold stroke-width:2.5px;
+  classDef blue stroke-width:2.5px;
+  classDef green stroke-width:2.5px;
+  classDef purple stroke-width:2.5px;
 
   class Archi,ValArchi,DeployDoc blue;
   class Code,TestCode,DeployApp gold;

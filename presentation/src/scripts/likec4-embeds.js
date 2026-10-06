@@ -16,89 +16,12 @@
       wrap._embedFallbackTimer = 0;
     }
   }
-  function updateLikeC4ActionState(wrap) {
-    var button = wrap ? wrap.querySelector('.embed-likec4-cta') : null;
-    var label = button ? button.querySelector('.embed-likec4-cta__label') : null;
-    if (!button || !label) return;
-
-    var isLoading = wrap.classList.contains('is-loading');
-    var isLoaded = wrap.classList.contains('is-loaded');
-    var isFallback = wrap.classList.contains('is-fallback');
-
-    button.disabled = !!isLoading;
-    button.classList.toggle('is-busy', isLoading);
-    button.setAttribute('aria-busy', isLoading ? 'true' : 'false');
-    label.textContent = isLoading ? 'Chargement LikeC4…' : 'Rendu LikeC4';
-
-    if (isLoading) {
-      button.setAttribute('title', 'Chargement du rendu LikeC4');
-      button.setAttribute('aria-label', 'Chargement du rendu LikeC4');
-    } else if (isLoaded) {
-      button.setAttribute('title', 'Recharger le rendu LikeC4');
-      button.setAttribute('aria-label', 'Recharger le rendu LikeC4');
-    } else if (isFallback) {
-      button.setAttribute('title', 'Réessayer le rendu LikeC4');
-      button.setAttribute('aria-label', 'Réessayer le rendu LikeC4');
-    } else {
-      button.setAttribute('title', 'Rendu');
-      button.setAttribute('aria-label', 'Rendu');
-    }
-  }
-  function updateEmbedLoaderState(wrap, isLoading) {
-    var loader = wrap ? wrap.querySelector('.embed-loader') : null;
-    if (!loader) return;
-    var button = loader.querySelector('.embed-loader__button');
-    var hint = loader.querySelector('.embed-loader__hint');
-    if (button) {
-      button.disabled = !!isLoading;
-      button.textContent = isLoading ? 'Chargement LikeC4…' : 'Rendu';
-    }
-    if (hint) {
-      hint.textContent = isLoading
-        ? 'Le rendu démarre… je lui laisse un peu plus de temps avant le fallback.'
-        : 'Déclenche le chargement quand tu veux.';
-    }
-  }
-  function ensureLikeC4PrimaryAction(wrap) {
-    if (!isLikeC4Embed(wrap) || isManualEmbed(wrap) || wrap.querySelector('.embed-likec4-cta')) return;
-    var button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'embed-likec4-cta';
-    button.innerHTML = [
-      '<span class="embed-likec4-cta__status" aria-hidden="true"></span>',
-      '<span class="embed-likec4-cta__label">Rendu</span>'
-    ].join('');
-    button.addEventListener('click', function() {
-      startEmbedLoad(wrap, { forceReload: wrap.classList.contains('is-loaded') || wrap.classList.contains('is-fallback') });
-    });
-    wrap.appendChild(button);
-  }
-  function ensureManualEmbedLoader(wrap) {
-    if (!isManualEmbed(wrap) || wrap.querySelector('.embed-loader')) return;
-    var fallback = wrap.querySelector('.embed-fallback');
-    var loader = document.createElement('div');
-    loader.className = 'embed-loader';
-    loader.setAttribute('aria-live', 'polite');
-    loader.innerHTML = [
-      '<button type="button" class="embed-loader__button">Rendu</button>'
-    ].join('');
-    loader.querySelector('.embed-loader__button').addEventListener('click', function() {
-      startEmbedLoad(wrap);
-    });
-    if (fallback) {
-      wrap.insertBefore(loader, fallback);
-    } else {
-      wrap.appendChild(loader);
-    }
-  }
   function markEmbedLoaded(wrap) {
     clearEmbedFallbackTimer(wrap);
     wrap.classList.remove('is-loading', 'is-fallback');
     wrap.classList.add('is-loaded');
     var fallback = wrap.querySelector('.embed-fallback');
     if (fallback) fallback.classList.remove('visible');
-    updateEmbedLoaderState(wrap, false);
-    updateLikeC4ActionState(wrap);
   }
   function showEmbedFallback(wrap) {
     clearEmbedFallbackTimer(wrap);
@@ -106,12 +29,11 @@
     wrap.classList.add('is-fallback');
     var fallback = wrap.querySelector('.embed-fallback');
     if (fallback) fallback.classList.add('visible');
-    updateEmbedLoaderState(wrap, false);
-    updateLikeC4ActionState(wrap);
   }
   function armEmbedFallbackTimer(wrap, iframe) {
     clearEmbedFallbackTimer(wrap);
     wrap._embedFallbackTimer = window.setTimeout(function() {
+      if (wrap.classList.contains('is-loaded')) return;
       try {
         var doc = iframe.contentDocument || iframe.contentWindow.document;
         if (doc && doc.body && doc.body.children.length > 0) {
@@ -119,7 +41,12 @@
           return;
         }
       } catch (e) {
-        /* Cross-origin or blocked — fall through to the fallback overlay. */
+        /* En local (file://) ou cross-origin, l'accès au DOM iframe lève une exception de sécurité légitime.
+           Si l'iframe a une source valide sans erreur explicite, on valide le chargement. */
+        if (iframe.src && iframe.src !== 'about:blank') {
+          markEmbedLoaded(wrap);
+          return;
+        }
       }
       showEmbedFallback(wrap);
     }, getEmbedTimeout(wrap));
@@ -153,10 +80,23 @@
     if (fallback) fallback.classList.remove('visible');
     wrap.classList.remove('is-fallback', 'is-loaded');
     wrap.classList.add('is-loading');
-    updateEmbedLoaderState(wrap, true);
-    updateLikeC4ActionState(wrap);
 
     var targetUrl = getThemeAdjustedUrl(iframe.dataset.src);
+    if (!wrap._likec4LoadListenerAttached) {
+      wrap._likec4LoadListenerAttached = true;
+      iframe.addEventListener('load', function() {
+        markEmbedLoaded(wrap);
+        scheduleLikeC4ViewportTuning(wrap, true);
+        attachLikeC4PreviewMirror(wrap);
+        try {
+          var currentTheme = document.documentElement.getAttribute('data-theme') || 'google-blueprint-light';
+          iframe.contentWindow.postMessage({ type: 'deck-theme-change', theme: currentTheme }, '*');
+        } catch (e) {}
+      });
+      iframe.addEventListener('error', function() {
+        showEmbedFallback(wrap);
+      });
+    }
     if (forceReload && iframe.src) {
       iframe.src = targetUrl;
     } else if (!iframe.src || forceReload) {
@@ -165,6 +105,18 @@
 
     armEmbedFallbackTimer(wrap, iframe);
   }
+  window.startEmbedLoad = startEmbedLoad;
+
+  function loadSlideEmbeds(slide) {
+    if (!slide) return;
+    var wraps = slide.querySelectorAll('.embed-wrap');
+    wraps.forEach(function(wrap) {
+      if (!wrap.classList.contains('is-loaded') && !wrap.classList.contains('is-loading')) {
+        startEmbedLoad(wrap);
+      }
+    });
+  }
+  window.loadSlideEmbeds = loadSlideEmbeds;
   function reloadEmbed(btn) {
     var wrap = btn.closest('.embed-wrap');
     startEmbedLoad(wrap, { forceReload: true });
@@ -205,10 +157,61 @@
       var fitClicks = String(wrap.dataset.likec4FitOnLoad || 'true').toLowerCase() === 'false' ? 0 : 1;
       var fitDone = triggerLikeC4Control(doc, '.react-flow__controls-fitview', fitClicks);
       var zoomOutDone = triggerLikeC4Control(doc, '.react-flow__controls-zoomout', getLikeC4ZoomOutSteps(wrap));
+      attachLikeC4PreviewMirror(wrap);
       return !!(fitDone || zoomOutDone);
     } catch (e) {
       return false;
     }
+  }
+  function attachLikeC4PreviewMirror(wrap) {
+    if (!document.documentElement.classList.contains('is-iframe-preview')) return;
+    if (wrap._likec4MirrorAttached) return;
+    var iframe = wrap.querySelector('iframe');
+    if (!iframe || !iframe.contentWindow) return;
+    try {
+      var doc = iframe.contentDocument || iframe.contentWindow.document;
+      if (!doc || !doc.body) return;
+      var vp = doc.querySelector('.react-flow__viewport');
+      if (!vp) {
+        window.setTimeout(function() {
+          attachLikeC4PreviewMirror(wrap);
+        }, 150);
+        return;
+      }
+      wrap._likec4MirrorAttached = true;
+      var lastTransform = vp.style.transform;
+      var vpRaf = 0;
+      var latestTransform = '';
+      var obs = new MutationObserver(function() {
+        if (vp.style.transform && vp.style.transform !== lastTransform) {
+          lastTransform = vp.style.transform;
+          latestTransform = vp.style.transform;
+          if (!vpRaf) {
+            vpRaf = window.requestAnimationFrame(function() {
+              vpRaf = 0;
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({
+                  type: 'PREVIEW_MIRROR_LIKEC4_VIEWPORT',
+                  embedId: wrap.id,
+                  transform: latestTransform
+                }, '*');
+              }
+            });
+          }
+        }
+      });
+      obs.observe(vp, { attributes: true, attributeFilter: ['style'] });
+
+      iframe.contentWindow.addEventListener('hashchange', function() {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({
+            type: 'PREVIEW_MIRROR_LIKEC4_NAV',
+            embedId: wrap.id,
+            hash: iframe.contentWindow.location.hash
+          }, '*');
+        }
+      });
+    } catch(e) {}
   }
   function scheduleLikeC4ViewportTuning(wrap, force) {
     if (!wrap || !shouldTuneLikeC4Viewport(wrap)) return;
@@ -436,17 +439,14 @@
   window.setCodePreviewStep = setCodePreviewStep;
 
   function openPrModalOrTab(btn) {
-    var minW = 960;
-    var minH = 680;
+    var isPreview = document.documentElement.classList.contains('is-iframe-preview');
     var codeTarget = 'diff-9031cdbb9779e2eb895e031359654e67f1bdfcda75eb412800c6ea3b5529fe1e';
-    // Si la fenêtre n'a pas assez d'espace, basculer directement sur un onglet dédié
-    if (window.innerWidth < minW || window.innerHeight < minH) {
-      window.open('./pr-page2.html#' + codeTarget, '_blank', 'noopener,noreferrer');
-      return;
-    }
     var slide = (btn && btn.closest && btn.closest('.slide--pr-review')) || document.querySelector('.slide--pr-review');
     if (slide && window.deckEngine) {
       window.deckEngine.setSlideStep(slide, '2');
+      if (isPreview && window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'PREVIEW_MIRROR_CLICK', prOpen: true, step: '2' }, '*');
+      }
       return;
     }
     togglePrBackupModal(btn);
@@ -456,8 +456,12 @@
   function togglePrBackupModal(btn) {
     var slide = (btn && btn.closest && btn.closest('.slide--pr-review')) || document.querySelector('.slide--pr-review');
     if (!slide) return;
+    var isPreview = document.documentElement.classList.contains('is-iframe-preview');
     if (window.deckEngine && slide.getAttribute('data-active-step') && slide.getAttribute('data-active-step') !== '1') {
       window.deckEngine.setSlideStep(slide, '1');
+      if (isPreview && window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'PREVIEW_MIRROR_CLICK', prClose: true, step: '1' }, '*');
+      }
       return;
     }
     var modal = slide.querySelector('.pr-backup-modal');
@@ -466,6 +470,9 @@
     modal.classList.toggle('is-open', !isOpen);
     modal.style.display = isOpen ? 'none' : 'flex';
     modal.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
+    if (isPreview && window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'PREVIEW_MIRROR_CLICK', prClose: isOpen, prOpen: !isOpen, step: isOpen ? '1' : '2' }, '*');
+    }
     if (!isOpen) {
       var iframe = modal.querySelector('iframe');
       if (iframe && iframe.contentWindow) {
@@ -503,6 +510,9 @@
         if (!window.deckEngine.isInIframe) {
           window.deckEngine.broadcastSlideChange();
         }
+      }
+      if (window.deckEngine.isInIframe && window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'PREVIEW_MIRROR_CLICK', diffTarget: targetId, step: s || '2' }, '*');
       }
     }
 
@@ -676,11 +686,6 @@
     document.querySelectorAll('.embed-wrap iframe[data-src]').forEach(function(iframe) {
       var wrap = iframe.closest('.embed-wrap');
       var manual = isManualEmbed(wrap);
-
-      ensureLikeC4PrimaryAction(wrap);
-      ensureManualEmbedLoader(wrap);
-      updateEmbedLoaderState(wrap, false);
-      updateLikeC4ActionState(wrap);
 
       iframe.addEventListener('load', function() {
         if (manual && !wrap._embedRequested) return;

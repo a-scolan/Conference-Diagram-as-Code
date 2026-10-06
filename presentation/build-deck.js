@@ -74,17 +74,33 @@ ${styles}
 </head>
 <body>
 
-<!-- Overlay de verrouillage d'orientation mobile (forcé en paysage) -->
-<div class="orientation-lock-overlay" aria-hidden="true">
+<!-- Overlay de verrouillage d'orientation mobile (forcé en paysage avec Screen Orientation API) -->
+<div class="orientation-lock-overlay" id="orientation-lock-overlay" aria-hidden="true">
   <div class="orientation-lock-card">
-    <svg class="orientation-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg class="orientation-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
       <line x1="12" y1="18" x2="12.01" y2="18"></line>
     </svg>
     <h2 class="orientation-lock-title">Pivotez votre &eacute;cran</h2>
-    <p class="orientation-lock-desc">Veuillez faire pivoter votre &eacute;cran en mode paysage (horizontal).</p>
+    <p class="orientation-lock-desc">Ce support de conf&eacute;rence est optimis&eacute; pour un affichage en mode paysage (horizontal).</p>
+    <div class="orientation-lock-actions">
+      <button type="button" class="orientation-lock-btn orientation-lock-btn--primary" id="btn-lock-landscape" onclick="if(typeof attemptLockLandscape==='function')attemptLockLandscape();">
+        <span>Basculer en plein &eacute;cran paysage</span>
+      </button>
+      <button type="button" class="orientation-lock-btn orientation-lock-btn--secondary" id="btn-bypass-orientation" onclick="if(typeof bypassOrientationLock==='function')bypassOrientationLock();">
+        <span>Continuer en portrait</span>
+      </button>
+    </div>
   </div>
 </div>
+<script>
+  try {
+    if (sessionStorage.getItem('dac_orientation_bypassed') === '1') {
+      var _ov = document.getElementById('orientation-lock-overlay');
+      if (_ov) _ov.classList.add('is-bypassed');
+    }
+  } catch (_) {}
+</script>
 
 <div class="deck">
 ${slidesHtml}

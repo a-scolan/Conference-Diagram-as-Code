@@ -6,11 +6,11 @@ Cette spécification définit l'architecture et le comportement de la console pr
 ## Requirements
 
 ### Requirement: Console de présentation multi-volets (Presenter Console)
-Le système DOIT (SHALL) fournir une interface de contrôle dédiée pour le présentateur (`presenter-view.html`) articulée autour de 4 zones principales : prévisualisation de la diapositive active, prévisualisation de la diapositive suivante, panneau des notes et didascalies scéniques, et barre d'état temporelle.
+Le système DOIT (SHALL) fournir une interface de contrôle dédiée pour le présentateur (`presenter-view.html`) articulée autour de 4 zones principales : prévisualisation en miroir visuel direct de la diapositive active en plein cadre via récepteur vidéo temps réel (`<video>` avec `object-fit: contain`), prévisualisation de la diapositive suivante cadrée sur la partie haute (titres et amorce de contenu découpés en bas), panneau des notes et didascalies scéniques, et barre d'état temporelle.
 
 #### Scenario: Affichage initial de la console présentateur
 - **WHEN** L'orateur ouvre `presenter-view.html` dans une fenêtre ou sur un moniteur secondaire
-- **THEN** La console charge les métadonnées et notes de la présentation, affiche la diapositive courante mise à l'échelle dans le volet principal, la diapositive suivante dans un volet réduit, et les notes orateur associées avec leurs balises d'action scénique.
+- **THEN** La console charge les métadonnées et notes de la présentation, affiche l'espace miroir direct en plein cadre dans le volet principal (avec invitation d'activation en 1 clic lorsque non connecté), affiche la diapositive suivante dans un volet compact cadré sur son en-tête, et les notes orateur associées avec leurs balises d'action scénique.
 
 #### Scenario: Rendu des notes et consignes de scène
 - **WHEN** La diapositive courante change
@@ -34,8 +34,8 @@ Le système DOIT (SHALL) maintenir une synchronisation instantanée et bidirecti
 - **THEN** La console change de diapositive et émet un événement de synchronisation qui amène immédiatement la fenêtre de projection publique sur la même diapositive.
 
 #### Scenario: Navigation déclenchée depuis l'écran de projection public
-- **WHEN** Une télécommande de présentation ou un raccourci clavier fait avancer la diapositive sur l'écran public
-- **THEN** La console présentateur reçoit la notification et met à jour instantanément la diapositive courante, la diapositive suivante et le volet de notes.
+- **WHEN** Une télécommande de présentation, un digipad ou un raccourci clavier fait avancer la diapositive sur l'écran public ou sur la console
+- **THEN** Les deux fenêtres s'ajustent instantanément à la diapositive courante, à la suivante et aux notes correspondantes.
 
 #### Scenario: Synchronisation à l'ouverture de la console
 - **WHEN** La console présentateur s'ouvre alors que la présentation publique est déjà sur la slide 16
@@ -44,8 +44,6 @@ Le système DOIT (SHALL) maintenir une synchronisation instantanée et bidirecti
 #### Scenario: Rechargement à chaud lors du rechargement de la conférence
 - **WHEN** La page de présentation de la conférence est rechargée (rafraîchissement de page, compilation ou nouvelle session)
 - **THEN** Tous les onglets de console présentateur ouverts reçoivent un événement de rechargement (`DECK_RELOADED`), réactualisent immédiatement leurs notes et métadonnées en arrière-plan sans perte du chronomètre, rafraîchissent les iframes de prévisualisation avec les derniers styles et contenus compilés, et se synchronisent sur la diapositive active.
-
----
 
 ### Requirement: Occultation d'écran et commandes de secours
 La console présentateur DOIT (SHALL) offrir des commandes rapides pour masquer l'écran public (mode écran noir) et déclencher des actions de démonstration sans quitter le mode plein écran.
@@ -61,11 +59,11 @@ La console présentateur DOIT (SHALL) présenter une checklist interactive de pr
 
 #### Scenario: Affichage automatique sur la première diapositive
 - **WHEN** La console présentateur est sur la diapositive d'ouverture (Slide 1 / Titre)
-- **THEN** Un panneau "Checklist Avant-Scène" s'affiche automatiquement en tête de la colonne de notes avec les 5 points de contrôle matériels et techniques cruciaux (Navigateur plein écran F11, VS Code zoomé light, onglets de secours PR & LikeC4, pas d'interruptions [Teams/Outlook & veille écran/PC], alimentation secteur / batterie & bouteille d'eau ; le chronomètre étant nativement présent dans la vue speaker, aucun smartphone n'est requis ; le cadrage orateur est concentré dans les concepts clés de la diapositive).
+- **THEN** Un panneau "Checklist Avant-Scène" s'affiche automatiquement en tête de la colonne de notes avec les 4 points de contrôle matériels et techniques cruciaux (Navigateur plein écran F11, VS Code zoomé light, onglets de secours PR & LikeC4, alimentation secteur / batterie & bouteille d'eau ; le chronomètre étant nativement présent dans la vue speaker, aucun smartphone n'est requis ; le cadrage orateur est concentré dans les concepts clés de la diapositive).
 
 #### Scenario: Interaction et persistance de la checklist
 - **WHEN** L'orateur coche ou décoche des éléments de la checklist
-- **THEN** L'état est instantanément sauvegardé dans `localStorage`, le compteur d'avancement se met à jour (badge vert `5/5 ✅ Prêt !`), et un bouton de réinitialisation permet de remettre la liste à zéro pour une nouvelle répétition ou session.
+- **THEN** L'état est instantanément sauvegardé dans `localStorage`, le compteur d'avancement se met à jour (badge vert `4/4 ✅ Prêt !`), et un bouton de réinitialisation permet de remettre la liste à zéro pour une nouvelle répétition ou session.
 
 #### Scenario: Repli progressif des éléments cochés
 - **WHEN** L'orateur coche des points de contrôle au fil de sa préparation
@@ -83,3 +81,14 @@ La console présentateur DOIT (SHALL) s'adapter visuellement au thème actif du 
 #### Scenario: Bascule du thème depuis la console présentateur
 - **WHEN** L'orateur clique sur le bouton de thème de l'en-tête de la console ou appuie sur la touche `T`
 - **THEN** La console bascule entre le thème clair et le thème sombre, et propage l'événement au diaporama public via `BroadcastChannel` et `localStorage`.
+
+### Requirement: Miroir visuel direct par streaming (Display Stream Mirror)
+Le système DOIT (SHALL) proposer un canal de streaming vidéo direct entre la fenêtre de projection publique (émetteur de flux d'onglet) et le cadre de prévisualisation de la console présentateur (récepteur vidéo matériellement accéléré), garantissant une stricte équivalence visuelle pixel-perfect, y compris dans les sous-menus interactifs, les modales et les iframes imbriquées LikeC4.
+
+#### Scenario: Connexion du flux de streaming direct
+- **WHEN** L'orateur clique sur "Activer le miroir direct" (dans la barre d'outils ou directement sur le bouton d'invitation de la zone de prévisualisation) et sélectionne l'onglet public de la conférence
+- **THEN** Le récepteur de la console présentateur affiche le flux vidéo haute fidélité temps réel de l'écran public sans instanciation concurrente de LikeC4, en affichage intégral (plein cadre 16:9 sans rognage) pour un monitoring complet de la scène.
+
+#### Scenario: Repli sans flux actif (Graceful Fallback)
+- **WHEN** Le flux direct n'est pas encore initialisé ou est interrompu
+- **THEN** La console présentateur affiche un panneau d'accueil élégant invitant à connecter le flux en un clic, sans instancier d'iframe concurrente ni bloquer la navigation, le chronomètre ou les notes d'orateur.

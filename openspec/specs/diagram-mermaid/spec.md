@@ -84,3 +84,31 @@ Lorsqu'une diapositive contenant un diagramme devient visible, la zone d'intér�
 #### Scenario: Entrée dans une diapositive avec diagramme
 - **WHEN** Une diapositive contenant un diagramme passe en état `.visible` via l'IntersectionObserver
 - **THEN** Le moteur vérifie si `shouldCenterMermaidViewport` est vérifié et planifie un double calcul de coordonnées pour centrer le cadre englobant (bounding box) au milieu de la fenêtre visible.
+
+---
+
+### Requirement: Rendu polychrome thématique des nœuds et contrastes (Multi-Theme Node Styling)
+Les nœuds et catégories de diagrammes (gold, blue, green, purple) doivent s'adapter dynamiquement au thème actif (Google Blueprint Light ou Slate Architect) sans dépendre de valeurs chromatiques figées dans le code source Mermaid.
+
+#### Scenario: Rendu des nœuds en mode sombre
+- **WHEN** Le thème actif est `slate-architect` ou `dark`
+- **THEN** Les formes des nœuds reçoivent un fond teinté translucide (`--diagram-*-dim`) avec un contour lumineux saturé (`--diagram-*`) et une encre textuelle blanche (`--text`, `#f8fafc`), garantissant un ratio de contraste supérieur à 7:1.
+
+#### Scenario: Rendu des nœuds en mode clair
+- **WHEN** Le thème actif est `google-blueprint-light` ou `light`
+- **THEN** Les formes des nœuds reçoivent un fond pastel doux (`--diagram-*-dim`) avec un contour marqué (`--diagram-*`) et une encre textuelle sombre (`--text`, `#0f172a`), garantissant un ratio de contraste supérieur à 10:1.
+
+#### Scenario: Déclaration neutre des styles Mermaid
+- **WHEN** Un diagramme Mermaid déclare des classes sémantiques via `classDef`
+- **THEN** La directive `classDef` ne doit pas embarquer de propriétés `fill:` ou `stroke:` directes pour éviter la génération de styles inline avec `!important` bloquant la réactivité du thème CSS.
+
+### Requirement: Lisibilité renforcée des diagrammes de cycle de vie (SDLC)
+Le système MUST garantir que les diagrammes représentant des processus séquentiels ou des cycles de vie logiciels étendus (SDLC/CI-CD) conservent une taille typographique et un contraste adaptés à une lecture à distance sans distorsion visuelle.
+
+#### Scenario: Dimensionnement typographique du pipeline CI/CD
+- **WHEN** Le diagramme de cycle de vie de développement élargi à l'architecture (diapositive 28) est rendu
+- **THEN** La taille de police des nœuds de composants, des sous-graphes et des étiquettes de transition est augmentée de manière ciblée par rapport aux diagrammes standards pour garantir une lisibilité instantanée depuis le fond de l'amphithéâtre.
+
+#### Scenario: Aération et cadrage spatial du flowchart horizontal
+- **WHEN** Le flowchart horizontal s'étend sur 4 étapes séquentielles ou plus
+- **THEN** Le conteneur `.mermaid-wrap` et les paramètres de vue adaptent la largeur maximale utile et la hauteur de conteneur afin que le calcul d'Auto-Fit ne rétrécisse pas les polices en deçà du seuil de confort visuel.

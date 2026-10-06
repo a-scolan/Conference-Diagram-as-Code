@@ -23,6 +23,16 @@
 
   /* Assets graphiques réutilisables */
   --quote-bg: url("./assets/quote.png");
+
+  /* Tokens de cartes et panneaux factorisés */
+  --card-radius: 16px;
+  --card-radius-sm: 12px;
+  --card-radius-lg: 18px;
+  --card-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  --card-shadow-hover: 0 8px 28px rgba(0, 0, 0, 0.08);
+
+  /* Tokens de badges et puces */
+  --badge-radius: 999px;
 }
 
 /* ==========================================================================
@@ -119,6 +129,8 @@
   --diagram-blue-dim: #e0f2fe;
   --diagram-green: #15803d;
   --diagram-green-dim: #dcfce7;
+  --diagram-purple: #7c3aed;
+  --diagram-purple-dim: #f3e8ff;
 
   /* Blocs de code (Mode clair élégant, fond blanc/gris très doux, bordure nette) */
   --code-bg: #f8fafc;
@@ -199,6 +211,8 @@
   --diagram-blue-dim: rgba(56, 189, 248, 0.18);
   --diagram-green: #34d399;
   --diagram-green-dim: rgba(52, 211, 153, 0.18);
+  --diagram-purple: #c084fc;
+  --diagram-purple-dim: rgba(192, 132, 252, 0.18);
 
   /* Blocs de code */
   --code-bg: #030712;
@@ -259,7 +273,7 @@
     z-index: 2147483647;
     opacity: 0;
     transform: translate3d(-999px, -999px, 0) translate(-50%, -50%) scale(1);
-    transition: opacity 90ms linear, transform 60ms ease-out;
+    transition: opacity 120ms ease;
     will-change: transform, opacity;
     backface-visibility: hidden;
   }
@@ -325,21 +339,31 @@
     width: 100%;
     overflow-y: auto;
     scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     scroll-padding-top: 0;
     overscroll-behavior-y: contain;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    overflow-anchor: auto;
   }
   .deck::-webkit-scrollbar { display: none; }
+
+  .deck.is-resizing,
+  .deck.is-resizing * {
+    scroll-snap-type: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
 
   .slide {
     height: 100%;
     height: -webkit-fill-available;
     height: 100svh;
     height: 100dvh;
-    scroll-snap-align: start;
+    scroll-snap-align: none;
     scroll-snap-stop: always;
+    overflow-anchor: none;
     overflow: hidden;
     position: relative;
     display: flex;
@@ -350,6 +374,11 @@
     opacity: 0;
     transform: none;
     transition: opacity 0.24s ease;
+  }
+
+  .slide.is-current {
+    scroll-snap-align: start;
+    overflow-anchor: auto;
   }
 
   .slide.visible,
@@ -477,12 +506,26 @@
     display: none !important;
   }
   .is-iframe-preview,
+  .is-iframe-preview body,
+  .is-iframe-preview body.laser-cursor-enabled,
+  .is-iframe-preview body.laser-cursor-enabled * {
+    cursor: default !important;
+  }
+  .is-iframe-preview body.laser-cursor-enabled button,
+  .is-iframe-preview body.laser-cursor-enabled a,
+  .is-iframe-preview body.laser-cursor-enabled [role="button"],
+  .is-iframe-preview body.laser-cursor-enabled [role="tab"],
+  .is-iframe-preview body.laser-cursor-enabled summary {
+    cursor: pointer !important;
+  }
+  .is-iframe-preview,
   .is-iframe-preview body {
     overflow: hidden !important;
   }
   .is-iframe-preview .deck {
     scroll-snap-type: none !important;
     overflow-y: hidden !important;
+    scroll-behavior: auto !important;
   }
 
   .deck-hints {
@@ -1164,6 +1207,23 @@
   .slide--diagram-flow {
     --diagram-edge-label-size: calc(13px + var(--font-bump));
   }
+  .slide--diagram-sdlc {
+    --diagram-node-font-size: calc(18px + var(--font-bump));
+    --diagram-edge-label-size: calc(15px + var(--font-bump));
+  }
+  .slide--diagram-sdlc:not(.slide--code-preview) .mermaid-wrap {
+    flex: 0 1 auto;
+    width: 100%;
+    max-width: min(100%, 1240px);
+    max-height: clamp(280px, 55vh, 620px);
+    padding: clamp(8px, 1.5vh, 18px);
+    margin: 0 auto;
+  }
+  .slide--diagram-sdlc .mermaid .cluster-label text,
+  .slide--diagram-sdlc .mermaid .cluster text {
+    font-size: calc(16px + var(--font-bump)) !important;
+    font-weight: 700 !important;
+  }
   .slide--diagram-flow:not(.slide--code-preview) .mermaid-wrap {
     flex: 0 1 auto;
     max-height: clamp(400px, 58vh, 620px);
@@ -1174,20 +1234,139 @@
   }
   .slide--diagram .slide__heading { margin-bottom: clamp(8px, 1.5vh, 20px); }
 
+  /* ==========================================================================
+     UNIFIED DESIGN FOUNDATIONS & FACTORIZATIONS
+     ========================================================================== */
+
+  /* --- 1. UNIFIED CARD ARCHITECTURE --- */
+  .dac-card,
+  .key-card,
+  .concept-card,
+  .review-questions__card,
+  .benefit-card,
+  .synthesis-panel {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1.5px solid var(--border-bright);
+    border-radius: var(--card-radius, 16px);
+    box-shadow: var(--card-shadow, 0 4px 18px rgba(0, 0, 0, 0.04));
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .dac-card:hover,
+  .key-card:hover,
+  .concept-card:hover,
+  .review-questions__card:hover,
+  .benefit-card:hover,
+  .synthesis-panel:hover {
+    border-color: var(--card-accent, var(--accent));
+    transform: translateY(-2px);
+    box-shadow: var(--card-shadow-hover, 0 8px 28px rgba(0, 0, 0, 0.08));
+  }
+
+  .dac-card--stripe::before,
+  .key-card::before,
+  .concept-card::before,
+  .benefit-card::before,
+  .synthesis-panel--before::before,
+  .synthesis-panel--after::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3.5px;
+    background: var(--card-accent, var(--accent));
+  }
+
+  /* --- 2. UNIFIED BADGES & PILLS SYSTEM --- */
+  .badge,
+  .synthesis-badge,
+  .benefit-card__badge,
+  .speaker-pill,
+  .adr-doc__badge,
+  .pr-review__badge,
+  .code-preview__tab-tag,
+  .workspace-tree__shared-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: var(--badge-radius, 999px);
+    line-height: 1.2;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .badge--green,
+  .synthesis-badge--after,
+  .adr-doc__badge {
+    background: var(--green-dim);
+    color: var(--green);
+    border: 1px solid color-mix(in srgb, var(--green) 35%, transparent);
+  }
+
+  .badge--red,
+  .synthesis-badge--before {
+    background: var(--red-dim);
+    color: var(--red);
+    border: 1px solid color-mix(in srgb, var(--red) 30%, transparent);
+  }
+
+  .badge--blue,
+  .badge--accent {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+
+  .badge--purple {
+    background: var(--accent3-dim);
+    color: var(--accent3);
+    border: 1px solid color-mix(in srgb, var(--accent3) 35%, transparent);
+  }
+
+  .badge--orange,
+  .badge--gold,
+  .code-preview__tab-tag,
+  .workspace-tree__shared-tag {
+    background: var(--accent2-dim);
+    color: var(--accent2);
+    border: 1px solid color-mix(in srgb, var(--accent2) 35%, transparent);
+  }
+
+  .badge--neutral,
+  .benefit-card__badge {
+    background: var(--surface2);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+
+  /* --- 3. UNIFIED CALLOUT & NOTE BANNERS --- */
+  .callout-banner,
+  .proof-banner,
+  .workspace-tree__note,
+  .slide--adr-preview .adr-doc__note {
+    border: 1px dashed var(--border-bright);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--surface2) 75%, transparent 25%);
+    color: var(--text-dim);
+    line-height: 1.4;
+    box-sizing: border-box;
+  }
+
   .proof-banner {
     display: block;
     text-align: center;
     margin: clamp(10px, 1.6vh, 18px) auto 0 auto;
     padding: clamp(6px, 1vh, 10px) clamp(14px, 1.6vw, 20px);
-    background: color-mix(in srgb, var(--surface2) 75%, transparent 25%);
-    border: 1px dashed var(--border-bright);
-    border-radius: 8px;
     width: 100%;
     max-width: 960px;
     font-size: calc(clamp(11px, 0.95vw, 13px) + var(--font-bump));
-    color: var(--text-dim);
-    line-height: 1.4;
-    box-sizing: border-box;
   }
   .proof-banner strong {
     color: var(--text);
@@ -1231,38 +1410,8 @@
   }
   .zoom-controls button:hover { background: var(--accent); color: #ffffff; }
   .zoom-controls button:active { background: var(--accent2); color: #ffffff; }
-  .slide--diagram .mermaid text,
-  .slide--diagram .mermaid tspan,
-  .slide--diagram .mermaid .cluster text,
-  .slide--diagram .mermaid .cluster-label text,
-  .slide--diagram .mermaid .cluster span,
-  .slide--diagram .mermaid .cluster p,
-  .slide--diagram .mermaid .cluster .nodeLabel,
-  .slide--diagram .mermaid .cluster-label span,
-  .slide--diagram .mermaid .nodeLabel,
-  .slide--diagram .mermaid .nodeLabel span,
-  .slide--diagram .mermaid .nodeLabel p,
-  .slide--diagram .mermaid .node text,
-  .slide--diagram .mermaid .node tspan,
-  .slide--diagram .mermaid .node .label,
-  .slide--diagram .mermaid text.actor,
-  .slide--diagram .mermaid .titleText,
-  .slide--diagram .mermaid .flowchartTitleText,
-  .slide--diagram .mermaid .noteText,
-  .slide--diagram .mermaid .noteText tspan,
-  .slide--diagram .mermaid .edgeLabel span,
-  .slide--diagram .mermaid .labelText,
-  .slide--diagram .mermaid .labelText tspan,
-  .slide--diagram .mermaid .loopText,
-  .slide--diagram .mermaid .loopText tspan,
-  .slide--diagram .mermaid .messageText,
-  .slide--diagram .mermaid .messageText tspan,
-  .slide--diagram .mermaid .classTitleText,
-  .slide--diagram .mermaid .er text,
-  .slide--diagram .mermaid .mindmap-node text,
-  .slide--diagram .mermaid .commit-label,
-  .slide--diagram .mermaid [class*="branch-label"],
-  .slide--diagram .mermaid [class*="commit-label"],
+
+  /* Unification des typographies et couleurs de texte Mermaid via var(--text) */
   .mermaid-wrap .mermaid text,
   .mermaid-wrap .mermaid tspan,
   .mermaid-wrap .mermaid .cluster text,
@@ -1299,7 +1448,6 @@
     fill: var(--text) !important;
     stroke: none !important;
   }
-  .slide--diagram .mermaid .nodeLabel,
   .mermaid-wrap .mermaid .nodeLabel {
     font-family: var(--font-body) !important;
     font-size: var(--diagram-node-font-size) !important;
@@ -1308,25 +1456,15 @@
     text-overflow: unset !important;
     font-weight: 600 !important;
   }
-  .slide--diagram .mermaid .edgeLabel,
-  .slide--diagram .mermaid .edgeLabel span,
   .mermaid-wrap .mermaid .edgeLabel,
   .mermaid-wrap .mermaid .edgeLabel span {
     font-family: var(--font-mono) !important;
     font-size: var(--diagram-edge-label-size) !important;
     overflow: visible !important;
   }
-  .slide--diagram .mermaid .edgeLabel foreignObject,
   .mermaid-wrap .mermaid .edgeLabel foreignObject {
     overflow: visible !important;
   }
-  .slide--diagram .mermaid .edgeLabel,
-  .slide--diagram .mermaid .edgeLabel span,
-  .slide--diagram .mermaid .edgeLabel p,
-  .slide--diagram .mermaid .edgeLabel .label,
-  .slide--diagram .mermaid .edgeLabel foreignObject div,
-  .slide--diagram .mermaid .labelBkg,
-  .slide--diagram .mermaid .labelBox,
   .mermaid-wrap .mermaid .edgeLabel,
   .mermaid-wrap .mermaid .edgeLabel span,
   .mermaid-wrap .mermaid .edgeLabel p,
@@ -1343,9 +1481,6 @@
     line-height: 1.25 !important;
     border-radius: 4px;
   }
-  .slide--diagram .mermaid .nodeLabel p,
-  .slide--diagram .mermaid .edgeLabel p,
-  .slide--diagram .mermaid .labelText p,
   .mermaid-wrap .mermaid .nodeLabel p,
   .mermaid-wrap .mermaid .edgeLabel p,
   .mermaid-wrap .mermaid .labelText p {
@@ -1375,35 +1510,22 @@
   .mermaid-wrap .mermaid .statediagram-cluster rect {
     stroke-width: 2px;
   }
-  .slide--diagram .mermaid .edgeLabel rect,
-  .slide--diagram .mermaid .labelBox,
-  .slide--diagram .mermaid .label-container rect,
-  .slide--diagram .mermaid .labelBkg,
   .mermaid-wrap .mermaid .edgeLabel rect,
   .mermaid-wrap .mermaid .labelBox,
+  .mermaid-wrap .mermaid .label-container rect,
   .mermaid-wrap .mermaid .labelBkg {
     fill: var(--surface) !important;
     stroke: var(--border) !important;
     background: var(--surface) !important;
     background-color: var(--surface) !important;
   }
-  .slide--diagram .mermaid .labelBkg,
-  .mermaid-wrap .mermaid .labelBkg {
-    fill: var(--surface) !important;
-  }
-  .slide--diagram .mermaid .cluster rect,
-  .slide--diagram .mermaid .stateGroup rect,
-  .slide--diagram .mermaid .statediagram-cluster rect,
   .mermaid-wrap .mermaid .cluster rect,
   .mermaid-wrap .mermaid .stateGroup rect,
   .mermaid-wrap .mermaid .statediagram-cluster rect {
     fill: var(--surface2) !important;
     stroke: var(--border-bright) !important;
   }
-  .slide--diagram .mermaid .node.gold rect,
-  .slide--diagram .mermaid .node.gold circle,
-  .slide--diagram .mermaid .node.gold polygon,
-  .slide--diagram .mermaid .node.gold path,
+  .mermaid-wrap .mermaid .node.gold :is(rect, circle, polygon, path),
   .mermaid-wrap .mermaid .node.gold rect,
   .mermaid-wrap .mermaid .node.gold circle,
   .mermaid-wrap .mermaid .node.gold polygon,
@@ -1411,10 +1533,7 @@
     fill: var(--diagram-gold-dim) !important;
     stroke: var(--diagram-gold) !important;
   }
-  .slide--diagram .mermaid .node.blue rect,
-  .slide--diagram .mermaid .node.blue circle,
-  .slide--diagram .mermaid .node.blue polygon,
-  .slide--diagram .mermaid .node.blue path,
+  .mermaid-wrap .mermaid .node.blue :is(rect, circle, polygon, path),
   .mermaid-wrap .mermaid .node.blue rect,
   .mermaid-wrap .mermaid .node.blue circle,
   .mermaid-wrap .mermaid .node.blue polygon,
@@ -1422,10 +1541,7 @@
     fill: var(--diagram-blue-dim) !important;
     stroke: var(--diagram-blue) !important;
   }
-  .slide--diagram .mermaid .node.green rect,
-  .slide--diagram .mermaid .node.green circle,
-  .slide--diagram .mermaid .node.green polygon,
-  .slide--diagram .mermaid .node.green path,
+  .mermaid-wrap .mermaid .node.green :is(rect, circle, polygon, path),
   .mermaid-wrap .mermaid .node.green rect,
   .mermaid-wrap .mermaid .node.green circle,
   .mermaid-wrap .mermaid .node.green polygon,
@@ -1433,10 +1549,14 @@
     fill: var(--diagram-green-dim) !important;
     stroke: var(--diagram-green) !important;
   }
-  .slide--diagram .mermaid rect.actor,
-  .slide--diagram .mermaid .er.entityBox,
-  .slide--diagram .mermaid .classBox,
-  .slide--diagram .mermaid .mindmap-node rect,
+  .mermaid-wrap .mermaid .node.purple :is(rect, circle, polygon, path),
+  .mermaid-wrap .mermaid .node.purple rect,
+  .mermaid-wrap .mermaid .node.purple circle,
+  .mermaid-wrap .mermaid .node.purple polygon,
+  .mermaid-wrap .mermaid .node.purple path {
+    fill: var(--diagram-purple-dim) !important;
+    stroke: var(--diagram-purple) !important;
+  }
   .mermaid-wrap .mermaid rect.actor,
   .mermaid-wrap .mermaid .er.entityBox,
   .mermaid-wrap .mermaid .classBox,
@@ -1444,28 +1564,16 @@
     fill: var(--diagram-gold-dim) !important;
     stroke: var(--diagram-gold) !important;
   }
-  .slide--diagram .mermaid .activation0,
-  .slide--diagram .mermaid .activation1,
   .mermaid-wrap .mermaid .activation0,
   .mermaid-wrap .mermaid .activation1 {
     fill: rgba(251,254,122,0.12) !important;
     stroke: rgba(251,254,122,0.28) !important;
   }
-  .slide--diagram .mermaid .note,
-  .slide--diagram .mermaid .note rect,
   .mermaid-wrap .mermaid .note,
   .mermaid-wrap .mermaid .note rect {
     fill: var(--surface) !important;
     stroke: rgba(160,184,208,0.44) !important;
   }
-  .slide--diagram .mermaid .flowchart-link,
-  .slide--diagram .mermaid .edgePath .path,
-  .slide--diagram .mermaid .messageLine0,
-  .slide--diagram .mermaid .messageLine1,
-  .slide--diagram .mermaid .actor-line,
-  .slide--diagram .mermaid .loopLine,
-  .slide--diagram .mermaid .relationshipLine,
-  .slide--diagram .mermaid .transition,
   .mermaid-wrap .mermaid .flowchart-link,
   .mermaid-wrap .mermaid .edgePath .path,
   .mermaid-wrap .mermaid .messageLine0,
@@ -1476,11 +1584,6 @@
   .mermaid-wrap .mermaid .transition {
     stroke: var(--text-dim) !important;
   }
-  .slide--diagram .mermaid .arrowheadPath,
-  .slide--diagram .mermaid .arrowMarkerPath,
-  .slide--diagram .mermaid marker path,
-  .slide--diagram .mermaid marker polygon,
-  .slide--diagram .mermaid marker circle,
   .mermaid-wrap .mermaid .arrowheadPath,
   .mermaid-wrap .mermaid .arrowMarkerPath,
   .mermaid-wrap .mermaid marker path,
@@ -1489,21 +1592,15 @@
     fill: var(--text-dim) !important;
     stroke: var(--text-dim) !important;
   }
-  .slide--diagram .mermaid .actor-man line,
-  .slide--diagram .mermaid .actor-man circle,
-  .slide--diagram .mermaid .actor-man path,
   .mermaid-wrap .mermaid .actor-man line,
   .mermaid-wrap .mermaid .actor-man circle,
   .mermaid-wrap .mermaid .actor-man path {
     stroke: var(--text-dim) !important;
     fill: none !important;
   }
-  .slide--diagram .mermaid .sequenceNumber,
   .mermaid-wrap .mermaid .sequenceNumber {
     fill: var(--text) !important;
   }
-  .slide--diagram .mermaid #sequencenumber,
-  .slide--diagram .mermaid #sequencenumber circle,
   .mermaid-wrap .mermaid #sequencenumber,
   .mermaid-wrap .mermaid #sequencenumber circle {
     fill: color-mix(in srgb, var(--diagram-blue) 72%, var(--surface2) 28%) !important;
@@ -1517,8 +1614,6 @@
     color: var(--text) !important;
     fill: var(--text) !important;
   }
-  .slide--diagram-flow .mermaid .labelBkg,
-  .slide--diagram .mermaid .labelBkg,
   .mermaid-wrap .mermaid .labelBkg {
     background: var(--surface2) !important;
     background-color: var(--surface2) !important;
@@ -1707,8 +1802,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .slide__code-block pre { margin: 0; overflow-x: auto; }
-  .slide__code-block code { font-family: var(--font-mono); font-size: calc(clamp(14px, 1.6vw, 18px) + var(--font-bump)); line-height: 1.7; color: var(--code-text); }
+  .slide__code-block pre { margin: 0; overflow-x: auto; display: flex; }
+  .slide__code-block code {
+    font-family: var(--font-mono);
+    font-size: calc(clamp(14px, 1.6vw, 18px) + var(--font-bump));
+    line-height: 1.7;
+    color: var(--code-text);
+    display: block;
+    min-width: 100%;
+    width: max-content;
+    box-sizing: border-box;
+  }
   .slide__code-block .hl { color: var(--accent); }
   .slide__code-block .kw { color: var(--accent3); }
   .slide__code-block .str { color: var(--green); }
@@ -1738,13 +1842,16 @@
   .slide__code-diff .line-del {
     display: block; color: var(--red); background: var(--red-dim);
     margin: 0 calc(-1 * clamp(24px, 4vw, 48px)); padding: 0 clamp(24px, 4vw, 48px);
+    min-width: 100%; width: 100%; box-sizing: border-box;
   }
   .slide__code-diff .line-add {
     display: block; color: var(--green); background: var(--green-dim);
     margin: 0 calc(-1 * clamp(24px, 4vw, 48px)); padding: 0 clamp(24px, 4vw, 48px);
+    min-width: 100%; width: 100%; box-sizing: border-box;
   }
   .slide__code-diff .line-ctx {
     display: block; color: var(--text-dim);
+    min-width: 100%; width: 100%; box-sizing: border-box;
   }
   .slide__code-diff .slide__diff-label {
     font-family: var(--font-mono); font-size: calc(clamp(11px, 1.2vw, 13px) + var(--font-bump));
@@ -1917,7 +2024,7 @@
     text-decoration: none;
     background: color-mix(in srgb, var(--accent) 15%, transparent 85%);
   }
-  @media (max-width: 880px) {
+  @media (max-width: 900px) {
     .slide--outro .slide__inner {
       grid-template-columns: 1fr;
       text-align: center;
@@ -2040,119 +2147,9 @@
       background: var(--surface);
     }
   }
-  .embed-wrap .embed-likec4-cta {
-    position: absolute; bottom: 12px; left: 12px; top: auto; right: auto; z-index: 11;
-    display: none; align-items: center; gap: 10px;
-    min-height: 38px; padding: 0 16px;
-    border-radius: 999px; border: 1px solid var(--border-bright);
-    background: var(--surface);
-    color: var(--text); font-family: var(--font-mono); font-size: calc(12px + var(--font-bump)); font-weight: 700;
-    letter-spacing: 0.02em; cursor: pointer;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
-  }
-  .embed-wrap[data-embed-kind="likec4"] .embed-likec4-cta {
-    display: inline-flex;
-  }
-  .embed-wrap.is-loaded .embed-likec4-cta {
-    display: none;
-  }
-  .embed-wrap .embed-likec4-cta:hover {
-    transform: translateY(-1px); border-color: var(--accent);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.16);
-  }
-  .embed-wrap .embed-likec4-cta:focus-visible {
-    outline: 2px solid var(--accent); outline-offset: 2px;
-  }
-  .embed-wrap .embed-likec4-cta[disabled] {
-    opacity: 0.84; cursor: progress;
-  }
-  .embed-wrap .embed-likec4-cta__status {
-    width: 10px; height: 10px; border-radius: 999px;
-    background: var(--accent);
-    box-shadow: 0 0 0 4px var(--accent-dim);
-    flex: none;
-  }
-  .embed-wrap.is-loaded .embed-likec4-cta__status {
-    background: var(--green);
-    box-shadow: 0 0 0 4px var(--green-dim);
-  }
-  .embed-wrap.is-fallback .embed-likec4-cta__status {
-    background: var(--accent2);
-    box-shadow: 0 0 0 4px var(--accent2-dim);
-  }
-  .embed-wrap.is-loading .embed-likec4-cta__status {
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255, 255, 255, 0.16);
-    border-top-color: var(--accent);
-    background: transparent; box-shadow: none;
-    animation: embed-loader-spin 0.9s linear infinite;
-  }
-  .embed-wrap .embed-likec4-cta__label {
-    white-space: nowrap;
-  }
+  .embed-wrap .embed-likec4-cta,
   .embed-wrap .embed-loader {
-    position: absolute; inset: 0; display: none; flex-direction: column;
-    align-items: center; justify-content: center; gap: 14px;
-    z-index: 3;
-    padding: 32px;
-    background: var(--surface2);
-    color: var(--text); text-align: center;
-    border: 1px dashed var(--border-bright);
-    border-radius: 8px;
-  }
-  .embed-wrap[data-load-mode="manual"]:not(.is-loading):not(.is-loaded):not(.is-fallback) .embed-loader {
-    display: flex;
-  }
-  .embed-wrap[data-load-mode="manual"]:not(.is-loading):not(.is-loaded):not(.is-fallback) .embed-controls {
-    opacity: 0; pointer-events: none;
-  }
-  .embed-wrap[data-load-mode="manual"] .embed-loader {
-    gap: 0;
-    padding: 0;
-  }
-  .embed-wrap[data-load-mode="manual"] .embed-loader__spinner,
-  .embed-wrap[data-load-mode="manual"] .embed-loader__title,
-  .embed-wrap[data-load-mode="manual"] .embed-loader__hint,
-  .embed-wrap[data-load-mode="manual"] .embed-likec4-cta {
     display: none !important;
-  }
-  .embed-wrap .embed-loader__spinner {
-    width: 26px; height: 26px; border-radius: 50%;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    box-shadow: 0 0 0 1px var(--border-bright);
-  }
-  .embed-wrap.is-loading .embed-loader__spinner {
-    animation: embed-loader-spin 0.9s linear infinite;
-  }
-  .embed-wrap .embed-loader__title {
-    margin: 0; font-size: clamp(14px, 1.4vw, 18px); font-weight: 700; color: var(--text);
-  }
-  .embed-wrap .embed-loader__hint {
-    margin: 0; max-width: 34ch; line-height: 1.5;
-    font-size: clamp(11px, 1vw, 13px); color: var(--text-dim);
-  }
-  .embed-wrap .embed-loader__button {
-    display: inline-flex; align-items: center; justify-content: center;
-    min-width: 208px; min-height: 42px; padding: 0 20px;
-    border-radius: 999px;
-    border: 1.5px solid var(--accent);
-    background: var(--surface);
-    color: var(--accent);
-    font-family: var(--font-mono); font-size: calc(12px + var(--font-bump)); font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
-  }
-  .embed-wrap .embed-loader__button:hover {
-    transform: translateY(-1px);
-    background: var(--accent);
-    color: #ffffff;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-  }
-  .embed-wrap.is-loading .embed-loader__button {
-    opacity: 0.78; pointer-events: none;
   }
   .embed-wrap .embed-fallback {
     position: absolute; inset: 0; display: none; flex-direction: column;
@@ -2215,7 +2212,7 @@
       width: 100%;
       position: relative;
     }
-    /* Bouton interactif pour basculer les colonnes (dans un carré arrondi) */
+    /* Bouton interactif pour basculer les colonnes (dans un badge blueprint architectural) */
     .code-preview__split-toggle {
       position: absolute;
       top: 50%;
@@ -2225,19 +2222,20 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
       border: 1.5px solid var(--border-bright);
       background: var(--surface);
-      color: var(--text-dim);
+      color: var(--accent);
       font-family: var(--font-mono);
-      font-size: 11px;
+      font-size: calc(12px + var(--font-bump));
       font-weight: 700;
       letter-spacing: -1px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10);
       transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
     }
     .slide--code-preview[data-split="half"] .code-preview__split-toggle,
     .slide--code-preview[data-split-mode="half"]:not([data-split="third"]) .code-preview__split-toggle {
@@ -2248,9 +2246,10 @@
     }
     .code-preview__split-toggle:hover {
       border-color: var(--accent);
-      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+      color: var(--accent-hover, var(--accent));
       transform: translate(-50%, -50%) scale(1.12);
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
     }
     @media (max-width: 900px), (max-height: 560px) {
       .code-preview__split-toggle {
@@ -2309,7 +2308,9 @@
     }
     .slide--code-preview .slide__code-block code {
       display: block;
-      width: 100%;
+      min-width: 100%;
+      width: max-content;
+      box-sizing: border-box;
       font-size: calc(clamp(10.5px, 0.9vw, 12.5px) + var(--font-bump));
       line-height: 1.45;
     }
@@ -3843,6 +3844,10 @@
       opacity: 1;
       border-left: 3.5px solid var(--accent);
       padding-left: 6px;
+      display: block;
+      min-width: 100%;
+      width: 100%;
+      box-sizing: border-box;
     }
     .slide--live-coding .live-coding__code-block,
     .slide--c2-evolution .live-coding__code-block,
@@ -3865,6 +3870,9 @@
       display: block;
       font-size: 0;
       line-height: 0;
+      min-width: 100%;
+      width: max-content;
+      box-sizing: border-box;
     }
     .slide--live-coding .live-coding__code-block .line-ctx,
     .slide--live-coding .live-coding__code-block .line-add,
@@ -3876,6 +3884,8 @@
     .live-coding__code-block .line-add,
     .live-coding__code-block .line-mod {
       display: block;
+      min-width: 100%;
+      width: 100%;
       font-size: calc(clamp(9.5px, 0.84vw, 11.5px) + var(--font-bump));
       line-height: 1.35;
       white-space: pre;
@@ -4075,6 +4085,39 @@
       min-height: 0;
       border: none;
       background: #fff;
+    }
+    @media (max-width: 960px), (max-height: 560px) {
+      .pr-backup-modal {
+        padding: 0 !important;
+      }
+      .pr-backup-modal__card {
+        width: 100vw !important;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        border-radius: 0 !important;
+        border: none !important;
+      }
+      .pr-backup-modal__header {
+        padding: 4px 8px !important;
+        gap: 6px !important;
+      }
+      .pr-backup-modal__title {
+        font-size: 11px !important;
+        max-width: 140px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .pr-backup-modal__nav {
+        gap: 4px !important;
+      }
+      .pr-backup-modal__nav-btn {
+        padding: 2px 7px !important;
+        font-size: 10px !important;
+      }
+      .pr-backup-modal__tab-btn {
+        padding: 2px 7px !important;
+        font-size: 10px !important;
+      }
     }
     .slide--live-coding .live-coding__embed-wrap {
       flex: 1 1 auto;
@@ -4965,6 +5008,10 @@
   .slide__code-block code {
     font-size: calc(14px + var(--font-bump));
     line-height: 1.55;
+    display: block;
+    min-width: 100%;
+    width: max-content;
+    box-sizing: border-box;
   }
 
   .line-highlight {
@@ -4972,18 +5019,75 @@
     border-left: 3px solid var(--accent);
     padding-left: 4px;
     margin-left: -7px;
-    display: inline-block;
-    width: calc(100% + 7px);
+    display: block;
+    min-width: calc(100% + 7px);
+    width: 100%;
+    box-sizing: border-box;
   }
 
   /* ============ RESPONSIVE GENERAL ============ */
   @media (max-height: 700px) {
-    .slide { padding: clamp(16px, 3vh, 32px) clamp(24px, 4vw, 60px); }
-    .slide__display { font-size: clamp(32px, 7vh, 64px); }
+    .slide { padding: clamp(14px, 2.8vh, 28px) clamp(20px, 3.5vw, 50px); }
+    .slide__display { font-size: clamp(28px, 6.5vh, 56px); }
+  }
+  @media (max-height: 560px) {
+    .slide {
+      padding: clamp(8px, 1.8vh, 14px) clamp(16px, 3vw, 36px) !important;
+    }
+    .slide__label {
+      margin-bottom: 2px !important;
+      font-size: calc(clamp(9.5px, 0.95vw, 11px) + var(--font-bump)) !important;
+    }
+    .slide__heading {
+      margin-bottom: 4px !important;
+      font-size: calc(clamp(15px, 2.1vw, 20px) + var(--font-bump)) !important;
+      line-height: 1.15 !important;
+    }
+    .slide--diagram {
+      --diagram-node-font-size: calc(14px + var(--font-bump));
+      --diagram-edge-label-size: calc(11px + var(--font-bump));
+    }
+    .slide--diagram-sdlc {
+      --diagram-node-font-size: calc(14px + var(--font-bump));
+      --diagram-edge-label-size: calc(11px + var(--font-bump));
+    }
+    .slide--diagram-sdlc .mermaid .cluster-label text,
+    .slide--diagram-sdlc .mermaid .cluster text {
+      font-size: calc(12px + var(--font-bump)) !important;
+    }
+    .slide--diagram-sdlc .slide__body {
+      font-size: calc(clamp(10.5px, 1vw, 12.5px) + var(--font-bump)) !important;
+      line-height: 1.32 !important;
+      margin-bottom: 4px !important;
+      max-width: 80ch !important;
+    }
+    .slide--diagram-sdlc:not(.slide--code-preview) .mermaid-wrap {
+      max-height: none !important;
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      padding: 6px 10px !important;
+    }
+    .slide--diagram-flow:not(.slide--code-preview) .mermaid-wrap {
+      max-height: none !important;
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      padding: 6px 10px !important;
+    }
+    .proof-banner {
+      margin: 4px auto 0 auto !important;
+      padding: 3px clamp(8px, 1.2vw, 12px) !important;
+      font-size: calc(clamp(9.5px, 0.85vw, 11px) + var(--font-bump)) !important;
+      line-height: 1.25 !important;
+    }
   }
   @media (max-width: 768px) {
     .slide--content .slide__inner { grid-template-columns: 1fr; }
-    .slide--content .slide__aside { display: none; }
+    .slide--content:not(.slide--portal-vivant):not(.slide--code-preview) .slide__aside { display: none; }
+    .slide--portal-vivant .slide__aside,
+    .slide--portal-vivant .portal-vivant__embed-pane {
+      display: flex !important;
+      min-height: 260px;
+    }
     .slide--speaker .slide__aside {
       display: grid;
       min-height: auto;
@@ -4992,8 +5096,25 @@
       grid-template-columns: 1fr;
     }
     .speaker-proof { grid-template-columns: 1fr; }
-    .slide--code-preview .slide__inner { grid-template-columns: 1fr; }
-    .slide--code-preview .slide__aside { display: flex; }
+    .slide--code-preview .slide__inner {
+      grid-template-columns: 1fr;
+      overflow-y: auto !important;
+      max-height: calc(100dvh - 120px) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 12px !important;
+    }
+    .slide--code-preview .slide__code-block {
+      flex: none !important;
+      max-height: 280px !important;
+      overflow-y: auto !important;
+    }
+    .slide--code-preview .slide__aside {
+      display: flex !important;
+      min-height: 260px !important;
+      height: 300px !important;
+      flex: none !important;
+    }
     .slide--split .slide__panels { grid-template-columns: 1fr; }
     .slide--split-bleed {
       background:
@@ -5013,6 +5134,34 @@
     .deck-dots { max-width: calc(100vw - 24px); }
     .key-grid,
     .system-lanes { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 1024px) and (orientation: landscape) {
+    .slide--code-preview .slide__inner {
+      display: grid !important;
+      grid-template-columns: minmax(0, var(--code-preview-code-col, 1fr)) minmax(0, var(--code-preview-preview-col, 1fr)) !important;
+      overflow-y: hidden !important;
+      max-height: none !important;
+      flex-direction: row !important;
+      gap: 12px !important;
+    }
+    .slide--code-preview .slide__code-block {
+      flex: 1 1 auto !important;
+      max-height: none !important;
+      height: 100% !important;
+    }
+    .slide--code-preview .slide__aside {
+      display: flex !important;
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      height: 100% !important;
+    }
+    .slide--portal-vivant .slide__inner {
+      grid-template-columns: 1fr 1fr !important;
+    }
+    .slide--portal-vivant .slide__aside {
+      display: flex !important;
+    }
   }
 
   /* ============ ACCESSIBILITY ============ */
@@ -5302,14 +5451,17 @@
 }
 
 /* ==========================================================================
-   MOBILE ORIENTATION LOCK OVERLAY (Blocage obligatoire en mode portrait)
+   MOBILE ORIENTATION LOCK OVERLAY (Blocage / recommandation en mode portrait)
    ========================================================================== */
 .orientation-lock-overlay {
   display: none;
 }
+.orientation-lock-overlay.is-bypassed {
+  display: none !important;
+}
 
 @media screen and (orientation: portrait) and (max-width: 899px) {
-  .orientation-lock-overlay {
+  .orientation-lock-overlay:not(.is-bypassed) {
     display: flex !important;
     position: fixed;
     inset: 0;
@@ -5319,34 +5471,36 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 32px 24px;
+    padding: 24px 16px;
     text-align: center;
     user-select: none;
+    box-sizing: border-box;
   }
 
   .orientation-lock-card {
     background: var(--surface);
     border: 2px solid var(--border-bright);
     border-radius: 16px;
-    padding: 36px 28px;
+    padding: 28px 20px;
     max-width: 360px;
     width: 100%;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
+    box-sizing: border-box;
   }
 
   .orientation-lock-icon {
-    width: 64px;
-    height: 64px;
+    width: 56px;
+    height: 56px;
     color: var(--accent);
     animation: rotatePhone 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 
   .orientation-lock-title {
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 700;
     line-height: 1.3;
     color: var(--text);
@@ -5354,10 +5508,57 @@
   }
 
   .orientation-lock-desc {
-    font-size: 15px;
-    line-height: 1.5;
+    font-size: 14px;
+    line-height: 1.45;
     color: var(--text-dim);
     margin: 0;
+  }
+
+  .orientation-lock-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .orientation-lock-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 16px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.18s ease;
+  }
+
+  .orientation-lock-btn--primary {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    box-shadow: 0 4px 12px rgba(251, 254, 122, 0.25);
+  }
+
+  .orientation-lock-btn--primary:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+  }
+
+  .orientation-lock-btn--secondary {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .orientation-lock-btn--secondary:hover {
+    color: var(--text);
+    border-color: var(--border-bright);
   }
 
   @keyframes rotatePhone {
@@ -5890,7 +6091,7 @@
 
   /* Code preview & LikeC4 : colonnes de code et rendu adjacent STRICTEMENT de même hauteur */
   .slide--code-preview .slide__inner {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr) !important;
+    grid-template-columns: minmax(0, var(--code-preview-code-col, 1.05fr)) minmax(0, var(--code-preview-preview-col, 0.95fr)) !important;
     gap: 10px !important;
     align-items: stretch !important;
     flex: 1 1 0 !important;
@@ -5955,11 +6156,17 @@
     line-height: 1.35 !important;
   }
 
-  .slide--code-preview .embed-wrap iframe,
-  .slide--code-preview .embed-wrap .embed-fallback {
+  .slide--code-preview .embed-wrap iframe {
     width: 100% !important;
     height: 100% !important;
     display: block !important;
+    border: none !important;
+  }
+
+  .slide--code-preview .embed-wrap .embed-fallback.visible {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
     border: none !important;
   }
 
@@ -6492,17 +6699,33 @@
 </head>
 <body>
 
-<!-- Overlay de verrouillage d'orientation mobile (forcé en paysage) -->
-<div class="orientation-lock-overlay" aria-hidden="true">
+<!-- Overlay de verrouillage d'orientation mobile (forcé en paysage avec Screen Orientation API) -->
+<div class="orientation-lock-overlay" id="orientation-lock-overlay" aria-hidden="true">
   <div class="orientation-lock-card">
-    <svg class="orientation-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg class="orientation-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
       <line x1="12" y1="18" x2="12.01" y2="18"></line>
     </svg>
     <h2 class="orientation-lock-title">Pivotez votre &eacute;cran</h2>
-    <p class="orientation-lock-desc">Veuillez faire pivoter votre &eacute;cran en mode paysage (horizontal).</p>
+    <p class="orientation-lock-desc">Ce support de conf&eacute;rence est optimis&eacute; pour un affichage en mode paysage (horizontal).</p>
+    <div class="orientation-lock-actions">
+      <button type="button" class="orientation-lock-btn orientation-lock-btn--primary" id="btn-lock-landscape" onclick="if(typeof attemptLockLandscape==='function')attemptLockLandscape();">
+        <span>Basculer en plein &eacute;cran paysage</span>
+      </button>
+      <button type="button" class="orientation-lock-btn orientation-lock-btn--secondary" id="btn-bypass-orientation" onclick="if(typeof bypassOrientationLock==='function')bypassOrientationLock();">
+        <span>Continuer en portrait</span>
+      </button>
+    </div>
   </div>
 </div>
+<script>
+  try {
+    if (sessionStorage.getItem('dac_orientation_bypassed') === '1') {
+      var _ov = document.getElementById('orientation-lock-overlay');
+      if (_ov) _ov.classList.add('is-bypassed');
+    }
+  } catch (_) {}
+</script>
 
 <div class="deck">
   <!-- Slide 0: Titre -->
@@ -6895,7 +7118,7 @@
       <div class="slide__aside reveal c1-generated__pane c1-generated__pane--embed code-preview__pane code-preview__pane--embed">
         <div class="code-preview__frame">
           <span class="slide__code-filename">Vue C1</span>
-          <div class="embed-wrap reveal" id="coffee-v1-c1-embed" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000">
+          <div class="embed-wrap reveal" id="coffee-v1-c1-embed" data-embed-kind="likec4" data-embed-timeout="10000">
             <div class="embed-controls">
               <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
               <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
@@ -7051,7 +7274,7 @@
       <div class="slide__aside reveal c1-generated__pane c1-generated__pane--embed code-preview__pane code-preview__pane--embed">
         <div class="code-preview__frame">
           <span class="slide__code-filename">Vue C2</span>
-          <div class="embed-wrap reveal" id="coffee-v1-c2-embed" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000">
+          <div class="embed-wrap reveal" id="coffee-v1-c2-embed" data-embed-kind="likec4" data-embed-timeout="10000">
             <div class="embed-controls">
               <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
               <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
@@ -7246,7 +7469,7 @@
       <div class="slide__aside reveal seq-likec4__pane seq-likec4__pane--embed code-preview__pane code-preview__pane--embed">
         <div class="code-preview__frame">
           <span class="slide__code-filename">Use Case</span>
-          <div class="embed-wrap reveal" id="coffee-v2-seq-embed-likec4" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000">
+          <div class="embed-wrap reveal" id="coffee-v2-seq-embed-likec4" data-embed-kind="likec4" data-embed-timeout="10000">
             <div class="embed-controls">
               <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
               <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
@@ -7526,40 +7749,40 @@ gitGraph
   </section>
 
   <!-- Slide 27: Cycle de développement élargi -->
-<section class="slide slide--diagram slide--diagram-flow" data-nav="Cycle de développement élargi">
+<section class="slide slide--diagram slide--diagram-flow slide--diagram-sdlc" data-nav="Cycle de développement élargi">
     <p class="slide__label reveal" style="color:var(--green);">Industrialisation &amp; Gouvernance</p>
     <h2 class="slide__heading reveal">Le cycle de d&eacute;veloppement &eacute;largi &agrave; l'architecture</h2>
-    <p class="slide__body reveal" style="margin-bottom: clamp(6px, 1.2vh, 14px); max-width: 960px;">Faire de l'architecture un citoyen de premier rang&nbsp;: co-&eacute;volution du code et du mod&egrave;le dans le m&ecirc;me cycle de vie logiciel.</p>
+    <p class="slide__body reveal" style="margin-bottom: clamp(6px, 1.2vh, 14px); max-width: 960px;">Faire de l'architecture un citoyen de premier rang&nbsp;: co-&eacute;volution du code et du mod&egrave;le dans le m&ecirc;me cycle de vie logiciel (SDLC).</p>
     
-    <div class="mermaid-wrap reveal">
+    <div class="mermaid-wrap reveal" data-fit-mode="contain" data-fit-scale-max="2.5" data-initial-zoom="1.0" data-center-viewport-on-reveal="always" data-wheel-zoom="true">
       <div class="zoom-controls" role="toolbar" aria-label="Commandes de zoom du pipeline CI/CD">
         <button type="button" data-zoom-action="in" data-zoom-factor="1.2" title="Zoom avant" aria-label="Zoom avant">+</button>
         <button type="button" data-zoom-action="out" data-zoom-factor="0.8" title="Zoom arrière" aria-label="Zoom arrière">&minus;</button>
         <button type="button" data-zoom-action="reset" title="Réinitialiser le zoom" aria-label="Réinitialiser le zoom">&#8634;</button>
       </div>
-      <div class="mermaid-scroll">
+      <div class="mermaid-scroll" role="img" aria-label="Pipeline de CI/CD et cycle de vie logiciel intégrant l'architecture as code">
       <pre class="mermaid">
 flowchart LR
   subgraph DEV["1. Évolution (branche Git)"]
     direction TB
-    Archi["📐 Architecture as Code<br/><code>model.c4</code> + <code>ADR.md</code>"]
-    Code["💻 Code applicatif<br/><code>src/**</code> + tests"]
+    Archi["📐 Architecture as Code<br/><b>model.c4 + ADR.md</b>"]
+    Code["💻 Code applicatif<br/><b>src/** + tests</b>"]
   end
 
   subgraph PR["2. Revue conjointe"]
-    PRBox["🔀 Pull Request unifiée<br/>Diff de code + Bot Visual Diff"]
+    PRBox["🔀 PR Unifiée<br/>Diff code + Visual Diff"]
   end
 
-  subgraph CI["3. Intégration Continue (CI)"]
+  subgraph CI["3. Intégration Continue"]
     direction TB
-    ValArchi["✅ CI Architecture<br/>Validation LikeC4 CLI et intégrité"]
-    TestCode["🧪 CI Applicative<br/>Lint, tests unitaires et build"]
+    ValArchi["✅ CI Architecture<br/>LikeC4 CLI & intégrité"]
+    TestCode["🧪 CI Applicative<br/>Lint, tests & build"]
   end
 
-  subgraph CD["4. Livraison Continue (CD)"]
+  subgraph CD["4. Livraison Continue"]
     direction TB
     DeployDoc["🗺️ CD Documentation<br/>Portail vivant compilé"]
-    DeployApp["🚀 CD Logicielle<br/>Services et conteneurs en prod"]
+    DeployApp["🚀 CD Logicielle<br/>Services & conteneurs prod"]
   end
 
   SYNC("🎯 Zéro dérive documentaire<br/>Miroir de la production")
@@ -7576,10 +7799,10 @@ flowchart LR
   DeployDoc --> SYNC
   DeployApp --> SYNC
 
-  classDef gold fill:#fef3c7,stroke:#b45309,stroke-width:2px;
-  classDef blue fill:#e0f2fe,stroke:#0284c7,stroke-width:2px;
-  classDef green fill:#dcfce7,stroke:#16a34a,stroke-width:2px;
-  classDef purple fill:#f3e8ff,stroke:#9333ea,stroke-width:2px;
+  classDef gold stroke-width:2.5px;
+  classDef blue stroke-width:2.5px;
+  classDef green stroke-width:2.5px;
+  classDef purple stroke-width:2.5px;
 
   class Archi,ValArchi,DeployDoc blue;
   class Code,TestCode,DeployApp gold;
@@ -7766,7 +7989,7 @@ flowchart TD
           <div class="slide__aside reveal c2-likec4__pane c2-likec4__pane--embed code-preview__pane code-preview__pane--embed">
             <div class="code-preview__frame">
               <span class="slide__code-filename">Vue C2</span>
-              <div class="embed-wrap reveal" id="coffee-v2-c2-embed-likec4" data-embed-kind="likec4" data-load-mode="manual" data-embed-timeout="10000" data-likec4-fit-on-load="true">
+              <div class="embed-wrap reveal" id="coffee-v2-c2-embed-likec4" data-embed-kind="likec4" data-embed-timeout="10000" data-likec4-fit-on-load="true">
                 <div class="embed-controls">
                   <button onclick="reloadEmbed(this)" title="Recharger">↻</button>
                   <button onclick="openEmbedExternal(this)" title="Ouvrir externe">↗</button>
@@ -7821,15 +8044,16 @@ flowchart TD
         <p class="slide__label reveal" style="color:var(--accent4);">Généraliser la pratique</p>
         <h2 class="slide__heading reveal">Passer &agrave; l'&eacute;chelle&nbsp;: legacy, r&eacute;seau et gouvernance</h2>
         <p class="slide__body reveal" style="margin-top:2px; margin-bottom:clamp(10px, 1.8vh, 18px); color:var(--text-dim); max-width:85ch;">
-          <em>&laquo;&nbsp;Et sur un syst&egrave;me existant avec 15 ans d'historique et 300 machines&nbsp;?&nbsp;&raquo;</em> Pas de grand soir&nbsp;: une d&eacute;marche pragmatique et progressive.
+          <em>&laquo;&nbsp;Et sur un syst&egrave;me existant avec 15 ans d'historique et 300 machines&nbsp;?&nbsp;&raquo;</em> Pas de grand soir&nbsp;: ing&eacute;nierie inverse assist&eacute;e par IA et d&eacute;marche d'attrition progressive.
         </p>
         <div class="concept-grid concept-grid--3" style="margin-top:clamp(8px, 1.8vh, 18px);">
           <div class="concept-card concept-card--blue reveal">
-            <p class="concept-card__step">01 &middot; Existant</p>
-            <h3 class="concept-card__title">Strangler Fig &amp; Attrition</h3>
+            <p class="concept-card__step">01 &middot; Existant &amp; IA</p>
+            <h3 class="concept-card__title">R&eacute;tro-ing&eacute;nierie &amp; Strangler</h3>
             <ul class="concept-card__list">
-              <li><strong>Cibler en priorit&eacute;</strong> les briques en transformation</li>
-              <li><strong>Remplacer le legacy</strong> au fil de l'eau sans grand soir</li>
+              <li><strong>Scanners statiques &amp; AST</strong> : cartographier routes, RPC et flux DB</li>
+              <li><strong>Agents LLM</strong> : inf&eacute;rer les fronti&egrave;res C4 et amorcer le LikeC4</li>
+              <li><strong>Contr&ocirc;le architecte</strong> : valider et remplacer au fil de l'eau</li>
             </ul>
           </div>
           <div class="concept-card concept-card--orange reveal">
@@ -8235,6 +8459,8 @@ flowchart TD
   // --- laser.js ---
 /* ============ Laser pointer ============ */
   (function initLaserPointer() {
+    // En mode aperçu pupitre, le curseur OS natif est utilisé : désactiver le laser virtuel pour libérer 100% du CPU
+    if (document.documentElement.classList.contains('is-iframe-preview')) return;
     if (!window.matchMedia || !window.matchMedia('(any-pointer: fine)').matches) return;
     var laser = document.querySelector('.laser-pointer');
     if (!laser) return;
@@ -8248,6 +8474,7 @@ flowchart TD
 
     function paint() {
       rafId = 0;
+      // Réactivité maximale 1:1 instantanée sans décalage ni traînée
       currentX = targetX;
       currentY = targetY;
       laser.style.transform = 'translate3d(' + Math.round(currentX) + 'px, ' + Math.round(currentY) + 'px, 0) translate(-50%, -50%) scale(' + scale + ')';
@@ -8257,14 +8484,24 @@ flowchart TD
       if (!rafId) rafId = window.requestAnimationFrame(paint);
     }
 
-    function moveTo(clientX, clientY) {
+    function moveTo(clientX, clientY, instant) {
       if (typeof clientX !== 'number' || typeof clientY !== 'number') return;
       targetX = clientX;
       targetY = clientY;
-      schedulePaint();
+      currentX = targetX;
+      currentY = targetY;
+      if (laser) {
+        laser.style.transform = 'translate3d(' + Math.round(currentX) + 'px, ' + Math.round(currentY) + 'px, 0) translate(-50%, -50%) scale(' + scale + ')';
+        if (!visible) {
+          visible = true;
+          document.body.classList.add('laser-cursor-enabled');
+          laser.classList.add('is-visible');
+        }
+      }
     }
 
     function reveal(evt) {
+      if (evt && !evt.isTrusted) return;
       if (evt && evt.pointerType && evt.pointerType !== 'mouse' && evt.pointerType !== 'pen') {
         conceal();
         return;
@@ -8289,6 +8526,7 @@ flowchart TD
     }
 
     function press(evt) {
+      if (evt && !evt.isTrusted) return;
       reveal(evt);
       scale = 1.06;
       laser.classList.add('is-active');
@@ -8300,6 +8538,91 @@ flowchart TD
       laser.classList.remove('is-active');
       schedulePaint();
     }
+
+    window.laserPointer = {
+      moveTo: moveTo,
+      reveal: reveal,
+      conceal: conceal,
+      press: press,
+      release: release,
+      paint: paint
+    };
+
+    function attachIframePointerTracking(iframe) {
+      if (!iframe) return;
+      try {
+        var doc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!doc || !doc.body || doc._laserDocAttached) return;
+        doc._laserDocAttached = true;
+
+        // Cacher le curseur système par défaut dans l'iframe uniquement sur la projection publique
+        if (!document.documentElement.classList.contains('is-iframe-preview')) {
+          var style = doc.createElement('style');
+          style.textContent = 'body, body * { cursor: none !important; }';
+          doc.head.appendChild(style);
+        }
+
+        var cachedRect = null;
+        function updateRect() {
+          try { cachedRect = iframe.getBoundingClientRect(); } catch(_) {}
+        }
+        window.addEventListener('resize', updateRect, { passive: true });
+        window.addEventListener('scroll', updateRect, { passive: true });
+        iframe.addEventListener('mouseenter', updateRect, { passive: true });
+        updateRect();
+
+        function handleIframePointer(evt) {
+          if (evt && !evt.isTrusted) return;
+          if (!cachedRect) updateRect();
+          var px = (cachedRect ? cachedRect.left : 0) + evt.clientX;
+          var py = (cachedRect ? cachedRect.top : 0) + evt.clientY;
+          moveTo(px, py, true);
+          if (!visible) {
+            visible = true;
+            document.body.classList.add('laser-cursor-enabled');
+            laser.classList.add('is-visible');
+          }
+        }
+
+        doc.addEventListener('pointermove', handleIframePointer, { passive: true });
+        if (!window.PointerEvent) {
+          doc.addEventListener('mousemove', handleIframePointer, { passive: true });
+        }
+        doc.addEventListener('pointerdown', function(evt) {
+          handleIframePointer(evt);
+          scale = 1.06;
+          laser.classList.add('is-active');
+          schedulePaint();
+        }, { passive: true });
+        doc.addEventListener('pointerup', function() {
+          scale = 1;
+          laser.classList.remove('is-active');
+          schedulePaint();
+        }, { passive: true });
+      } catch(e) {}
+    }
+
+    function scanAndAttachIframes() {
+      document.querySelectorAll('iframe').forEach(function(iframe) {
+        if (!iframe._laserLoadHooked) {
+          iframe._laserLoadHooked = true;
+          iframe.addEventListener('load', function() {
+            attachIframePointerTracking(iframe);
+          });
+        }
+        attachIframePointerTracking(iframe);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', scanAndAttachIframes);
+    } else {
+      scanAndAttachIframes();
+    }
+    try {
+      var iframeObserver = new MutationObserver(scanAndAttachIframes);
+      iframeObserver.observe(document.body, { childList: true, subtree: true });
+    } catch(e) {}
 
     document.addEventListener('pointermove', reveal, { passive: true });
     if (!window.PointerEvent) {
@@ -8338,89 +8661,12 @@ flowchart TD
       wrap._embedFallbackTimer = 0;
     }
   }
-  function updateLikeC4ActionState(wrap) {
-    var button = wrap ? wrap.querySelector('.embed-likec4-cta') : null;
-    var label = button ? button.querySelector('.embed-likec4-cta__label') : null;
-    if (!button || !label) return;
-
-    var isLoading = wrap.classList.contains('is-loading');
-    var isLoaded = wrap.classList.contains('is-loaded');
-    var isFallback = wrap.classList.contains('is-fallback');
-
-    button.disabled = !!isLoading;
-    button.classList.toggle('is-busy', isLoading);
-    button.setAttribute('aria-busy', isLoading ? 'true' : 'false');
-    label.textContent = isLoading ? 'Chargement LikeC4…' : 'Rendu LikeC4';
-
-    if (isLoading) {
-      button.setAttribute('title', 'Chargement du rendu LikeC4');
-      button.setAttribute('aria-label', 'Chargement du rendu LikeC4');
-    } else if (isLoaded) {
-      button.setAttribute('title', 'Recharger le rendu LikeC4');
-      button.setAttribute('aria-label', 'Recharger le rendu LikeC4');
-    } else if (isFallback) {
-      button.setAttribute('title', 'Réessayer le rendu LikeC4');
-      button.setAttribute('aria-label', 'Réessayer le rendu LikeC4');
-    } else {
-      button.setAttribute('title', 'Rendu');
-      button.setAttribute('aria-label', 'Rendu');
-    }
-  }
-  function updateEmbedLoaderState(wrap, isLoading) {
-    var loader = wrap ? wrap.querySelector('.embed-loader') : null;
-    if (!loader) return;
-    var button = loader.querySelector('.embed-loader__button');
-    var hint = loader.querySelector('.embed-loader__hint');
-    if (button) {
-      button.disabled = !!isLoading;
-      button.textContent = isLoading ? 'Chargement LikeC4…' : 'Rendu';
-    }
-    if (hint) {
-      hint.textContent = isLoading
-        ? 'Le rendu démarre… je lui laisse un peu plus de temps avant le fallback.'
-        : 'Déclenche le chargement quand tu veux.';
-    }
-  }
-  function ensureLikeC4PrimaryAction(wrap) {
-    if (!isLikeC4Embed(wrap) || isManualEmbed(wrap) || wrap.querySelector('.embed-likec4-cta')) return;
-    var button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'embed-likec4-cta';
-    button.innerHTML = [
-      '<span class="embed-likec4-cta__status" aria-hidden="true"></span>',
-      '<span class="embed-likec4-cta__label">Rendu</span>'
-    ].join('');
-    button.addEventListener('click', function() {
-      startEmbedLoad(wrap, { forceReload: wrap.classList.contains('is-loaded') || wrap.classList.contains('is-fallback') });
-    });
-    wrap.appendChild(button);
-  }
-  function ensureManualEmbedLoader(wrap) {
-    if (!isManualEmbed(wrap) || wrap.querySelector('.embed-loader')) return;
-    var fallback = wrap.querySelector('.embed-fallback');
-    var loader = document.createElement('div');
-    loader.className = 'embed-loader';
-    loader.setAttribute('aria-live', 'polite');
-    loader.innerHTML = [
-      '<button type="button" class="embed-loader__button">Rendu</button>'
-    ].join('');
-    loader.querySelector('.embed-loader__button').addEventListener('click', function() {
-      startEmbedLoad(wrap);
-    });
-    if (fallback) {
-      wrap.insertBefore(loader, fallback);
-    } else {
-      wrap.appendChild(loader);
-    }
-  }
   function markEmbedLoaded(wrap) {
     clearEmbedFallbackTimer(wrap);
     wrap.classList.remove('is-loading', 'is-fallback');
     wrap.classList.add('is-loaded');
     var fallback = wrap.querySelector('.embed-fallback');
     if (fallback) fallback.classList.remove('visible');
-    updateEmbedLoaderState(wrap, false);
-    updateLikeC4ActionState(wrap);
   }
   function showEmbedFallback(wrap) {
     clearEmbedFallbackTimer(wrap);
@@ -8428,12 +8674,11 @@ flowchart TD
     wrap.classList.add('is-fallback');
     var fallback = wrap.querySelector('.embed-fallback');
     if (fallback) fallback.classList.add('visible');
-    updateEmbedLoaderState(wrap, false);
-    updateLikeC4ActionState(wrap);
   }
   function armEmbedFallbackTimer(wrap, iframe) {
     clearEmbedFallbackTimer(wrap);
     wrap._embedFallbackTimer = window.setTimeout(function() {
+      if (wrap.classList.contains('is-loaded')) return;
       try {
         var doc = iframe.contentDocument || iframe.contentWindow.document;
         if (doc && doc.body && doc.body.children.length > 0) {
@@ -8441,7 +8686,12 @@ flowchart TD
           return;
         }
       } catch (e) {
-        /* Cross-origin or blocked — fall through to the fallback overlay. */
+        /* En local (file://) ou cross-origin, l'accès au DOM iframe lève une exception de sécurité légitime.
+           Si l'iframe a une source valide sans erreur explicite, on valide le chargement. */
+        if (iframe.src && iframe.src !== 'about:blank') {
+          markEmbedLoaded(wrap);
+          return;
+        }
       }
       showEmbedFallback(wrap);
     }, getEmbedTimeout(wrap));
@@ -8475,10 +8725,23 @@ flowchart TD
     if (fallback) fallback.classList.remove('visible');
     wrap.classList.remove('is-fallback', 'is-loaded');
     wrap.classList.add('is-loading');
-    updateEmbedLoaderState(wrap, true);
-    updateLikeC4ActionState(wrap);
 
     var targetUrl = getThemeAdjustedUrl(iframe.dataset.src);
+    if (!wrap._likec4LoadListenerAttached) {
+      wrap._likec4LoadListenerAttached = true;
+      iframe.addEventListener('load', function() {
+        markEmbedLoaded(wrap);
+        scheduleLikeC4ViewportTuning(wrap, true);
+        attachLikeC4PreviewMirror(wrap);
+        try {
+          var currentTheme = document.documentElement.getAttribute('data-theme') || 'google-blueprint-light';
+          iframe.contentWindow.postMessage({ type: 'deck-theme-change', theme: currentTheme }, '*');
+        } catch (e) {}
+      });
+      iframe.addEventListener('error', function() {
+        showEmbedFallback(wrap);
+      });
+    }
     if (forceReload && iframe.src) {
       iframe.src = targetUrl;
     } else if (!iframe.src || forceReload) {
@@ -8487,6 +8750,18 @@ flowchart TD
 
     armEmbedFallbackTimer(wrap, iframe);
   }
+  window.startEmbedLoad = startEmbedLoad;
+
+  function loadSlideEmbeds(slide) {
+    if (!slide) return;
+    var wraps = slide.querySelectorAll('.embed-wrap');
+    wraps.forEach(function(wrap) {
+      if (!wrap.classList.contains('is-loaded') && !wrap.classList.contains('is-loading')) {
+        startEmbedLoad(wrap);
+      }
+    });
+  }
+  window.loadSlideEmbeds = loadSlideEmbeds;
   function reloadEmbed(btn) {
     var wrap = btn.closest('.embed-wrap');
     startEmbedLoad(wrap, { forceReload: true });
@@ -8527,10 +8802,61 @@ flowchart TD
       var fitClicks = String(wrap.dataset.likec4FitOnLoad || 'true').toLowerCase() === 'false' ? 0 : 1;
       var fitDone = triggerLikeC4Control(doc, '.react-flow__controls-fitview', fitClicks);
       var zoomOutDone = triggerLikeC4Control(doc, '.react-flow__controls-zoomout', getLikeC4ZoomOutSteps(wrap));
+      attachLikeC4PreviewMirror(wrap);
       return !!(fitDone || zoomOutDone);
     } catch (e) {
       return false;
     }
+  }
+  function attachLikeC4PreviewMirror(wrap) {
+    if (!document.documentElement.classList.contains('is-iframe-preview')) return;
+    if (wrap._likec4MirrorAttached) return;
+    var iframe = wrap.querySelector('iframe');
+    if (!iframe || !iframe.contentWindow) return;
+    try {
+      var doc = iframe.contentDocument || iframe.contentWindow.document;
+      if (!doc || !doc.body) return;
+      var vp = doc.querySelector('.react-flow__viewport');
+      if (!vp) {
+        window.setTimeout(function() {
+          attachLikeC4PreviewMirror(wrap);
+        }, 150);
+        return;
+      }
+      wrap._likec4MirrorAttached = true;
+      var lastTransform = vp.style.transform;
+      var vpRaf = 0;
+      var latestTransform = '';
+      var obs = new MutationObserver(function() {
+        if (vp.style.transform && vp.style.transform !== lastTransform) {
+          lastTransform = vp.style.transform;
+          latestTransform = vp.style.transform;
+          if (!vpRaf) {
+            vpRaf = window.requestAnimationFrame(function() {
+              vpRaf = 0;
+              if (window.parent && window.parent !== window) {
+                window.parent.postMessage({
+                  type: 'PREVIEW_MIRROR_LIKEC4_VIEWPORT',
+                  embedId: wrap.id,
+                  transform: latestTransform
+                }, '*');
+              }
+            });
+          }
+        }
+      });
+      obs.observe(vp, { attributes: true, attributeFilter: ['style'] });
+
+      iframe.contentWindow.addEventListener('hashchange', function() {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({
+            type: 'PREVIEW_MIRROR_LIKEC4_NAV',
+            embedId: wrap.id,
+            hash: iframe.contentWindow.location.hash
+          }, '*');
+        }
+      });
+    } catch(e) {}
   }
   function scheduleLikeC4ViewportTuning(wrap, force) {
     if (!wrap || !shouldTuneLikeC4Viewport(wrap)) return;
@@ -8758,17 +9084,14 @@ flowchart TD
   window.setCodePreviewStep = setCodePreviewStep;
 
   function openPrModalOrTab(btn) {
-    var minW = 960;
-    var minH = 680;
+    var isPreview = document.documentElement.classList.contains('is-iframe-preview');
     var codeTarget = 'diff-9031cdbb9779e2eb895e031359654e67f1bdfcda75eb412800c6ea3b5529fe1e';
-    // Si la fenêtre n'a pas assez d'espace, basculer directement sur un onglet dédié
-    if (window.innerWidth < minW || window.innerHeight < minH) {
-      window.open('./pr-page2.html#' + codeTarget, '_blank', 'noopener,noreferrer');
-      return;
-    }
     var slide = (btn && btn.closest && btn.closest('.slide--pr-review')) || document.querySelector('.slide--pr-review');
     if (slide && window.deckEngine) {
       window.deckEngine.setSlideStep(slide, '2');
+      if (isPreview && window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'PREVIEW_MIRROR_CLICK', prOpen: true, step: '2' }, '*');
+      }
       return;
     }
     togglePrBackupModal(btn);
@@ -8778,8 +9101,12 @@ flowchart TD
   function togglePrBackupModal(btn) {
     var slide = (btn && btn.closest && btn.closest('.slide--pr-review')) || document.querySelector('.slide--pr-review');
     if (!slide) return;
+    var isPreview = document.documentElement.classList.contains('is-iframe-preview');
     if (window.deckEngine && slide.getAttribute('data-active-step') && slide.getAttribute('data-active-step') !== '1') {
       window.deckEngine.setSlideStep(slide, '1');
+      if (isPreview && window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'PREVIEW_MIRROR_CLICK', prClose: true, step: '1' }, '*');
+      }
       return;
     }
     var modal = slide.querySelector('.pr-backup-modal');
@@ -8788,6 +9115,9 @@ flowchart TD
     modal.classList.toggle('is-open', !isOpen);
     modal.style.display = isOpen ? 'none' : 'flex';
     modal.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
+    if (isPreview && window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'PREVIEW_MIRROR_CLICK', prClose: isOpen, prOpen: !isOpen, step: isOpen ? '1' : '2' }, '*');
+    }
     if (!isOpen) {
       var iframe = modal.querySelector('iframe');
       if (iframe && iframe.contentWindow) {
@@ -8825,6 +9155,9 @@ flowchart TD
         if (!window.deckEngine.isInIframe) {
           window.deckEngine.broadcastSlideChange();
         }
+      }
+      if (window.deckEngine.isInIframe && window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'PREVIEW_MIRROR_CLICK', diffTarget: targetId, step: s || '2' }, '*');
       }
     }
 
@@ -8998,11 +9331,6 @@ flowchart TD
     document.querySelectorAll('.embed-wrap iframe[data-src]').forEach(function(iframe) {
       var wrap = iframe.closest('.embed-wrap');
       var manual = isManualEmbed(wrap);
-
-      ensureLikeC4PrimaryAction(wrap);
-      ensureManualEmbedLoader(wrap);
-      updateEmbedLoaderState(wrap, false);
-      updateLikeC4ActionState(wrap);
 
       iframe.addEventListener('load', function() {
         if (manual && !wrap._embedRequested) return;
@@ -9185,6 +9513,9 @@ flowchart TD
     },{passive:true});
   });
 
+  window.setDiagramZoom = setDiagramZoom;
+  window.getCurrentZoom = getCurrentZoom;
+
   // --- codespace-popup.js ---
 /* ============ Codespace popup ============ */
   var codespacePopup = null;
@@ -9226,6 +9557,9 @@ flowchart TD
       if(parsed>=0&&parsed<this.total) initIdx=parsed;
     }
     this.current=initIdx;
+    this.isResizing=false;
+    this.isNavigating=false;
+    this.resizeTimer=null;
     this.scrollTimer=null;
     if(initIdx>0){
       var targetTop=this.getSlideTop(initIdx);
@@ -9234,10 +9568,23 @@ flowchart TD
     this.injectCrystals();
     this.injectCardHatchStrips();
     this.initPresenterSync();
+    this.displayStream=null;
+    this.peerConnection=null;
+    this.initStreamEmitter();
     this.buildSectionMap();this.buildChrome();this.bindEvents();this.observe();this.update();
+    this.initOrientationLock();
     if(initIdx>0){
       var self=this;
-      setTimeout(function(){ self.goTo(initIdx,'instant'); }, 50);
+      setTimeout(function(){
+        self.goTo(initIdx,'instant');
+        if(self.slides[initIdx] && typeof window.loadSlideEmbeds === 'function'){
+          window.loadSlideEmbeds(self.slides[initIdx]);
+        }
+      }, 50);
+    } else {
+      if(this.slides[0] && typeof window.loadSlideEmbeds === 'function'){
+        window.loadSlideEmbeds(this.slides[0]);
+      }
     }
     this.broadcastDeckReloaded();
   }
@@ -9470,22 +9817,64 @@ flowchart TD
       tX = null;
     });
     this.deck.addEventListener('scroll',function(){
+      if(self.isResizing || self.isNavigating){
+        if(self.scrollTimer){
+          clearTimeout(self.scrollTimer);
+          self.scrollTimer = null;
+        }
+        return;
+      }
       clearTimeout(self.scrollTimer);
       self.scrollTimer=setTimeout(function(){self.snapToNearest();},140);
     },{passive:true});
 
-    /* Recalage précis en cas de redimensionnement de fenêtre, rotation ou barre d'URL mobile */
-    var resizeTimer = null;
+    /* Verrouillage strict et recalage instantané pendant tout redimensionnement (ex: barre d'outils / menu Firefox) */
+    var lastH = window.innerHeight;
+    var lastW = window.innerWidth;
     var handleResize = function(){
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function(){
+      if(!self.deck) return;
+      var newH = window.innerHeight;
+      var newW = window.innerWidth;
+      if(Math.abs(newH - lastH) < 2 && Math.abs(newW - lastW) < 2) return;
+      lastH = newH;
+      lastW = newW;
+
+      // Détection de redimensionnement de la fenêtre : verrouiller sur la slide active
+      self.isResizing = true;
+      self.deck.classList.add('is-resizing');
+
+      // Repositionnement immédiat sur la slide active sans changer de slide
+      var targetTop = self.getSlideTop(self.current);
+      self.deck.scrollTop = targetTop;
+
+      // Recalage synchrone dans la trame de rendu (élimine tout tressautement d'une trame)
+      if(!self._resizeRaf){
+        self._resizeRaf = requestAnimationFrame(function(){
+          self._resizeRaf = 0;
+          if(self.deck && self.slides[self.current]){
+            self.deck.scrollTop = self.getSlideTop(self.current);
+          }
+        });
+      }
+
+      if(self.resizeTimer) clearTimeout(self.resizeTimer);
+      self.resizeTimer = setTimeout(function(){
+        self.resizeTimer = null;
+        if(self._resizeRaf){
+          cancelAnimationFrame(self._resizeRaf);
+          self._resizeRaf = 0;
+        }
         if(self.deck && self.slides[self.current]){
-          var targetTop = self.getSlideTop(self.current);
-          self.deck.scrollTo({ top: targetTop, behavior: 'instant' });
+          var finalTop = self.getSlideTop(self.current);
+          self.deck.scrollTop = finalTop;
+          self.deck.classList.remove('is-resizing');
+          self.slides[self.current].classList.add('visible');
           self.update();
         }
-      }, 50);
+        self.isResizing = false;
+      }, 60);
     };
+
     window.addEventListener('resize', handleResize, { passive: true });
     window.addEventListener('orientationchange', handleResize, { passive: true });
     if(window.visualViewport){
@@ -9499,6 +9888,9 @@ flowchart TD
       entries.forEach(function(entry){
         if(entry.isIntersecting){
           entry.target.classList.add('visible');
+          if(typeof window.loadSlideEmbeds === 'function'){
+            window.loadSlideEmbeds(entry.target);
+          }
           entry.target.querySelectorAll('.mermaid-wrap').forEach(function(w){
             var t=w.querySelector('.mermaid');
             if(t&&(!t.dataset.baseW||parseFloat(t.dataset.baseW)<40)){
@@ -9524,7 +9916,7 @@ flowchart TD
             scheduleCenterMermaidViewport(w,true);
           });
           var newIdx=self.slides.indexOf(entry.target);
-          if(newIdx!==-1 && newIdx!==self.current){
+          if(!self.isNavigating && !self.isResizing && newIdx!==-1 && newIdx!==self.current){
             self.current=newIdx;
             self.update();
           }
@@ -9569,7 +9961,7 @@ flowchart TD
     return nearest;
   };
   SlideEngine.prototype.snapToNearest=function(){
-    if(this.isInIframe || this.isNavigating) return;
+    if(this.isInIframe || this.isNavigating || this.isResizing) return;
     var i=this.getNearestSlideIndex();
     var targetTop=this.getSlideTop(i);
     if(Math.abs(this.deck.scrollTop-targetTop)>2){
@@ -9790,8 +10182,20 @@ flowchart TD
             if(window.setDeckTheme) window.setDeckTheme(data.theme, true);
           } else if(data.type==='TOGGLE_THEME'){
             if(window.toggleDeckTheme) window.toggleDeckTheme();
+          } else if(data.type==='TOGGLE_READABILITY'){
+            if(window.toggleReadabilityMode) window.toggleReadabilityMode();
+          } else if(data.type==='SET_READABILITY'&&data.mode){
+            if(window.setReadabilityMode) window.setReadabilityMode(data.mode);
           } else if(data.type==='REQUEST_SYNC'){
             self.broadcastSlideChange();
+          } else if(data.type==='STREAM_REQUEST_OFFER'){
+            self.handleStreamRequestOffer();
+          } else if(data.type==='STREAM_ANSWER'){
+            self.handleStreamAnswer(data);
+          } else if(data.type==='STREAM_ICE_CANDIDATE'){
+            self.handleStreamIceCandidate(data);
+          } else if(data.type==='STREAM_STOP_REQUEST'){
+            self.stopDisplayStream();
           }
         };
       }catch(e){
@@ -9917,10 +10321,25 @@ flowchart TD
     });
   };
   SlideEngine.prototype.goTo=function(i,behavior,initialStep){
+    if(this.resizeTimer){
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = null;
+    }
+    this.isResizing = false;
+    if(this.deck){
+      this.deck.classList.remove('is-resizing');
+      this.deck.style.scrollSnapType = '';
+    }
     i=Math.max(0,Math.min(i,this.total-1));
     this.cleanupInactiveModals(i);
     this.current=i;
     var targetSlide=this.slides[i];
+    if(targetSlide){
+      targetSlide.classList.add('visible');
+      if(typeof window.loadSlideEmbeds === 'function'){
+        window.loadSlideEmbeds(targetSlide);
+      }
+    }
     var steps=this.getSlideSteps(targetSlide);
     if(steps.length>0){
       var stepToSet=initialStep||steps[0];
@@ -10004,6 +10423,9 @@ flowchart TD
   };
   SlideEngine.prototype.update=function(){
     this.cleanupInactiveModals(this.current);
+    if(this.slides[this.current]){
+      this.slides[this.current].classList.add('visible');
+    }
     this.bar.style.width=((this.current+1)/this.total*100)+'%';
     var c=this.current; var map=this.sectionMap;
     this.dots.forEach(function(d,i){
@@ -10025,6 +10447,302 @@ flowchart TD
     if(history.replaceState) history.replaceState(null,'','#slide-'+(this.current+1));
     this.broadcastSlideChange();
   };
+
+  /* ============ DISPLAY STREAM EMITTER & WEBRTC P2P ============ */
+  SlideEngine.prototype.initStreamEmitter = function() {
+    if (this.isInIframe) return;
+    var self = this;
+    window.addEventListener('beforeunload', function() {
+      self.stopDisplayStream();
+    });
+  };
+
+  SlideEngine.prototype.toggleDisplayStream = function() {
+    if (this.displayStream && this.displayStream.active) {
+      this.stopDisplayStream();
+    } else {
+      this.startDisplayStream();
+    }
+  };
+
+  SlideEngine.prototype.startDisplayStream = function() {
+    var self = this;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+      console.warn('[SlideEngine] getDisplayMedia non supporté dans cet environnement.');
+      return Promise.resolve(null);
+    }
+    var options = {
+      video: {
+        displaySurface: 'browser',
+        frameRate: { ideal: 60, max: 60 },
+        cursor: 'never'
+      },
+      audio: false,
+      preferCurrentTab: true
+    };
+    return navigator.mediaDevices.getDisplayMedia(options).then(function(stream) {
+      self.displayStream = stream;
+
+      if (self.presenterChannel) {
+        self.presenterChannel.postMessage({ type: 'STREAM_STATUS', active: true });
+      }
+
+      self.initWebRtcEmitter();
+
+      var videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        videoTrack.onended = function() {
+          self.stopDisplayStream();
+        };
+      }
+      return stream;
+    }).catch(function(err) {
+      console.warn('[SlideEngine] Capture écran annulée ou refusée:', err);
+      return null;
+    });
+  };
+
+  SlideEngine.prototype.initWebRtcEmitter = function() {
+    var self = this;
+    if (!this.displayStream) return;
+    if (this.peerConnection) {
+      try { this.peerConnection.close(); } catch(e){}
+      this.peerConnection = null;
+    }
+    try {
+      var pc = new RTCPeerConnection({ iceServers: [] });
+      this.peerConnection = pc;
+
+      this.displayStream.getTracks().forEach(function(track) {
+        pc.addTrack(track, self.displayStream);
+      });
+
+      pc.onicecandidate = function(e) {
+        if (e.candidate && self.presenterChannel) {
+          var candObj = e.candidate.toJSON ? e.candidate.toJSON() : {
+            candidate: e.candidate.candidate,
+            sdpMid: e.candidate.sdpMid,
+            sdpMLineIndex: e.candidate.sdpMLineIndex
+          };
+          self.presenterChannel.postMessage({
+            type: 'STREAM_ICE_CANDIDATE',
+            candidate: candObj,
+            from: 'public'
+          });
+        }
+      };
+
+      pc.createOffer({
+        offerToReceiveVideo: false,
+        offerToReceiveAudio: false
+      }).then(function(offer) {
+        return pc.setLocalDescription(offer);
+      }).then(function() {
+        if (self.presenterChannel && pc.localDescription) {
+          self.presenterChannel.postMessage({
+            type: 'STREAM_OFFER',
+            sdp: {
+              type: pc.localDescription.type,
+              sdp: pc.localDescription.sdp
+            }
+          });
+        }
+      }).catch(function(err) {
+        console.warn('[SlideEngine] Erreur createOffer WebRTC:', err);
+      });
+    } catch(err) {
+      console.warn('[SlideEngine] Erreur initialisation WebRTC:', err);
+    }
+  };
+
+  SlideEngine.prototype.handleStreamAnswer = function(data) {
+    if (this.peerConnection && data && data.sdp) {
+      this.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp)).catch(function(err) {
+        console.warn('[SlideEngine] Erreur setRemoteDescription answer:', err);
+      });
+    }
+  };
+
+  SlideEngine.prototype.handleStreamIceCandidate = function(data) {
+    if (this.peerConnection && data && data.candidate && data.from === 'receiver') {
+      this.peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate)).catch(function(){});
+    }
+  };
+
+  SlideEngine.prototype.handleStreamRequestOffer = function() {
+    if (this.displayStream && this.displayStream.active) {
+      this.initWebRtcEmitter();
+    }
+  };
+
+  SlideEngine.prototype.stopDisplayStream = function() {
+    if (this.displayStream) {
+      this.displayStream.getTracks().forEach(function(t) {
+        try { t.stop(); } catch(e){}
+      });
+      this.displayStream = null;
+    }
+    if (this.peerConnection) {
+      try { this.peerConnection.close(); } catch(e){}
+      this.peerConnection = null;
+    }
+    if (this.presenterChannel) {
+      this.presenterChannel.postMessage({ type: 'STREAM_STATUS', active: false });
+    }
+  };
+
+  /* ============ VERROUILLAGE ET DÉTECTION D'ORIENTATION MOBILE ============ */
+  function bypassOrientationLock() {
+    var overlay = document.getElementById('orientation-lock-overlay') || document.querySelector('.orientation-lock-overlay');
+    if (overlay) {
+      overlay.classList.add('is-bypassed');
+      overlay.classList.remove('is-active');
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+    try {
+      sessionStorage.setItem('dac_orientation_bypassed', '1');
+    } catch (_) {}
+  }
+  window.bypassOrientationLock = bypassOrientationLock;
+
+  var _isLockingLandscape = false;
+  async function attemptLockLandscape() {
+    if (_isLockingLandscape) return;
+    _isLockingLandscape = true;
+    var overlay = document.getElementById('orientation-lock-overlay') || document.querySelector('.orientation-lock-overlay');
+    var desc = overlay ? overlay.querySelector('.orientation-lock-desc') : null;
+    var btnLock = overlay ? overlay.querySelector('#btn-lock-landscape') : null;
+    var docEl = document.documentElement;
+
+    try {
+      // 1. Tenter le passage en plein écran (souvent prérequis pour l'orientation lock sur Chrome Android)
+      try {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          if (docEl.requestFullscreen) {
+            await docEl.requestFullscreen();
+          } else if (docEl.webkitRequestFullscreen) {
+            await docEl.webkitRequestFullscreen();
+          }
+        }
+      } catch (fsErr) {
+        console.warn('[OrientationLock] Plein écran non disponible ou refusé:', fsErr);
+      }
+
+      // 2. Tenter le verrouillage de l'orientation
+      var locked = false;
+      try {
+        if (window.screen && window.screen.orientation && typeof window.screen.orientation.lock === 'function') {
+          await window.screen.orientation.lock('landscape');
+          locked = true;
+        }
+      } catch (lockErr) {
+        console.warn('[OrientationLock] Verrouillage d\'orientation non supporté ou refusé:', lockErr);
+      }
+
+      if (locked) {
+        if (overlay) {
+          overlay.classList.add('is-bypassed');
+          overlay.classList.remove('is-active');
+          overlay.setAttribute('aria-hidden', 'true');
+        }
+        return;
+      }
+
+      // Si le verrouillage automatique n'est pas permis ou non supporté (ex: iOS Safari)
+      if (desc) {
+        desc.textContent = "Le verrouillage automatique n'est pas autorisé par votre navigateur mobile. Veuillez faire pivoter votre appareil manuellement à l'horizontale.";
+      }
+      if (btnLock) {
+        var btnSpan = btnLock.querySelector('span') || btnLock;
+        btnSpan.textContent = "Pivoter manuellement";
+      }
+    } finally {
+      _isLockingLandscape = false;
+    }
+  }
+  window.attemptLockLandscape = attemptLockLandscape;
+
+  SlideEngine.prototype.initOrientationLock = function() {
+    if (this.isInIframe) return;
+    var overlay = document.getElementById('orientation-lock-overlay') || document.querySelector('.orientation-lock-overlay');
+    if (!overlay) return;
+
+    var btnLock = overlay.querySelector('#btn-lock-landscape');
+    var btnBypass = overlay.querySelector('#btn-bypass-orientation');
+
+    if (btnLock && !btnLock._bound) {
+      btnLock._bound = true;
+      if (!btnLock.getAttribute('onclick')) {
+        btnLock.addEventListener('click', function(e) {
+          e.preventDefault();
+          attemptLockLandscape();
+        });
+      }
+    }
+
+    if (btnBypass && !btnBypass._bound) {
+      btnBypass._bound = true;
+      if (!btnBypass.getAttribute('onclick')) {
+        btnBypass.addEventListener('click', function(e) {
+          e.preventDefault();
+          bypassOrientationLock();
+        });
+      }
+    }
+
+    var checkOrientation = function() {
+      var isPortrait = false;
+      if (window.screen && window.screen.orientation && window.screen.orientation.type) {
+        isPortrait = window.screen.orientation.type.indexOf('portrait') !== -1;
+      } else if (window.matchMedia) {
+        isPortrait = window.matchMedia('(orientation: portrait)').matches;
+      } else {
+        isPortrait = window.innerHeight > window.innerWidth;
+      }
+
+      var isNarrow = (window.innerWidth <= 899 || window.innerHeight <= 899);
+      var isBypassed = false;
+      try {
+        isBypassed = sessionStorage.getItem('dac_orientation_bypassed') === '1';
+      } catch (_) {}
+
+      if (isBypassed) {
+        overlay.classList.add('is-bypassed');
+        overlay.classList.remove('is-active');
+        overlay.setAttribute('aria-hidden', 'true');
+        return;
+      }
+
+      if (isPortrait && isNarrow) {
+        overlay.classList.add('is-active');
+        overlay.removeAttribute('aria-hidden');
+      } else {
+        overlay.classList.remove('is-active');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+    };
+
+    if (window.screen && window.screen.orientation) {
+      window.screen.orientation.addEventListener('change', checkOrientation);
+    }
+    if (window.matchMedia) {
+      try {
+        var mql = window.matchMedia('(orientation: portrait)');
+        if (mql.addEventListener) {
+          mql.addEventListener('change', checkOrientation);
+        } else if (mql.addListener) {
+          mql.addListener(checkOrientation);
+        }
+      } catch (_) {}
+    }
+    window.addEventListener('orientationchange', function() {
+      setTimeout(checkOrientation, 100);
+    });
+    window.addEventListener('resize', checkOrientation);
+
+    checkOrientation();
+  };
+
   SlideEngine.prototype.fadeHints=function(){clearTimeout(this.hintTimer);this.hints.classList.add('faded');};
 
   // Auto-initialisation robuste et indépendante

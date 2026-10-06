@@ -7,21 +7,31 @@
     width: 100%;
     overflow-y: auto;
     scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     scroll-padding-top: 0;
     overscroll-behavior-y: contain;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    overflow-anchor: auto;
   }
   .deck::-webkit-scrollbar { display: none; }
+
+  .deck.is-resizing,
+  .deck.is-resizing * {
+    scroll-snap-type: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
 
   .slide {
     height: 100%;
     height: -webkit-fill-available;
     height: 100svh;
     height: 100dvh;
-    scroll-snap-align: start;
+    scroll-snap-align: none;
     scroll-snap-stop: always;
+    overflow-anchor: none;
     overflow: hidden;
     position: relative;
     display: flex;
@@ -32,6 +42,11 @@
     opacity: 0;
     transform: none;
     transition: opacity 0.24s ease;
+  }
+
+  .slide.is-current {
+    scroll-snap-align: start;
+    overflow-anchor: auto;
   }
 
   .slide.visible,
@@ -159,12 +174,26 @@
     display: none !important;
   }
   .is-iframe-preview,
+  .is-iframe-preview body,
+  .is-iframe-preview body.laser-cursor-enabled,
+  .is-iframe-preview body.laser-cursor-enabled * {
+    cursor: default !important;
+  }
+  .is-iframe-preview body.laser-cursor-enabled button,
+  .is-iframe-preview body.laser-cursor-enabled a,
+  .is-iframe-preview body.laser-cursor-enabled [role="button"],
+  .is-iframe-preview body.laser-cursor-enabled [role="tab"],
+  .is-iframe-preview body.laser-cursor-enabled summary {
+    cursor: pointer !important;
+  }
+  .is-iframe-preview,
   .is-iframe-preview body {
     overflow: hidden !important;
   }
   .is-iframe-preview .deck {
     scroll-snap-type: none !important;
     overflow-y: hidden !important;
+    scroll-behavior: auto !important;
   }
 
   .deck-hints {

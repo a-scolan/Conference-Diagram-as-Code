@@ -134,3 +134,6 @@
       }
     },{passive:true});
   });
+
+  window.setDiagramZoom = setDiagramZoom;
+  window.getCurrentZoom = getCurrentZoom;

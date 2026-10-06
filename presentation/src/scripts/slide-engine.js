@@ -20,6 +20,9 @@
       if(parsed>=0&&parsed<this.total) initIdx=parsed;
     }
     this.current=initIdx;
+    this.isResizing=false;
+    this.isNavigating=false;
+    this.resizeTimer=null;
     this.scrollTimer=null;
     if(initIdx>0){
       var targetTop=this.getSlideTop(initIdx);
@@ -28,10 +31,23 @@
     this.injectCrystals();
     this.injectCardHatchStrips();
     this.initPresenterSync();
+    this.displayStream=null;
+    this.peerConnection=null;
+    this.initStreamEmitter();
     this.buildSectionMap();this.buildChrome();this.bindEvents();this.observe();this.update();
+    this.initOrientationLock();
     if(initIdx>0){
       var self=this;
-      setTimeout(function(){ self.goTo(initIdx,'instant'); }, 50);
+      setTimeout(function(){
+        self.goTo(initIdx,'instant');
+        if(self.slides[initIdx] && typeof window.loadSlideEmbeds === 'function'){
+          window.loadSlideEmbeds(self.slides[initIdx]);
+        }
+      }, 50);
+    } else {
+      if(this.slides[0] && typeof window.loadSlideEmbeds === 'function'){
+        window.loadSlideEmbeds(this.slides[0]);
+      }
     }
     this.broadcastDeckReloaded();
   }
@@ -264,22 +280,64 @@
       tX = null;
     });
     this.deck.addEventListener('scroll',function(){
+      if(self.isResizing || self.isNavigating){
+        if(self.scrollTimer){
+          clearTimeout(self.scrollTimer);
+          self.scrollTimer = null;
+        }
+        return;
+      }
       clearTimeout(self.scrollTimer);
       self.scrollTimer=setTimeout(function(){self.snapToNearest();},140);
     },{passive:true});
 
-    /* Recalage précis en cas de redimensionnement de fenêtre, rotation ou barre d'URL mobile */
-    var resizeTimer = null;
+    /* Verrouillage strict et recalage instantané pendant tout redimensionnement (ex: barre d'outils / menu Firefox) */
+    var lastH = window.innerHeight;
+    var lastW = window.innerWidth;
     var handleResize = function(){
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function(){
+      if(!self.deck) return;
+      var newH = window.innerHeight;
+      var newW = window.innerWidth;
+      if(Math.abs(newH - lastH) < 2 && Math.abs(newW - lastW) < 2) return;
+      lastH = newH;
+      lastW = newW;
+
+      // Détection de redimensionnement de la fenêtre : verrouiller sur la slide active
+      self.isResizing = true;
+      self.deck.classList.add('is-resizing');
+
+      // Repositionnement immédiat sur la slide active sans changer de slide
+      var targetTop = self.getSlideTop(self.current);
+      self.deck.scrollTop = targetTop;
+
+      // Recalage synchrone dans la trame de rendu (élimine tout tressautement d'une trame)
+      if(!self._resizeRaf){
+        self._resizeRaf = requestAnimationFrame(function(){
+          self._resizeRaf = 0;
+          if(self.deck && self.slides[self.current]){
+            self.deck.scrollTop = self.getSlideTop(self.current);
+          }
+        });
+      }
+
+      if(self.resizeTimer) clearTimeout(self.resizeTimer);
+      self.resizeTimer = setTimeout(function(){
+        self.resizeTimer = null;
+        if(self._resizeRaf){
+          cancelAnimationFrame(self._resizeRaf);
+          self._resizeRaf = 0;
+        }
         if(self.deck && self.slides[self.current]){
-          var targetTop = self.getSlideTop(self.current);
-          self.deck.scrollTo({ top: targetTop, behavior: 'instant' });
+          var finalTop = self.getSlideTop(self.current);
+          self.deck.scrollTop = finalTop;
+          self.deck.classList.remove('is-resizing');
+          self.slides[self.current].classList.add('visible');
           self.update();
         }
-      }, 50);
+        self.isResizing = false;
+      }, 60);
     };
+
     window.addEventListener('resize', handleResize, { passive: true });
     window.addEventListener('orientationchange', handleResize, { passive: true });
     if(window.visualViewport){
@@ -293,6 +351,9 @@
       entries.forEach(function(entry){
         if(entry.isIntersecting){
           entry.target.classList.add('visible');
+          if(typeof window.loadSlideEmbeds === 'function'){
+            window.loadSlideEmbeds(entry.target);
+          }
           entry.target.querySelectorAll('.mermaid-wrap').forEach(function(w){
             var t=w.querySelector('.mermaid');
             if(t&&(!t.dataset.baseW||parseFloat(t.dataset.baseW)<40)){
@@ -318,7 +379,7 @@
             scheduleCenterMermaidViewport(w,true);
           });
           var newIdx=self.slides.indexOf(entry.target);
-          if(newIdx!==-1 && newIdx!==self.current){
+          if(!self.isNavigating && !self.isResizing && newIdx!==-1 && newIdx!==self.current){
             self.current=newIdx;
             self.update();
           }
@@ -363,7 +424,7 @@
     return nearest;
   };
   SlideEngine.prototype.snapToNearest=function(){
-    if(this.isInIframe || this.isNavigating) return;
+    if(this.isInIframe || this.isNavigating || this.isResizing) return;
     var i=this.getNearestSlideIndex();
     var targetTop=this.getSlideTop(i);
     if(Math.abs(this.deck.scrollTop-targetTop)>2){
@@ -584,8 +645,20 @@
             if(window.setDeckTheme) window.setDeckTheme(data.theme, true);
           } else if(data.type==='TOGGLE_THEME'){
             if(window.toggleDeckTheme) window.toggleDeckTheme();
+          } else if(data.type==='TOGGLE_READABILITY'){
+            if(window.toggleReadabilityMode) window.toggleReadabilityMode();
+          } else if(data.type==='SET_READABILITY'&&data.mode){
+            if(window.setReadabilityMode) window.setReadabilityMode(data.mode);
           } else if(data.type==='REQUEST_SYNC'){
             self.broadcastSlideChange();
+          } else if(data.type==='STREAM_REQUEST_OFFER'){
+            self.handleStreamRequestOffer();
+          } else if(data.type==='STREAM_ANSWER'){
+            self.handleStreamAnswer(data);
+          } else if(data.type==='STREAM_ICE_CANDIDATE'){
+            self.handleStreamIceCandidate(data);
+          } else if(data.type==='STREAM_STOP_REQUEST'){
+            self.stopDisplayStream();
           }
         };
       }catch(e){
@@ -711,10 +784,25 @@
     });
   };
   SlideEngine.prototype.goTo=function(i,behavior,initialStep){
+    if(this.resizeTimer){
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = null;
+    }
+    this.isResizing = false;
+    if(this.deck){
+      this.deck.classList.remove('is-resizing');
+      this.deck.style.scrollSnapType = '';
+    }
     i=Math.max(0,Math.min(i,this.total-1));
     this.cleanupInactiveModals(i);
     this.current=i;
     var targetSlide=this.slides[i];
+    if(targetSlide){
+      targetSlide.classList.add('visible');
+      if(typeof window.loadSlideEmbeds === 'function'){
+        window.loadSlideEmbeds(targetSlide);
+      }
+    }
     var steps=this.getSlideSteps(targetSlide);
     if(steps.length>0){
       var stepToSet=initialStep||steps[0];
@@ -798,6 +886,9 @@
   };
   SlideEngine.prototype.update=function(){
     this.cleanupInactiveModals(this.current);
+    if(this.slides[this.current]){
+      this.slides[this.current].classList.add('visible');
+    }
     this.bar.style.width=((this.current+1)/this.total*100)+'%';
     var c=this.current; var map=this.sectionMap;
     this.dots.forEach(function(d,i){
@@ -819,6 +910,302 @@
     if(history.replaceState) history.replaceState(null,'','#slide-'+(this.current+1));
     this.broadcastSlideChange();
   };
+
+  /* ============ DISPLAY STREAM EMITTER & WEBRTC P2P ============ */
+  SlideEngine.prototype.initStreamEmitter = function() {
+    if (this.isInIframe) return;
+    var self = this;
+    window.addEventListener('beforeunload', function() {
+      self.stopDisplayStream();
+    });
+  };
+
+  SlideEngine.prototype.toggleDisplayStream = function() {
+    if (this.displayStream && this.displayStream.active) {
+      this.stopDisplayStream();
+    } else {
+      this.startDisplayStream();
+    }
+  };
+
+  SlideEngine.prototype.startDisplayStream = function() {
+    var self = this;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+      console.warn('[SlideEngine] getDisplayMedia non supporté dans cet environnement.');
+      return Promise.resolve(null);
+    }
+    var options = {
+      video: {
+        displaySurface: 'browser',
+        frameRate: { ideal: 60, max: 60 },
+        cursor: 'never'
+      },
+      audio: false,
+      preferCurrentTab: true
+    };
+    return navigator.mediaDevices.getDisplayMedia(options).then(function(stream) {
+      self.displayStream = stream;
+
+      if (self.presenterChannel) {
+        self.presenterChannel.postMessage({ type: 'STREAM_STATUS', active: true });
+      }
+
+      self.initWebRtcEmitter();
+
+      var videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        videoTrack.onended = function() {
+          self.stopDisplayStream();
+        };
+      }
+      return stream;
+    }).catch(function(err) {
+      console.warn('[SlideEngine] Capture écran annulée ou refusée:', err);
+      return null;
+    });
+  };
+
+  SlideEngine.prototype.initWebRtcEmitter = function() {
+    var self = this;
+    if (!this.displayStream) return;
+    if (this.peerConnection) {
+      try { this.peerConnection.close(); } catch(e){}
+      this.peerConnection = null;
+    }
+    try {
+      var pc = new RTCPeerConnection({ iceServers: [] });
+      this.peerConnection = pc;
+
+      this.displayStream.getTracks().forEach(function(track) {
+        pc.addTrack(track, self.displayStream);
+      });
+
+      pc.onicecandidate = function(e) {
+        if (e.candidate && self.presenterChannel) {
+          var candObj = e.candidate.toJSON ? e.candidate.toJSON() : {
+            candidate: e.candidate.candidate,
+            sdpMid: e.candidate.sdpMid,
+            sdpMLineIndex: e.candidate.sdpMLineIndex
+          };
+          self.presenterChannel.postMessage({
+            type: 'STREAM_ICE_CANDIDATE',
+            candidate: candObj,
+            from: 'public'
+          });
+        }
+      };
+
+      pc.createOffer({
+        offerToReceiveVideo: false,
+        offerToReceiveAudio: false
+      }).then(function(offer) {
+        return pc.setLocalDescription(offer);
+      }).then(function() {
+        if (self.presenterChannel && pc.localDescription) {
+          self.presenterChannel.postMessage({
+            type: 'STREAM_OFFER',
+            sdp: {
+              type: pc.localDescription.type,
+              sdp: pc.localDescription.sdp
+            }
+          });
+        }
+      }).catch(function(err) {
+        console.warn('[SlideEngine] Erreur createOffer WebRTC:', err);
+      });
+    } catch(err) {
+      console.warn('[SlideEngine] Erreur initialisation WebRTC:', err);
+    }
+  };
+
+  SlideEngine.prototype.handleStreamAnswer = function(data) {
+    if (this.peerConnection && data && data.sdp) {
+      this.peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp)).catch(function(err) {
+        console.warn('[SlideEngine] Erreur setRemoteDescription answer:', err);
+      });
+    }
+  };
+
+  SlideEngine.prototype.handleStreamIceCandidate = function(data) {
+    if (this.peerConnection && data && data.candidate && data.from === 'receiver') {
+      this.peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate)).catch(function(){});
+    }
+  };
+
+  SlideEngine.prototype.handleStreamRequestOffer = function() {
+    if (this.displayStream && this.displayStream.active) {
+      this.initWebRtcEmitter();
+    }
+  };
+
+  SlideEngine.prototype.stopDisplayStream = function() {
+    if (this.displayStream) {
+      this.displayStream.getTracks().forEach(function(t) {
+        try { t.stop(); } catch(e){}
+      });
+      this.displayStream = null;
+    }
+    if (this.peerConnection) {
+      try { this.peerConnection.close(); } catch(e){}
+      this.peerConnection = null;
+    }
+    if (this.presenterChannel) {
+      this.presenterChannel.postMessage({ type: 'STREAM_STATUS', active: false });
+    }
+  };
+
+  /* ============ VERROUILLAGE ET DÉTECTION D'ORIENTATION MOBILE ============ */
+  function bypassOrientationLock() {
+    var overlay = document.getElementById('orientation-lock-overlay') || document.querySelector('.orientation-lock-overlay');
+    if (overlay) {
+      overlay.classList.add('is-bypassed');
+      overlay.classList.remove('is-active');
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+    try {
+      sessionStorage.setItem('dac_orientation_bypassed', '1');
+    } catch (_) {}
+  }
+  window.bypassOrientationLock = bypassOrientationLock;
+
+  var _isLockingLandscape = false;
+  async function attemptLockLandscape() {
+    if (_isLockingLandscape) return;
+    _isLockingLandscape = true;
+    var overlay = document.getElementById('orientation-lock-overlay') || document.querySelector('.orientation-lock-overlay');
+    var desc = overlay ? overlay.querySelector('.orientation-lock-desc') : null;
+    var btnLock = overlay ? overlay.querySelector('#btn-lock-landscape') : null;
+    var docEl = document.documentElement;
+
+    try {
+      // 1. Tenter le passage en plein écran (souvent prérequis pour l'orientation lock sur Chrome Android)
+      try {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          if (docEl.requestFullscreen) {
+            await docEl.requestFullscreen();
+          } else if (docEl.webkitRequestFullscreen) {
+            await docEl.webkitRequestFullscreen();
+          }
+        }
+      } catch (fsErr) {
+        console.warn('[OrientationLock] Plein écran non disponible ou refusé:', fsErr);
+      }
+
+      // 2. Tenter le verrouillage de l'orientation
+      var locked = false;
+      try {
+        if (window.screen && window.screen.orientation && typeof window.screen.orientation.lock === 'function') {
+          await window.screen.orientation.lock('landscape');
+          locked = true;
+        }
+      } catch (lockErr) {
+        console.warn('[OrientationLock] Verrouillage d\'orientation non supporté ou refusé:', lockErr);
+      }
+
+      if (locked) {
+        if (overlay) {
+          overlay.classList.add('is-bypassed');
+          overlay.classList.remove('is-active');
+          overlay.setAttribute('aria-hidden', 'true');
+        }
+        return;
+      }
+
+      // Si le verrouillage automatique n'est pas permis ou non supporté (ex: iOS Safari)
+      if (desc) {
+        desc.textContent = "Le verrouillage automatique n'est pas autorisé par votre navigateur mobile. Veuillez faire pivoter votre appareil manuellement à l'horizontale.";
+      }
+      if (btnLock) {
+        var btnSpan = btnLock.querySelector('span') || btnLock;
+        btnSpan.textContent = "Pivoter manuellement";
+      }
+    } finally {
+      _isLockingLandscape = false;
+    }
+  }
+  window.attemptLockLandscape = attemptLockLandscape;
+
+  SlideEngine.prototype.initOrientationLock = function() {
+    if (this.isInIframe) return;
+    var overlay = document.getElementById('orientation-lock-overlay') || document.querySelector('.orientation-lock-overlay');
+    if (!overlay) return;
+
+    var btnLock = overlay.querySelector('#btn-lock-landscape');
+    var btnBypass = overlay.querySelector('#btn-bypass-orientation');
+
+    if (btnLock && !btnLock._bound) {
+      btnLock._bound = true;
+      if (!btnLock.getAttribute('onclick')) {
+        btnLock.addEventListener('click', function(e) {
+          e.preventDefault();
+          attemptLockLandscape();
+        });
+      }
+    }
+
+    if (btnBypass && !btnBypass._bound) {
+      btnBypass._bound = true;
+      if (!btnBypass.getAttribute('onclick')) {
+        btnBypass.addEventListener('click', function(e) {
+          e.preventDefault();
+          bypassOrientationLock();
+        });
+      }
+    }
+
+    var checkOrientation = function() {
+      var isPortrait = false;
+      if (window.screen && window.screen.orientation && window.screen.orientation.type) {
+        isPortrait = window.screen.orientation.type.indexOf('portrait') !== -1;
+      } else if (window.matchMedia) {
+        isPortrait = window.matchMedia('(orientation: portrait)').matches;
+      } else {
+        isPortrait = window.innerHeight > window.innerWidth;
+      }
+
+      var isNarrow = (window.innerWidth <= 899 || window.innerHeight <= 899);
+      var isBypassed = false;
+      try {
+        isBypassed = sessionStorage.getItem('dac_orientation_bypassed') === '1';
+      } catch (_) {}
+
+      if (isBypassed) {
+        overlay.classList.add('is-bypassed');
+        overlay.classList.remove('is-active');
+        overlay.setAttribute('aria-hidden', 'true');
+        return;
+      }
+
+      if (isPortrait && isNarrow) {
+        overlay.classList.add('is-active');
+        overlay.removeAttribute('aria-hidden');
+      } else {
+        overlay.classList.remove('is-active');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+    };
+
+    if (window.screen && window.screen.orientation) {
+      window.screen.orientation.addEventListener('change', checkOrientation);
+    }
+    if (window.matchMedia) {
+      try {
+        var mql = window.matchMedia('(orientation: portrait)');
+        if (mql.addEventListener) {
+          mql.addEventListener('change', checkOrientation);
+        } else if (mql.addListener) {
+          mql.addListener(checkOrientation);
+        }
+      } catch (_) {}
+    }
+    window.addEventListener('orientationchange', function() {
+      setTimeout(checkOrientation, 100);
+    });
+    window.addEventListener('resize', checkOrientation);
+
+    checkOrientation();
+  };
+
   SlideEngine.prototype.fadeHints=function(){clearTimeout(this.hintTimer);this.hints.classList.add('faded');};
 
   // Auto-initialisation robuste et indépendante

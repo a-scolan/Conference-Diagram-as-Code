@@ -17,3 +17,22 @@ projects/skills-testing/.space/
 # Temporary files
 *.tmp
 *.bak
+.playwright-mcp/
+openspec/changes/archive/.space/
+openspec/changes/archive/2026-10-05-conference-content-refinements/.openspec.yaml
+openspec/changes/archive/2026-10-05-conference-content-refinements/design.md
+openspec/changes/archive/2026-10-05-conference-content-refinements/proposal.md
+openspec/changes/archive/2026-10-05-conference-content-refinements/tasks.md
+openspec/changes/archive/2026-10-05-conference-content-refinements/specs/conference-narrative/spec.md
+openspec/changes/archive/2026-10-05-conference-content-refinements/specs/diagram-mermaid/spec.md
+openspec/changes/archive/2026-10-05-presentation-ux-and-controls/.openspec.yaml
+openspec/changes/archive/2026-10-05-presentation-ux-and-controls/design.md
+openspec/changes/archive/2026-10-05-presentation-ux-and-controls/proposal.md
+openspec/changes/archive/2026-10-05-presentation-ux-and-controls/tasks.md
+openspec/changes/archive/2026-10-05-presentation-ux-and-controls/specs/presenter-view/spec.md
+openspec/changes/archive/2026-10-05-presentation-ux-and-controls/specs/slide-engine/spec.md
+openspec/changes/archive/2026-10-05-presenter-stream-mirror/.openspec.yaml
+openspec/changes/archive/2026-10-05-presenter-stream-mirror/design.md
+openspec/changes/archive/2026-10-05-presenter-stream-mirror/proposal.md
+openspec/changes/archive/2026-10-05-presenter-stream-mirror/tasks.md
+openspec/changes/archive/2026-10-05-presenter-stream-mirror/specs/presenter-view/spec.md

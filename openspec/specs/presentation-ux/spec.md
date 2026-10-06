@@ -80,16 +80,16 @@ Les fenêtres d'aperçu de code DOIVENT (SHALL) permettre l'accentuation visuell
 
 #### Scenario: Présentation d'un extrait de modèle C4
 - **WHEN** L'orateur commente une section spécifique du modèle `.c4`
-- **THEN** Les lignes ciblées sont mises en valeur par une surbrillance contrastée (`line-highlight`), tandis que le reste du bloc est légèrement estompé pour guider le regard de l'auditoire.
+- **THEN** Les lignes ciblées sont mises en valeur par une surbrillance contrastée (`line-highlight`), tandis que le reste du bloc est légèrement estompé pour guider le regard de l'auditoire. L'élément de surbrillance ainsi que les blocs diff (`.line-add`, `.line-mod`, `.line-del`) s'étendent sur `100%` de la largeur `max-content` du conteneur de code, garantissant la persistance de la couleur de fond lors du défilement dans l'ascenseur horizontal.
 
 ---
 
-### Requirement: Support responsive mobile avec verrouillage d'orientation paysage obligatoire
-Le moteur de rendu DOIT (SHALL) exiger l'orientation paysage sur les écrans mobiles de petite taille (`@media (orientation: portrait) and (max-width: 899px)`), en bloquant l'affichage vertical inadapté et en adaptant la mise en page en mode horizontal (hauteur d'écran $\le 560$px) pour garantir l'intégrité des diagrammes et des codes.
+### Requirement: Support responsive mobile avec détection, Screen Orientation API et verrouillage d'orientation paysage
+Le moteur de rendu DOIT (SHALL) privilégier l'orientation paysage sur les écrans mobiles de petite taille (`@media (orientation: portrait) and (max-width: 899px)`), en proposant un forçage programmatique via la Screen Orientation API (`screen.orientation.lock('landscape')`), un calque d'invitation avec fallback explicite si l'API est absente ou refusée, et une option de contournement contrôlée par l'utilisateur.
 
-#### Scenario: Ouverture sur smartphone en mode portrait (Verrouillage obligatoire)
+#### Scenario: Ouverture sur smartphone en mode portrait avec détection et forçage
 - **WHEN** La page est consultée sur un écran mobile en orientation portrait
-- **THEN** Un calque bloquant plein écran (`.orientation-lock-overlay`) s'affiche au premier plan, masquant la présentation et exigeant la rotation de l'appareil avec une animation de smartphone pivotant à 90 degrés et le message neutre et universel : *« Veuillez faire pivoter votre écran en mode paysage (horizontal). »*.
+- **THEN** Un calque bloquant plein écran (`.orientation-lock-overlay`) s'affiche au premier plan avec l'animation de rotation, un bouton primaire permettant d'invoquer la Screen Orientation API couplée au plein écran (`attemptLockLandscape()`), un bouton secondaire permettant de continuer en portrait (`is-bypassed`), et un texte pédagogique invitant à pivoter l'appareil si le forçage automatique n'est pas permis.
 
 #### Scenario: Affichage sur smartphone en mode paysage (Déverrouillage et layout compact)
 - **WHEN** L'appareil est tourné en mode paysage (hauteur d'écran comprise entre 320px et 560px)

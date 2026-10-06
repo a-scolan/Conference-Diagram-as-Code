@@ -73,7 +73,7 @@ La troisième partie MUST déplacer l'enjeu de l'outil individuel vers la collab
 ---
 
 ### Requirement: Acte 4 — Industrialisation, Portail Vivant et Synthèse
-La clôture de la session MUST démontrer que le modèle as-code s'exporte en portail de documentation interactif et navigable pour l'ensemble des parties prenantes.
+La clôture de la session MUST démontrer que le modèle as-code s'exporte en portail de documentation interactif et navigable pour l'ensemble des parties prenantes, tout en fournissant une trajectoire pragmatique pour appliquer la démarche aux patrimoines applicatifs existants (legacy) grâce à l'outillage IA.
 
 #### Scenario: Démonstration du portail vivant
 - **WHEN** L'orateur manipule le portail généré par LikeC4
@@ -82,3 +82,18 @@ La clôture de la session MUST démontrer que le modèle as-code s'exporte en po
 #### Scenario: Matrice de synthèse Avant / Après
 - **WHEN** La slide de synthèse finale est présentée
 - **THEN** Le discours structure la victoire en 3 piliers à fort contraste : source de vérité unique dans Git (vs wiki dispersé), revue collective en PR (vs réunions tardives subjectives), et portail compilé en continu par CI/CD (vs PNG figé obsolète).
+
+#### Scenario: Trajectoire de reprise de patrimoine existant par outillage IA
+- **WHEN** La diapositive de passage à l'échelle (« Généraliser la pratique », slide 34) est présentée
+- **THEN** L'orateur détaille la méthode d'ingénierie inverse assistée par IA pour cartographier un système existant sans grand soir : extraction statique / scanners d'AST de code source, agents LLM formulant les premières propositions de frontières C4 (systèmes et conteneurs), génération des blocs LikeC4 initiaux et validation critique obligatoire par l'architecte humain.
+
+### Requirement: Didascalies de posture scénique et balisage d'attention
+Les supports d'orateur (console présentateur et notes) MUST intégrer des indications scéniques formelles pour soutenir la posture physique, l'ancrage au sol, le balayage visuel de la salle et la mémorisation des punchlines clés.
+
+#### Scenario: Balayage visuel et contact avec la salle
+- **WHEN** L'orateur consulte les notes de chaque diapositive charnière
+- **THEN** La console affiche des rappels de posture explicites invitant à balayer du regard les trois secteurs de la salle (gauche, centre, droite) et à maintenir le contact visuel au moins 3 secondes par zone avant de commenter une ligne de code ou un schéma.
+
+#### Scenario: Gestuelle ouverte et formules clés
+- **WHEN** Un moment fort d'accroche ou de conclusion d'acte est atteint
+- **THEN** Les didascalies surlignent en typographie distincte la formule oratoire exacte à prononcer de mémoire, accompagnée d'une consigne de gestuelle ouverte (bras dégagés, buste tourné vers l'auditoire) pour renforcer l'impact du message.

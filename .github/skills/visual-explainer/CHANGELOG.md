@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.4.5] - 2026-10-05
+
+### Cross-Theme Mermaid Node Theming & Mobile Ergonomics
+- **Fixed dark mode node fill/stroke collision**: Documented anti-pattern where hardcoding `fill:` and `stroke:` in Mermaid `classDef` generates inline SVG styles with `!important`, causing unreadable white text on light pastel boxes in dark mode.
+- **Added semantic diagram tokens**: Added `--diagram-purple` and `--diagram-purple-dim` to themes to complete the palette alongside `--diagram-gold`, `--diagram-blue`, and `--diagram-green`.
+- **Decoupled classDef from hardcoded colors**: Mermaid source now uses clean `classDef <name> stroke-width:2px;`, while fill and stroke are fully reactive via CSS custom properties.
+- **Mobile landscape diagram scaling**: Clamped heading and body vertical margins on compact landscape viewports (`max-height: 560px`) to prevent squashing wide Mermaid flowcharts.
+- **Horizontal swipe navigation**: Added horizontal touch swipe support for mobile touch devices alongside vertical swipe.
+- **Updated reference and template**: Updated `references/mermaid-layout.md` and `templates/slide-deck.html` to align with the cross-theme Mermaid standard.
+
 ## [0.4.3] - 2026-03-01
 
 ### Mermaid Zoom and Positioning Fixes

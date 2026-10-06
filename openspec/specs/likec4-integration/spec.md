@@ -22,38 +22,39 @@ Afin d'éviter de saturer le réseau ou le moteur de rendu dès le démarrage de
 - **THEN** L'attribut `src` de l'iframe reste non assigné et seule la cible est conservée dans l'attribut `data-src`.
 
 #### Scenario: Approche de la diapositive dans le champ de vision
-- **WHEN** La diapositive franchit le seuil d'intersection configuré (seuil de 10% de visibilité)
-- **THEN** L'IntersectionObserver déclenche l'affectation du `data-src` vers `src` pour les embeds en mode automatique et amorce le téléchargement des assets.
+- **WHEN** La diapositive franchit le seuil d'intersection configuré (seuil de 10% de visibilité) ou devient active via `SlideEngine.goTo()`
+- **THEN** Le moteur déclenche l'affectation du `data-src` vers `src` pour les embeds en mode automatique (`loadSlideEmbeds`) et amorce le téléchargement des assets.
 
 ---
 
-### Requirement: Modes de chargement explicite (Manuel vs Automatique) et CTA dédié
-Certains blocs LikeC4 complexes doivent pouvoir être déclenchés uniquement sur action délibérée de l'orateur, signalée par un bouton d'action primaire (`.embed-likec4-cta`).
+### Requirement: Chargement transparent et direct des intégrations LikeC4
+Les conteneurs LikeC4 doivent charger leur vue directement sans afficher de bloc ou bouton intrusif (« Chargement LikeC4… »), préservant la fluidité visuelle et la propreté de l'écran lors du défilement.
 
-#### Scenario: Présentation avec mode manuel
-- **WHEN** Le conteneur `.embed-wrap` porte l'attribut `data-load-mode="manual"`
-- **THEN** Le chargement automatique est inhibé, un écran d'attente affiche le bouton `"Charger le rendu LikeC4"` et le navigateur n'initie aucune requête réseau pour l'iframe.
-
-#### Scenario: Clic sur le bouton de déclenchement du rendu
-- **WHEN** L'orateur clique sur le bouton `.embed-likec4-cta` ou `.embed-loader__button`
-- **THEN** Le conteneur passe en état `.is-loading`, le label devient `"Chargement LikeC4…"`, le bouton est désactivé et l'iframe charge sa ressource.
-
-#### Scenario: Fin de chargement réussi
-- **WHEN** L'événement `load` de l'iframe est émis
-- **THEN** La classe `.is-loading` est retirée, la classe `.is-loaded` est ajoutée, l'écran de chargement disparaît et le bouton s'efface pour laisser place à la vue LikeC4 active.
+#### Scenario: Rendu immédiat à l'affichage de la diapositive
+- **WHEN** La diapositive contenant un modèle LikeC4 devient active
+- **THEN** L'iframe charge son bundle localement en arrière-plan sans insérer de bloc d'attente obstruant la vue, et affiche le diagramme dès son initialisation.
 
 ---
 
 ### Requirement: Détection d'incident et affichage de secours (Fallback Timeout)
-En cas d'échec de chargement réseau, de blocage de script ou de restriction de sécurité du navigateur, un mécanisme de secours automatique doit proposer un lien direct vers la vue.
+En cas d'échec de chargement réseau, de blocage de script ou de restriction de sécurité du navigateur, un mécanisme de secours discret doit proposer un lien direct vers la vue.
 
 #### Scenario: Dépassement du délai de chargement (Timeout)
-- **WHEN** Le délai alloué (`data-embed-timeout`, par défaut 10000ms en manuel ou 6000ms en automatique) s'écoule sans confirmation de rendu valide
-- **THEN** La classe `.is-fallback` est appliquée et l'élément `.embed-fallback` s'affiche avec le message d'erreur et un lien hypertexte ouvrant la vue LikeC4 dans un nouvel onglet.
+- **WHEN** Le délai alloué (`data-embed-timeout`, par défaut 4000ms) s'écoule sans confirmation de rendu valide
+- **THEN** La classe `.is-fallback` est appliquée si l'iframe n'a pas pu charger sa source. En protocole local (`file://`) ou contextes restreints, l'exception d'accès DOM inter-origines ne déclenche pas de faux positif si la source est activement chargée.
 
 #### Scenario: Tentative de rechargement depuis le bandeau de secours
 - **WHEN** L'utilisateur clique sur le bouton de rechargement `[↻]` dans la barre d'outils `.embed-controls`
 - **THEN** Le temporisateur est réinitialisé et une nouvelle tentative de chargement forcé (`forceReload: true`) est lancée.
+
+---
+
+### Requirement: Redimensionnement adaptatif et proportionnel des diffs visuels en PR (Sliders interactifs)
+Les aperçus de pull request intégrant des diffs d'images avec curseurs glissants (`swipe` et `onion-skin`) DOIVENT (SHALL) s'adapter dynamiquement à la largeur de l'écran et à une proportion de l'espace vertical disponible, sans boucle d'agrandissement indésirable.
+
+#### Scenario: Consultation d'un diff visuel sur smartphone ou écran restreint
+- **WHEN** Le diff d'image (848px de largeur native) est affiché sur un écran mobile en portrait ou paysage
+- **THEN** La vue est mise à l'échelle via `scale = Math.min(1, maxW / naturalW, maxH / naturalH)` où `maxH` représente une fraction maîtrisée de la hauteur d'écran (~40% à ~52%), et le conteneur ajuste sa hauteur de façon stable et synchrone sans dériver ni s'agrandir en boucle.
 
 ---
 

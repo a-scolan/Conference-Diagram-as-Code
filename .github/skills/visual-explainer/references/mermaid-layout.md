@@ -188,6 +188,80 @@ Also, schedule centering in a few delayed passes (`0ms`, `~90ms`, `~220ms`) on s
 - keep branch/edge stroke widths around `2px`–`3px`
 - reserve extra-bold (`700+`) for one accent only (e.g., PR tag), not every label
 
+## Cross-Theme Mermaid Node Theming (Light & Dark Mode)
+
+Mermaid `classDef` declarations with hard-coded colors (e.g. `classDef gold fill:#fef3c7,stroke:#b45309`) inject inline styles with `!important` directly on generated SVG elements (`<rect style="fill:#fef3c7 !important; ...">`). This prevents CSS stylesheets from adapting node colors when switching between light and dark modes, causing white text to render on light pastel backgrounds (or dark text on dark surfaces).
+
+### The Canonical Multi-Theme Pattern
+
+1. **Keep `classDef` clean in Mermaid source** — define only geometric attributes such as stroke width:
+```mermaid
+flowchart LR
+  classDef gold stroke-width:2.5px;
+  classDef blue stroke-width:2.5px;
+  classDef green stroke-width:2.5px;
+  classDef purple stroke-width:2.5px;
+
+  class Archi blue;
+  class Code gold;
+  class PR purple;
+  class Prod green;
+```
+
+2. **Define semantic diagram tokens in theme stylesheets**:
+```css
+/* Light Mode */
+:root, [data-theme="light"], [data-theme="google-blueprint-light"] {
+  --diagram-gold: #b45309;
+  --diagram-gold-dim: #fef3c7;
+  --diagram-blue: #0284c7;
+  --diagram-blue-dim: #e0f2fe;
+  --diagram-green: #15803d;
+  --diagram-green-dim: #dcfce7;
+  --diagram-purple: #7c3aed;
+  --diagram-purple-dim: #f3e8ff;
+}
+
+/* Dark Mode */
+[data-theme="dark"], [data-theme="slate-architect"] {
+  --diagram-gold: #fde047;
+  --diagram-gold-dim: rgba(253, 224, 71, 0.18);
+  --diagram-blue: #38bdf8;
+  --diagram-blue-dim: rgba(56, 189, 248, 0.18);
+  --diagram-green: #34d399;
+  --diagram-green-dim: rgba(52, 211, 153, 0.18);
+  --diagram-purple: #c084fc;
+  --diagram-purple-dim: rgba(192, 132, 252, 0.18);
+}
+```
+
+3. **Style Mermaid nodes with CSS custom properties**:
+```css
+.mermaid-wrap .mermaid .node.gold :is(rect, circle, polygon, path) {
+  fill: var(--diagram-gold-dim) !important;
+  stroke: var(--diagram-gold) !important;
+}
+.mermaid-wrap .mermaid .node.blue :is(rect, circle, polygon, path) {
+  fill: var(--diagram-blue-dim) !important;
+  stroke: var(--diagram-blue) !important;
+}
+.mermaid-wrap .mermaid .node.green :is(rect, circle, polygon, path) {
+  fill: var(--diagram-green-dim) !important;
+  stroke: var(--diagram-green) !important;
+}
+.mermaid-wrap .mermaid .node.purple :is(rect, circle, polygon, path) {
+  fill: var(--diagram-purple-dim) !important;
+  stroke: var(--diagram-purple) !important;
+}
+```
+
+### Mobile Landscape Diagram Ergonomics (`max-height: 560px`)
+
+On compact mobile screens in landscape orientation (smartphones 375px–430px height):
+- Slide headings, labels, and introductory text must be compact (`margin-bottom: 4px`, font size clamped to 11–13px) so they don't consume more than 20% of vertical height.
+- `.mermaid-wrap` must use `flex: 1 1 auto; max-height: none; min-height: 0;` to give the diagram maximum room.
+- Footers and proof banners must use tight padding and smaller type (10–11px) to prevent vertical overflow.
+
 ## Anti-patterns
 
 ```css
@@ -200,14 +274,19 @@ Also, schedule centering in a few delayed passes (`0ms`, `~90ms`, `~220ms`) on s
 ```
 
 ```mermaid
-%% BAD: hard-coded text color breaks cross-theme rendering
-classDef api fill:#0f9ed544,stroke:#0f9ed5,color:#ffffff
+%% BAD: hard-coded fill/stroke in classDef breaks cross-theme rendering
+classDef gold fill:#fef3c7,stroke:#b45309,stroke-width:2.5px;
+classDef purple fill:#f3e8ff,stroke:#9333ea,stroke-width:2.5px;
 ```
 
 ## Good defaults
 
 - keep `theme: 'base'`
 - prefer `themeVariables.fontSize` over post-render text inflation
+- use `sequence.wrap: true` for any non-trivial sequence diagram
+- keep label HTML margins neutral (`p { margin: 0 }`)
+- keep `foreignObject` overflow visible when Mermaid uses HTML labels
+- drive node fill and stroke colors via CSS variables `--diagram-*` and bare `classDef` declarations
 - use `sequence.wrap: true` for any non-trivial sequence diagram
 - keep label HTML margins neutral (`p { margin: 0 }`)
 - keep `foreignObject` overflow visible when Mermaid uses HTML labels

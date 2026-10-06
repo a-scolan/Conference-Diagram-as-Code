@@ -28,17 +28,31 @@ Pour développer et modifier les slides en direct avec rechargement automatique 
 npm run dev:deck
 ```
 
-Les vues **LikeC4** intégrées dans les slides se chargent désormais **à la demande** : le bouton *Rendu LikeC4* est visible avant chargement puis disparaît automatiquement une fois le schéma affiché, avec un délai de fallback plus tolérant pour éviter les faux échecs au démarrage.
+Les vues **LikeC4** intégrées dans les diapositives se chargent de manière fluide et transparente en arrière-plan à l'arrivée sur chaque diapositive, sans bloc d'attente intrusif ni bouton intermédiaire, avec un délai de repli tolérant évitant les faux échecs locaux.
 
-Les slides **Mermaid** interactives utilisent désormais un cadrage plus large, un recentrage fiable, le zoom via boutons ou molette sur les vues dédiées, et un **mouse-pan** par glisser-déposer quand le diagramme dépasse le cadre.
+Les slides **Mermaid** interactives utilisent désormais un cadrage plus large, un recentrage fiable, le zoom via boutons ou molette sur les vues dédiées, un **mouse-pan** par glisser-déposer quand le diagramme dépasse le cadre, une adaptation chromatique dynamique aux thèmes sombre (*Slate Architect*) et clair (*Google Blueprint Light*), ainsi qu'une navigation tactile fluide (swipe horizontal et vertical) optimisée pour mobile en orientation paysage.
+
+### Ergonomie et adaptation mobile
+
+- **Verrouillage et détection d'orientation mobile** : Détection automatique des écrans étroits en mode portrait, proposition de forçage en plein écran paysage via la Screen Orientation API (`screen.orientation.lock('landscape')`), avec bouton de dérogation pour continuer en portrait si souhaité.
+- **Diffs de Pull Request adaptatifs (Slide 26)** : Redimensionnement proportionnel à l'espace vertical disponible des diffs visuels (`swipe`, `onion-skin`, `2-up`) sans boucle d'agrandissement infinie, tactile optimisé (`touch-action: none`), épuration des bandeaux superflus GitHub et ouverture de la modale directement en plein écran sur smartphone.
+- **Coloration continue du code et des diffs** : Les fonds de lignes de code (`.line-highlight`, `.line-add`, `.line-mod`, `.line-del`) s'étendent sur l'intégralité de la largeur `max-content` lors du défilement dans l'ascenseur horizontal.
 
 ### Raccourcis et fonctionnalités orateur en séance
 
-- **Touche P** : Ouvre instantanément la **vue présentateur double écran** (`presenter-view.html`) sur moniteur secondaire, synchronisée en temps réel via `BroadcastChannel` (chronomètre de session, 5 jalons d'Actes, slide active, slide suivante, notes d'orateur mot à mot avec mise en valeur des *Silences Sacrés* et zoom typographique de pupitre `A-` / `A+`).
-- **Touches Flèches / Espace / Télécommande** : Déroulent les **étapes de code progressives** sur les diapositives techniques (Slide 11 C1, Slide 13 C2, Slide 16 Live coding, Slide 18 Séquence) sans nécessiter de clic à la souris avec défilement automatique des ascenseurs de code vers les lignes révélées, avant de basculer sur la slide suivante.
+- **Touche V, O ou Alt+P** : Ouvre instantanément la **vue présentateur double écran** (`presenter-view.html`) sur moniteur secondaire, synchronisée en temps réel via `BroadcastChannel` (chronomètre persistant avec bouton Démarrer/Pause explicite résistant aux rechargements, 5 jalons d'Actes, slide active, slide suivante, notes d'orateur mot à mot avec didascalies de posture `[REGARD] Scan 180°`, `[POSTURE]`, `[PAUSE]` et zoom typographique `A-` / `A+`).
+- **Miroir vidéo direct WebRTC 60fps (Bouton Miroir ou activation directe dans la vignette)** :
+  - *Flux direct matériellement accéléré* : Remplacement du double rendu de la slide courante par un récepteur vidéo `<video id="pv-stream-video">` alimenté par streaming WebRTC P2P local (60fps pixel-perfect sans latence ni divergence d'état) affichant l'intégralité de la slide active.
+  - *Aperçu de la slide suivante cadré sur le haut* : Proportions optimisées pour laisser un espace prépondérant au miroir direct actif, tout en affichant l'amorce supérieure (titre et introduction) de la slide suivante pour une anticipation scénique immédiate.
+  - *Activation en un clic* : Bouton de connexion directe intégré dans le cadre de prévisualisation lorsque le miroir n'est pas actif.
+  - *Suppression des frictions de curseur* : Les commandes scéniques sont opérées de manière fluide et naturelle via télécommande/clavier ou directement sur la projection, sans relais de curseur artificiel depuis le pupitre.
+- **Télécommandes & Digipads** :
+  - *Avancer* : `Flèche Droite`, `Flèche Bas`, `Espace`, `PageDown`, `Enter`, `N`, pavé numérique `+`.
+  - *Reculer* : `Flèche Gauche`, `Flèche Haut`, `PageUp`, `Backspace`, `P`, pavé numérique `-`.
+  - *Blackout* : Touche `.` (point) ou `B`.
+- **Immunité et stabilité de défilement** : Détection d'impulsion franche à la molette (seuil $\ge 65$ avec temporisation anti-rebond) évitant les sauts accidentels, et zone morte sur les événements de redimensionnement pour ignorer l'apparition/disparition des barres de navigation rétractables sans flash visuel.
 - **Touche C** : Bascule le **mode confort & fort contraste** fond de salle (`data-readability="high-contrast"`, `--font-bump: 6.5px`) pour les vidéoprojecteurs délavés.
 - **Touche T** : Alterne le thème visuel (*Google Blueprint Light* / *Slate Architect*).
-- **Touche . (point) ou B** : Occulte l'écran public (mode écran noir) pour concentrer l'attention sur l'orateur.
 
 ## Publier la présentation sur GitHub Pages
 

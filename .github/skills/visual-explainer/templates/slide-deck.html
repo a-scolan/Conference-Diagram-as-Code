@@ -71,6 +71,14 @@
     --red-dim: rgba(240, 136, 72, 0.10);
     --blue: #38b4e8;
     --blue-dim: rgba(56, 180, 232, 0.10);
+    --diagram-gold: #fbfe7a;
+    --diagram-gold-dim: rgba(251, 254, 122, 0.15);
+    --diagram-blue: #38b4e8;
+    --diagram-blue-dim: rgba(56, 180, 232, 0.15);
+    --diagram-green: #5cc038;
+    --diagram-green-dim: rgba(92, 192, 56, 0.15);
+    --diagram-purple: #c084fc;
+    --diagram-purple-dim: rgba(192, 132, 252, 0.15);
     --quote-mark: #4a8fa0;
     --split-light: #d0d0d5;
     /* --elephant-bg: url(...); — set per-presentation PNG data URI */
@@ -642,6 +650,18 @@
   .slide--diagram .mermaid .node rect,
   .slide--diagram .mermaid .node circle,
   .slide--diagram .mermaid .node polygon { stroke-width: 2px; }
+  .slide--diagram .mermaid .node.primary :is(rect, circle, polygon, path) {
+    fill: var(--diagram-gold-dim) !important;
+    stroke: var(--diagram-gold) !important;
+  }
+  .slide--diagram .mermaid .node.secondary :is(rect, circle, polygon, path) {
+    fill: var(--diagram-blue-dim) !important;
+    stroke: var(--diagram-blue) !important;
+  }
+  .slide--diagram .mermaid .node.output :is(rect, circle, polygon, path) {
+    fill: var(--diagram-green-dim) !important;
+    stroke: var(--diagram-green) !important;
+  }
   .slide--diagram .mermaid .node foreignObject {
     overflow: visible !important;
   }
@@ -1302,9 +1322,9 @@ graph LR
   Render --> Archi["Portail Archi"]
   Validate --> Review["Revue de code"]
 
-  classDef primary fill:#fbfe7a22,stroke:#fbfe7a,stroke-width:2px
-  classDef secondary fill:#38b4e822,stroke:#38b4e8,stroke-width:2px
-  classDef output fill:#5cc03822,stroke:#5cc038,stroke-width:2px
+  classDef primary stroke-width:2px;
+  classDef secondary stroke-width:2px;
+  classDef output stroke-width:2px;
 
   class Code,Git primary
   class CI,Validate,Render secondary

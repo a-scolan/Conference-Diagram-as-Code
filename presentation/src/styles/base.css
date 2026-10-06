@@ -40,7 +40,7 @@
     z-index: 2147483647;
     opacity: 0;
     transform: translate3d(-999px, -999px, 0) translate(-50%, -50%) scale(1);
-    transition: opacity 90ms linear, transform 60ms ease-out;
+    transition: opacity 120ms ease;
     will-change: transform, opacity;
     backface-visibility: hidden;
   }

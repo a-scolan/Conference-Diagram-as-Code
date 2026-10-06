@@ -289,12 +289,13 @@
     position: relative;
   }
   .pv-preview-card--current {
-    flex: 1 1 65%;
-    min-height: 240px;
+    flex: 1 1 auto;
+    min-height: 200px;
   }
   .pv-preview-card--next {
-    flex: 0 0 35%;
-    min-height: 140px;
+    flex: 0 0 auto;
+    height: clamp(140px, 22vh, 190px);
+    min-height: 120px;
     opacity: 0.92;
   }
   .pv-preview-header {
@@ -316,6 +317,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: default;
   }
   .pv-preview-scaler {
     width: 1280px;
@@ -380,6 +382,127 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+  }
+
+  /* Bouton Miroir Direct dans le header */
+  .pv-btn--mirror {
+    border-color: rgba(56, 189, 248, 0.4);
+    color: var(--pv-text-bright);
+    gap: 6px;
+  }
+  .pv-btn--mirror:hover {
+    border-color: var(--pv-accent);
+    color: var(--pv-accent);
+  }
+  .pv-btn--mirror.is-connected {
+    border-color: rgba(34, 197, 94, 0.6);
+    background: rgba(34, 197, 94, 0.12);
+    color: #22c55e;
+  }
+  .pv-mirror-pill {
+    font-size: 10px;
+    font-family: var(--pv-font-mono);
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 8px;
+    background: rgba(148, 163, 184, 0.2);
+    color: var(--pv-text-muted);
+    text-transform: uppercase;
+  }
+  .pv-btn--mirror.is-connected .pv-mirror-pill {
+    background: #22c55e;
+    color: #0f172a;
+  }
+
+  /* Conteneur et affichage du flux vidéo direct */
+  .pv-preview-card--current .pv-preview-body {
+    align-items: center;
+    justify-content: center;
+    background: #000;
+  }
+  .pv-preview-card--next .pv-preview-body {
+    align-items: flex-start;
+    justify-content: center;
+    background: #000;
+  }
+  .pv-preview-card--next .pv-preview-scaler {
+    transform-origin: top center;
+  }
+  .pv-stream-container {
+    display: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 5;
+  }
+  .pv-stream-container.is-active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #pv-stream-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #000;
+  }
+
+  /* Placeholder pour activation miroir direct */
+  .pv-mirror-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    text-align: center;
+    background: var(--pv-surface);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+  }
+  .pv-mirror-placeholder.is-hidden {
+    display: none !important;
+  }
+  .pv-mirror-placeholder__icon {
+    color: var(--pv-accent);
+    opacity: 0.85;
+  }
+  .pv-mirror-placeholder__title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--pv-text-bright);
+    font-family: var(--pv-font-sans);
+  }
+  .pv-mirror-placeholder__btn {
+    appearance: none;
+    border: 1.5px solid var(--pv-accent);
+    background: color-mix(in srgb, var(--pv-accent) 15%, var(--pv-surface));
+    color: var(--pv-accent);
+    font-family: var(--pv-font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .pv-mirror-placeholder__btn:hover {
+    background: var(--pv-accent);
+    color: var(--pv-accent-contrast);
+    transform: translateY(-1px);
   }
 
   /* Bouton Checklist dans le header */
@@ -836,32 +959,36 @@
   <!-- CHRONOMÈTRE ET JALONS DE RYTHME (5 ACTES) -->
   <div class="pv-timer-cluster">
     <div class="pv-clock" id="pv-clock">00:00:00</div>
-    <div class="pv-stopwatch" id="pv-stopwatch" title="Cliquer pour démarrer/pause">00:00</div>
+    <div class="pv-stopwatch" id="pv-stopwatch">00:00</div>
     <div class="pv-milestones-track">
-      <span class="pv-milestone-pill" data-act="0" title="Acte 0 : Intro (0-7m)">A0: 7m</span>
-      <span class="pv-milestone-pill" data-act="1" title="Acte 1 : V1 (7-18m)">A1: 18m</span>
-      <span class="pv-milestone-pill" data-act="2" title="Acte 2 : V2 Diff (18-28m)">A2: 28m</span>
-      <span class="pv-milestone-pill" data-act="3" title="Acte 3 : PR (28-36m)">A3: 36m</span>
-      <span class="pv-milestone-pill" data-act="4" title="Acte 4 & 5 : Clôture (36-45m)">A4: 45m</span>
+      <span class="pv-milestone-pill" data-act="0">A0: 7m</span>
+      <span class="pv-milestone-pill" data-act="1">A1: 18m</span>
+      <span class="pv-milestone-pill" data-act="2">A2: 28m</span>
+      <span class="pv-milestone-pill" data-act="3">A3: 36m</span>
+      <span class="pv-milestone-pill" data-act="4">A4: 45m</span>
     </div>
   </div>
 
   <!-- CONTRÔLES PRÉSENTATEUR -->
   <div class="pv-actions">
-    <div class="pv-font-controls" title="Ajuster la taille du texte de lecture pupitre">
+    <div class="pv-font-controls">
       <button type="button" class="pv-font-btn" id="pv-font-dec" aria-label="Diminuer texte">A-</button>
       <button type="button" class="pv-font-btn" id="pv-font-inc" aria-label="Agrandir texte">A+</button>
     </div>
-    <button type="button" class="pv-btn" id="pv-btn-theme" title="Basculer le thème Light / Dark (Touche T)" aria-label="Basculer le thème">
+    <button type="button" class="pv-btn" id="pv-btn-theme" aria-label="Basculer le thème">
       <span id="pv-theme-icon">☀️</span>
       <span id="pv-theme-label">Clair</span>
     </button>
-    <button type="button" class="pv-btn pv-btn--checklist" id="pv-btn-checklist" title="Afficher/masquer la checklist avant-scène">
+    <button type="button" class="pv-btn pv-btn--checklist" id="pv-btn-checklist" aria-label="Checklist avant-scène">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
       Checklist <span class="pv-checklist-badge-pill" id="pv-checklist-pill">0/5</span>
     </button>
-    <button type="button" class="pv-btn pv-btn--blackout" id="pv-btn-blackout" title="Occulter l'écran public (Touche .)">Écran noir</button>
-    <button type="button" class="pv-btn" id="pv-btn-reset-timer" title="Réinitialiser chrono">Reset</button>
+    <button type="button" class="pv-btn pv-btn--mirror" id="pv-btn-mirror" aria-label="Miroir direct">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+      Miroir <span class="pv-mirror-pill" id="pv-mirror-pill">Off</span>
+    </button>
+    <button type="button" class="pv-btn pv-btn--blackout" id="pv-btn-blackout" aria-label="Écran noir">Écran noir</button>
+    <button type="button" class="pv-btn" id="pv-btn-reset-timer" aria-label="Réinitialiser chrono">Reset</button>
     <button type="button" class="pv-btn" id="pv-btn-prev" aria-label="Slide précédente">&larr; Pr&eacute;c</button>
     <button type="button" class="pv-btn pv-btn--primary" id="pv-btn-next" aria-label="Slide suivante">Suiv &rarr;</button>
   </div>
@@ -871,15 +998,24 @@
 <main class="pv-main">
   <!-- COLONNE GAUCHE : APERÇUS SLIDE COURANTE & SUIVANTE -->
   <section class="pv-col-previews">
-    <!-- Diapositive courante (public) -->
+    <!-- Diapositive courante (Miroir direct de projection) -->
     <div class="pv-preview-card pv-preview-card--current">
       <div class="pv-preview-header">
         <span style="color:var(--pv-accent); font-weight:700;" id="pv-cur-badge">Slide 1 / 35</span>
         <span style="color:var(--pv-text-muted);" id="pv-cur-title">Titre</span>
       </div>
-      <div class="pv-preview-body">
-        <div class="pv-preview-scaler">
-          <iframe class="pv-preview-iframe" id="pv-iframe-current" src="./presentation-diagram-as-code.html#slide-1"></iframe>
+      <div class="pv-preview-body" id="pv-current-body">
+        <!-- Conteneur miroir vidéo direct -->
+        <div class="pv-stream-container" id="pv-stream-container">
+          <video id="pv-stream-video" autoplay playsinline muted></video>
+        </div>
+        <!-- Placeholder invitant à activer le miroir -->
+        <div class="pv-mirror-placeholder" id="pv-mirror-placeholder">
+          <div class="pv-mirror-placeholder__icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          </div>
+          <div class="pv-mirror-placeholder__title">Miroir direct non connect&eacute;</div>
+          <button type="button" class="pv-mirror-placeholder__btn" id="pv-mirror-launch-btn">Activer le miroir direct</button>
         </div>
         <div class="pv-blackout-indicator" id="pv-blackout-indicator">&block; &Eacute;CRAN PUBLIC MASQU&Eacute;</div>
       </div>
@@ -1565,13 +1701,9 @@
       }
     }).catch(function() {});
 
-  // 2. Gestion des Iframes (Chargement unique sans rechargement de src)
-  var iframeCur = document.getElementById('pv-iframe-current');
+  // 2. Gestion de l'Iframe d'aperçu de la diapositive suivante
   var iframeNxt = document.getElementById('pv-iframe-next');
-  var iframeCurReady = false;
   var iframeNxtReady = false;
-  var lastCurSentIdx = -1;
-  var lastCurSentStep = null;
   var lastNxtSentIdx = -1;
 
   function setIframeSlide(iframe, slideIndex, step) {
@@ -1586,13 +1718,12 @@
   }
 
   function resizePreviewScalers() {
-    document.querySelectorAll('.pv-preview-body').forEach(function(body) {
+    document.querySelectorAll('.pv-preview-card--next .pv-preview-body').forEach(function(body) {
       var scaler = body.querySelector('.pv-preview-scaler');
       if (!scaler) return;
       var w = body.clientWidth;
-      var h = body.clientHeight;
-      if (w > 0 && h > 0) {
-        var scale = Math.min(w / 1280, h / 720) * 0.96;
+      if (w > 0) {
+        var scale = (w / 1280) * 0.98;
         scaler.style.transform = 'scale(' + scale + ')';
       }
     });
@@ -1603,13 +1734,7 @@
     var data = ev.data;
     if (!data) return;
     if (data.type === 'IFRAME_DECK_READY') {
-      if (ev.source === (iframeCur && iframeCur.contentWindow)) {
-        iframeCurReady = true;
-        setIframeSlide(iframeCur, state.current, state.currentStep);
-        if (iframeCur && iframeCur.contentWindow) {
-          iframeCur.contentWindow.postMessage({ type: 'SET_THEME', theme: state.theme }, '*');
-        }
-      } else if (ev.source === (iframeNxt && iframeNxt.contentWindow)) {
+      if (ev.source === (iframeNxt && iframeNxt.contentWindow)) {
         iframeNxtReady = true;
         var nxt = Math.min(state.current + 1, state.total - 1);
         setIframeSlide(iframeNxt, nxt, '1');
@@ -1621,16 +1746,6 @@
     }
   });
 
-  if (iframeCur) {
-    iframeCur.addEventListener('load', function() {
-      iframeCurReady = true;
-      setIframeSlide(iframeCur, state.current, state.currentStep);
-      if (iframeCur.contentWindow) {
-        iframeCur.contentWindow.postMessage({ type: 'SET_THEME', theme: state.theme }, '*');
-      }
-      resizePreviewScalers();
-    });
-  }
   if (iframeNxt) {
     iframeNxt.addEventListener('load', function() {
       iframeNxtReady = true;
@@ -1647,14 +1762,8 @@
     var t = Date.now();
     var cur = state.current;
     var nxt = Math.min(cur + 1, state.total - 1);
-    iframeCurReady = false;
     iframeNxtReady = false;
-    lastCurSentIdx = -1;
-    lastCurSentStep = null;
     lastNxtSentIdx = -1;
-    if (iframeCur) {
-      iframeCur.src = './presentation-diagram-as-code.html?t=' + t + '#slide-' + (cur + 1);
-    }
     if (iframeNxt) {
       iframeNxt.src = './presentation-diagram-as-code.html?t=' + (t + 1) + '#slide-' + (nxt + 1);
     }
@@ -1826,6 +1935,16 @@
           }
         } else if (data.type === 'BLACKOUT_CHANGED') {
           setBlackoutState(!!data.isBlackout, false);
+        } else if (data.type === 'STREAM_OFFER' && data.sdp) {
+          handleStreamOffer(data.sdp);
+        } else if (data.type === 'STREAM_ICE_CANDIDATE' && data.from === 'public') {
+          handleStreamIceCandidate(data.candidate);
+        } else if (data.type === 'STREAM_STATUS') {
+          if (!data.active) {
+            setStreamActiveState(false);
+          } else if (!isStreamActive) {
+            if (channel) channel.postMessage({ type: 'STREAM_REQUEST_OFFER' });
+          }
         }
       };
     } catch(e) {}
@@ -2081,12 +2200,7 @@
     document.getElementById('pv-cur-title').textContent = note ? note.title : ('Slide ' + (cur + 1));
     document.getElementById('pv-next-title').textContent = (nxt === cur) ? '(Fin de conf)' : (nextNote ? nextNote.title : ('Slide ' + (nxt + 1)));
 
-    // Pilotage direct des Iframes sans rechargement de src (uniquement si changement)
-    if (iframeCurReady && (cur !== lastCurSentIdx || state.currentStep !== lastCurSentStep)) {
-      lastCurSentIdx = cur;
-      lastCurSentStep = state.currentStep;
-      setIframeSlide(iframeCur, cur, state.currentStep);
-    }
+    // Pilotage de l'iframe d'aperçu de la prochaine slide
     if (iframeNxtReady && nxt !== lastNxtSentIdx) {
       lastNxtSentIdx = nxt;
       setIframeSlide(iframeNxt, nxt, '1');
@@ -2239,6 +2353,173 @@
   }
   applyFontSize(state.fontSize);
 
+  // --- DISPLAY STREAM RECEIVER (STREAM MIRROR) ---
+  var streamReceiverPc = null;
+  var isStreamActive = false;
+  var localMediaStream = null;
+  var streamVideo = document.getElementById('pv-stream-video');
+  var streamContainer = document.getElementById('pv-stream-container');
+  var mirrorPlaceholder = document.getElementById('pv-mirror-placeholder');
+  var btnMirror = document.getElementById('pv-btn-mirror');
+  var pillMirror = document.getElementById('pv-mirror-pill');
+  var btnMirrorLaunch = document.getElementById('pv-mirror-launch-btn');
+
+  if (streamVideo) {
+    streamVideo.autoplay = true;
+    streamVideo.playsInline = true;
+    streamVideo.muted = true;
+    if ('latencyHint' in streamVideo) {
+      try { streamVideo.latencyHint = 0; } catch(_) {}
+    }
+  }
+
+  function setStreamActiveState(active) {
+    isStreamActive = !!active;
+    if (streamContainer) {
+      streamContainer.classList.toggle('is-active', isStreamActive);
+    }
+    if (mirrorPlaceholder) {
+      mirrorPlaceholder.classList.toggle('is-hidden', isStreamActive);
+    }
+    if (btnMirror) {
+      btnMirror.classList.toggle('is-connected', isStreamActive);
+    }
+    if (pillMirror) {
+      pillMirror.textContent = isStreamActive ? 'Actif' : 'Off';
+    }
+    if (!isStreamActive) {
+      if (localMediaStream) {
+        localMediaStream.getTracks().forEach(function(t){ try { t.stop(); } catch(e){} });
+        localMediaStream = null;
+      }
+      if (streamVideo) {
+        streamVideo.srcObject = null;
+      }
+    }
+  }
+
+  function startMirrorStream() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+      if (channel) channel.postMessage({ type: 'STREAM_REQUEST_OFFER' });
+      return;
+    }
+    var options = {
+      video: {
+        displaySurface: 'browser',
+        frameRate: { ideal: 60, max: 60 },
+        cursor: 'never'
+      },
+      audio: false,
+      preferCurrentTab: false
+    };
+    navigator.mediaDevices.getDisplayMedia(options).then(function(stream) {
+      localMediaStream = stream;
+      if (streamVideo) {
+        streamVideo.srcObject = stream;
+        streamVideo.play().catch(function(){});
+      }
+      setStreamActiveState(true);
+      var videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        videoTrack.onended = function() {
+          stopMirrorStream();
+        };
+      }
+      if (channel) {
+        channel.postMessage({ type: 'STREAM_STATUS', active: true });
+      }
+    }).catch(function(err) {
+      console.warn('[Presenter] Sélection écran annulée:', err);
+    });
+  }
+
+  function stopMirrorStream() {
+    setStreamActiveState(false);
+    if (channel) channel.postMessage({ type: 'STREAM_STOP_REQUEST' });
+  }
+
+  function initStreamReceiver() {
+    if (streamReceiverPc) {
+      try { streamReceiverPc.close(); } catch(e){}
+      streamReceiverPc = null;
+    }
+    var pc = new RTCPeerConnection({ iceServers: [] });
+    streamReceiverPc = pc;
+
+    pc.ontrack = function(event) {
+      if (streamVideo && event.streams && event.streams[0]) {
+        streamVideo.srcObject = event.streams[0];
+        streamVideo.play().catch(function(){});
+        setStreamActiveState(true);
+      }
+    };
+
+    pc.onicecandidate = function(e) {
+      if (e.candidate && channel) {
+        var candObj = e.candidate.toJSON ? e.candidate.toJSON() : {
+          candidate: e.candidate.candidate,
+          sdpMid: e.candidate.sdpMid,
+          sdpMLineIndex: e.candidate.sdpMLineIndex
+        };
+        channel.postMessage({
+          type: 'STREAM_ICE_CANDIDATE',
+          candidate: candObj,
+          from: 'receiver'
+        });
+      }
+    };
+
+    pc.onconnectionstatechange = function() {
+      if (pc.connectionState === 'disconnected' || pc.connectionState === 'failed' || pc.connectionState === 'closed') {
+        setStreamActiveState(false);
+      }
+    };
+    return pc;
+  }
+
+  function handleStreamOffer(offerSdp) {
+    var pc = initStreamReceiver();
+    pc.setRemoteDescription(new RTCSessionDescription(offerSdp)).then(function() {
+      return pc.createAnswer();
+    }).then(function(answer) {
+      return pc.setLocalDescription(answer);
+    }).then(function() {
+      if (channel && pc.localDescription) {
+        channel.postMessage({
+          type: 'STREAM_ANSWER',
+          sdp: {
+            type: pc.localDescription.type,
+            sdp: pc.localDescription.sdp
+          }
+        });
+      }
+    }).catch(function(err) {
+      console.warn('[Presenter] Erreur WebRTC answer:', err);
+    });
+  }
+
+  function handleStreamIceCandidate(candidate) {
+    if (streamReceiverPc && candidate) {
+      streamReceiverPc.addIceCandidate(new RTCIceCandidate(candidate)).catch(function(){});
+    }
+  }
+
+  if (btnMirror) {
+    btnMirror.addEventListener('click', function() {
+      if (isStreamActive) {
+        stopMirrorStream();
+      } else {
+        startMirrorStream();
+      }
+    });
+  }
+
+  if (btnMirrorLaunch) {
+    btnMirrorLaunch.addEventListener('click', function() {
+      startMirrorStream();
+    });
+  }
+
   // 8. Événements boutons et clavier
   document.getElementById('pv-btn-next').addEventListener('click', next);
   document.getElementById('pv-btn-prev').addEventListener('click', prev);
@@ -2282,14 +2563,30 @@
   document.getElementById('pv-font-inc').addEventListener('click', function() { applyFontSize(state.fontSize + 2); });
   document.getElementById('pv-font-dec').addEventListener('click', function() { applyFontSize(state.fontSize - 2); });
 
+  function toggleReadabilityPresenter() {
+    var cur = document.documentElement.getAttribute('data-readability');
+    var next = (cur === 'high-contrast') ? 'standard' : 'high-contrast';
+    if (next === 'high-contrast') {
+      document.documentElement.setAttribute('data-readability', 'high-contrast');
+    } else {
+      document.documentElement.removeAttribute('data-readability');
+    }
+    if (channel) {
+      channel.postMessage({ type: 'SET_READABILITY', mode: next });
+    }
+  }
+
   window.addEventListener('keydown', function(e) {
     if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown' || e.key === 'Enter' || e.key === 'n' || e.key === 'N') {
       e.preventDefault(); next();
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'Backspace' || e.key === 'p' || e.key === 'P') {
       e.preventDefault(); prev();
     } else if (e.key === '.' || e.key === 'b' || e.key === 'B') {
       e.preventDefault(); toggleBlackout();
+    } else if (e.key === 'c' || e.key === 'C') {
+      e.preventDefault();
+      toggleReadabilityPresenter();
     } else if (e.key === '+' || e.key === '=') {
       e.preventDefault(); applyFontSize(state.fontSize + 2);
     } else if (e.key === '-' || e.key === '_') {
@@ -2298,6 +2595,13 @@
       e.preventDefault(); togglePresenterTheme();
     } else if (e.key === 'r' || e.key === 'R') {
       e.preventDefault(); resetTimer();
+    } else if (e.key === 'f' || e.key === 'F') {
+      e.preventDefault();
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(function(){});
+      } else {
+        document.exitFullscreen().catch(function(){});
+      }
     }
   });
 
@@ -2308,13 +2612,16 @@
     if (initIdx >= 0) state.current = initIdx;
   }
 
-  // Demander synchronisation initiale
+  // Demander synchronisation initiale et négociation de flux miroir
   renderTimeline();
   updateView();
   setTimeout(resizePreviewScalers, 100);
 
   if (channel) {
-    try { channel.postMessage({ type: 'REQUEST_SYNC' }); } catch(e) {}
+    try {
+      channel.postMessage({ type: 'REQUEST_SYNC' });
+      channel.postMessage({ type: 'STREAM_REQUEST_OFFER' });
+    } catch(e) {}
   }
 })();
 </script>

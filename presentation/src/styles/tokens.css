@@ -11,6 +11,16 @@
 
   /* Assets graphiques réutilisables */
   --quote-bg: url("./assets/quote.png");
+
+  /* Tokens de cartes et panneaux factorisés */
+  --card-radius: 16px;
+  --card-radius-sm: 12px;
+  --card-radius-lg: 18px;
+  --card-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  --card-shadow-hover: 0 8px 28px rgba(0, 0, 0, 0.08);
+
+  /* Tokens de badges et puces */
+  --badge-radius: 999px;
 }
 
 /* ==========================================================================

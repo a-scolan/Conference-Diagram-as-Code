@@ -6,28 +6,26 @@ Cette spécification définit l'architecture et le fonctionnement du moteur d'ex
 ## Requirements
 
 ### Requirement: Défilement vertical avec accrochage magnétique (Snap-Scroll)
-Le conteneur principal du diaporama (`.deck`) doit présenter chaque diapositive (`.slide`) en plein écran (100vh / 100vw) avec un accrochage vertical fluide, sans risque de décalage ou de superposition instable.
+Le conteneur principal du diaporama (`.deck`) SHALL présenter chaque diapositive (`.slide`) en plein écran (100vh / 100vw) avec un accrochage vertical fluide, sans risque de décalage, de flash visuel ou de superposition instable.
 
 #### Scenario: Navigation par défilement à la molette
-- **WHEN** L'utilisateur fait défiler la page verticalement à l'aide de la molette ou du pavé tactile
-- **THEN** Le moteur temporise le défilement et force l'alignement (`snapToNearest`) sur la diapositive la plus proche avec une animation fluide (`behavior: smooth`).
+- **WHEN** L'utilisateur manipule la molette de souris ou le pavé tactile
+- **THEN** Le moteur applique un filtre de seuil d'amplitude cumulé et un verrouillage temporel anti-rebond afin d'ignorer les micro-effleurements accidentels et de ne déclencher une transition diapositive par diapositive que sur une intention claire de défilement.
 
 #### Scenario: Redimensionnement de la fenêtre
-- **WHEN** La fenêtre du navigateur est redimensionnée en cours de présentation
-- **THEN** Le diaporama recalcule l'offset de la diapositive active et conserve son plein cadrage sans perte de contexte.
-
----
+- **WHEN** La fenêtre du navigateur ou le `visualViewport` subit une variation dimensionnelle (notamment l'apparition/disparition des barres d'outils ou d'adresses au survol des bords d'écran)
+- **THEN** Le moteur applique une zone morte de tolérance (deadband de quelques pixels) et recalcule le cadrage de la diapositive courante sans provoquer de flash visuel, de recalcul erroné de l'IntersectionObserver ni de retour arrière vers la diapositive précédente.
 
 ### Requirement: Contrôle au clavier et navigation tactile
-Le moteur doit écouter les événements clavier globaux et les gestes tactiles verticaux pour permettre au présentateur de piloter son discours sans souris.
+Le moteur SHALL écouter les événements clavier globaux, les gestes tactiles verticaux et les commandes de télécommandes/digipads pour permettre au présentateur de piloter son discours sans souris.
 
 #### Scenario: Avancement à la diapositive suivante
-- **WHEN** L'utilisateur presse la touche `Flèche Droite`, `Flèche Bas`, `Espace` ou `PageDown`
-- **THEN** Le diaporama bascule immédiatement vers la diapositive suivante si l'index courant est inférieur au total.
+- **WHEN** L'utilisateur presse la touche `Flèche Droite`, `Flèche Bas`, `Espace`, `PageDown`, `Enter` ou `N`
+- **THEN** Le diaporama bascule immédiatement vers l'étape ou la diapositive suivante si l'index courant est inférieur au total.
 
 #### Scenario: Retour à la diapositive précédente
-- **WHEN** L'utilisateur presse la touche `Flèche Gauche`, `Flèche Haut` ou `PageUp`
-- **THEN** Le diaporama revient immédiatement vers la diapositive précédente.
+- **WHEN** L'utilisateur presse la touche `Flèche Gauche`, `Flèche Haut`, `PageUp`, `Backspace` ou `P`
+- **THEN** Le diaporama revient immédiatement vers l'étape ou la diapositive précédente.
 
 #### Scenario: Saut aux extrémités
 - **WHEN** L'utilisateur presse la touche `Home` ou `End`
@@ -40,8 +38,6 @@ Le moteur doit écouter les événements clavier globaux et les gestes tactiles 
 #### Scenario: Isolation des zones interactives
 - **WHEN** Le focus utilisateur ou la cible de l'événement clavier se situe à l'intérieur d'un diagramme zoomable (`.mermaid-wrap`), d'un tableau défilant (`.table-scroll`), d'un bloc de code (`.code-scroll`) ou d'un champ éditable
 - **THEN** Les raccourcis clavier du diaporama sont ignorés afin de préserver l'interaction locale du composant.
-
----
 
 ### Requirement: Barre de progression et compteur de diapositives
 Le moteur doit maintenir en permanence deux indicateurs visuels non intrusifs : une barre de progression continue et un compteur textuel.
